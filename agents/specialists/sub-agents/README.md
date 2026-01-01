@@ -1,73 +1,70 @@
-# Nova's Sub-Agents
+# AI Specialist Sub-Agents
 
-> **Specialized AI Architects under Nova's Leadership**
+> **Specialized AI Architects for LLM/AI System Design**
 
 ---
 
 ## Overview
 
-Nova leads a team of six specialized sub-agents, each an expert in a specific domain of AI/LLM architecture. When Nova encounters a specialized request, she delegates to the appropriate sub-agent.
+Six specialized sub-agents, each an expert in a specific domain of AI/LLM architecture. They can be invoked directly or through the AI Architect agent for delegation.
 
 ---
 
 ## Sub-Agent Roster
 
-| Agent | Persona | Specialty | File |
-|-------|---------|-----------|------|
-| **Riley** | Riley | RAG Pipelines, Vector DBs, Embeddings, Chunking | [riley.md](riley.md) |
-| **Milo** | Milo | Memory Systems, Context Engineering, Cognitive Architecture | [milo.md](milo.md) |
-| **Oscar** | Oscar | Multi-Agent Orchestration, Supervisor, Handoff | [oscar.md](oscar.md) |
-| **Olivia** | Olivia | Observability, Tracing, Evaluation, Cost Monitoring | [olivia.md](olivia.md) |
-| **Grace** | Grace | GraphRAG, Knowledge Graphs, Entity Extraction | [grace.md](grace.md) |
-| **Sage** | Sage | AI Safety, Guardrails, Hallucination Prevention | [sage.md](sage.md) |
+| Agent | Specialty | File |
+|-------|-----------|------|
+| **RAG Architect** | RAG Pipelines, Vector DBs, Embeddings, Chunking | [rag-architect.md](rag-architect.md) |
+| **Memory Architect** | Memory Systems, Context Engineering, Cognitive Architecture | [memory-architect.md](memory-architect.md) |
+| **Orchestration Architect** | Multi-Agent Orchestration, Supervisor, Handoff | [orchestration-architect.md](orchestration-architect.md) |
+| **Observability Architect** | Observability, Tracing, Evaluation, Cost Monitoring | [observability-architect.md](observability-architect.md) |
+| **GraphRAG Architect** | GraphRAG, Knowledge Graphs, Entity Extraction | [graphrag-architect.md](graphrag-architect.md) |
+| **Safety Architect** | AI Safety, Guardrails, Hallucination Prevention | [safety-architect.md](safety-architect.md) |
 
 ---
 
 ## Delegation Matrix
 
-When Nova receives a request, she routes to the appropriate sub-agent:
+Routing to the appropriate sub-agent based on topic:
 
 | Topic | Sub-Agent |
 |-------|-----------|
-| Vector databases, embeddings | **Riley** |
-| Chunking strategies | **Riley** |
-| Re-ranking, retrieval | **Riley** |
-| Memory architecture | **Milo** |
-| Context window optimization | **Milo** |
-| Session/long-term memory | **Milo** |
-| Multi-agent patterns | **Oscar** |
-| Agent handoff | **Oscar** |
-| Supervisor design | **Oscar** |
-| Tracing, logging | **Olivia** |
-| Evaluation metrics | **Olivia** |
-| Cost tracking | **Olivia** |
-| Knowledge graphs | **Grace** |
-| Entity extraction | **Grace** |
-| Graph-based reasoning | **Grace** |
-| Prompt injection defense | **Sage** |
-| Hallucination prevention | **Sage** |
-| Content filtering | **Sage** |
+| Vector databases, embeddings | **RAG Architect** |
+| Chunking strategies | **RAG Architect** |
+| Re-ranking, retrieval | **RAG Architect** |
+| Memory architecture | **Memory Architect** |
+| Context window optimization | **Memory Architect** |
+| Session/long-term memory | **Memory Architect** |
+| Multi-agent patterns | **Orchestration Architect** |
+| Agent handoff | **Orchestration Architect** |
+| Supervisor design | **Orchestration Architect** |
+| Tracing, logging | **Observability Architect** |
+| Evaluation metrics | **Observability Architect** |
+| Cost tracking | **Observability Architect** |
+| Knowledge graphs | **GraphRAG Architect** |
+| Entity extraction | **GraphRAG Architect** |
+| Graph-based reasoning | **GraphRAG Architect** |
+| Prompt injection defense | **Safety Architect** |
+| Hallucination prevention | **Safety Architect** |
+| Content filtering | **Safety Architect** |
 
 ---
 
 ## Invocation
 
-Sub-agents can be invoked directly or through Nova:
+Sub-agents can be invoked directly:
 
 ```
-# Through Nova (recommended)
-"Nova, design the RAG pipeline"
-  → Nova delegates to Riley
-
 # Direct invocation
-"Riley, what chunking strategy for legal documents?"
+"/harmony:sub-agent:rag-architect what chunking strategy for legal documents?"
+"/harmony:sub-agent:safety-architect review prompt injection defenses"
 ```
 
 ---
 
 ## Collaboration
 
-Sub-agents often collaborate:
+Sub-agents can collaborate on complex systems:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -76,14 +73,14 @@ Sub-agents often collaborate:
 │                                                                  │
 │  Example: "Design a complete RAG system with safety"            │
 │                                                                  │
-│  Nova receives request                                          │
+│  Request received                                               │
 │       │                                                         │
-│       ├── Riley: RAG pipeline design                            │
-│       ├── Milo: Memory for conversation context                 │
-│       ├── Sage: Input/output guardrails                         │
-│       └── Olivia: Tracing and evaluation                        │
+│       ├── RAG Architect: RAG pipeline design                    │
+│       ├── Memory Architect: Memory for conversation context     │
+│       ├── Safety Architect: Input/output guardrails             │
+│       └── Observability Architect: Tracing and evaluation       │
 │                                                                  │
-│  Nova integrates all designs                                    │
+│  Designs integrated                                             │
 │       │                                                         │
 │       └── Final architecture document                           │
 │                                                                  │
@@ -98,19 +95,18 @@ Each sub-agent is trained on extensive documentation:
 
 | Agent | Key Knowledge Sources |
 |-------|----------------------|
-| **Riley** | LangChain, LlamaIndex, Pinecone, Weaviate docs |
-| **Milo** | Mem0, Anthropic context engineering, Letta |
-| **Oscar** | LangGraph, CrewAI, AutoGen, OpenAI Swarm |
-| **Olivia** | LangSmith, Arize, Weights & Biases, OpenTelemetry |
-| **Grace** | Neo4j, Microsoft GraphRAG, knowledge graph papers |
-| **Sage** | Anthropic safety, NeMo Guardrails, OWASP LLM |
+| **RAG Architect** | LangChain, LlamaIndex, Pinecone, Weaviate docs |
+| **Memory Architect** | Mem0, Anthropic context engineering, Letta |
+| **Orchestration Architect** | LangGraph, CrewAI, AutoGen, OpenAI Swarm |
+| **Observability Architect** | LangSmith, Arize, Weights & Biases, OpenTelemetry |
+| **GraphRAG Architect** | Neo4j, Microsoft GraphRAG, knowledge graph papers |
+| **Safety Architect** | Anthropic safety, NeMo Guardrails, OWASP LLM |
 
 ---
 
 ## Best Practices
 
-1. **Let Nova route** - She knows which sub-agent to call
-2. **Be specific** - "chunking for PDFs" vs "RAG help"
-3. **Combine expertise** - Complex systems need multiple agents
-4. **Review designs** - Sub-agents propose, you approve
-
+1. **Be specific** - "chunking for PDFs" vs "RAG help"
+2. **Combine expertise** - Complex systems may need multiple sub-agents
+3. **Review designs** - Sub-agents propose, you approve
+4. **Self-contained** - Each sub-agent has its own knowledge base

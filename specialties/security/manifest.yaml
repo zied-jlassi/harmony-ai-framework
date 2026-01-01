@@ -1,0 +1,162 @@
+# Security Specialty Pack
+# Domain expertise for security testing, pentesting, and compliance
+# Migrated from BMAD - 2026-01-01
+
+specialty:
+  id: security
+  name: "Security"
+  version: "1.0.0"
+  description: "Security testing, penetration testing, OWASP compliance, RGPD, infrastructure security"
+  last_updated: "2026-01-01"
+
+# Agents included in this specialty
+agents:
+  - id: pentest-agent
+    file: agents/pentest-agent.md
+    description: "Penetration testing expert - OWASP, network, web, social engineering"
+
+  - id: security-agent
+    file: agents/security-agent.md
+    description: "General security architect - security patterns, threat modeling"
+
+  - id: rgpd-agent
+    file: agents/rgpd-agent.md
+    description: "RGPD/GDPR compliance expert - data protection, privacy"
+
+# Modules (specialized knowledge packs for pentest)
+modules:
+  web:
+    - id: pentest-web
+      file: modules/pentest-web.md
+      description: "Web application security testing (OWASP Top 10)"
+    - id: pentest-dast-scanners
+      file: modules/pentest-dast-scanners.md
+      description: "Dynamic Application Security Testing scanners"
+    - id: pentest-dast-signatures
+      file: modules/pentest-dast-signatures.md
+      description: "DAST attack signatures"
+    - id: pentest-dast-waf
+      file: modules/pentest-dast-waf.md
+      description: "WAF bypass techniques"
+    - id: pentest-dast-recon
+      file: modules/pentest-dast-recon.md
+      description: "DAST reconnaissance"
+
+  network:
+    - id: pentest-network
+      file: modules/pentest-network.md
+      description: "Network security testing"
+    - id: pentest-recon
+      file: modules/pentest-recon.md
+      description: "Reconnaissance and OSINT"
+
+  exploitation:
+    - id: pentest-exploit
+      file: modules/pentest-exploit.md
+      description: "Exploitation techniques"
+    - id: pentest-metasploit
+      file: modules/pentest-metasploit.md
+      description: "Metasploit Framework"
+    - id: pentest-post
+      file: modules/pentest-post.md
+      description: "Post-exploitation"
+
+  specialized:
+    - id: pentest-crypto
+      file: modules/pentest-crypto.md
+      description: "Cryptographic security testing"
+    - id: pentest-social
+      file: modules/pentest-social.md
+      description: "Social engineering"
+    - id: pentest-malware
+      file: modules/pentest-malware.md
+      description: "Malware analysis"
+    - id: pentest-forensics
+      file: modules/pentest-forensics.md
+      description: "Digital forensics"
+
+  sources:
+    - id: pentest-sources
+      file: modules/pentest-sources.json
+      description: "Research sources for pentest knowledge"
+
+# Knowledge base
+knowledge:
+  general:
+    - id: owasp-checklists
+      file: knowledge/owasp-checklists.md
+      description: "OWASP security checklists"
+    - id: cis-benchmarks
+      file: knowledge/cis-benchmarks.md
+      description: "CIS security benchmarks"
+    - id: data-protection
+      file: knowledge/data-protection.md
+      description: "Data protection patterns"
+    - id: infrastructure
+      file: knowledge/infrastructure.md
+      description: "Infrastructure security"
+    - id: patterns-detection
+      file: knowledge/patterns-detection.md
+      description: "Attack pattern detection"
+    - id: pentest-patterns
+      file: knowledge/pentest-patterns.md
+      description: "Penetration testing patterns"
+
+  gaming:
+    - id: owasp-gaming-checklist
+      file: knowledge/owasp-gaming-checklist.md
+      description: "OWASP checklist for gaming platforms"
+    - id: owasp-gaming-checklists
+      file: knowledge/owasp-gaming-checklists.md
+      description: "Extended OWASP gaming checklists"
+    - id: gaming-security-patterns
+      file: knowledge/gaming-security-patterns.md
+      description: "Security patterns specific to gaming"
+    - id: data-protection-gaming
+      file: knowledge/data-protection-gaming.md
+      description: "Data protection for gaming (COPPA, minors)"
+
+# Integration with Harmony
+harmony_integration:
+  triggers:
+    - "pentest"
+    - "security audit"
+    - "vulnerability"
+    - "OWASP"
+    - "penetration test"
+    - "RGPD"
+    - "GDPR"
+    - "data protection"
+    - "compliance"
+
+  phases:
+    - phase: 3  # Solutioning
+      role: "Security architecture review"
+    - phase: 4  # Implementation
+      role: "Security testing and validation"
+
+  # Note: This specialty is self-contained
+  # Agents load their own modules and knowledge as needed
+
+# Statistics
+stats:
+  agents: 3
+  modules: 15
+  knowledge_files: 10
+  total_files: 29
+
+# Usage
+usage:
+  invoke: "/harmony:specialty:security"
+  direct_agents:
+    - "/harmony:agent:pentest"
+    - "/harmony:agent:security"
+    - "/harmony:agent:rgpd"
+
+  examples:
+    - "Perform OWASP Top 10 assessment"
+    - "Test API authentication security"
+    - "Audit network infrastructure"
+    - "Review cryptographic implementation"
+    - "Check RGPD compliance for user data"
+    - "Analyze gaming platform security"

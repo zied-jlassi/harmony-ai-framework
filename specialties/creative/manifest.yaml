@@ -1,0 +1,86 @@
+# Creative Specialty Pack
+# Domain expertise for ideation, design thinking, UX, and innovation
+# Migrated from BMAD CIS Suite - 2026-01-01
+
+specialty:
+  id: creative
+  name: "Creative"
+  version: "1.0.0"
+  description: "Ideation, design thinking, UX writing, visual documentation, innovation scouting"
+  last_updated: "2026-01-01"
+
+# Agents included in this specialty
+agents:
+  - id: brainstorm-facilitator
+    file: agents/brainstorm-facilitator.md
+    description: "Brainstorming expert - SCAMPER, 6 Hats, Crazy-8, ideation techniques"
+
+  - id: visual-documenter
+    file: agents/visual-documenter.md
+    description: "Visual documentation expert - Mermaid diagrams, ADRs, presentations"
+
+  - id: problem-solver
+    file: agents/problem-solver.md
+    description: "Root cause analysis expert - 5-Whys, Fishbone, fault trees, debugging"
+
+  - id: design-thinking-lead
+    file: agents/design-thinking-lead.md
+    description: "Design thinking expert - Personas, empathy maps, HMW, usability tests"
+
+  - id: ux-storyteller
+    file: agents/ux-storyteller.md
+    description: "UX writing expert - Microcopy, journey maps, narrative, story arcs"
+
+  - id: innovation-scout
+    file: agents/innovation-scout.md
+    description: "Innovation expert - Tech trends, competitive analysis, feasibility studies"
+
+# Integration with Harmony
+harmony_integration:
+  triggers:
+    - "brainstorm"
+    - "ideation"
+    - "design thinking"
+    - "diagram"
+    - "presentation"
+    - "problem solving"
+    - "root cause"
+    - "persona"
+    - "UX"
+    - "innovation"
+    - "trends"
+
+  phases:
+    - phase: 1  # Analysis
+      role: "Problem definition and ideation"
+    - phase: 2  # Planning
+      role: "User research and design"
+    - phase: 3  # Solutioning
+      role: "Visual documentation and presentations"
+
+  # Note: This specialty is self-contained
+  # Agents load their own techniques and patterns as needed
+
+# Statistics
+stats:
+  agents: 6
+  total_files: 7
+
+# Usage
+usage:
+  invoke: "/harmony:specialty:creative"
+  direct_agents:
+    - "/harmony:agent:brainstorm-facilitator"
+    - "/harmony:agent:visual-documenter"
+    - "/harmony:agent:problem-solver"
+    - "/harmony:agent:design-thinking-lead"
+    - "/harmony:agent:ux-storyteller"
+    - "/harmony:agent:innovation-scout"
+
+  examples:
+    - "Run a brainstorming session with SCAMPER"
+    - "Create architecture diagrams with Mermaid"
+    - "Apply 5-Whys root cause analysis"
+    - "Create user personas for the product"
+    - "Write engaging microcopy for children"
+    - "Analyze EdTech trends and competitors"

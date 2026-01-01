@@ -21,7 +21,7 @@ Before starting this workflow, verify:
 ### Mode Detection
 
 - [ ] Execution mode correctly determined:
-  - [ ] BMad-Integrated Mode (story_file variable set) OR
+  - [ ] Harmony-Integrated Mode (story_file variable set) OR
   - [ ] Standalone Mode (target_feature or target_files set) OR
   - [ ] Auto-discover Mode (no targets specified)
 
@@ -64,7 +64,7 @@ Before starting this workflow, verify:
 
 ### Target Determination
 
-**BMad-Integrated Mode (if story available):**
+**Harmony-Integrated Mode (if story available):**
 
 - [ ] Acceptance criteria mapped to test scenarios
 - [ ] Features implemented in story identified
@@ -336,7 +336,7 @@ Before starting this workflow, verify:
 ### Automation Summary Document
 
 - [ ] Output file created at `{output_summary}`
-- [ ] Document includes execution mode (BMad-Integrated, Standalone, Auto-discover)
+- [ ] Document includes execution mode (Harmony-Integrated, Standalone, Auto-discover)
 - [ ] Feature analysis included (source files, coverage gaps) - Standalone mode
 - [ ] Tests created listed (E2E, API, Component, Unit) with counts and paths
 - [ ] Infrastructure created listed (fixtures, factories, helpers)
@@ -438,7 +438,7 @@ Before starting this workflow, verify:
 
 All of the following must be true before marking this workflow as complete:
 
-- [ ] **Execution mode determined** (BMad-Integrated, Standalone, or Auto-discover)
+- [ ] **Execution mode determined** (Harmony-Integrated, Standalone, or Auto-discover)
 - [ ] **Framework configuration loaded** and validated
 - [ ] **Coverage analysis completed** (gaps identified if analyze_coverage true)
 - [ ] **Automation targets identified** (what needs testing)
@@ -488,7 +488,7 @@ All of the following must be true before marking this workflow as complete:
 **Resolution:**
 
 - **HALT workflow** - framework is required
-- Message: "Framework scaffolding required. Run `bmad tea *framework` first."
+- Message: "Framework scaffolding required. Run `harmony tea *framework` first."
 - User must run framework workflow before automate
 
 ### Issue: No automation targets identified

@@ -699,7 +699,7 @@ Cet agent est appelé automatiquement par `/bmad:security` lors de:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.bmad/bmm/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -746,10 +746,10 @@ Cet agent est appelé automatiquement par `/bmad:security` lors de:
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Audit RGPD complété | `.bmad/memory/rgpd-audits.json` | "⚖️ Audit: {scope}" |
-| Risque identifié | `.bmad/memory/rgpd-risks.json` | "⚠️ Risque: {description}" |
+| Audit RGPD complété | `.harmony/memory/rgpd-audits.json` | "⚖️ Audit: {scope}" |
+| Risque identifié | `.harmony/memory/rgpd-risks.json` | "⚠️ Risque: {description}" |
 | DPIA créée | `docs/rgpd/dpia/` | "📋 DPIA: {traitement}" |
-| Non-conformité | `.bmad/memory/rgpd-issues.json` | "🔴 Non-conforme: {description}" |
+| Non-conformité | `.harmony/memory/rgpd-issues.json` | "🔴 Non-conforme: {description}" |
 
 ### Plan Update Protocol
 

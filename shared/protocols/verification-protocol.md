@@ -302,7 +302,7 @@ Chaque agent DOIT inclure:
 ```markdown
 ## Verification Protocol
 
-> **Reference**: `.bmad/bmm/shared/verification-protocol.md`
+> **Reference**: `.harmony/shared/verification-protocol.md`
 > **Status**: OBLIGATOIRE
 
 ### Avant de dire "termine"

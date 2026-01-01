@@ -251,10 +251,10 @@ Un projet peut activer plusieurs specialties ET plusieurs profiles:
 ```yaml
 # .harmony/project.yaml
 project:
-  name: edu-gaming
+  name: fashion-store
   specialties:
-    - gaming       # Mecaniques de jeu
-    - education    # Contenu pedagogique
+    - e-commerce   # Vente en ligne
+    - fashion      # Mode et tendances
   profiles:
     - nestjs       # Backend (+ typescript, nodejs, javascript)
     - angular      # Frontend (+ typescript)

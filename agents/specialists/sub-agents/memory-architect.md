@@ -144,7 +144,7 @@ memory.add(
     messages=[{"role": "user", "content": "..."}],
     user_id="zoe",
     agent_id="dev",
-    metadata={"project": "edu-gaming", "story": "STORY-042"}
+    metadata={"project": "fashion-store", "story": "STORY-042"}
 )
 
 # Retrieve relevant memories
@@ -179,7 +179,7 @@ memories = memory.search(
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │  SYSTEM PROMPT: 2-5K tokens                              │   │
 │  │  ├── Agent persona                                       │   │
-│  │  ├── Core rules (HQVF, BMAD workflow)                    │   │
+│  │  ├── Core rules (HQVF, Harmony workflow)                    │   │
 │  │  └── Current context (project, story)                    │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                                                                  │
@@ -261,7 +261,7 @@ def deduplicate_memories(memories, threshold=0.85):
 │  Core Memory (Always in context)                                │
 │  ├── User facts: "Zoe is intermediate developer"               │
 │  ├── Preferences: "French communication, minimal emojis"       │
-│  └── Project context: "edu-gaming, BMAD workflow"              │
+│  └── Project context: "fashion-store, agile workflow"          │
 │                                                                  │
 │  Recall Memory (Retrieved on demand)                            │
 │  ├── Previous decisions                                         │
@@ -306,10 +306,10 @@ def deduplicate_memories(memories, threshold=0.85):
 // Create entities (facts about users, projects)
 mcp__memory__create_entities({
   entities: [{
-    name: "edu-gaming-project",
+    name: "ecommerce-project",
     entityType: "project",
     observations: [
-      "Uses BMAD workflow",
+      "Uses agile workflow",
       "Follows HQVF quality rules",
       "Docker-based development"
     ]
@@ -319,8 +319,8 @@ mcp__memory__create_entities({
 // Create relations
 mcp__memory__create_relations({
   relations: [{
-    from: "Zoe",
-    to: "edu-gaming-project",
+    from: "Alex",
+    to: "ecommerce-project",
     relationType: "works_on"
   }]
 });
@@ -345,7 +345,7 @@ M-004:
     patterns_learned: "docs/learning/patterns/"
     errors_resolved: "docs/operations/issues/"
     decisions_made: "docs/decisions/"
-    agent_improvements: ".bmad/memory/"
+    agent_improvements: ".harmony/memory/"
 
   commit_format: "learn(scope): brief description"
 

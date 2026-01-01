@@ -11,6 +11,10 @@ specialty:
 
 # Agents included in this specialty
 agents:
+  - id: game-architect
+    file: agents/game-architect.md
+    description: "Game architecture, ECS patterns, state machines, networking"
+
   - id: game-designer
     file: agents/game-designer.md
     persona: "Marcus"

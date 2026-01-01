@@ -400,7 +400,7 @@ graphrag:
 
   extraction:
     entity_types:
-      - AGENT        # BMAD agents
+      - AGENT        # Harmony agents
       - WORKFLOW     # Workflows and tasks
       - STORY        # User stories
       - COMPONENT    # Code components

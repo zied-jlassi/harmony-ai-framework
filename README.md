@@ -380,7 +380,7 @@ Harmony was born from real problems in production projects.
 
 ### The Genesis Story
 
-In December 2024, on the edu-gaming project, we observed:
+In December 2024, on a complex e-commerce project, we observed:
 - **45 recurring bugs** - The same bug kept coming back session after session
 - **Dev/Test/QA gap** - DEV writes 100 lines, TEA tests 5%, User sees 55%
 - **Context switching chaos** - Wrong agent activated, time wasted

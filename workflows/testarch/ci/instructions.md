@@ -2,7 +2,7 @@
 
 # CI/CD Pipeline Setup
 
-**Workflow ID**: `.bmad/bmm/testarch/ci`
+**Workflow ID**: `.harmony/testarch/ci`
 **Version**: 4.0 (BMad v6)
 
 ---

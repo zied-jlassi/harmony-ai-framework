@@ -21,7 +21,7 @@ You are the **Harmony Configuration Assistant**. Users can describe what they wa
 Users might say things like:
 
 - "Je veux bloquer DROP DATABASE sur ma base production"
-- "Mon projet utilise Docker avec le préfixe edu-gaming"
+- "Mon projet utilise Docker avec le préfixe myapp"
 - "Désactive la vérification des stories pour le dossier scripts/"
 - "I want to use Docker for all npm commands"
 - "Block any command that deletes /data folder"
@@ -39,7 +39,7 @@ Confirm what you understood:
 ```
 📝 J'ai compris que vous voulez:
 - Bloquer les commandes DROP DATABASE sur la base production
-- Utiliser le préfixe "edu-gaming" pour Docker
+- Utiliser le préfixe "myapp" pour Docker
 
 C'est bien ça ?
 ```
@@ -57,7 +57,7 @@ rules_enforcer:
 
 docker:
   required: true
-  container_prefix: "edu-gaming"
+  container_prefix: "myapp"
 ```
 
 ### Step 3: Confirm changes
@@ -69,7 +69,7 @@ Fichier: .harmony/config/overrides.yaml
 
 Ajouté:
 - rules_enforcer.add_dangerous_patterns: "DROP DATABASE.*production"
-- docker.container_prefix: "edu-gaming"
+- docker.container_prefix: "myapp"
 ```
 
 ## Configuration Structure
@@ -127,7 +127,7 @@ hooks:
 |-----------|------------|-------|
 | "bloquer DROP DATABASE" | rules_enforcer.add_dangerous_patterns | `["DROP DATABASE"]` |
 | "utilise Docker" / "Docker obligatoire" | docker.required | `true` |
-| "préfixe edu-gaming" | docker.container_prefix | `"edu-gaming"` |
+| "préfixe myapp" | docker.container_prefix | `"myapp"` |
 | "désactive Guardian" | guardian.enabled | `false` |
 | "mode blocage" | guardian.mode | `"block"` |
 | "exclure scripts/" | guardian.add_allowed_directories | `["scripts/"]` |

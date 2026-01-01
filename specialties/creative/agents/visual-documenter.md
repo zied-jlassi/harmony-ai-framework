@@ -444,7 +444,7 @@ SLIDE 6: RESSOURCES
 📚 Documentation:
 ├── /docs/architecture/
 ├── /docs/games/
-└── /.bmad/patterns/
+└── /.harmony/patterns/
 
 🤖 Agents BMAD:
 ├── DEV Agent - Implémentation
@@ -505,7 +505,7 @@ curl http://localhost:3001/health  # Should return 200
 
 ## 📚 Lectures Obligatoires
 
-1. `/.bmad/patterns/architecture-patterns.md`
+1. `/.harmony/patterns/architecture-patterns.md`
 2. `/docs/games/prd/game-design.md`
 3. `/CLAUDE.md` (instructions projet)
 
@@ -540,7 +540,7 @@ Emojis par domaine:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.bmad/bmm/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)

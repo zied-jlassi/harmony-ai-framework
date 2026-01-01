@@ -257,7 +257,7 @@ Exécuter directement l'action correspondante sans afficher le menu.
 ### Pré-requis (Automatique)
 
 Avant toute action, charger automatiquement:
-1. `.bmad/project-context.md` - Standards et conventions
+1. `.harmony/project-context.md` - Standards et conventions
 
 ---
 
@@ -755,7 +755,7 @@ L'option **4 (RGPD check)** appelle automatiquement l'agent `/bmad:rgpd` (Claire
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.bmad/bmm/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -805,10 +805,10 @@ L'option **4 (RGPD check)** appelle automatiquement l'agent `/bmad:rgpd` (Claire
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Vulnérabilité trouvée | `.bmad/memory/vulnerabilities.json` | "🔒 Vuln: {OWASP-XX}" |
-| Audit complété | `.bmad/memory/security-audits.json` | "📝 Audit: {scope}" |
-| Pattern sécurisé | `.bmad/memory/secure-patterns.json` | "✅ Secure pattern: {name}" |
-| CVE identifié | `.bmad/memory/cve-tracking.json` | "⚠️ CVE: {id}" |
+| Vulnérabilité trouvée | `.harmony/memory/vulnerabilities.json` | "🔒 Vuln: {OWASP-XX}" |
+| Audit complété | `.harmony/memory/security-audits.json` | "📝 Audit: {scope}" |
+| Pattern sécurisé | `.harmony/memory/secure-patterns.json` | "✅ Secure pattern: {name}" |
+| CVE identifié | `.harmony/memory/cve-tracking.json` | "⚠️ CVE: {id}" |
 
 ### Plan Update Protocol
 

@@ -281,7 +281,7 @@ Chaque agent DOIT inclure cette section:
 ```markdown
 ## Plan Update Protocol
 
-> **Reference**: `.bmad/bmm/shared/plan-update-protocol.md`
+> **Reference**: `.harmony/shared/plan-update-protocol.md`
 > **Status**: OBLIGATOIRE
 
 ### Workflow

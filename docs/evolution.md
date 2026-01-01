@@ -20,7 +20,7 @@
 
 ### Le Problème Initial
 
-Dans le projet edu-gaming, nous avons constaté des problèmes récurrents:
+Dans un projet e-commerce complexe, nous avons constaté des problèmes récurrents:
 
 1. **Erreurs répétées** - Le même bug revenait session après session
 2. **Confusion d'agents** - Mauvais agent activé pour la tâche

@@ -11,148 +11,168 @@ They ensure consistency, quality, and proper handoffs between agents.
 
 ---
 
-## Available Workflows
+## Phase Overview with UCV Integration
 
-| Workflow | Purpose | Key Agents |
-|----------|---------|------------|
-| `discovery.md` | Phase 1: Understand the problem | Analyst |
-| `planning.md` | Phase 2: Define requirements | Analyst, SM |
-| `solutioning.md` | Phase 3: Design the solution | Architect, Nova |
-| `implementation.md` | Phase 4: Build the solution | Developer, Tester |
-| `release.md` | Phase 5: Deploy and review | Developer, SM |
-| `rex.md` | Retrospective workflow | SM, All |
-| `story-lifecycle.md` | Story creation to completion | SM, Developer, Tester |
-| `ucv-lifecycle.md` | UCV creation to validation | Clara, Victor |
-| `incident.md` | Error handling and learning | Sentinel |
-| `bug-fix.md` | Bug reproduction and fixing | Developer |
-| `handoff.md` | Session continuity | Any |
+```
+WORKFLOW PHASES WITH UCV INTEGRATION
+
+Phase 1: ANALYSIS
+├── product-brief/          → Product Brief
+└── research/               → Domain Research
+
+Phase 2: PLANNING
+├── prd/                    → PRD Document
+└── ux-design/              → UX Design
+
+Phase 3: SOLUTIONING
+├── architecture/           → Architecture Document
+├── epics-stories/          → Epics & Stories
+│   └── ⭐ UCV GENERATION   → UCV Writer (Clara) generates UCVs
+│                            → User APPROVES before dev starts
+└── readiness/              → Implementation Readiness Check
+
+Phase 4: IMPLEMENTATION
+├── sprint-planning/        → Sprint Planning
+├── create-story/           → Story Creation from Epic
+│   └── ⭐ UCV CHECK        → Story must have approved UCVs
+├── dev-story/              → Story Development
+│   └── ⭐ DEV MARKS UCVs   → Developer marks UCV checkboxes
+├── code-review/            → Code Review
+└── retrospective/          → Sprint Retrospective
+
+Phase 5: VALIDATION (UCV-Driven)
+├── testarch/               → Test Architecture
+│   └── ⭐ TEA TESTS UCVs   → Tester writes tests per UCV
+└── ucv-lifecycle.md        → UCV Validation
+    └── ⭐ UCV VALIDATOR    → Victor validates 100% coverage
+```
 
 ---
 
-## Workflow Structure
+## UCV Workflow (HQVF)
+
+> **HQVF** = Harmony Quality Verification Framework
+> UCVs (Use Case Verifiables) ensure complete requirements coverage
+
+```
+UCV LIFECYCLE
+
+1. STORY CREATED (SM)
+   └── Story without UCVs = NOT READY
+
+2. UCV GENERATION (Clara - UCV Writer)
+   └── /harmony ucv STORY-XXX
+   └── Generates: STORY-XXX-UCV.md
+
+3. USER APPROVAL (GATE)
+   └── User reviews UCVs
+   └── Approves or requests changes
+   └── Story status: READY only after approval
+
+4. DEVELOPMENT (DEV)
+   └── Developer implements
+   └── Marks checkboxes: [x] DEV for each UCV
+
+5. TESTING (TEA)
+   └── Writes tests per UCV
+   └── Marks checkboxes: [x] TEST for each UCV
+
+6. QA VALIDATION (Luna)
+   └── Exploratory testing
+   └── Marks checkboxes: [x] QA for each UCV
+
+7. FINAL VALIDATION (Victor - UCV Validator)
+   └── /harmony ucv-validate STORY-XXX
+   └── Checks 100% coverage: DEV + TEST + QA
+   └── Story status: DONE only if 100%
+```
+
+---
+
+## Detailed Structure
 
 ```
 workflows/
-├── README.md            # This file
-├── discovery.md         # Phase 1 workflow
-├── planning.md          # Phase 2 workflow
-├── solutioning.md       # Phase 3 workflow
-├── implementation.md    # Phase 4 workflow
-├── release.md           # Phase 5 workflow
-├── rex.md               # Retrospective (REX)
-├── story-lifecycle.md   # Full story lifecycle
-├── ucv-lifecycle.md     # UCV lifecycle
-├── incident.md          # Incident handling
-├── bug-fix.md           # Bug reproduction and fixing
-└── handoff.md           # Session handoff
+├── README.md                    # This file
+│
+├── # High-Level Phase Workflows
+├── discovery.md                 # Phase 1 overview
+├── planning.md                  # Phase 2 overview
+├── solutioning.md               # Phase 3 overview
+├── implementation.md            # Phase 4 overview
+├── release.md                   # Phase 5 overview
+│
+├── # UCV Workflows
+├── ucv-lifecycle.md             # Complete UCV lifecycle
+│
+├── # Detailed Phase Workflows
+├── 1-analysis/
+│   ├── product-brief/
+│   └── research/
+├── 2-planning/
+│   ├── prd/
+│   └── ux-design/
+├── 3-solutioning/
+│   ├── architecture/
+│   ├── epics-stories/           # ← UCV Generation here
+│   └── readiness/
+├── 4-implementation/
+│   ├── sprint-planning/
+│   ├── create-story/            # ← UCV Check required
+│   ├── dev-story/               # ← DEV marks UCVs
+│   ├── code-review/
+│   └── retrospective/
+│
+├── # Test Workflows (UCV-Driven)
+├── testarch/
+│   ├── atdd/                    # ← TEST marks UCVs
+│   ├── test-design/
+│   └── ...
+│
+├── # Core Workflows
+├── core/
+│   ├── brainstorming/
+│   └── party-mode/
+│
+├── # Utility Workflows
+├── diagrams/
+├── quick-flow/
+├── document-project/
+├── generate-project-context/
+└── workflow-status/
 ```
 
 ---
 
-## Workflow Format
+## Key Workflows
 
-Each workflow defines:
-- Trigger conditions
-- Steps with agents
-- Success criteria
-- Error handling
-- Outputs
-
-```yaml
-workflow:
-  id: WF-001
-  name: "Workflow Name"
-  trigger: "condition or command"
-
-steps:
-  - step: 1
-    name: "Step Name"
-    agent: agent_name
-    inputs: []
-    outputs: []
-    success_criteria: []
-
-transitions:
-  - from: step_1
-    to: step_2
-    condition: "success_criteria_met"
-
-error_handling:
-  on_failure: "action"
-  retry: 3
-```
+| Workflow | Purpose | Key Agents |
+|----------|---------|------------|
+| `ucv-lifecycle.md` | UCV creation to validation | Clara, Victor |
+| `story-lifecycle.md` | Story creation to completion | SM, DEV, TEA |
+| `dev-story/` | Story development with UCV marking | Developer |
+| `testarch/atdd/` | Test per UCV | Tester |
 
 ---
 
-## Phase Workflows
+## UCV Integration Points
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    PHASE WORKFLOW OVERVIEW                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Phase 1: DISCOVERY                                             │
-│  └── discovery.md                                               │
-│      ├── Stakeholder interviews                                 │
-│      ├── Problem analysis                                       │
-│      └── Output: Product Brief                                  │
-│                                                                  │
-│  Phase 2: PLANNING                                              │
-│  └── planning.md                                                │
-│      ├── Requirements elicitation                               │
-│      ├── PRD creation                                           │
-│      └── Output: PRD, Roadmap                                   │
-│                                                                  │
-│  Phase 3: SOLUTIONING                                           │
-│  └── solutioning.md                                             │
-│      ├── Architecture design                                    │
-│      ├── ADRs                                                   │
-│      ├── Epic/Story creation                                    │
-│      └── Output: Architecture, Stories                          │
-│                                                                  │
-│  Phase 4: IMPLEMENTATION                                        │
-│  └── implementation.md                                          │
-│      ├── Story execution                                        │
-│      ├── Testing                                                │
-│      ├── UCV validation                                         │
-│      └── Output: Working code                                   │
-│                                                                  │
-│  Phase 5: RELEASE                                               │
-│  └── release.md                                                 │
-│      ├── Deployment                                             │
-│      ├── Monitoring                                             │
-│      ├── Retrospective                                          │
-│      └── Output: Released product, REX                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Running Workflows
-
-### Manual Invocation
-
-```bash
-# Start a workflow
-"run discovery workflow"
-"execute implementation workflow for STORY-042"
-"run retrospective for Sprint 5"
-```
-
-### Automatic Triggers
-
-Workflows can be triggered automatically:
-- Phase change
-- Story status change
-- Error threshold reached
-- Session handoff needed
+| Phase | Workflow | UCV Action |
+|-------|----------|------------|
+| 3 | epics-stories | Clara generates UCVs |
+| 3 | readiness | Check UCVs approved |
+| 4 | create-story | Verify UCV exists |
+| 4 | dev-story | DEV marks UCVs |
+| 4 | testarch/atdd | TEST writes tests per UCV |
+| 4 | (Luna QA) | QA marks UCVs |
+| 4 | (validation) | Victor validates 100% |
 
 ---
 
 ## Related
 
-- [Agents](../agents/)
-- [Templates](../templates/)
-- [Rules](../rules/)
-
+- [UCV Template](../templates/ucv.md)
+- [UCV Writer Agent](../agents/specialists/sub-agents/ucv-writer.md)
+- [UCV Validator Agent](../agents/specialists/sub-agents/ucv-validator.md)
+- [UCV Gate Rule](../rules/R-002-ucv-approval.yaml)
+- [UCV Pattern](../patterns/P-008-ucv-gate.md)

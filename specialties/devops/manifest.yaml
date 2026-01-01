@@ -1,0 +1,47 @@
+# DevOps Specialty Pack
+# Infrastructure, CI/CD, and deployment expertise
+
+specialty:
+  id: devops
+  name: "DevOps"
+  version: "1.0.0"
+  description: "Infrastructure automation, CI/CD pipelines, container orchestration, deployment strategies"
+
+# Agents included in this specialty
+agents:
+  - id: devops
+    file: agents/devops.md
+    description: "DevOps engineer for Docker, CI/CD, and deployment automation"
+
+  - id: builder
+    file: agents/builder.md
+    description: "Build automation, packaging, and artifact management"
+
+# Knowledge sources
+knowledge:
+  topics:
+    - docker           # Container orchestration
+    - kubernetes       # K8s deployment
+    - ci-cd            # Continuous integration/deployment
+    - github-actions   # GitHub workflows
+    - terraform        # Infrastructure as code
+    - ansible          # Configuration management
+    - monitoring       # Observability, logging
+    - secrets          # Secret management
+
+  sources:
+    - url: "https://docs.docker.com/"
+      priority: 1
+    - url: "https://kubernetes.io/docs/"
+      priority: 2
+    - url: "https://docs.github.com/en/actions"
+      priority: 3
+
+# Patterns
+patterns:
+  - id: docker-compose
+    description: "Multi-service Docker Compose patterns"
+  - id: ci-pipeline
+    description: "CI/CD pipeline best practices"
+  - id: gitops
+    description: "GitOps deployment workflow"

@@ -517,7 +517,7 @@ Top blockers requiring immediate attention:
 
 3. **Re-Run Gate After Fixes**
    - Re-run full test suite after fixes
-   - Re-run `bmad tea *trace` workflow
+   - Re-run `harmony tea *trace` workflow
    - Verify decision is PASS before deploying
 
 ---

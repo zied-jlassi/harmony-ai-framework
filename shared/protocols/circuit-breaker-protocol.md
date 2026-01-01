@@ -20,7 +20,7 @@
 │                                                                  │
 │  AVANT CHAQUE OPERATION CRITIQUE:                               │
 │                                                                  │
-│  1. Verifier .bmad/memory/circuit-breaker.json                  │
+│  1. Verifier .harmony/memory/circuit-breaker.json                  │
 │     └─ Si state = "OPEN" → STOP + Demander reset                │
 │     └─ Si state = "CLOSED" → Continuer                          │
 │                                                                  │
@@ -73,7 +73,7 @@ Ajouter dans la section "Pre-execution checks" de chaque agent:
 ```markdown
 ### Circuit Breaker Check
 
-1. Lire `.bmad/memory/circuit-breaker.json`
+1. Lire `.harmony/memory/circuit-breaker.json`
 2. Si `state === "OPEN"`:
    - Afficher erreurs recentes depuis `history`
    - Demander diagnostic et correction

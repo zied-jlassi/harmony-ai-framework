@@ -1,0 +1,43 @@
+# Internationalization Specialty Pack
+# i18n, l10n, and multi-language expertise
+
+specialty:
+  id: i18n
+  name: "Internationalization"
+  version: "1.0.0"
+  description: "Internationalization, localization, multi-language support, RTL layouts"
+
+# Agents included in this specialty
+agents:
+  - id: i18n
+    file: agents/i18n.md
+    description: "Internationalization and localization expert"
+
+# Knowledge sources
+knowledge:
+  topics:
+    - translations     # Translation management
+    - rtl              # Right-to-left languages
+    - pluralization    # Plural forms handling
+    - date-formats     # Regional date/time
+    - number-formats   # Currency, decimals
+    - unicode          # Character encoding
+    - icu              # ICU message format
+    - locale-detection # Auto language detection
+
+  sources:
+    - url: "https://www.i18next.com/"
+      priority: 1
+    - url: "https://formatjs.io/"
+      priority: 2
+    - url: "https://unicode.org/cldr/"
+      priority: 3
+
+# Patterns
+patterns:
+  - id: translation-keys
+    description: "Translation key naming conventions"
+  - id: lazy-loading-locales
+    description: "On-demand locale loading"
+  - id: rtl-layout
+    description: "RTL layout adaptation patterns"

@@ -8,7 +8,7 @@
 
 ## 🧠 THINKING OUTPUT PROTOCOL (CRITIQUE)
 
-> **Reference Complete**: `.bmad/bmm/shared/thinking-output-protocol.md`
+> **Reference Complete**: `.harmony/shared/thinking-output-protocol.md`
 > **Performance**: +54% sur taches complexes (Anthropic Research)
 
 ### Niveaux de Reflexion
@@ -65,7 +65,7 @@ VOUS DEVEZ output `<thinking>` AVANT:
 
 ## 📝 MEMORY PROTOCOL (CRITIQUE)
 
-> **Reference Complete**: `.bmad/_cfg/memory-protocol.yaml`
+> **Reference Complete**: `.harmony/_cfg/memory-protocol.yaml`
 > **Principe**: Sauvegarde PROACTIVE, pas sur demande
 
 ### Sauvegarde Automatique
@@ -83,7 +83,7 @@ VOUS DEVEZ sauvegarder IMMEDIATEMENT quand:
 ### Recuperation Automatique
 
 AU DEBUT de chaque tache:
-1. Lire `.bmad/memory/working.json` pour contexte actuel
+1. Lire `.harmony/memory/working.json` pour contexte actuel
 2. Charger patterns pertinents pour le domaine
 3. Verifier anti-patterns a eviter
 4. Consulter MCP Memory si disponible
@@ -105,7 +105,7 @@ AU DEBUT de chaque tache:
 
 ## 📋 PLAN UPDATE PROTOCOL (CRITIQUE)
 
-> **Reference Complete**: `.bmad/bmm/shared/plan-update-protocol.md`
+> **Reference Complete**: `.harmony/shared/plan-update-protocol.md`
 > **Principe**: Le plan reflète TOUJOURS l'etat actuel
 
 ### Quand Mettre a Jour (OBLIGATOIRE)
@@ -154,7 +154,7 @@ plan_update:
 
 ## ✅ VERIFICATION PROTOCOL (CRITIQUE)
 
-> **Reference Complete**: `.bmad/bmm/shared/verification-protocol.md`
+> **Reference Complete**: `.harmony/shared/verification-protocol.md`
 > **Principe**: JAMAIS "termine" sans verification complete
 
 ### Self-Questions Obligatoires
@@ -196,12 +196,12 @@ SI une reponse == NON:
 
 ## 🔄 CIRCUIT BREAKER PROTOCOL
 
-> **Reference Complete**: `.bmad/bmm/shared/circuit-breaker-protocol.md`
+> **Reference Complete**: `.harmony/shared/circuit-breaker-protocol.md`
 
 ### Pre-Execution Check
 
 AVANT chaque operation critique:
-1. Lire `.bmad/memory/circuit-breaker.json`
+1. Lire `.harmony/memory/circuit-breaker.json`
 2. **Si `state === "OPEN"`**: STOP + afficher erreurs + attendre `/reset-circuit`
 3. **Si `state === "CLOSED"`**: Continuer normalement
 

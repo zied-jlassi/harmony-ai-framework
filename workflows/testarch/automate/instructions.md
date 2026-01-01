@@ -2,7 +2,7 @@
 
 # Test Automation Expansion
 
-**Workflow ID**: `.bmad/bmm/testarch/automate`
+**Workflow ID**: `.harmony/testarch/automate`
 **Version**: 4.0 (BMad v6)
 
 ---
@@ -11,7 +11,7 @@
 
 Expands test automation coverage by generating comprehensive test suites at appropriate levels (E2E, API, Component, Unit) with supporting infrastructure. This workflow operates in **dual mode**:
 
-1. **BMad-Integrated Mode**: Works WITH BMad artifacts (story, tech-spec, PRD, test-design) to expand coverage after story implementation
+1. **Harmony-Integrated Mode**: Works WITH BMad artifacts (story, tech-spec, PRD, test-design) to expand coverage after story implementation
 2. **Standalone Mode**: Works WITHOUT BMad artifacts - analyzes existing codebase and generates tests independently
 
 **Core Principle**: Generate prioritized, deterministic tests that avoid duplicate coverage and follow testing best practices.
@@ -27,7 +27,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 - ✅ Framework scaffolding configured (run `framework` workflow if missing)
 - ✅ Test framework configuration available (playwright.config.ts or cypress.config.ts)
 
-### Optional (BMad-Integrated Mode)
+### Optional (Harmony-Integrated Mode)
 
 - Story markdown with acceptance criteria (enhances coverage targeting)
 - Tech spec or PRD (provides architectural context)
@@ -38,7 +38,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 - Source code to analyze (feature implementation)
 - Existing tests (for gap analysis)
 
-**If framework is missing:** HALT with message: "Framework scaffolding required. Run `bmad tea *framework` first."
+**If framework is missing:** HALT with message: "Framework scaffolding required. Run `harmony tea *framework` first."
 
 ---
 
@@ -49,13 +49,13 @@ Expands test automation coverage by generating comprehensive test suites at appr
 1. **Detect Execution Mode**
 
    Check if BMad artifacts are available:
-   - If `{story_file}` variable is set → BMad-Integrated Mode
+   - If `{story_file}` variable is set → Harmony-Integrated Mode
    - If `{target_feature}` or `{target_files}` set → Standalone Mode
    - If neither set → Auto-discover mode (scan codebase for features needing tests)
 
 2. **Load BMad Artifacts (If Available)**
 
-   **BMad-Integrated Mode:**
+   **Harmony-Integrated Mode:**
    - Read story markdown from `{story_file}`
    - Extract acceptance criteria and technical requirements
    - Load tech-spec.md if `{use_tech_spec}` is true
@@ -87,7 +87,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
 6. **Load Knowledge Base Fragments**
 
-   **Critical:** Consult `{project-root}/.bmad/bmm/testarch/tea-index.csv` to load:
+   **Critical:** Consult `{project-root}/.harmony/testarch/tea-index.csv` to load:
 
    **Core Testing Patterns (Always load):**
    - `test-levels-framework.md` - Test level selection (E2E vs API vs Component vs Unit with decision matrix, 467 lines, 4 examples)
@@ -127,7 +127,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
 1. **Determine What Needs Testing**
 
-   **BMad-Integrated Mode (story available):**
+   **Harmony-Integrated Mode (story available):**
    - Map acceptance criteria from story to test scenarios
    - Identify features implemented in this story
    - Check if story has existing ATDD tests (from `*atdd` workflow)
@@ -873,7 +873,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
    Save to `{output_summary}` with:
 
-   **BMad-Integrated Mode:**
+   **Harmony-Integrated Mode:**
 
    ````markdown
    # Automation Summary - {feature_name}
@@ -962,7 +962,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
    ## Next Steps
    1. Review generated tests with team
    2. Run tests in CI pipeline: `npm run test:e2e`
-   3. Integrate with quality gate: `bmad tea *gate`
+   3. Integrate with quality gate: `harmony tea *gate`
    4. Monitor for flaky tests in burn-in loop
 
    ````
@@ -996,7 +996,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
    ## Tests Created
 
-   {Same structure as BMad-Integrated Mode}
+   {Same structure as Harmony-Integrated Mode}
 
    ## Recommendations
 
@@ -1016,7 +1016,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
    ## Definition of Done
 
-   {Same checklist as BMad-Integrated Mode}
+   {Same checklist as Harmony-Integrated Mode}
    ````
 
 2. **Provide Summary to User**
@@ -1041,7 +1041,7 @@ Expands test automation coverage by generating comprehensive test suites at appr
 
 ### Dual-Mode Operation
 
-**BMad-Integrated Mode** (story available):
+**Harmony-Integrated Mode** (story available):
 
 - Uses story acceptance criteria for coverage targeting
 - Aligns with test-design risk/priority assessment
@@ -1214,7 +1214,7 @@ After completing this workflow, provide a summary:
 ````markdown
 ## Automation Complete
 
-**Mode:** {standalone_mode ? "Standalone" : "BMad-Integrated"}
+**Mode:** {standalone_mode ? "Standalone" : "Harmony-Integrated"}
 **Target:** {story_id || target_feature || "Auto-discovered features"}
 
 **Tests Created:**
@@ -1273,7 +1273,7 @@ npm run test:e2e -- {first_test_file}
 1. Review generated tests with team
 2. Run tests in CI pipeline
 3. Monitor for flaky tests in burn-in loop
-4. Integrate with quality gate: `bmad tea *gate`
+4. Integrate with quality gate: `harmony tea *gate`
 
 **Knowledge Base References Applied:**
 
@@ -1292,7 +1292,7 @@ npm run test:e2e -- {first_test_file}
 
 After completing all steps, verify:
 
-- [ ] Execution mode determined (BMad-Integrated, Standalone, or Auto-discover)
+- [ ] Execution mode determined (Harmony-Integrated, Standalone, or Auto-discover)
 - [ ] BMad artifacts loaded if available (story, tech-spec, test-design, PRD)
 - [ ] Framework configuration loaded
 - [ ] Existing test coverage analyzed (gaps identified)

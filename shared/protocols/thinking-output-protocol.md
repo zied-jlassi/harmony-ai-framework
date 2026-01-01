@@ -328,7 +328,7 @@ Chaque agent DOIT inclure cette section dans son fichier:
 ```markdown
 ## Thinking Output Protocol
 
-> **Reference**: `.bmad/bmm/shared/thinking-output-protocol.md`
+> **Reference**: `.harmony/shared/thinking-output-protocol.md`
 > **Status**: OBLIGATOIRE
 
 ### Declencheurs pour cet agent

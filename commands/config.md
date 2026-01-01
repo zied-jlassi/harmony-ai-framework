@@ -113,7 +113,7 @@ sentinel:
 # Agents
 agents:
   disabled: []                   # Agents to disable
-  aliases: {}                    # e.g., { "qa": "luna" }
+  aliases: {}                    # e.g., { "qa": "exploratory-qa" }
 
 # Hooks
 hooks:
@@ -131,7 +131,7 @@ hooks:
 | "désactive Guardian" | guardian.enabled | `false` |
 | "mode blocage" | guardian.mode | `"block"` |
 | "exclure scripts/" | guardian.add_allowed_directories | `["scripts/"]` |
-| "alias qa = luna" | agents.aliases | `{ "qa": "luna" }` |
+| "alias qa = exploratory-qa" | agents.aliases | `{ "qa": "exploratory-qa" }` |
 | "désactive pentest" | agents.disabled | `["pentest"]` |
 | "5 échecs max" | sentinel.circuit_breaker.max_failures | `5` |
 

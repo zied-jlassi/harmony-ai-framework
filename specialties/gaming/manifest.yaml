@@ -17,37 +17,30 @@ agents:
 
   - id: game-designer
     file: agents/game-designer.md
-    persona: "Marcus"
     description: "Game mechanics, balancing, progression systems, economy design"
 
   - id: game-developer
     file: agents/game-developer.md
-    persona: "Kai"
     description: "Game-specific code patterns, ECS, state machines, physics"
 
   - id: game-sm
     file: agents/game-sm.md
-    persona: "Jordan"
     description: "Scrum Master gaming context (milestones, playtests, releases)"
 
   - id: game-ux
     file: agents/game-ux.md
-    persona: "Maya"
     description: "Game UX/UI, HUD design, feedback loops, player onboarding"
 
   - id: game-sound
     file: agents/game-sound.md
-    persona: "Aria"
     description: "Sound design, music, audio feedback, ambiance, SFX"
 
   - id: game-narrative
     file: agents/game-narrative.md
-    persona: "Theo"
     description: "Story, dialogue, lore, world-building, quests"
 
   - id: game-qa
     file: agents/game-qa.md
-    persona: "Luna-G"
     description: "Game testing, playtest sessions, bug hunting, balancing feedback"
 
 # Domain patterns

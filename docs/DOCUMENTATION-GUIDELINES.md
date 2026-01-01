@@ -45,9 +45,9 @@ project:
 ### Noms de Personnes
 
 Utiliser des prenoms generiques:
-- Alex, Jordan, Sam, Taylor (neutres)
+- Alex, Jordan, Security Agent, Taylor (neutres)
 - Marie, Jean, Pierre (francophones)
-- John, Jane, Bob (anglophones)
+- John, Jane, Scrum Master (anglophones)
 
 ## Raisons
 

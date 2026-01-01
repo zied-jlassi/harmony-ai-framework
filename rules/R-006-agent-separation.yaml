@@ -103,8 +103,8 @@ agents:
       - run_tests
       - design_architecture
 
-  clara:
-    role: "UCV Writer"
+  ucv-writer:
+    role: "UCV Writer 📝"
     can_do:
       - create_ucv
       - write_gherkin
@@ -114,8 +114,8 @@ agents:
       - write_code
       - run_tests
 
-  victor:
-    role: "UCV Validator"
+  ucv-validator:
+    role: "UCV Validator ✅"
     can_do:
       - validate_ucv_coverage
       - check_completion
@@ -125,8 +125,8 @@ agents:
       - write_code
       - modify_story
 
-  luna:
-    role: "Exploratory QA"
+  exploratory-qa:
+    role: "Exploratory QA 🔍"
     can_do:
       - exploratory_testing
       - mark_ucv_qa
@@ -137,8 +137,8 @@ agents:
       - implement_features
       - create_stories
 
-  nova:
-    role: "AI Architecture"
+  ai-architect:
+    role: "AI Architect 🧠"
     can_do:
       - design_ai_systems
       - delegate_to_sub_agents
@@ -187,12 +187,12 @@ routing:
   create_story: sm
   implement_feature: developer
   write_tests: tester
-  create_ucv: clara
-  validate_ucv: victor
-  exploratory_qa: luna
+  create_ucv: ucv-writer
+  validate_ucv: ucv-validator
+  exploratory_qa: exploratory-qa
   design_architecture: architect
   analyze_requirements: analyst
-  ai_design: nova
+  ai_design: ai-architect
 
 # Related
 related:

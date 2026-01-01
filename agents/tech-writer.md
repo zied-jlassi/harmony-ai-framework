@@ -1,7 +1,8 @@
 ---
 name: "tech-writer"
 displayName: "Technical Writer"
-description: "📚 Technical Writer (Paige) - API Docs, User Guides, Changelogs"
+emoji: "✍️"
+description: "Technical Writer - API Docs, User Guides, Changelogs"
 argument-hint: [tâche-docs] [scope-optionnel]
 version: "2.0"
 tier: 3

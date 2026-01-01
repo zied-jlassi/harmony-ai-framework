@@ -283,7 +283,7 @@ export class AuditService {
 |  [ ] Renommage fichiers (UUID)                                  |
 |                                                                  |
 |  LOGGING & MONITORING                                            |
-|  [ ] Winston/Pino configure                                     |
+|  [ ] Architect/Pino configure                                     |
 |  [ ] Pas de secrets dans les logs                               |
 |  [ ] Audit trail pour actions sensibles                         |
 |  [ ] Alertes sur erreurs auth repetees                          |

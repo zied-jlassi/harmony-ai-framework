@@ -27,7 +27,7 @@ Dans un projet e-commerce complexe, nous avons constaté des problèmes récurre
 3. **Qualité incertaine** - "Ça marche" n'était pas vérifiable
 4. **Contexte perdu** - Chaque session repartait de zéro
 
-### Analyse de l'Architecte AI (Nova)
+### Analyse de l'Architecte AI (AI Architect)
 
 **Recherche menée:**
 - 150+ sources 2025 analysées
@@ -132,7 +132,7 @@ use_case:
       description: "Modal visible centrée"
       dev: false   # ☐ DEV marque
       test: false  # ☐ TEA marque
-      qa: false    # ☐ Luna marque
+      qa: false    # ☐ Exploratory QA marque
 ```
 
 **Règle HQVF-7:**
@@ -399,15 +399,15 @@ APRÈS (1 système):
 
 | Persona | Role | Contribution |
 |---------|------|--------------|
-| Nova | AI Architect | Architecture globale, recherche |
-| Clara | UCV Writer | Système HQVF |
-| Victor | UCV Validator | Validation qualité |
-| Luna | QA Explorer | Tests exploratoires |
-| Amelia | Developer | Implémentation |
-| Emma | Tester | Tests automatisés |
-| Bob | Scrum Master | Workflow stories |
-| Mary | Analyst | Requirements |
-| Winston | Architect | Design technique |
+| AI Architect | AI Architect | Architecture globale, recherche |
+| UCV Writer | UCV Writer | Système HQVF |
+| UCV Validator | UCV Validator | Validation qualité |
+| Exploratory QA | QA Explorer | Tests exploratoires |
+| Developer | Developer | Implémentation |
+| Tester | Tester | Tests automatisés |
+| Scrum Master | Scrum Master | Workflow stories |
+| Analyst | Analyst | Requirements |
+| Architect | Architect | Design technique |
 
 ---
 

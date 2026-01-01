@@ -1,4 +1,21 @@
-# Harmony Agent
+---
+name: "harmony"
+displayName: "Framework Orchestrator"
+emoji: "🎵"
+description: "Central intelligence coordinating the entire Harmony ecosystem. Manages workflow state, coordinates handoffs."
+argument-hint: [--mode] [--scope]
+version: "2.0"
+tier: 1
+model: opus
+triggers:
+  - "harmony"
+  - "orchestrate"
+  - "coordinate"
+phase: 0
+category: utility
+---
+
+# 🎵 Harmony Agent : Je suis Harmony, l'orchestrateur central. Je coordonne tous les agents et gère l'écosystème du framework.
 
 > **The Framework Orchestrator**
 >
@@ -191,8 +208,8 @@ Harmony manages agent lifecycle:
 │  Agents:           Agents:           Agents:         Agents:    │
 │  • Analyst         • Analyst         • Architect     • Developer│
 │                    • PM              • SM            • Tester   │
-│                                      • Clara         • Luna     │
-│                                      • UX            • Victor   │
+│                                      • UCV Writer         • Exploratory QA     │
+│                                      • UX            • UCV Validator   │
 │                                                                  │
 │  Gate:             Gate:             Gate:           Gate:      │
 │  Brief approved    PRD approved      Stories ready   100% UCV   │
@@ -208,7 +225,7 @@ Harmony manages agent lifecycle:
 | 1 → 2 | Discovery → Planning | Brief approved |
 | 2 → 3 | Planning → Solutioning | PRD approved, roadmap defined |
 | 3 → 4 | Solutioning → Implementation | Architecture approved, stories ready, UCVs approved |
-| 4 → 5 | Implementation → Release | 100% UCV coverage, Luna approved |
+| 4 → 5 | Implementation → Release | 100% UCV coverage, Exploratory QA approved |
 
 ---
 
@@ -319,7 +336,7 @@ interface HQVFIntegration {
 
 ### Current Story
 - Story: STORY-042
-- Agent: Developer (Amelia)
+- Agent: Developer (Developer)
 - UCV Coverage: 70%
 
 ## Memory Status
@@ -339,7 +356,7 @@ interface HQVFIntegration {
 ### Recently Active
 1. Developer (2 hours ago)
 2. Tester (4 hours ago)
-3. Luna (yesterday)
+3. Exploratory QA (yesterday)
 
 ### Available
 - All 18 agents operational
@@ -386,6 +403,6 @@ Returns framework status report
 
 - [Guardian](guardian.md) - Intent detection
 - [Sentinel](sentinel.md) - Error memory
-- [Clara](specialists/clara.md) - UCV creation
-- [Victor](specialists/victor.md) - UCV validation
+- [UCV Writer 📝](specialists/ucv-writer.md) - UCV creation
+- [UCV Validator ✅](specialists/ucv-validator.md) - UCV validation
 

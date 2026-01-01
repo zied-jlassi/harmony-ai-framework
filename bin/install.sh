@@ -722,8 +722,8 @@ Executer directement le mode specifie: `$ARGUMENTS`
 |------|--------------------|
 | full, quick, duplicates, fix | `.harmony/agents/harmony.md` |
 | sentinel | `.harmony/memory/` |
-| ucv | `.harmony/agents/specialists/clara.md` |
-| ucv --validate | `.harmony/agents/specialists/victor.md` |
+| ucv | `.harmony/agents/specialists/ucv-writer.md` |
+| ucv --validate | `.harmony/agents/specialists/ucv-validator.md` |
 | rules | `.harmony/rules/` |
 | profiles | `.harmony/profiles/` |
 | specialties | `.harmony/specialties/` |
@@ -851,12 +851,12 @@ Guardian auto-routes based on intent keywords:
 
 | Keywords | Routes To |
 |----------|-----------|
-| "develop", "create", "build", "code" | Developer (Amelia) |
+| "develop", "create", "build", "code" | Developer |
 | "fix", "bug", "error", "broken" | Developer + Sentinel |
-| "test", "verify", "validate" | Tester (Emma) |
-| "plan", "design", "architect" | Architect (Winston) |
-| "analyze", "requirements" | Analyst (Mary) |
-| "UCV", "use case" | Clara (UCV Writer) |
+| "test", "verify", "validate" | Tester |
+| "plan", "design", "architect" | Architect |
+| "analyze", "requirements" | Analyst |
+| "UCV", "use case" | UCV Writer |
 
 ## UCV Pattern
 

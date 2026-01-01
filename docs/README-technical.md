@@ -70,15 +70,15 @@ User: "développe le scoring"
 
 | Intent | Mots-clés | Agent | Prérequis |
 |--------|-----------|-------|-----------|
-| IMPLEMENT | développer, coder, implémenter, ajouter | DEV (Amelia) | Story DOIT exister |
-| FIX | corriger, bug, erreur, problème | DEV (Amelia) | Story ou BUGFIX |
-| PLAN | story, sprint, planifier, backlog | SM (Bob) | Architecture existe |
-| TEST | tester, test, coverage, TDD | TEA (Emma) | - |
-| EXPLORE | Luna, QA exploratoire | Luna | - |
-| ANALYZE | analyser, besoin, comprendre | Analyst (Mary) | - |
-| DESIGN | architecture, ADR, structurer | Architect (Winston) | PRD existe |
-| UCV | UCV, use case, vérifications | Clara | Story existe |
-| AI | IA, RAG, LLM, mémoire | Nova + sub-agents | - |
+| IMPLEMENT | développer, coder, implémenter, ajouter | Developer | Story DOIT exister |
+| FIX | corriger, bug, erreur, problème | Developer | Story ou BUGFIX |
+| PLAN | story, sprint, planifier, backlog | SM (Scrum Master) | Architecture existe |
+| TEST | tester, test, coverage, TDD | TEA (Tester) | - |
+| EXPLORE | Exploratory QA, QA exploratoire | Exploratory QA | - |
+| ANALYZE | analyser, besoin, comprendre | Analyst (Analyst) | - |
+| DESIGN | architecture, ADR, structurer | Architect | PRD existe |
+| UCV | UCV, use case, vérifications | UCV Writer | Story existe |
+| AI | IA, RAG, LLM, mémoire | AI Architect + sub-agents | - |
 
 ### 2. Sentinel System
 
@@ -139,7 +139,7 @@ Garantit la qualité via Use Cases Verifiables (UCV).
 | HQVF-3 | User approuve UCVs avant dev |
 | HQVF-4 | DEV coche chaque vérification |
 | HQVF-5 | TEA écrit 1+ test par vérification |
-| HQVF-6 | Luna valide chaque UCV |
+| HQVF-6 | Exploratory QA valide chaque UCV |
 | HQVF-7 | Story DONE = 100% UCVs validés |
 
 **Format UCV:**
@@ -163,7 +163,7 @@ use_cases:
         description: "Popin visible centrée"
         dev: false   # ☐ à cocher par DEV
         test: false  # ☐ à cocher par TEA
-        qa: false    # ☐ à cocher par Luna
+        qa: false    # ☐ à cocher par Exploratory QA
 ```
 
 ---
@@ -176,22 +176,22 @@ use_cases:
 |-------|---------|------|-------|
 | **Guardian** | - | Protection workflow | All |
 | **Sentinel** | - | Mémoire erreurs | All |
-| **Analyst** | Mary | Analyse besoins | 1-2 |
-| **Architect** | Winston | Design technique | 3 |
-| **Developer** | Amelia | Implémentation | 4 |
-| **Tester** | Emma | Assurance qualité | 4 |
-| **Scrum Master** | Bob | Gestion sprint | 3-4 |
+| **Analyst** | Analyst | Analyse besoins | 1-2 |
+| **Architect** | Architect | Design technique | 3 |
+| **Developer** | Developer | Implémentation | 4 |
+| **Tester** | Tester | Assurance qualité | 4 |
+| **Scrum Master** | Scrum Master | Gestion sprint | 3-4 |
 
 ### Specialist Agents
 
 | Agent | Persona | Spécialité |
 |-------|---------|-----------|
-| **Nova** | Nova | Architecture AI/LLM (+ 6 sub-agents) |
-| **Luna** | Luna | QA Exploratoire |
-| **Clara** | Clara | UCV Writer |
-| **Victor** | Victor | UCV Validator |
+| **AI Architect** | AI Architect | Architecture AI/LLM (+ 6 sub-agents) |
+| **Exploratory QA** | Exploratory QA | QA Exploratoire |
+| **UCV Writer** | UCV Writer | UCV Writer |
+| **UCV Validator** | UCV Validator | UCV Validator |
 
-### Nova's Sub-Agents (AI Specialists)
+### AI Architect's Sub-Agents (AI Specialists)
 
 | Agent | Persona | Domaine |
 |-------|---------|---------|
@@ -228,8 +228,8 @@ use_cases:
 │                                                                 │
 │ Analyst     Analyst      Architect      Developer    DevOps    │
 │             PM           SM             Tester                  │
-│                          UX             Luna                    │
-│                          Clara          Victor                  │
+│                          UX             Exploratory QA                    │
+│                          UCV Writer          UCV Validator                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -240,7 +240,7 @@ use_cases:
 | 1 → 2 | Discovery → Planning | Brief approuvé |
 | 2 → 3 | Planning → Solutioning | PRD approuvé |
 | 3 → 4 | Solutioning → Implementation | Architecture + Stories + UCVs |
-| 4 → 5 | Implementation → Release | 100% UCV + Luna approved |
+| 4 → 5 | Implementation → Release | 100% UCV + Exploratory QA approved |
 
 ---
 
@@ -307,7 +307,7 @@ memory:
 | **R-001** | Never develop without a story |
 | **R-002** | Strict role separation between agents |
 | **R-003** | UCV must be approved before development |
-| **R-004** | Exploratory QA (Luna) before release |
+| **R-004** | Exploratory QA (Exploratory QA) before release |
 | **R-005** | 100% verification coverage for story completion |
 | **R-006** | Handoff protocol between agents |
 | **R-007** | Circuit breaker after 3 consecutive failures |
@@ -359,7 +359,7 @@ module.exports = {
   // Agent settings
   agents: {
     enabled: ['analyst', 'architect', 'developer', 'tester'],
-    specialists: ['nova', 'luna'],
+    specialists: ['ai-architect', 'exploratory-qa'],
   },
 };
 ```

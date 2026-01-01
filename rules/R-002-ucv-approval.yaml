@@ -36,7 +36,7 @@ workflow:
   # UCV creation workflow
   creation:
     trigger: "story created"
-    agent: clara
+    agent: ucv-writer
     output: "STORY-{id}-UCV.md"
 
   # UCV approval workflow
@@ -88,5 +88,5 @@ related:
   patterns:
     - P-008-ucv-gate
   agents:
-    - clara
-    - victor
+    - ucv-writer
+    - ucv-validator

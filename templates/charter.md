@@ -19,7 +19,7 @@
 |-------|-------|
 | **Charter ID** | CHARTER-{id} |
 | **Date** | {date} |
-| **Tester** | Luna |
+| **Tester** | Exploratory QA |
 | **Duration** | 60-90 min (max 2h) |
 | **Priority** | P0 / P1 / P2 |
 | **Story Reference** | STORY-{story_id} |
@@ -183,4 +183,4 @@
 
 - Story: [STORY-{story_id}](../stories/STORY-{story_id}.md)
 - UCV: [STORY-{story_id}-UCV](../stories/STORY-{story_id}-UCV.md)
-- Luna Agent: [Luna](../agents/specialists/luna.md)
+- Exploratory QA Agent: [Exploratory QA 🔍](../agents/specialists/exploratory-qa.md)

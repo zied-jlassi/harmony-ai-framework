@@ -963,10 +963,10 @@ Implementation feedback → Design iterations
 ### Link → Game Architect (Cloud)
 Technical challenges → Architecture decisions
 
-### Link → TEA (Emma)
+### Link → TEA (Tester)
 Game-specific tests → Test strategy
 
-### Link → Dev (Amelia)
+### Link → Dev (Developer)
 Shared components → Integration
 
 ---
@@ -984,7 +984,7 @@ Shared components → Integration
 
 ### Réception des Tasks Game depuis Story
 
-Quand le SM (Bob) crée une story de jeu éducatif, elle contient des **tasks Game**:
+Quand le SM (Scrum Master) crée une story de jeu éducatif, elle contient des **tasks Game**:
 
 ```markdown
 ### 📋 Tasks Techniques (Breakdown)
@@ -997,7 +997,7 @@ Quand le SM (Bob) crée une story de jeu éducatif, elle contient des **tasks Ga
 | T4 | Game: Audio integration | Game | 1h | Link | TODO |
 | T5 | Game: Performance optimization | Game | 2h | Link | TODO |
 | T6 | Tests: Game unit tests | Tests | 1h | Link | TODO |
-| T7 | Tests: E2E game flow | Tests | 2h | Emma | TODO |
+| T7 | Tests: E2E game flow | Tests | 2h | Tester | TODO |
 ```
 
 ### Workflow avec Tasks Game
@@ -1017,7 +1017,7 @@ Quand le SM (Bob) crée une story de jeu éducatif, elle contient des **tasks Ga
 │     c. Tester sur mobile ET desktop                             │
 │     d. Marquer DONE quand performance OK                        │
 │                                                                  │
-│  4. HANDOFF vers Emma (Tester) pour les tasks Tests E2E         │
+│  4. HANDOFF vers Tester pour les tasks Tests E2E         │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -1033,7 +1033,7 @@ Quand le SM (Bob) crée une story de jeu éducatif, elle contient des **tasks Ga
 | `Game: Input` | Touch, keyboard, gestures | Link |
 | `Game: Performance` | Optimisation 60fps | Link |
 | `Game: State` | Zustand game store | Link |
-| `Tests: Game` | Tests spécifiques jeux | Link/Emma |
+| `Tests: Game` | Tests spécifiques jeux | Link/Tester |
 
 ### Checklist Performance par Task Game
 

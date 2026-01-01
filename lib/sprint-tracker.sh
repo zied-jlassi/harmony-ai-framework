@@ -299,7 +299,7 @@ add_velocity() {
 # -----------------------------------------------------------------------------
 
 # Start working on a story
-# Usage: start_story "STORY-001" "Story Title" 5 "EPIC-001" "Amelia"
+# Usage: start_story "STORY-001" "Story Title" 5 "EPIC-001" "Developer"
 start_story() {
     local story_id="$1"
     local title="$2"

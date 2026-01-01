@@ -27,7 +27,7 @@ Phase 2: PLANNING
 Phase 3: SOLUTIONING
 ├── architecture/           → Architecture Document
 ├── epics-stories/          → Epics & Stories
-│   └── ⭐ UCV GENERATION   → UCV Writer (Clara) generates UCVs
+│   └── ⭐ UCV GENERATION   → UCV Writer (UCV Writer) generates UCVs
 │                            → User APPROVES before dev starts
 └── readiness/              → Implementation Readiness Check
 
@@ -44,7 +44,7 @@ Phase 5: VALIDATION (UCV-Driven)
 ├── testarch/               → Test Architecture
 │   └── ⭐ TEA TESTS UCVs   → Tester writes tests per UCV
 └── ucv-lifecycle.md        → UCV Validation
-    └── ⭐ UCV VALIDATOR    → Victor validates 100% coverage
+    └── ⭐ UCV VALIDATOR    → UCV Validator validates 100% coverage
 ```
 
 ---
@@ -60,7 +60,7 @@ UCV LIFECYCLE
 1. STORY CREATED (SM)
    └── Story without UCVs = NOT READY
 
-2. UCV GENERATION (Clara - UCV Writer)
+2. UCV GENERATION (UCV Writer - UCV Writer)
    └── /harmony ucv STORY-XXX
    └── Generates: STORY-XXX-UCV.md
 
@@ -77,11 +77,11 @@ UCV LIFECYCLE
    └── Writes tests per UCV
    └── Marks checkboxes: [x] TEST for each UCV
 
-6. QA VALIDATION (Luna)
+6. QA VALIDATION (Exploratory QA)
    └── Exploratory testing
    └── Marks checkboxes: [x] QA for each UCV
 
-7. FINAL VALIDATION (Victor - UCV Validator)
+7. FINAL VALIDATION (UCV Validator - UCV Validator)
    └── /harmony ucv-validate STORY-XXX
    └── Checks 100% coverage: DEV + TEST + QA
    └── Story status: DONE only if 100%
@@ -148,7 +148,7 @@ workflows/
 
 | Workflow | Purpose | Key Agents |
 |----------|---------|------------|
-| `ucv-lifecycle.md` | UCV creation to validation | Clara, Victor |
+| `ucv-lifecycle.md` | UCV creation to validation | UCV Writer, UCV Validator |
 | `story-lifecycle.md` | Story creation to completion | SM, DEV, TEA |
 | `dev-story/` | Story development with UCV marking | Developer |
 | `testarch/atdd/` | Test per UCV | Tester |
@@ -159,13 +159,13 @@ workflows/
 
 | Phase | Workflow | UCV Action |
 |-------|----------|------------|
-| 3 | epics-stories | Clara generates UCVs |
+| 3 | epics-stories | UCV Writer generates UCVs |
 | 3 | readiness | Check UCVs approved |
 | 4 | create-story | Verify UCV exists |
 | 4 | dev-story | DEV marks UCVs |
 | 4 | testarch/atdd | TEST writes tests per UCV |
-| 4 | (Luna QA) | QA marks UCVs |
-| 4 | (validation) | Victor validates 100% |
+| 4 | (Exploratory QA QA) | QA marks UCVs |
+| 4 | (validation) | UCV Validator validates 100% |
 
 ---
 

@@ -64,7 +64,7 @@ triggers:
 |    v                                                              |
 |  +---------------------------------------------+                  |
 |  | STEP 1: Story/Ticket Creation               |                  |
-|  | Agent: SM (Bob)                             |                  |
+|  | Agent: SM (Scrum Master)                             |                  |
 |  |                                              |                  |
 |  | - Create BUGFIX-XXX story                    |                  |
 |  | - Document reported behavior                 |                  |
@@ -147,7 +147,7 @@ triggers:
 
 ### Step 1: Story/Ticket Creation
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Story Format:**
 ```markdown

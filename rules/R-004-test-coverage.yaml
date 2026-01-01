@@ -134,4 +134,4 @@ related:
     - P-008-ucv-gate
   agents:
     - tester
-    - victor
+    - ucv-validator

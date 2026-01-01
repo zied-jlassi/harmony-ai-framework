@@ -17,14 +17,14 @@ They ensure nothing is forgotten and standardize communication.
 |----------|---------|------------|
 | `story.md` | User story definition | SM |
 | `epic.md` | Epic/feature grouping | SM |
-| `ucv.md` | Use Case Verifications | Clara |
+| `ucv.md` | Use Case Verifications | UCV Writer |
 | `adr.md` | Architecture Decision Record | Architect |
 | `task.md` | Technical subtask | Developer |
 | `handoff.md` | Session handoff | Any agent |
 | `brief.md` | Product brief | Analyst |
 | `prd.md` | Product Requirements Document | Analyst |
 | `retrospective.md` | Sprint/epic retrospective | SM |
-| `charter.md` | Exploratory test session | Luna |
+| `charter.md` | Exploratory test session | Exploratory QA |
 
 ---
 
@@ -100,6 +100,6 @@ Templates use `{variable}` syntax for interpolation:
 ## Related
 
 - [SM Agent](../agents/specialists/sm.md)
-- [Clara Agent](../agents/specialists/clara.md)
+- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
 - [Architect Agent](../agents/architect.md)
 

@@ -47,7 +47,7 @@ The Guardian is the **workflow protector**. It ensures the right agent handles t
 │          └── UCV approved? ✅                                   │
 │                                                                  │
 │  STEP 4: Agent Routing                                          │
-│          Route to: Developer (Amelia)                           │
+│          Route to: Developer (Developer)                           │
 │                                                                  │
 │  STEP 5: Context Activation                                     │
 │          Set active_story: STORY-XXX                            │
@@ -63,11 +63,11 @@ The Guardian is the **workflow protector**. It ensures the right agent handles t
 | FIX | fix, bug, error, debug, repair | Developer |
 | PLAN_STORY | story, sprint, backlog, plan | SM |
 | TEST | test, TDD, coverage | Tester |
-| EXPLORE_QA | explore, Luna, QA, UX check | Luna |
+| EXPLORE_QA | explore, Exploratory QA, QA, UX check | Exploratory QA |
 | ANALYZE | analyze, requirement, need | Analyst |
 | DESIGN | architecture, design, ADR | Architect |
-| CREATE_UCV | UCV, use case, verification | Clara |
-| VALIDATE_UCV | validate UCV, verify | Victor |
+| CREATE_UCV | UCV, use case, verification | UCV Writer |
+| VALIDATE_UCV | validate UCV, verify | UCV Validator |
 | SECURITY | security audit, pentest | Security Agent |
 | COMPLIANCE | RGPD, GDPR, privacy | RGPD Agent |
 | ACCESSIBILITY | a11y, WCAG, RGAA | Accessibility Agent |
@@ -145,7 +145,7 @@ HQVF ensures quality through **verifiable use cases** (UCV).
 │           │                                                      │
 │           ▼                                                      │
 │  ┌─────────────────┐                                            │
-│  │  Clara (Writer) │ ─── Creates STORY-XXX-UCV.md              │
+│  │  UCV Writer (Writer) │ ─── Creates STORY-XXX-UCV.md              │
 │  └─────────────────┘                                            │
 │           │                                                      │
 │           ▼                                                      │
@@ -158,11 +158,11 @@ HQVF ensures quality through **verifiable use cases** (UCV).
 │           │                                                      │
 │           ├──► Developer marks: [x] dev                         │
 │           ├──► Tester marks:    [x] test                        │
-│           └──► Luna marks:      [x] qa                          │
+│           └──► Exploratory QA marks:      [x] qa                          │
 │           │                                                      │
 │           ▼                                                      │
 │  ┌─────────────────┐                                            │
-│  │ Victor (Validator)│ ─── Verifies 100% coverage              │
+│  │ UCV Validator (Validator)│ ─── Verifies 100% coverage              │
 │  └─────────────────┘                                            │
 │           │                                                      │
 │           ▼                                                      │
@@ -193,7 +193,7 @@ use_cases:
         description: "Modal appears centered"
         dev: false    # ☐ Developer
         test: false   # ☐ Tester
-        qa: false     # ☐ Luna
+        qa: false     # ☐ Exploratory QA
 
       - id: V-001-2
         description: "Form pre-filled with user data"
@@ -273,7 +273,7 @@ Each agent in Harmony follows this structure:
 # Agent Definition
 name: "developer"
 displayName: "Developer"
-persona: "Amelia"
+persona: "Developer"
 description: "Implements features and fixes bugs"
 version: "1.0"
 
@@ -306,7 +306,7 @@ prerequisites:
 
 # Handoff Protocol
 handoff:
-  to: ["tester", "luna"]
+  to: ["tester", "exploratory-qa"]
   format: |
     HANDOFF: Developer → {destination}
     Story: {story_id}
@@ -319,7 +319,7 @@ handoff:
 | Category | Agents | Purpose |
 |----------|--------|---------|
 | **Core** | Guardian, Sentinel, Analyst, Architect, Developer, Tester | Essential development workflow |
-| **Specialists** | Nova, Luna, Clara, Victor | Advanced capabilities |
+| **Specialists** | AI Architect, Exploratory QA, UCV Writer, UCV Validator | Advanced capabilities |
 | **Compliance** | Security, RGPD, Accessibility, Pentest | Regulatory and quality |
 | **AI Sub-agents** | Riley, Milo, Oscar, Olivia, Grace, Sage | AI/LLM specialization |
 
@@ -348,7 +348,7 @@ handoff:
  │  │ 1→2: Brief approved by stakeholders                     │ │
  │  │ 2→3: PRD approved, roadmap defined                      │ │
  │  │ 3→4: Architecture approved, stories created, UCVs ready │ │
- │  │ 4→5: All UCVs validated, Luna approved                  │ │
+ │  │ 4→5: All UCVs validated, Exploratory QA approved                  │ │
  │  └─────────────────────────────────────────────────────────┘ │
  │                                                                │
  └────────────────────────────────────────────────────────────────┘
@@ -360,8 +360,8 @@ handoff:
 |-------|------|---------|---------------|--------|
 | 1 | Discovery | Understanding needs | Brief | Analyst |
 | 2 | Planning | Defining scope | PRD, Roadmap | Analyst, PM |
-| 3 | Solutioning | Designing solution | Architecture, Stories, UCVs | Architect, SM, UX, Clara |
-| 4 | Implementation | Building product | Code, Tests, Validations | Developer, Tester, Luna, Victor |
+| 3 | Solutioning | Designing solution | Architecture, Stories, UCVs | Architect, SM, UX, UCV Writer |
+| 4 | Implementation | Building product | Code, Tests, Validations | Developer, Tester, Exploratory QA, UCV Validator |
 | 5 | Release | Deploying product | Deployment, Monitoring | DevOps, Olivia |
 
 ---

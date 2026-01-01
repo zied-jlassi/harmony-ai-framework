@@ -365,7 +365,7 @@ QUESTIONS POST-TEST (à l'enfant)
 
 RÉSUMÉ INSIGHTS (Exemple)
 ─────────────────────────
-Participant: Emma, 6 ans
+Participant: Tester, 6 ans
 
 Points positifs:
 ├── A trouvé Lumio "trop mignon"

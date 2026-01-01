@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-UCV-LIFECYCLE |
 | **Phase** | 3-4 (Solutioning to Implementation) |
-| **Primary Agents** | Clara (Writer), Victor (Validator) |
+| **Primary Agents** | UCV Writer (Writer), UCV Validator (Validator) |
 
 ---
 
@@ -72,7 +72,7 @@ The UCV Lifecycle ensures:
 │    ▼                                                            │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 1: UCV CREATION               │                       │
-│  │ Agent: Clara                        │                       │
+│  │ Agent: UCV Writer                        │                       │
 │  │                                      │                       │
 │  │ • Analyze story requirements         │                       │
 │  │ • Create use cases (UC-XXX)          │                       │
@@ -131,7 +131,7 @@ The UCV Lifecycle ensures:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 6: QA MARKING                 │                       │
-│  │ Agent: Luna                         │                       │
+│  │ Agent: Exploratory QA                         │                       │
 │  │                                      │                       │
 │  │ • Visually verify each item          │                       │
 │  │ • Mark [x] in QA column              │                       │
@@ -141,7 +141,7 @@ The UCV Lifecycle ensures:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 7: VALIDATION                 │                       │
-│  │ Agent: Victor                       │                       │
+│  │ Agent: UCV Validator                       │                       │
 │  │                                      │                       │
 │  │ • Calculate coverage percentages     │                       │
 │  │ • Check all columns complete         │                       │
@@ -189,7 +189,7 @@ verifications:
 
 ---
 
-## Clara: UCV Writer
+## UCV Writer: UCV Writer
 
 ### Responsibilities
 
@@ -230,7 +230,7 @@ verifications:
 
 ---
 
-## Victor: UCV Validator
+## UCV Validator: UCV Validator
 
 ### Responsibilities
 
@@ -300,14 +300,14 @@ verifications:
 - [ ] Dev column 100%
 - [ ] Test column 100%
 - [ ] QA column 100%
-- [ ] Victor confirms 100% coverage
+- [ ] UCV Validator confirms 100% coverage
 
 ---
 
 ## Related
 
-- [Clara Agent](../agents/specialists/clara.md)
-- [Victor Agent](../agents/specialists/victor.md)
+- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
+- [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
 - [UCV Template](../templates/ucv.md)
 - [P-008: UCV Quality Gate](../patterns/P-008-ucv-gate.md)
 

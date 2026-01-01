@@ -44,9 +44,9 @@ Combine all three patterns intelligently based on task characteristics:
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
 │  │  SEQUENTIAL  │  │  PARALLEL    │  │  SEQUENTIAL  │          │
 │  │              │  │              │  │              │          │
-│  │ Analyst ───► │  │ Dev ════ Test  │ Clara ───►  │          │
-│  │ Architect    │  │      ↓       │  │ Victor      │          │
-│  │              │  │    Luna      │  │              │          │
+│  │ Analyst ───► │  │ Dev ════ Test  │ UCV Writer ───►  │          │
+│  │ Architect    │  │      ↓       │  │ UCV Validator      │          │
+│  │              │  │    Exploratory QA      │  │              │          │
 │  └──────────────┘  └──────────────┘  └──────────────┘          │
 │                                                                  │
 │  Phase 1-2            Phase 4            Phase 3               │
@@ -68,7 +68,7 @@ Combine all three patterns intelligently based on task characteristics:
 ### Sequential
 - Dependent tasks (A must complete before B)
 - Handoff chains (Analyst → Architect → SM)
-- Quality gates (Clara → User Approval → Dev)
+- Quality gates (UCV Writer → User Approval → Dev)
 
 ### Parallel
 - Independent subtasks

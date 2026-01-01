@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-SOLUTIONING |
 | **Phase** | 3 - Solutioning |
-| **Primary Agents** | Architect (Winston), Nova, SM (Bob) |
+| **Primary Agents** | Architect, AI Architect, SM (Scrum Master) |
 | **Prerequisite** | PRD approved |
 
 ---
@@ -48,7 +48,7 @@ triggers:
 │    ▼                                                            │
 │  ┌─────────────────────────────────────┐                       │
 │  │ STEP 1: Architecture Design         │                       │
-│  │ Agent: Architect (+ Nova if AI)     │                       │
+│  │ Agent: Architect (+ AI Architect if AI)     │                       │
 │  │ • High-level architecture            │                       │
 │  │ • Component breakdown                │                       │
 │  │ • Integration points                 │                       │
@@ -75,7 +75,7 @@ triggers:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ STEP 4: UCV Creation                │                       │
-│  │ Agent: Clara                         │                       │
+│  │ Agent: UCV Writer                         │                       │
 │  │ • Create UCVs for each story         │                       │
 │  │ • Write Gherkin scenarios            │                       │
 │  │ • Define verifications               │                       │
@@ -116,7 +116,7 @@ triggers:
 
 ### Step 1: Architecture Design
 
-**Agent:** Architect (Winston), Nova (if AI system)
+**Agent:** Architect, AI Architect (if AI system)
 
 **Activities:**
 - Design high-level architecture
@@ -136,7 +136,7 @@ triggers:
 
 ### Step 2: Technology Decisions
 
-**Agent:** Architect (Winston)
+**Agent:** Architect
 
 **Activities:**
 - Evaluate technology options
@@ -158,7 +158,7 @@ triggers:
 
 ### Step 3: Story Breakdown
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Activities:**
 - Break each epic into user stories
@@ -183,7 +183,7 @@ triggers:
 
 ### Step 4: UCV Creation
 
-**Agent:** Clara
+**Agent:** UCV Writer
 
 **Activities:**
 - Create UCV for each story
@@ -248,9 +248,9 @@ triggers:
 ## Related
 
 - [Architect Agent](../agents/architect.md)
-- [Nova Agent](../agents/specialists/nova.md)
+- [AI Architect Agent 🧠](../agents/specialists/ai-architect.md)
 - [SM Agent](../agents/specialists/sm.md)
-- [Clara Agent](../agents/specialists/clara.md)
+- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
 - [Story Template](../templates/story.md)
 - [UCV Template](../templates/ucv.md)
 - [ADR Template](../templates/adr.md)

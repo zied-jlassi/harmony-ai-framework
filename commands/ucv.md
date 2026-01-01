@@ -31,7 +31,7 @@
 | **HQVF-3** | User MUST approve UCVs before dev | Gate blocking |
 | **HQVF-4** | DEV marks each verification | Progress tracked |
 | **HQVF-5** | TEA writes 1+ test per verification | 100% coverage |
-| **HQVF-6** | Luna validates each UCV | Final validation |
+| **HQVF-6** | Exploratory QA validates each UCV | Final validation |
 | **HQVF-7** | Story DONE = 100% UCVs valid | Objective, not subjective |
 
 ---
@@ -170,9 +170,9 @@ And a success toast appears
 │                                                                  │
 │  PHASE 1: ELABORATION                                           │
 │  ─────────────────────                                          │
-│  SM (Bob) creates story                                         │
+│  SM (Scrum Master) creates story                                         │
 │       ↓                                                         │
-│  Harmony → Clara (UCV Writer) generates UCVs                    │
+│  Harmony → UCV Writer (UCV Writer) generates UCVs                    │
 │       ↓                                                         │
 │  UCVs file created                                              │
 │                                                                  │
@@ -186,13 +186,13 @@ And a success toast appears
 │                                                                  │
 │  PHASE 3: IMPLEMENTATION                                        │
 │  ────────────────────────                                       │
-│  DEV (Amelia) implements + marks DEV ✓                          │
-│  TEA (Emma) tests + marks TEST ✓                                │
-│  Luna (QA) explores + marks QA ✓                                │
+│  Developer implements + marks DEV ✓                          │
+│  TEA (Tester) tests + marks TEST ✓                                │
+│  Exploratory QA (QA) explores + marks QA ✓                                │
 │                                                                  │
 │  PHASE 4: CLOSURE                                               │
 │  ─────────────────                                              │
-│  Harmony → Victor (Validator) verifies 100%                     │
+│  Harmony → UCV Validator (Validator) verifies 100%                     │
 │       ↓                                                         │
 │  Story marked DONE                                              │
 │                                                                  │
@@ -205,11 +205,11 @@ And a success toast appears
 
 | Agent | Persona | Role |
 |-------|---------|------|
-| **UCV Writer** | Clara | Generate exhaustive UCVs |
-| **UCV Validator** | Victor | Verify 100% coverage |
-| **Developer** | Amelia | Implement + mark DEV |
-| **Tester** | Emma | Test + mark TEST |
-| **QA Explorer** | Luna | Explore + mark QA |
+| **UCV Writer** | UCV Writer | Generate exhaustive UCVs |
+| **UCV Validator** | UCV Validator | Verify 100% coverage |
+| **Developer** | Developer | Implement + mark DEV |
+| **Tester** | Tester | Test + mark TEST |
+| **QA Explorer** | Exploratory QA | Explore + mark QA |
 
 ---
 

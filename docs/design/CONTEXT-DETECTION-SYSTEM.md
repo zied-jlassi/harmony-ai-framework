@@ -31,7 +31,7 @@ Raison: Pas de consentement, pas de droit a l'effacement
 ```
 Utilisateur: "On va creer une plateforme gaming backend + frontend"
 
-ANALYST (Mary) + ARIA:
+ANALYST (Analyst) + ARIA:
 > Contexte detecte: GAMING
 > Plateforme: fullstack (backend + frontend)
 >
@@ -72,7 +72,7 @@ CYCLE DE VIE PROJET AVEC CONTEXT DETECTION
 
 PHASE 1: ANALYSE (PREMIERE DETECTION)
 ├── Utilisateur decrit le projet
-├── Analyst (Mary) + ARIA analysent
+├── Analyst (Analyst) + ARIA analysent
 ├── Detection contexte metier
 ├── Proposition activations automatiques
 └── Configuration initiale projet
@@ -181,12 +181,12 @@ Si "Ignorer pour tous les agents":
    - Fichier: .harmony/project.yaml section dismissed_recommendations"
 ```
 
-### Integration UCV (Clara)
+### Integration UCV (UCV Writer)
 
 ```
 CREATION UCV AVEC CONTEXT DETECTION
 
-UCV Writer (Clara) cree UCVs pour STORY-042...
+UCV Writer (UCV Writer) cree UCVs pour STORY-042...
 
 ARIA CONTEXT WATCHER:
 ├── Story: "Formulaire inscription utilisateur"
@@ -291,7 +291,7 @@ dismissed_recommendations:
 Utilisateur: "On va creer une plateforme de jeux educatifs pour
               enfants, avec backend NestJS et frontend Angular"
 
-ANALYST (Mary):
+ANALYST (Analyst):
 Je vais analyser votre besoin. ARIA va m'aider a detecter le contexte.
 
 ARIA CONTEXT DETECTION
@@ -482,7 +482,7 @@ stories_without_compliance:
 Alex: "On va creer une boutique e-commerce pour vendre des vetements,
        avec paiement en ligne et livraison. Stack: NestJS + React."
 
-ANALYST (Mary):
+ANALYST (Analyst):
 Excellent projet! Je lance l'analyse avec detection de contexte...
 
 ARIA CONTEXT DETECTION
@@ -528,7 +528,7 @@ Decisions enregistrees.
 ```
 Alex: "/harmony:workflows:create-epics-stories"
 
-SM (Bob):
+SM (Scrum Master):
 Je vais creer les epics. ARIA, un check contextuel?
 
 ARIA CONTEXT WATCHER
@@ -563,7 +563,7 @@ OK. Rappel programme pour la phase Architecture.
 Alex: "/harmony:agents:architect"
       "Designer le schema de la base de donnees"
 
-ARCHITECT (Winston):
+ARCHITECT (Architect):
 Je vais concevoir le schema. ARIA, verification contexte?
 
 ARIA CONTEXT WATCHER
@@ -623,7 +623,7 @@ Vous etes responsable de la conformite.
 Alex: "/harmony:workflows:create-story"
       "Story pour le tunnel de paiement"
 
-SM (Bob):
+SM (Scrum Master):
 Je cree la story checkout. ARIA, check contextuel?
 
 ARIA CONTEXT WATCHER
@@ -674,14 +674,14 @@ Plus de rappels automatiques.
 Alex: "/harmony:sub-agents:ucv-writer STORY-089"
       "UCVs pour le formulaire de paiement"
 
-UCV Writer (Clara):
+UCV Writer (UCV Writer):
 Je genere les UCVs pour "Formulaire paiement"...
 
 ARIA (Mode silencieux - tout ignore):
 [Pas de rappel affiche]
 [Log dans project.yaml: story_without_compliance]
 
-UCV Writer (Clara):
+UCV Writer (UCV Writer):
 Voici les UCVs generes:
 
 UC-001: Affichage formulaire paiement
@@ -870,7 +870,7 @@ stories_without_compliance:
 1. [ ] Implementer l'agent ARIA
 2. [ ] Enrichir Analyst avec detection contexte
 3. [ ] Creer systeme de rappels par agent
-4. [ ] Integrer dans UCV Writer (Clara)
+4. [ ] Integrer dans UCV Writer (UCV Writer)
 5. [ ] Creer skill /harmony context
 6. [ ] Creer agents de reactivation (/harmony gdpr, etc.)
 7. [ ] Tests et documentation

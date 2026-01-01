@@ -26,12 +26,12 @@
 
 | Intent | Keywords | Target Agent | Prerequisites |
 |--------|----------|--------------|---------------|
-| **IMPLEMENT** | develop, code, implement, build | Developer (Amelia) | Story must exist |
-| **FIX** | fix, bug, error, debug | Developer (Amelia) | Story or BUGFIX |
-| **TEST** | test, coverage, TDD | Tester (Emma) | Code exists |
-| **EXPLORE** | Luna, QA, verify UX | Luna | Feature ready |
-| **ANALYZE** | analyze, requirement | Analyst (Mary) | - |
-| **DESIGN** | architecture, ADR | Architect (Winston) | PRD exists |
+| **IMPLEMENT** | develop, code, implement, build | Developer | Story must exist |
+| **FIX** | fix, bug, error, debug | Developer | Story or BUGFIX |
+| **TEST** | test, coverage, TDD | Tester | Code exists |
+| **EXPLORE** | explore, QA, verify UX | Exploratory QA | Feature ready |
+| **ANALYZE** | analyze, requirement | Analyst | - |
+| **DESIGN** | architecture, ADR | Architect | PRD exists |
 
 ### Before Coding (MANDATORY)
 
@@ -55,7 +55,7 @@
 
 ## Agents
 
-### Developer (Amelia)
+### Developer
 **Phase**: 4 (Implementation)
 **Triggers**: develop, implement, code, build, fix
 
@@ -71,7 +71,7 @@
 - Design architecture (Architect's job)
 - Approve UCVs (User's job)
 
-### Tester (Emma)
+### Tester
 **Phase**: 4 (Implementation)
 **Triggers**: test, TDD, coverage, E2E
 
@@ -81,9 +81,9 @@
 - Validate acceptance criteria
 - Mark test verifications
 
-### Luna (Exploratory QA)
+### Exploratory QA
 **Phase**: 4 (Pre-release)
-**Triggers**: Luna, explore, QA, verify UX
+**Triggers**: explore, QA, verify UX, exploratory
 
 **Can Do**:
 - Exploratory testing sessions

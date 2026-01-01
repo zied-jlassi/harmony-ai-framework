@@ -113,7 +113,7 @@ agents:
   # Example:
   # aliases:
   #   "dev": "game-developer"
-  #   "qa": "luna"
+  #   "qa": "exploratory-qa"
 
 # -----------------------------------------------------------------------------
 # HOOKS CHAIN

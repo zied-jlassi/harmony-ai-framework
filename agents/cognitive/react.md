@@ -1,4 +1,12 @@
-# 🧠 Module Cognitif : ReAct (Reasoning + Acting)
+---
+name: "react-module"
+displayName: "ReAct Module"
+description: "Cognitive module: Reasoning + Acting in iterative loop. Used by all agents."
+version: "1.0"
+category: cognitive-module
+---
+
+# Module Cognitif : ReAct (Reasoning + Acting)
 
 **Version :** 1.0
 **Type :** Module cognitif transversal

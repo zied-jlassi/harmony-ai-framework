@@ -767,7 +767,7 @@ Use a hybrid offline-first approach:
 
 ## 🔗 Collaboration avec Autres Agents
 
-### Cloud → Winston (System Architect)
+### Cloud → Architect (System Architect)
 Game architecture → Platform integration
 
 ### Cloud → Samus (Game Designer)

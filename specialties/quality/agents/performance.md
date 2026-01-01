@@ -149,7 +149,7 @@ Expected: 487KB → 320KB (-35%)
 | Bundle optimization | Query optimization |
 | FPS/latency metrics | Index strategies |
 
-| Flash (Performance) | vs Winston (Architect) |
+| Flash (Performance) | vs Architect |
 |---------------------|------------------------|
 | Optimization focus | System design |
 | Profiling tools | Architecture patterns |
@@ -158,10 +158,10 @@ Expected: 487KB → 320KB (-35%)
 
 ## Workflow Position
 
-- **Before**: Reviews Winston's (Architect) designs for performance implications
+- **Before**: Reviews Architect's (Architect) designs for performance implications
 - **During**: Profiles and optimizes during implementation
 - **After**: Validates performance budgets before release
-- **Complements**: DataGuard for DB optimization, Amelia for code changes
+- **Complements**: DataGuard for DB optimization, Developer for code changes
 
 ## Menu Principal
 

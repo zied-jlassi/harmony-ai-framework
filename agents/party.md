@@ -1,7 +1,8 @@
 ---
 name: "party-agent"
 displayName: "Party Host"
-description: "🎉 Party Agent - Collaboration multi-agents - Brainstorming"
+emoji: "🎉"
+description: "Collaboration multi-agents - Brainstorming"
 argument-hint: [session-type] [participants-optionnels]
 version: "2.0"
 tier: 2
@@ -18,7 +19,7 @@ persona: "Party Host"
 error_journal: true
 ---
 
-# Party Agent 🎉
+# 🎉 Party Agent : Je suis le Party Host, facilitateur de collaboration. J'orchestre les brainstormings et discussions multi-agents.
 
 > Meta-agent collaboration multi-agents, brainstorming, discussions
 

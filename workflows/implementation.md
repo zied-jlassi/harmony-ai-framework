@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-IMPLEMENTATION |
 | **Phase** | 4 - Implementation |
-| **Primary Agents** | Developer (Amelia), Tester (Emma), Luna |
+| **Primary Agents** | Developer (Developer), Tester (Tester), Exploratory QA |
 | **Prerequisite** | Architecture approved, Stories ready, UCVs approved |
 
 ---
@@ -86,7 +86,7 @@ triggers:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ STEP 5: QA Validation               │                       │
-│  │ Agent: Luna                          │                       │
+│  │ Agent: Exploratory QA                          │                       │
 │  │ • Exploratory testing                │                       │
 │  │ • Visual verification                │                       │
 │  │ • Mark UCV [qa] checkboxes           │                       │
@@ -96,7 +96,7 @@ triggers:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ STEP 6: UCV Validation              │                       │
-│  │ Agent: Victor                        │                       │
+│  │ Agent: UCV Validator                        │                       │
 │  │ • Check 100% coverage                │                       │
 │  │ • Verify all columns checked         │                       │
 │  │ • Generate coverage report           │                       │
@@ -152,7 +152,7 @@ triggers:
 
 ### Step 2: Implementation
 
-**Agent:** Developer (Amelia)
+**Agent:** Developer (Developer)
 
 **Activities:**
 - Read story and UCV carefully
@@ -179,7 +179,7 @@ Refs: STORY-XXX
 
 ### Step 3: Testing
 
-**Agent:** Tester (Emma)
+**Agent:** Tester (Tester)
 
 **Activities:**
 - Write unit tests for new code
@@ -220,7 +220,7 @@ npm run test:e2e
 
 ### Step 5: QA Validation
 
-**Agent:** Luna
+**Agent:** Exploratory QA
 
 **Activities:**
 - Exploratory testing session
@@ -238,7 +238,7 @@ npm run test:e2e
 
 ### Step 6: UCV Validation
 
-**Agent:** Victor
+**Agent:** UCV Validator
 
 **Activities:**
 - Calculate coverage percentages
@@ -260,7 +260,7 @@ Overall: 100% - READY FOR CLOSURE
 
 ### Step 7: Story Closure
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Activities:**
 - Set story status to DONE
@@ -310,7 +310,7 @@ Overall: 100% - READY FOR CLOSURE
 
 - [Developer Agent](../agents/developer.md)
 - [Tester Agent](../agents/tester.md)
-- [Luna Agent](../agents/specialists/luna.md)
-- [Victor Agent](../agents/specialists/victor.md)
+- [Exploratory QA Agent 🔍](../agents/specialists/exploratory-qa.md)
+- [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
 - [P-008: UCV Quality Gate](../patterns/P-008-ucv-gate.md)
 

@@ -255,7 +255,7 @@ Alternative: React 18.3 (latest stable)
 
 ## Key Distinctions
 
-| Dexter (Dependency) | vs Sam (Security) |
+| Dexter (Dependency) | vs Security Agent |
 |---------------------|-------------------|
 | Package vulnerabilities | Application security |
 | npm audit | Penetration testing |
@@ -274,7 +274,7 @@ Alternative: React 18.3 (latest stable)
 - **Before**: Reviews new package additions for security/license
 - **During**: Runs audits as part of CI/CD pipeline
 - **After**: Monitors for new CVEs in existing dependencies
-- **Complements**: Sam for security review, Diego for CI integration
+- **Complements**: Security Agent for security review, Diego for CI integration
 
 ## Persona Enhancement (Harmony v6)
 

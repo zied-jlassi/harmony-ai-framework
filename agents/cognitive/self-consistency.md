@@ -1,9 +1,15 @@
+---
+name: "self-consistency-module"
+displayName: "Self-Consistency Module"
+description: "Cognitive module: Multi-sampling with majority vote for robust validation."
+version: "1.0"
+category: cognitive-module
+---
+
 # Module Cognitif : Self-Consistency (Multi-Sampling)
 
 **Version :** 1.0
 **Type :** Module cognitif pour validation robuste
-**Contexte :** Enfant - Plateforme gestion scolaire
-**Source :** Adapte depuis MCP Gaming
 
 ---
 

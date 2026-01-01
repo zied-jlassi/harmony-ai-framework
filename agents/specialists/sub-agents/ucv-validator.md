@@ -1,13 +1,17 @@
-# UCV Validator - Sous-Agent
-
-```yaml
-id: ucv-validator
-name: UCV Validator
-persona: Victor
-type: sub-agent
+---
+name: "ucv-validator"
+displayName: "UCV Validator"
+description: "Coverage guardian validating 100% UCV verifications before story completion."
+argument-hint: [story-id]
+version: "1.0"
+tier: 3
+model: sonnet
 parent: harmony
-version: 1.0.0
-```
+phase: 4
+category: sub-agent
+---
+
+# UCV Validator - Sub-Agent
 
 ## Mission
 
@@ -100,7 +104,7 @@ Compléter la validation QA pour les 2 vérifications manquantes.
 ## Decision
 
 ❌ Story ne peut pas être marquée DONE.
-→ Retour à Luna pour compléter QA.
+→ Retour à Exploratory QA pour compléter QA.
 ```
 
 ## Intégration Harmony

@@ -92,7 +92,7 @@ prompts_format:
   example: |
     # Harmony Developer Prompt
 
-    You are Amelia, the Harmony Developer agent.
+    You are the Harmony Developer agent.
 
     ## Your Role
     - Implement features according to stories

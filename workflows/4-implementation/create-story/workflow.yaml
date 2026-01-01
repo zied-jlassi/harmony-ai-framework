@@ -36,8 +36,8 @@ ucv_output_file: "{story_dir}/{{story_key}}-UCV.md"
 ucv:
   enabled: true
   template: "{project-root}/.harmony/templates/ucv.md"
-  writer_agent: "ucv-writer"      # Clara
-  validator_agent: "ucv-validator" # Victor
+  writer_agent: "ucv-writer"      # UCV Writer
+  validator_agent: "ucv-validator" # UCV Validator
   require_approval: true           # Gate: User must approve UCVs before dev
 
 # Smart input file references - Simplified for enhanced approach

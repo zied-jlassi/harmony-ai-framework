@@ -163,7 +163,7 @@ Feature: {feature_name}
 
 | Date | Action | By |
 |------|--------|-----|
-| {created_date} | Created | Clara |
+| {created_date} | Created | UCV Writer |
 | {approved_date} | Approved | {approved_by} |
 | {updated_date} | {last_action} | {updated_by} |
 

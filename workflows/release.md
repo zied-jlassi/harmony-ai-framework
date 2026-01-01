@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-RELEASE |
 | **Phase** | 5 - Release |
-| **Primary Agents** | Developer (Amelia), SM (Bob) |
+| **Primary Agents** | Developer (Developer), SM (Scrum Master) |
 | **Prerequisite** | All stories DONE, Tests passing |
 
 ---
@@ -57,8 +57,8 @@ triggers:
 │                     │                                           │
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
-│  │ STEP 2: Luna Final Validation       │                       │
-│  │ Agent: Luna                          │                       │
+│  │ STEP 2: Exploratory QA Final Validation       │                       │
+│  │ Agent: Exploratory QA                          │                       │
 │  │ • Full exploratory session           │                       │
 │  │ • Critical path validation           │                       │
 │  │ • Go/No-Go decision                  │                       │
@@ -141,9 +141,9 @@ triggers:
 
 ---
 
-### Step 2: Luna Final Validation
+### Step 2: Exploratory QA Final Validation
 
-**Agent:** Luna
+**Agent:** Exploratory QA
 
 **Activities:**
 - Full exploratory session (60-90 min)
@@ -212,7 +212,7 @@ triggers:
 
 ### Step 6: Retrospective (REX)
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **See:** [REX Workflow](./rex.md)
 
@@ -226,7 +226,7 @@ triggers:
 
 ### Step 7: Close Sprint/Epic
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Activities:**
 - Set sprint status to COMPLETED
@@ -262,7 +262,7 @@ triggers:
 
 - [Developer Agent](../agents/developer.md)
 - [SM Agent](../agents/specialists/sm.md)
-- [Luna Agent](../agents/specialists/luna.md)
+- [Exploratory QA Agent 🔍](../agents/specialists/exploratory-qa.md)
 - [REX Workflow](./rex.md)
 - [Retrospective Template](../templates/retrospective.md)
 

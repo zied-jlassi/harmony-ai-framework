@@ -81,7 +81,7 @@ phases:
     agents:
       - developer
       - tester
-      - luna
+      - exploratory-qa
     gate_to_phase_5:
       required:
         - "all_stories DONE"

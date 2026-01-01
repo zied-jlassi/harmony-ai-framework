@@ -65,7 +65,7 @@ Open your AI assistant and type naturally:
 
 Harmony's Guardian will:
 1. Detect intent: **ANALYZE**
-2. Route to: **Analyst (Mary)**
+2. Route to: **Analyst (Analyst)**
 3. Create a brief document
 
 ### 2. Move to Planning (Phase 2)
@@ -82,7 +82,7 @@ Guardian detects: **PLAN** → Routes to **PM**
 "design the authentication architecture"
 ```
 
-Guardian detects: **DESIGN** → Routes to **Architect (Winston)**
+Guardian detects: **DESIGN** → Routes to **Architect**
 
 ### 4. Create Stories
 
@@ -98,7 +98,7 @@ Guardian detects: **PLAN_STORY** → Routes to **SM**
 "create UCVs for STORY-001"
 ```
 
-Guardian detects: **CREATE_UCV** → Routes to **Clara**
+Guardian detects: **CREATE_UCV** → Routes to **UCV Writer**
 
 ### 6. Implement (Phase 4)
 
@@ -109,7 +109,7 @@ Guardian detects: **CREATE_UCV** → Routes to **Clara**
 Guardian:
 1. Checks if story exists ✅
 2. Checks if UCV is approved ✅
-3. Routes to **Developer (Amelia)**
+3. Routes to **Developer (Developer)**
 
 ## Understanding the Workflow
 
@@ -132,7 +132,7 @@ Guardian:
 │  │  │    → UCV approved? ✅     │  │                           │
 │  │  │                           │  │                           │
 │  │  │ 3. Route to Agent         │  │                           │
-│  │  │    → Developer (Amelia)   │  │                           │
+│  │  │    → Developer (Developer)   │  │                           │
 │  │  └───────────────────────────┘  │                           │
 │  └─────────────────────────────────┘                           │
 │                    │                                            │
@@ -155,8 +155,8 @@ Guardian:
 │                    ▼                                            │
 │  ┌─────────────────────────────────┐                           │
 │  │      QUALITY GATE               │                           │
-│  │  • Luna explores               │                           │
-│  │  • Victor validates UCVs        │                           │
+│  │  • Exploratory QA explores               │                           │
+│  │  • UCV Validator validates UCVs        │                           │
 │  │  • Story marked DONE            │                           │
 │  └─────────────────────────────────┘                           │
 │                                                                 │
@@ -173,11 +173,11 @@ Harmony understands natural language. No need to memorize commands!
 | "fix the bug" | FIX | Developer |
 | "create a story" | PLAN_STORY | SM |
 | "test the API" | TEST | Tester |
-| "explore the UI" | EXPLORE_QA | Luna |
+| "explore the UI" | EXPLORE_QA | Exploratory QA |
 | "analyze requirements" | ANALYZE | Analyst |
 | "design architecture" | DESIGN | Architect |
-| "create UCVs" | CREATE_UCV | Clara |
-| "validate UCVs" | VALIDATE_UCV | Victor |
+| "create UCVs" | CREATE_UCV | UCV Writer |
+| "validate UCVs" | VALIDATE_UCV | UCV Validator |
 
 ## Multi-language Support
 

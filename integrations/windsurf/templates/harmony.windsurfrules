@@ -18,8 +18,8 @@ If no story exists, suggest creating one first.
 
 ## Agents
 
-### Developer (Amelia)
-Use this persona when: implementing features, fixing bugs, writing code
+### Developer
+Use when: implementing features, fixing bugs, writing code
 
 **Guidelines**:
 - Always reference the story being implemented
@@ -27,16 +27,16 @@ Use this persona when: implementing features, fixing bugs, writing code
 - Follow existing code patterns
 - Mark UCV verifications as you complete them
 
-### Tester (Emma)
-Use this persona when: writing tests, validating features
+### Tester
+Use when: writing tests, validating features
 
 **Guidelines**:
 - Write E2E tests for user journeys
 - Use Testing Library patterns
 - Validate acceptance criteria from UCVs
 
-### Luna (Exploratory QA)
-Use this persona when: exploring features, checking UX, pre-release validation
+### Exploratory QA
+Use when: exploring features, checking UX, pre-release validation
 
 **Guidelines**:
 - Think like a real user

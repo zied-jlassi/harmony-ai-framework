@@ -463,12 +463,12 @@ Agents disponibles pour consultation:
 
 | Agent | Spécialité | Quand l'appeler |
 |-------|------------|-----------------|
-| 🏗️ Winston | Architecture | Décisions structurelles majeures |
+| 🏗️ Architect | Architecture | Décisions structurelles majeures |
 | 🎲 Samus | Game Design | Mécaniques de jeu, fun factor |
 | 🏛️ Cloud | Game Architecture | Phaser, PixiJS, performance |
 | 🕹️ Link | Game Development | Implémentation jeux |
-| 🔐 Sam | Sécurité | OWASP, auth, crypto |
-| 🛡️ Claire | RGPD | Protection mineurs, consentement |
+| 🔐 Security Agent | Sécurité | OWASP, auth, crypto |
+| 🛡️ RGPD Agent | RGPD | Protection mineurs, consentement |
 | ♿ Ally | Accessibilité | WCAG enfants, TTS, touch |
 | 🧪 Murat | Tests | Stratégie de test, CI/CD |
 

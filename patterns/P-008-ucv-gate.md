@@ -74,7 +74,7 @@ use_cases:
         description: "Popin visible et centrée"
         dev: false    # ☐ Developer
         test: false   # ☐ Tester
-        qa: false     # ☐ QA (Luna)
+        qa: false     # ☐ QA (Exploratory QA)
 
       - id: V-001-2
         description: "Email pré-rempli"
@@ -138,7 +138,7 @@ function canCloseStory(story: Story): ValidationResult {
 │           │                                                      │
 │           ▼                                                      │
 │  ┌─────────────────┐                                            │
-│  │  Clara (Writer) │ ─── Creates STORY-XXX-UCV.md              │
+│  │  UCV Writer     │ ─── Creates STORY-XXX-UCV.md              │
 │  └─────────────────┘                                            │
 │           │                                                      │
 │           ▼                                                      │
@@ -155,12 +155,12 @@ function canCloseStory(story: Story): ValidationResult {
 │           ├──► Tester marks:    [x] test                        │
 │           │    (as writing tests for each)                      │
 │           │                                                      │
-│           └──► Luna marks:      [x] qa                          │
+│           └──► Exploratory QA marks: [x] qa                     │
 │                (as validating visually)                         │
 │           │                                                      │
 │           ▼                                                      │
 │  ┌─────────────────┐                                            │
-│  │ Victor (Validator)│ ─── Verifies 100% coverage              │
+│  │ UCV Validator   │ ─── Verifies 100% coverage                │
 │  └─────────────────┘                                            │
 │           │                                                      │
 │           ▼                                                      │

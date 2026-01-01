@@ -124,9 +124,9 @@ mdc_format:
     3. Route to appropriate agent
 
     ## Agents
-    - Developer (Amelia): Implementation
-    - Tester (Emma): Testing
-    - Luna: Exploratory QA
+    - Developer: Implementation
+    - Tester: Testing
+    - Exploratory QA: Pre-release validation
 
   frontmatter:
     description: "Rule description (shown in UI)"

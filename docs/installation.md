@@ -179,10 +179,10 @@ your-project/
 │   │   ├── developer.md
 │   │   ├── tester.md
 │   │   └── specialists/
-│   │       ├── nova.md
-│   │       ├── luna.md
-│   │       ├── clara.md
-│   │       ├── victor.md
+│   │       ├── ai-architect.md
+│   │       ├── exploratory-qa.md
+│   │       ├── ucv-writer.md
+│   │       ├── ucv-validator.md
 │   │       ├── security.md
 │   │       ├── rgpd.md
 │   │       ├── accessibility.md
@@ -295,7 +295,7 @@ module.exports = {
   // Agents
   agents: {
     core: ['guardian', 'sentinel', 'analyst', 'architect', 'developer', 'tester'],
-    specialists: ['nova', 'luna', 'clara', 'victor'],
+    specialists: ['ai-architect', 'exploratory-qa', 'ucv-writer', 'ucv-validator'],
     compliance: ['security', 'rgpd', 'accessibility', 'pentest'],
     custom: [],            // Add your custom agents here
   },

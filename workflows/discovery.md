@@ -69,7 +69,7 @@ state:
 |-------|-------|
 | **Workflow ID** | WF-DISCOVERY |
 | **Phase** | 1 - Discovery |
-| **Primary Agent** | Analyst (Mary) |
+| **Primary Agent** | Analyst (Analyst) |
 | **Duration** | Variable |
 
 ---
@@ -166,7 +166,7 @@ triggers:
 
 ### Step 1: Problem Elicitation
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Ask open-ended questions about the problem
@@ -186,7 +186,7 @@ triggers:
 
 ### Step 2: Stakeholder Analysis
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Identify all stakeholders
@@ -205,7 +205,7 @@ triggers:
 
 ### Step 3: Context Gathering
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Document current solutions
@@ -225,7 +225,7 @@ triggers:
 
 ### Step 4: Brief Creation
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Synthesize findings into product brief

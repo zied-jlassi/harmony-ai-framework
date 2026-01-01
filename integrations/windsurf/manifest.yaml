@@ -109,17 +109,17 @@ windsurfrules_format:
 
     ## Agents
 
-    ### Developer (Amelia)
+    ### Developer
     - Implements features
     - Fixes bugs
     - Writes unit tests
 
-    ### Tester (Emma)
+    ### Tester
     - Writes E2E tests
     - Validates acceptance criteria
 
-    ### Luna
-    - Exploratory QA
+    ### Exploratory QA
+    - Pre-release validation
     - UX validation
 
     ## Tech Stack

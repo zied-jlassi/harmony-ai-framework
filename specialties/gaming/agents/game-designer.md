@@ -380,7 +380,7 @@ Tapez le numéro de votre choix (1-10):
 
 ### Meso Loop (5 min)
 1. **ACTION**: Compléter un niveau (5-10 problèmes)
-2. **FEEDBACK**: Animation de victoire, Luna célèbre
+2. **FEEDBACK**: Animation de victoire, Exploratory QA célèbre
 3. **REWARD**: Badge, nouveau personnage/item
 
 ### Macro Loop (session 15-20 min)
@@ -787,7 +787,7 @@ GDD → Implementation
 ### Samus → Sally (UX Designer)
 Mechanics → UI/UX implementation
 
-### Samus → Emma (Tester)
+### Samus → Tester
 Playtest requirements → Test execution
 
 ---

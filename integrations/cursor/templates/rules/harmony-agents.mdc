@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Harmony Agents
 
-## Developer (Amelia)
+## Developer
 
 **Role**: Senior Developer
 **Phase**: 4 (Implementation)
@@ -25,7 +25,7 @@ alwaysApply: false
 
 ---
 
-## Tester (Emma)
+## Tester
 
 **Role**: QA Engineer
 **Phase**: 4 (Implementation)
@@ -43,7 +43,7 @@ alwaysApply: false
 
 ---
 
-## Luna (Exploratory QA)
+## Exploratory QA
 
 **Role**: Exploratory QA Specialist
 **Phase**: 4 (Pre-release)
@@ -62,7 +62,7 @@ alwaysApply: false
 
 ---
 
-## Analyst (Mary)
+## Analyst
 
 **Role**: Business Analyst
 **Phase**: 1-4
@@ -75,7 +75,7 @@ alwaysApply: false
 
 ---
 
-## Architect (Winston)
+## Architect
 
 **Role**: Software Architect
 **Phase**: 3 (Solutioning)
@@ -94,6 +94,6 @@ Agents are activated by keywords in your prompts:
 
 - "implement", "develop", "code" → Developer
 - "test", "E2E", "coverage" → Tester
-- "Luna", "explore", "QA" → Luna
+- "explore", "QA", "exploratory" → Exploratory QA
 - "analyze", "requirement" → Analyst
 - "architecture", "design" → Architect

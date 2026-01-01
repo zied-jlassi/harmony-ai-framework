@@ -50,7 +50,7 @@ Natural language intent detection with keyword mapping and context awareness:
 │          └── Domain: Gaming                                     │
 │                                                                  │
 │  STEP 4: AGENT SELECTION                                        │
-│          └── Route to: Developer (Amelia)                       │
+│          └── Route to: Developer (Developer)                       │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -67,9 +67,9 @@ Natural language intent detection with keyword mapping and context awareness:
 | **ANALYZE** | Requirements analysis | Analyst |
 | **DESIGN** | Architecture design | Architect |
 | **PLAN_STORY** | Create stories | SM |
-| **CREATE_UCV** | Generate UCVs | Clara |
-| **VALIDATE_UCV** | Check coverage | Victor |
-| **EXPLORE_QA** | Exploratory testing | Luna |
+| **CREATE_UCV** | Generate UCVs | UCV Writer |
+| **VALIDATE_UCV** | Check coverage | UCV Validator |
+| **EXPLORE_QA** | Exploratory testing | Exploratory QA |
 | **SECURITY** | Security audit | Security |
 | **COMPLIANCE** | Privacy/legal | RGPD |
 | **ACCESSIBILITY** | A11y audit | Accessibility |
@@ -90,7 +90,7 @@ const INTENT_KEYWORDS = {
   PLAN_STORY: ['story', 'sprint', 'backlog', 'plan'],
   CREATE_UCV: ['UCV', 'use case', 'verification'],
   VALIDATE_UCV: ['validate', 'verify', 'coverage', 'check'],
-  EXPLORE_QA: ['explore', 'QA', 'UX', 'smoke', 'Luna'],
+  EXPLORE_QA: ['explore', 'QA', 'UX', 'smoke', 'Exploratory QA'],
 };
 ```
 
@@ -162,9 +162,9 @@ function routeToAgent(intent: string): Agent {
     ANALYZE: agents.analyst,
     DESIGN: agents.architect,
     PLAN_STORY: agents.sm,
-    CREATE_UCV: agents.clara,
-    VALIDATE_UCV: agents.victor,
-    EXPLORE_QA: agents.luna,
+    CREATE_UCV: agents.ucv_writer,
+    VALIDATE_UCV: agents.ucv_validator,
+    EXPLORE_QA: agents.exploratory_qa,
     SECURITY: agents.security,
     COMPLIANCE: agents.rgpd,
     ACCESSIBILITY: agents.accessibility,

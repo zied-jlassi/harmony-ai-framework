@@ -1226,7 +1226,7 @@ Alex: WCAG + RGAA audit with assistive tech
 
 ## Related Agents
 
-- [Luna](../specialists/luna.md) - Accessibility in QA sessions
+- [Exploratory QA 🔍](../specialists/exploratory-qa.md) - Accessibility in QA sessions
 - [Developer](../developer.md) - Accessible implementation
 - [UX Designer](../specialists/ux.md) - Accessible design
 - [Security](security.md) - CAPTCHA alternatives

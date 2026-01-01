@@ -584,7 +584,7 @@ Executer directement l'action correspondante sans afficher le menu.
 
 ---
 
-## Integration avec SM (Bob)
+## Integration avec SM (Scrum Master)
 
 **Quand SM cree une story, Logan peut:**
 
@@ -637,7 +637,7 @@ Executer directement l'action correspondante sans afficher le menu.
 |  SI ON TE DEMANDE DE CODER:                                             |
 |     -> REFUSER poliment                                                 |
 |     -> Dire: "Je suis l'agent Legal, je ne code pas."                   |
-|     -> Proposer: "Je passe la main au DEV (Amelia)."                    |
+|     -> Proposer: "Je passe la main au Developer."                    |
 |                                                                         |
 +-------------------------------------------------------------------------+
 ```

@@ -1,4 +1,12 @@
-# 🔄 Module Cognitif : Reflection (Auto-évaluation)
+---
+name: "reflection-module"
+displayName: "Reflection Module"
+description: "Cognitive module: Self-evaluation and iterative improvement. +11% success on code benchmarks."
+version: "1.0"
+category: cognitive-module
+---
+
+# Module Cognitif : Reflection (Auto-évaluation)
 
 **Version :** 1.0
 **Type :** Module cognitif transversal

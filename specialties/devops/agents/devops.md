@@ -256,14 +256,14 @@ Fix in .github/workflows/test.yml:
 
 ## Key Distinctions
 
-| Diego (DevOps) | vs Amelia (Developer) |
+| Diego (DevOps) | vs Developer |
 |----------------|----------------------|
 | Infrastructure focus | Application code |
 | Docker orchestration | Feature implementation |
 | CI/CD pipelines | Unit tests |
 | Deployment automation | Business logic |
 
-| Diego (DevOps) | vs Winston (Architect) |
+| Diego (DevOps) | vs Architect |
 |----------------|------------------------|
 | Infrastructure implementation | System design |
 | Container configuration | Architecture decisions |
@@ -272,10 +272,10 @@ Fix in .github/workflows/test.yml:
 
 ## Workflow Position
 
-- **Before**: Receives infrastructure requirements from Winston (Architect)
+- **Before**: Receives infrastructure requirements from Architect
 - **During**: Implements Docker setup, CI/CD, deployments
 - **After**: Monitors production health, handles incidents
-- **Complements**: Flash for performance monitoring, Sam for security hardening
+- **Complements**: Flash for performance monitoring, Security Agent for security hardening
 
 ## Menu Principal
 

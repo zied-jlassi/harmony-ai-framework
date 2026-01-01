@@ -124,7 +124,7 @@ User: "develop the scoring system"
          ↓
   [Route to Developer Agent]
          ↓
-  [Developer: Amelia activated]
+  [Developer: Developer activated]
 ```
 
 ### 2. Sentinel System - Error Memory
@@ -180,20 +180,20 @@ coverage: 100% → Story DONE ✓
 |-------|---------|------|:-----:|
 | Guardian | - | Workflow protection, intent detection | All |
 | Sentinel | - | Error memory, circuit breaker | All |
-| Analyst | Mary | Requirements analysis | 1-2 |
-| Architect | Winston | Technical design, ADRs | 3 |
-| Scrum Master | Bob | Sprint management, story creation | 3-4 |
-| Developer | Amelia | Implementation | 4 |
-| Tester | Emma | Quality assurance, test coverage | 4 |
+| Analyst | Analyst | Requirements analysis | 1-2 |
+| Architect | Architect | Technical design, ADRs | 3 |
+| Scrum Master | Scrum Master | Sprint management, story creation | 3-4 |
+| Developer | Developer | Implementation | 4 |
+| Tester | Tester | Quality assurance, test coverage | 4 |
 
 ### Specialist Agents
 
 | Agent | Persona | Specialty |
 |-------|---------|-----------|
-| Nova | Nova | AI/LLM Architecture (+ 6 sub-agents: Riley, Oscar, Sage, Milo, Grace, Olivia) |
-| Luna | Luna | Exploratory QA, user experience testing |
-| Clara | Clara | UCV Writer - Creates Use Case Verifiables |
-| Victor | Victor | UCV Validator - Validates 100% coverage |
+| AI Architect | AI Architect | AI/LLM Architecture (+ 6 sub-agents: Riley, Oscar, Sage, Milo, Grace, Olivia) |
+| Exploratory QA | Exploratory QA | Exploratory QA, user experience testing |
+| UCV Writer | UCV Writer | UCV Writer - Creates Use Case Verifiables |
+| UCV Validator | UCV Validator | UCV Validator - Validates 100% coverage |
 
 ### Compliance Agents
 
@@ -385,7 +385,7 @@ In December 2024, on a complex e-commerce project, we observed:
 - **Dev/Test/QA gap** - DEV writes 100 lines, TEA tests 5%, User sees 55%
 - **Context switching chaos** - Wrong agent activated, time wasted
 
-Nova's analysis (AI Architect) across 150+ sources in 2025 revealed:
+AI Architect's analysis (AI Architect) across 150+ sources in 2025 revealed:
 > "No existing framework offers persistent error memory
 > or verifiable quality systems. This is our USP."
 

@@ -81,9 +81,9 @@ contextProviders:
 
 # Assistants are loaded from .continue/assistants/*.yaml
 # Available:
-# - harmony-developer (Amelia)
-# - harmony-tester (Emma)
-# - harmony-analyst (Mary)
+# - harmony-developer (Developer)
+# - harmony-tester (Tester)
+# - harmony-analyst (Analyst)
 # - harmony-guardian
 
 # ═══════════════════════════════════════════════════════════════

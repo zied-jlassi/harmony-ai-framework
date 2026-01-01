@@ -35,11 +35,11 @@ Before any implementation:
 
 ## Step 3: Route to Agent
 
-- **IMPLEMENT/FIX** → Developer (Amelia)
-- **TEST** → Tester (Emma)
-- **EXPLORE** → Luna (QA)
-- **ANALYZE** → Analyst (Mary)
-- **DESIGN** → Architect (Winston)
+- **IMPLEMENT/FIX** → Developer
+- **TEST** → Tester
+- **EXPLORE** → Exploratory QA
+- **ANALYZE** → Analyst
+- **DESIGN** → Architect
 
 ## Response Format
 

@@ -64,8 +64,8 @@
 
   "agents": {
     "core": ["guardian", "sentinel", "analyst", "architect", "developer", "tester"],
-    "specialists": ["nova", "luna", "clara", "victor"],
-    "sub_agents": ["riley", "milo", "oscar", "olivia", "grace", "sage"],
+    "specialists": ["ai-architect", "exploratory-qa", "ucv-writer", "ucv-validator"],
+    "sub_agents": ["rag-architect", "memory-architect", "orchestration-architect", "observability-architect", "graphrag-architect", "safety-architect"],
     "extensible": ["game-developer", "game-designer", "legal", "security", "accessibility"]
   },
 
@@ -77,7 +77,9 @@
     "P-005": "Closed-Loop Learning",
     "P-006": "Intent Detection",
     "P-007": "Story-Based Development",
-    "P-008": "UCV Quality Gate"
+    "P-008": "UCV Quality Gate",
+    "P-009": "Task Progress",
+    "P-010": "Agent Announcement"
   },
 
   "rules": {

@@ -1,9 +1,15 @@
+---
+name: "graph-of-thoughts-module"
+displayName: "Graph of Thoughts Module"
+description: "Cognitive module: Graph-based reasoning for interdependent problems. +62% quality vs Tree of Thoughts."
+version: "1.0"
+category: cognitive-module
+---
+
 # Module Cognitif : Graph of Thoughts (GoT)
 
 **Version :** 1.0
 **Type :** Module cognitif pour problemes interdependants
-**Contexte :** Enfant - Plateforme gestion scolaire
-**Source :** Adapte depuis MCP Gaming
 
 ---
 

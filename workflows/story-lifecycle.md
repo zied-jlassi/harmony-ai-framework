@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-STORY-LIFECYCLE |
 | **Phase** | 3-4 (Solutioning to Implementation) |
-| **Agents** | SM, Clara, Developer, Tester, Luna, Victor |
+| **Agents** | SM, UCV Writer, Developer, Tester, Exploratory QA, UCV Validator |
 
 ---
 
@@ -18,12 +18,12 @@
 
 Defines the complete lifecycle of a user story:
 - Creation by SM
-- UCV generation by Clara
+- UCV generation by UCV Writer
 - Approval by user
 - Implementation by Developer
 - Testing by Tester
-- Validation by Luna
-- Verification by Victor
+- Validation by Exploratory QA
+- Verification by UCV Validator
 - Closure by SM
 
 ---
@@ -56,7 +56,7 @@ Defines the complete lifecycle of a user story:
 │         │ [Dev complete, testing done]                          │
 │         ▼                                                       │
 │  ┌──────────┐                                                   │
-│  │  REVIEW  │ ← Victor validates 100% UCV                      │
+│  │  REVIEW  │ ← UCV Validator validates 100% UCV                      │
 │  └─────┬────┘                                                   │
 │        │ [100% coverage confirmed]                              │
 │        ▼                                                        │
@@ -84,7 +84,7 @@ Defines the complete lifecycle of a user story:
 │                                                                  │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 1: CREATION                   │                       │
-│  │ Agent: SM (Bob)                     │                       │
+│  │ Agent: SM (Scrum Master)                     │                       │
 │  │                                      │                       │
 │  │ • Extract from epic/request          │                       │
 │  │ • Write user story format            │                       │
@@ -95,7 +95,7 @@ Defines the complete lifecycle of a user story:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 2: UCV GENERATION             │                       │
-│  │ Agent: Clara                        │                       │
+│  │ Agent: UCV Writer                        │                       │
 │  │                                      │                       │
 │  │ • Analyze story requirements         │                       │
 │  │ • Write Gherkin scenarios            │                       │
@@ -120,7 +120,7 @@ Defines the complete lifecycle of a user story:
 │            ▼                                                    │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 4: IMPLEMENTATION             │                       │
-│  │ Agent: Developer (Amelia)           │                       │
+│  │ Agent: Developer (Developer)           │                       │
 │  │                                      │                       │
 │  │ • Set story IN_PROGRESS              │                       │
 │  │ • Implement each verification        │                       │
@@ -131,7 +131,7 @@ Defines the complete lifecycle of a user story:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 5: TESTING                    │                       │
-│  │ Agent: Tester (Emma)                │                       │
+│  │ Agent: Tester (Tester)                │                       │
 │  │                                      │                       │
 │  │ • Write tests for each verification  │                       │
 │  │ • Run tests                          │                       │
@@ -142,7 +142,7 @@ Defines the complete lifecycle of a user story:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 6: QA VALIDATION              │                       │
-│  │ Agent: Luna                         │                       │
+│  │ Agent: Exploratory QA                         │                       │
 │  │                                      │                       │
 │  │ • Exploratory testing                │                       │
 │  │ • Visual verification                │                       │
@@ -153,7 +153,7 @@ Defines the complete lifecycle of a user story:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 7: VERIFICATION               │                       │
-│  │ Agent: Victor                       │                       │
+│  │ Agent: UCV Validator                       │                       │
 │  │                                      │                       │
 │  │ • Check all [dev] marked             │                       │
 │  │ • Check all [test] marked            │                       │
@@ -168,7 +168,7 @@ Defines the complete lifecycle of a user story:
 │            ▼                                                    │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 8: CLOSURE                    │                       │
-│  │ Agent: SM (Bob)                     │                       │
+│  │ Agent: SM (Scrum Master)                     │                       │
 │  │                                      │                       │
 │  │ • Set story to DONE                  │                       │
 │  │ • Update sprint status               │                       │
@@ -186,7 +186,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 1: Creation
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Inputs:**
 - Epic requirements
@@ -206,7 +206,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 2: UCV Generation
 
-**Agent:** Clara
+**Agent:** UCV Writer
 
 **Inputs:**
 - Story file
@@ -241,7 +241,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 4: Implementation
 
-**Agent:** Developer (Amelia)
+**Agent:** Developer (Developer)
 
 **Prerequisites:**
 - Story status = TODO
@@ -256,7 +256,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 5: Testing
 
-**Agent:** Tester (Emma)
+**Agent:** Tester (Tester)
 
 **Activities:**
 - Write unit tests per verification
@@ -268,7 +268,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 6: QA Validation
 
-**Agent:** Luna
+**Agent:** Exploratory QA
 
 **Activities:**
 - Exploratory testing session
@@ -280,7 +280,7 @@ Defines the complete lifecycle of a user story:
 
 ### Phase 7: Verification
 
-**Agent:** Victor
+**Agent:** UCV Validator
 
 **Verification Matrix:**
 ```
@@ -301,7 +301,7 @@ Coverage: 3/3 = 100% ✅
 
 ### Phase 8: Closure
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Activities:**
 - Set story status = DONE
@@ -314,11 +314,11 @@ Coverage: 3/3 = 100% ✅
 ## Related
 
 - [SM Agent](../agents/specialists/sm.md)
-- [Clara Agent](../agents/specialists/clara.md)
-- [Victor Agent](../agents/specialists/victor.md)
+- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
+- [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
 - [Developer Agent](../agents/developer.md)
 - [Tester Agent](../agents/tester.md)
-- [Luna Agent](../agents/specialists/luna.md)
+- [Exploratory QA Agent 🔍](../agents/specialists/exploratory-qa.md)
 - [Story Template](../templates/story.md)
 - [UCV Template](../templates/ucv.md)
 

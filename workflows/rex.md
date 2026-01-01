@@ -10,7 +10,7 @@
 |-------|-------|
 | **Workflow ID** | WF-REX |
 | **Phase** | 5 - Release (end of iteration) |
-| **Primary Agent** | SM (Bob) |
+| **Primary Agent** | SM (Scrum Master) |
 | **Participants** | All agents involved in iteration |
 
 ---
@@ -133,7 +133,7 @@ triggers:
 
 ### Step 1: Data Gathering
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Data Sources:**
 - Sprint/Epic metrics (velocity, bugs, etc.)
@@ -148,7 +148,7 @@ triggers:
 |--------|--------|---------|
 | Stories completed | Sprint status | Velocity |
 | Bugs found | Issue tracker | Quality |
-| UCV coverage | Victor reports | Verification |
+| UCV coverage | UCV Validator reports | Verification |
 | Error count | Error journal | Resilience |
 | Pattern applications | Learned patterns | Learning |
 
@@ -267,7 +267,7 @@ triggers:
 
 ### Step 7: Document REX
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Template:** `templates/retrospective.md`
 

@@ -73,7 +73,7 @@ Enforce that all code changes must be tied to a story:
 │      │                                                          │
 │      ▼                                                          │
 │  ┌────────┐                                                     │
-│  │ UCV    │  ← Clara creates use case verifications            │
+│  │ UCV    │  ← UCV Writer creates use case verifications            │
 │  │PENDING │                                                     │
 │  └───┬────┘                                                     │
 │      │                                                          │
@@ -95,11 +95,11 @@ Enforce that all code changes must be tied to a story:
 │        │                                                        │
 │        ├── Dev marks verifications [x] dev                     │
 │        ├── Tester marks [x] test                               │
-│        └── Luna marks [x] qa                                   │
+│        └── Exploratory QA marks [x] qa                                   │
 │        │                                                        │
 │        ▼                                                        │
 │  ┌────────┐                                                     │
-│  │ REVIEW │  ← Victor validates 100% coverage                  │
+│  │ REVIEW │  ← UCV Validator validates 100% coverage                  │
 │  └───┬────┘                                                     │
 │      │                                                          │
 │      ▼                                                          │

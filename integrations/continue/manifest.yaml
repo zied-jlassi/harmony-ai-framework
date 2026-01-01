@@ -101,7 +101,7 @@ assistant_format:
     schema: v1
 
     description: |
-      Amelia - Harmony Developer Agent
+      Harmony Developer Agent
       Implements features, fixes bugs, writes unit tests
 
     models:
@@ -115,7 +115,7 @@ assistant_format:
           - apply
 
     rules:
-      - "You are Amelia, the Developer agent"
+      - "You are the Harmony Developer agent"
       - "Always check for a story before implementing"
       - "Write unit tests for new code"
       - "Follow the project's tech stack conventions"

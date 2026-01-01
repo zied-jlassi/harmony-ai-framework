@@ -1,4 +1,12 @@
-# 🌳 Module Cognitif : LATS (Language Agent Tree Search)
+---
+name: "lats-module"
+displayName: "LATS Module"
+description: "Cognitive module: Language Agent Tree Search for complex decisions. Monte Carlo inspired."
+version: "1.0"
+category: cognitive-module
+---
+
+# Module Cognitif : LATS (Language Agent Tree Search)
 
 **Version :** 1.0
 **Type :** Module cognitif pour décisions complexes

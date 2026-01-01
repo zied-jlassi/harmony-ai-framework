@@ -78,7 +78,7 @@ Three-tier memory hierarchy with different scopes and lifetimes:
 
 ```json
 {
-  "persona": "Developer (Amelia)",
+  "persona": "Developer (Developer)",
   "current_task": "Implement user profile editing",
   "active_story": "STORY-042",
   "constraints": ["TypeScript strict", "No any types"],

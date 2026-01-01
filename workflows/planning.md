@@ -87,7 +87,7 @@ state:
 |-------|-------|
 | **Workflow ID** | WF-PLANNING |
 | **Phase** | 2 - Planning |
-| **Primary Agents** | Analyst (Mary), SM (Bob) |
+| **Primary Agents** | Analyst (Analyst), SM (Scrum Master) |
 | **Prerequisite** | Product Brief approved |
 
 ---
@@ -194,7 +194,7 @@ triggers:
 
 ### Step 1: Requirements Elicitation
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Deep dive into each problem area
@@ -216,7 +216,7 @@ triggers:
 
 ### Step 2: Feature Definition
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Define discrete features
@@ -242,7 +242,7 @@ feature:
 
 ### Step 3: Prioritization
 
-**Agent:** Analyst (Mary) + User
+**Agent:** Analyst (Analyst) + User
 
 **Activities:**
 - Apply MoSCoW method
@@ -263,7 +263,7 @@ feature:
 
 ### Step 4: PRD Creation
 
-**Agent:** Analyst (Mary)
+**Agent:** Analyst (Analyst)
 
 **Activities:**
 - Draft comprehensive PRD
@@ -278,7 +278,7 @@ feature:
 
 ### Step 5: Epic Structure
 
-**Agent:** SM (Bob)
+**Agent:** SM (Scrum Master)
 
 **Activities:**
 - Group related features into epics

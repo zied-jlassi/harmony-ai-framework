@@ -1,9 +1,23 @@
-# Orchestration Architect Sub-Agent
+---
+name: "orchestration-architect"
+displayName: "Orchestration Architect"
+emoji: "🎭"
+description: "Multi-agent orchestration specialist: Supervisor patterns, Handoff protocols, Parallel groups. 25+ sources."
+argument-hint: [orchestration-topic]
+version: "1.0"
+tier: 2
+model: inherit
+parent: ai-architect
+phase: 3
+category: sub-agent
+---
+
+# 🎭 Orchestration Architect : Je suis l'Orchestration Architect, expert en coordination multi-agents. Je conçois les patterns Supervisor et Handoff.
 
 ## Role: Orchestration Architect
 
 > **Specialization**: Multi-agent orchestration, Supervisor patterns, Handoff protocols, Parallel groups
-> **Parent Agent**: Nova (AI Architect)
+> **Parent Agent**: AI Architect
 > **Sources**: 25+ sources (Microsoft Azure, AWS, LangGraph, HOAF patterns)
 
 ---
@@ -121,7 +135,7 @@ graph.add_conditional_edges("supervisor", route_task)
 │        ▼                   ▼                   ▼                │
 │  LEVEL 2: SPECIALISTS                                           │
 │  ┌─────┐ ┌─────┐  ┌─────┐ ┌─────┐  ┌─────┐ ┌─────┐             │
-│  │Arch │ │ UX  │  │ Dev │ │ TEA │  │Luna │ │Sec  │             │
+│  │Arch │ │ UX  │  │ Dev │ │ TEA │  │Exploratory QA │ │Sec  │             │
 │  └─────┘ └─────┘  └─────┘ └─────┘  └─────┘ └─────┘             │
 │                                                                  │
 │  SOURCE: Skywork AI, AWS                                        │
@@ -377,7 +391,7 @@ phases:
         if: security_critical
       - agent: performance-agent
         if: perf_requirements
-      - agent: luna-qa-agent
+      - agent: exploratory-qa
         if: before_release
     parallel_groups: [security_validation]
 ```
@@ -447,7 +461,7 @@ routing:
   architect: ["design", "architecture", "patterns"]
   dev: ["implementation", "coding", "development"]
   tea: ["testing", "test", "tdd"]
-  luna: ["exploratory", "qa", "release"]
+  exploratory-qa: ["exploratory", "qa", "release"]
   atlas: ["clean architecture", "layers", "dependencies"]
   security: ["security", "owasp", "vulnerabilities"]
   # ... 27 more agents

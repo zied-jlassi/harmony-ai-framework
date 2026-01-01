@@ -363,7 +363,7 @@ Points
 │  1. ✅ Story file created (STORY-XXX.md)                        │
 │                                                                  │
 │  2. 🎯 INVOKE UCV WRITER 📝 (MANDATORY)                         │
-│     └── Command: /harmony --mode ucv STORY-XXX                  │
+│     └── Command: /harmony ucv STORY-XXX (option 26)             │
 │     └── Or: "UCV Writer, create UCVs for STORY-XXX"                  │
 │                                                                  │
 │  3. ⏳ WAIT FOR USER APPROVAL                                   │
@@ -381,7 +381,7 @@ Points
 
 ```bash
 # Option 1: Via Harmony skill
-/harmony --mode ucv STORY-XXX
+/harmony ucv STORY-XXX   # Option 26 - Creer UCVs
 
 # Option 2: Direct invocation
 "UCV Writer, créer les UCVs pour STORY-XXX"

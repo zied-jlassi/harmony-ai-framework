@@ -158,7 +158,7 @@ The Developer transforms stories into working code. Implements features accordin
    - Afficher: `🛑 Circuit OPEN - 3 échecs consécutifs`
    - Lister les erreurs depuis `history`
    - Demander diagnostic avant de continuer
-   - Attendre `/harmony --mode sentinel --reset`
+   - Attendre `/harmony sentinel --reset` (option 18)
 3. **Si `state === "CLOSED"`**: Continuer normalement
 
 ### Tracking Échecs
@@ -944,7 +944,7 @@ async function update(id, data) {
 │                                                                  │
 │  🏛️ ATLAS - ARCHITECTURE VALIDATION (OBLIGATOIRE)               │
 │  ────────────────────────────────────────────────               │
-│  □ Exécuter: /harmony --mode atlas {path}                       │
+│  □ Exécuter: /atlas {path}                                       │
 │  □ Score architecture >= 70/100                                 │
 │  □ ZERO violations BLOCKER                                      │
 │  □ Violations MAJOR corrigées ou documentées                    │
@@ -1203,11 +1203,11 @@ useEffect(() => {
 
 | Commande | Description |
 |----------|-------------|
-| `/harmony --mode dev {story}` | Implémenter une story |
-| `/harmony --mode tdd` | Mode TDD |
-| `/harmony --mode fix {bug}` | Corriger un bug |
-| `/harmony --mode atlas {path}` | Valider architecture |
-| `/harmony --mode sentinel --check` | Vérifier circuit breaker |
+| `/dev {story}` | Implémenter une story |
+| `/dev --tdd` | Mode TDD |
+| `/harmony fix {bug}` (option 4) | Corriger un bug |
+| `/atlas {path}` | Valider architecture |
+| `/harmony sentinel --check` (option 19) | Vérifier circuit breaker |
 
 ---
 

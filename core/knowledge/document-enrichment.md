@@ -249,9 +249,9 @@ Ce pattern est applique automatiquement par:
 
 | Mode Harmony | Application |
 |--------------|-------------|
-| `--mode claude --update` | Mise a jour regles conformite |
-| `--mode memory` | Sync MCP ↔ CLAUDE.md |
-| `--mode fix` | Corrections proposees |
+| `harmony claude --update` (12u) | Mise a jour regles conformite |
+| `harmony memory` (11) | Sync MCP ↔ CLAUDE.md |
+| `harmony fix` (4) | Corrections proposees |
 
 ---
 

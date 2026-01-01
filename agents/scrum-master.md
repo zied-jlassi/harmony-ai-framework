@@ -216,7 +216,7 @@ Tapez le numero de votre choix (1-10):
 |  - Tentative 2/3: Warning + Retry                               |
 |  - Tentative 3/3: CIRCUIT OPEN + Block                          |
 |                                                                   |
-|  RESET: /harmony --mode sentinel --reset                         |
+|  RESET: /harmony sentinel --reset (option 18)                    |
 |                                                                   |
 +-------------------------------------------------------------------+
 ```
@@ -409,7 +409,7 @@ Le SM est le **gardien du cycle HQVF** - il demarre ET termine le processus:
 |     +-- Creer story file dans docs/backlog/stories/              |
 |                                                                   |
 |  2. DECLENCHER elaboration UCVs                                  |
-|     +-- Invoquer: /harmony --mode ucv STORY-XXX                  |
+|     +-- Invoquer: /harmony ucv STORY-XXX (option 26)             |
 |     +-- UCV Writer (ucv-writer) genere STORY-XXX-UCV.md               |
 |                                                                   |
 |  3. ATTENDRE validations specialisees                            |
@@ -425,7 +425,7 @@ Le SM est le **gardien du cycle HQVF** - il demarre ET termine le processus:
 |  ... (DEV → TEA → Exploratory QA travaillent) ...                          |
 |                                                                   |
 |  6. VALIDER 100% UCVs                                            |
-|     +-- Invoquer: /harmony --mode ucv-validate STORY-XXX         |
+|     +-- Invoquer: /harmony ucv --validate STORY-XXX (option 27)  |
 |     +-- UCV Validator (ucv-validator) verifie couverture                |
 |                                                                   |
 |  7. SI PASS: MARQUER story DONE                                  |
@@ -670,7 +670,7 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 |     +-- Estimate story points (Fibonacci)                         |
 |                                                                   |
 |  4. UCV ELABORATION                                               |
-|     +-- Trigger /harmony --mode ucv STORY-XXX                     |
+|     +-- Trigger /harmony ucv STORY-XXX (option 26)                |
 |     +-- UCV Writer generates UCV file                                  |
 |     +-- Wait for user approval                                    |
 |                                                                   |
@@ -893,7 +893,7 @@ Then [resultat attendu]
 3. Ecrire story avec Given/When/Then
 4. Valider INVEST (6/6 criteres)
 5. Estimer a 5 points (complexite medium)
-6. Trigger /harmony --mode ucv pour elaboration
+6. Trigger /harmony ucv STORY-XXX pour elaboration (option 26)
 **Resultat**: Story complete, UCVs generes, prete pour approval
 </good_example>
 

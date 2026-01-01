@@ -3,7 +3,7 @@ name: "sentinel"
 displayName: "Memory Guardian"
 emoji: "👁️"
 description: "Memory system remembering errors, preventing repetition, protecting with circuit breaker."
-argument-hint: [--mode] [--action]
+argument-hint: [--status|--learn|--reset|--check|--report]
 version: "2.0"
 tier: 4
 model: haiku

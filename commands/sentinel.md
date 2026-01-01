@@ -34,7 +34,9 @@ ${MEMORY_DIR}/              # IDE-specific (e.g., .claude/memory/)
 
 ## Modes
 
-### 1. Dashboard (`harmony sentinel`)
+### 1. Status / Dashboard (`harmony sentinel` ou `harmony sentinel --status`)
+
+> **Option par défaut** - Si aucun argument, affiche le dashboard.
 
 Shows system health:
 

@@ -244,7 +244,7 @@ Tapez le numero de votre choix (1-10):
 ### Reset Command
 
 ```
-/harmony --mode sentinel --reset
+/harmony sentinel --reset   # Option 18 - Reset circuit breaker
 ```
 
 ---

@@ -230,7 +230,7 @@ Tapez le numero de votre choix (1-9):
 |  -> Si 3 echecs consecutifs: CIRCUIT OPEN                        |
 |  -> Documenter et attendre fix                                   |
 |                                                                   |
-|  RESET: /harmony --mode sentinel --reset                         |
+|  RESET: /harmony sentinel --reset (option 18)                    |
 |                                                                   |
 +-------------------------------------------------------------------+
 ```

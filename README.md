@@ -77,12 +77,81 @@ npx harmony-ai-framework --full --ide windsurf
 ### After Installation
 
 ```bash
-/go                    # Session kickoff - show current context
-/harmony               # Interactive menu
-/harmony --mode quick  # Quick health check
-/harmony --mode sentinel          # Error memory dashboard
-/harmony --mode sentinel --reset  # Reset circuit breaker if stuck
-/harmony --mode ucv STORY-XXX     # Create UCVs for a story
+/go                               # Session kickoff
+/harmony                          # Menu interactif (30 commandes)
+
+# 🔍 VALIDATION FRAMEWORK (1-5)
+/harmony full                     # 1 - Audit complet (~2-5 min)
+/harmony quick                    # 2 - Check rapide (~30s)
+/harmony duplicates               # 3 - Detection duplicats
+/harmony fix                      # 4 - Proposer corrections
+/harmony fix --apply              #   - Appliquer avec confirmation
+/harmony watch                    # 5 - Pre-commit hook
+/harmony watch --install          #   - Installer hook
+/harmony watch --status           #   - Status hook
+
+# 📊 RAPPORTS (6-7)
+/harmony report                   # 6 - Matrice coherence
+/harmony report --verbose         #   - Details par categorie
+/harmony tokens                   # 7 - Cout tokens par agent
+/harmony tokens --breakdown       #   - Details par agent
+/harmony tokens --optimize        #   - Suggestions optimisation
+
+# 🎯 VALIDATION SPECIFIQUE (8-10)
+/harmony pipeline                 # 8 - Coherence pipeline config vs docs
+/harmony pipeline --verbose       #   - Details complets
+/harmony pipeline --fix           #   - Proposer corrections
+/harmony hooks                    # 9 - Validation hooks Claude
+/harmony hooks --install          #   - Installer hooks par defaut
+/harmony hooks --status           #   - Status hooks
+/harmony patterns                 # 10 - Validation patterns
+/harmony patterns --fix           #   - Proposer corrections
+
+# 🔄 SYNCHRONISATION (11-12)
+/harmony memory                   # 11 - Sync MCP <-> CLAUDE.md
+/harmony memory --diff            #   - Afficher differences
+/harmony claude                   # 12 - Validation config Claude Code
+/harmony claude --update          # 12u - MAJ regles (GADER pattern)
+/harmony claude --fix             #   - Proposer corrections
+
+# 📏 REGLES APPLICATION (13-15)
+/harmony rules                    # 13 - Audit regles
+/harmony rules --usage            # 14 - Usage dans le code
+/harmony rules --report           # 15 - Rapport conformite
+
+# 🛡️ HARMONY SENTINEL (16-20)
+/harmony sentinel                 # 16 - Status: Dashboard (defaut)
+/harmony sentinel --status        #    - Alias pour status
+/harmony sentinel --learn         # 17 - Learn: Documenter erreur
+/harmony sentinel --reset         # 18 - Reset: Reinitialiser CB
+/harmony sentinel --check         # 19 - Check: Verification complete
+/harmony sentinel --report        # 20 - Report: Rapport detaille
+
+# 📚 KNOWLEDGE & PROFILES (21-23)
+/harmony learn <url>              # 21 - Apprendre depuis URL
+/harmony profiles                 # 22 - Lister profiles
+/harmony profiles --active        #    - Afficher actifs
+/harmony profiles --add <name>    #    - Activer profile
+/harmony profiles --remove <name> #    - Desactiver profile
+/harmony specialties              # 23 - Lister specialties
+/harmony specialties --active     #    - Afficher actives
+/harmony specialties --add <name> #    - Activer specialty
+/harmony specialties --remove <n> #    - Desactiver specialty
+
+# 🔌 INTEGRATIONS (24-25)
+/harmony install <ide>            # 24 - Deployer vers IDE
+/harmony install --status         # 25 - Afficher integrations
+
+# ✅ QUALITE HQVF (26-27)
+/harmony ucv <story>              # 26 - Creer UCVs
+/harmony ucv --validate <story>   # 27 - Verifier couverture
+
+# 🆕 FRAMEWORK (28-30)
+/harmony init                     # 28 - Initialiser Harmony
+/harmony upgrade                  # 29 - Mettre a jour framework
+/harmony upgrade --check          #    - Verifier updates
+/harmony export                   # 30 - Exporter configuration
+/harmony export --full            #    - Export complet avec memory
 ```
 
 ---
@@ -247,13 +316,14 @@ npx harmony-ai-framework --full --ide cody
 npx harmony-ai-framework --full --specialty gaming
 
 # Learn game design patterns
-/harmony --mode learn https://www.gamedeveloper.com/design/progression-systems
+/harmony learn https://www.gamedeveloper.com/design/progression-systems
 
 # Create UCVs for a story
-/harmony --mode ucv STORY-026
+/harmony ucv STORY-026
 
-# Check Sentinel health
-/harmony --mode sentinel
+# Sentinel (voir liste complete ci-dessus)
+/harmony sentinel                 # Dashboard health
+/harmony sentinel --learn         # Document error
 
 # Deploy to Cursor
 npx harmony-ai-framework --full --ide cursor

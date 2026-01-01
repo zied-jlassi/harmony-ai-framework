@@ -417,11 +417,11 @@ Atlas intervient apres le developpement, avant la validation finale:
 
 | Commande | Description |
 |----------|-------------|
-| `/harmony --mode atlas {path}` | Valider un module |
-| `/harmony --mode atlas --scan` | Scanner tout le projet |
-| `/harmony --mode atlas --score` | Afficher score detaille |
-| `/harmony --mode atlas --compare {ref}` | Comparer avec reference |
-| `/harmony --mode atlas --fix` | Proposer corrections |
+| `/atlas {path}` | Valider un module |
+| `/atlas --scan` | Scanner tout le projet |
+| `/atlas --score` | Afficher score detaille |
+| `/atlas --compare {ref}` | Comparer avec reference |
+| `/atlas --fix` | Proposer corrections |
 
 ---
 

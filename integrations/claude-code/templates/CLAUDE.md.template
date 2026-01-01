@@ -103,7 +103,7 @@ Files in `.claude/memory/`:
 ### Circuit Breaker
 - 3 consecutive failures = OPEN (blocked)
 - Requires diagnosis before reset
-- Reset: `/harmony --mode sentinel --reset`
+- Reset: `/harmony sentinel --reset` (option 18)
 
 ---
 

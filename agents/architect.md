@@ -142,7 +142,7 @@ The Architect transforms requirements into technical solutions. Designs system a
    - Afficher: `🛑 Circuit OPEN - 3 échecs consécutifs`
    - Lister les erreurs depuis `history`
    - Demander diagnostic avant de continuer
-   - Attendre `/harmony --mode sentinel --reset`
+   - Attendre `/harmony sentinel --reset` (option 18)
 3. **Si `state === "CLOSED"`**: Continuer normalement
 
 ### Tracking Échecs
@@ -822,9 +822,9 @@ Architecture for [Feature] is complete and approved.
 
 | Commande | Description |
 |----------|-------------|
-| `/harmony --mode architect` | Menu interactif |
-| `/harmony --mode adr {title}` | Créer ADR |
-| `/harmony --mode gate-check` | Validation architecture |
+| `/architect` | Menu interactif |
+| `/architect adr {title}` | Créer ADR |
+| `/architect gate-check` | Validation architecture |
 
 ---
 

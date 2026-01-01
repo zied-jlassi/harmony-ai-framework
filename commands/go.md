@@ -28,8 +28,9 @@ Initialize a new working session with Harmony.
 - Pending tasks: [count]
 
 💡 Quick Actions:
-- /harmony --mode quick     # Health check
-- /harmony --mode sentinel  # Error dashboard
+- /harmony quick            # Health check
+- /harmony sentinel         # Sentinel Status (default): Dashboard
+- /harmony sentinel --reset # Reset circuit breaker if stuck
 ```
 
 ## Execution

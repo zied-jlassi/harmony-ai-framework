@@ -675,62 +675,98 @@ create_slash_commands() {
     # Create harmony.md slash command
     cat > "$commands_dir/harmony.md" << 'HARMONY_CMD_EOF'
 ---
-description: "Harmony - Modes: full | quick | duplicates | fix | tokens | report | pipeline | claude | rules | sentinel | learn | ucv | profiles | specialties"
+description: "Harmony Framework - 30 commands: validation, sentinel, profiles, ucv, install..."
 ---
 
 # Harmony - Framework Orchestrator
 
-Active l'agent Harmony pour orchestrer le framework Harmony.
+Active l'agent Harmony pour orchestrer le framework.
 
 ## Comportement
 
 **Si aucun argument fourni:**
-Afficher le menu interactif et attendre la selection.
+1. Lire les fichiers memoire pour obtenir le statut actuel
+2. Afficher le menu interactif complet depuis `.harmony/commands/index.md`
+3. Attendre la selection de l'utilisateur
 
 **Si argument fourni:**
-Executer directement le mode specifie: `$ARGUMENTS`
+Charger et executer le fichier de commande correspondant depuis `.harmony/commands/`.
 
-## Modes Disponibles
+## Menu Interactif (30 commandes)
 
-```bash
-/harmony                        # Menu interactif
-/harmony --mode full            # Audit complet
-/harmony --mode quick           # Check rapide
-/harmony --mode duplicates      # Analyser duplications
-/harmony --mode fix             # Proposer corrections
-/harmony --mode tokens          # Rapport tokens
-/harmony --mode report          # Matrice coherence
-/harmony --mode pipeline        # Validation pipeline
-/harmony --mode hooks           # Validation hooks Claude
-/harmony --mode patterns        # Validation patterns
-/harmony --mode memory          # Sync MCP memory
-/harmony --mode claude          # Validation config Claude Code
-/harmony --mode rules           # Audit complet des regles
-/harmony --mode sentinel        # Dashboard sante systeme memoire
-/harmony --mode sentinel --learn   # Documenter une erreur
-/harmony --mode sentinel --reset   # Reinitialiser circuit breaker
-/harmony --mode learn <url>        # Apprendre depuis URL
-/harmony --mode profiles           # Lister tech profiles disponibles
-/harmony --mode specialties        # Lister specialties disponibles
-/harmony --mode ucv STORY-XXX      # Creer UCVs pour une story
-/harmony --mode ucv --validate STORY-XXX  # Verifier couverture 100%
+```
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                         HARMONY - Framework Orchestrator                        ║
+║                           INTERACTIVE COMMAND CENTER                            ║
+╠════════════════════════════════════════════════════════════════════════════════╣
+║  Project: {project_name}                                                        ║
+║  Phase: {phase} - {phase_name}               Status: {phase_status}             ║
+║  Circuit Breaker: {cb_state}                 Failures: {failures}/3             ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+   🔍 VALIDATION FRAMEWORK
+    1  Audit complet       2  Check rapide        3  Duplications
+    4  Proposer fixes      5  Watch mode
+
+   📊 RAPPORTS
+    6  Matrice coherence   7  Tokens Report
+
+   🎯 VALIDATION SPECIFIQUE
+    8  Pipeline            9  Hooks              10  Patterns
+
+   🔄 SYNCHRONISATION
+   11  Memory Sync        12  Claude Compliance  12u Claude Update
+
+   📏 REGLES APPLICATION
+   13  Rules Audit        14  Rules Usage        15  Rules Report
+
+   🛡️ HARMONY SENTINEL (Auto-Learning)
+   16  Sentinel Status    17  Sentinel Learn     18  Sentinel Reset
+   19  Sentinel Check     20  Sentinel Report
+
+   📚 KNOWLEDGE & PROFILES
+   21  Learn              22  Profiles           23  Specialties
+
+   🔌 INTEGRATIONS (LLM/IDE)
+   24  Install            25  Install Status
+
+   ✅ QUALITE (HQVF)
+   26  UCV Create         27  UCV Validate
+
+   🆕 FRAMEWORK
+   28  Init               29  Upgrade            30  Export
+
+╚════════════════════════════════════════════════════════════════════════════════╝
 ```
 
-## Documentation
+## Commandes Directes
 
-| Mode | Fichiers Reference |
-|------|--------------------|
-| full, quick, duplicates, fix | `.harmony/agents/harmony.md` |
-| sentinel | `.harmony/memory/` |
-| ucv | `.harmony/agents/specialists/ucv-writer.md` |
-| ucv --validate | `.harmony/agents/specialists/ucv-validator.md` |
-| rules | `.harmony/rules/` |
-| profiles | `.harmony/profiles/` |
-| specialties | `.harmony/specialties/` |
+```bash
+harmony                         # Menu interactif complet
+harmony full                    # Audit complet
+harmony quick                   # Check rapide
+harmony sentinel                # Dashboard Sentinel
+harmony sentinel --learn        # Documenter une erreur
+harmony sentinel --reset        # Reset circuit breaker
+harmony learn <url>             # Apprendre depuis URL
+harmony profiles                # Lister profiles
+harmony ucv STORY-XXX           # Creer UCVs
+```
+
+## Sources
+
+| Categorie | Fichiers Reference |
+|-----------|--------------------|
+| Menu complet | `.harmony/commands/index.md` |
+| Validation | `.harmony/commands/full.md`, `quick.md`, etc. |
+| Sentinel | `.harmony/commands/sentinel.md` |
+| Profiles | `.harmony/profiles/` |
+| Specialties | `.harmony/specialties/` |
+| UCV | `.harmony/agents/specialists/ucv-*.md` |
 
 ## Execution
 
-Charger l'agent depuis `.harmony/agents/harmony.md` et executer selon le mode.
+Charger le menu depuis `.harmony/commands/index.md` et executer selon la selection.
 
 Arguments: $ARGUMENTS
 HARMONY_CMD_EOF
@@ -793,19 +829,92 @@ Uses the **Harmony AI Framework** with:
 ## Essential Commands
 
 \`\`\`bash
-/go                               # Session kickoff - show current context
-/harmony                          # Interactive menu
-/harmony --mode quick             # Quick health check
-/harmony --mode sentinel          # Error memory dashboard
-/harmony --mode sentinel --reset  # Reset circuit breaker if stuck
-/harmony --mode ucv STORY-XXX     # Create UCVs for a story
+/go                               # Session kickoff
+/harmony                          # Menu interactif (30 commandes)
+
+# 🔍 VALIDATION FRAMEWORK (1-5)
+/harmony full                     # 1 - Audit complet (~2-5 min)
+/harmony quick                    # 2 - Check rapide (~30s)
+/harmony duplicates               # 3 - Detection duplicats
+/harmony fix                      # 4 - Proposer corrections
+/harmony fix --apply              #   - Appliquer avec confirmation
+/harmony watch                    # 5 - Pre-commit hook
+/harmony watch --install          #   - Installer hook
+/harmony watch --status           #   - Status hook
+
+# 📊 RAPPORTS (6-7)
+/harmony report                   # 6 - Matrice coherence
+/harmony report --json            #   - Export JSON
+/harmony report --verbose         #   - Details complets
+/harmony tokens                   # 7 - Token usage
+/harmony tokens --breakdown       #   - Par fichier
+/harmony tokens --optimize        #   - Optimisations
+
+# 🎯 VALIDATION SPECIFIQUE (8-10)
+/harmony pipeline                 # 8 - Coherence pipeline
+/harmony pipeline --verbose       #   - Details complets
+/harmony pipeline --fix           #   - Proposer corrections
+/harmony hooks                    # 9 - Validation hooks
+/harmony hooks --install          #   - Installer hooks
+/harmony hooks --status           #   - Status hooks
+/harmony patterns                 # 10 - Validation patterns
+/harmony patterns --fix           #   - Proposer corrections
+
+# 🔄 SYNCHRONISATION (11-12)
+/harmony memory                   # 11 - Sync MCP <-> CLAUDE.md
+/harmony memory --diff            #   - Afficher differences
+/harmony claude                   # 12 - Validation Claude Code
+/harmony claude --update          # 12u - MAJ regles conformite
+/harmony claude --fix             #   - Proposer corrections
+
+# 📏 REGLES APPLICATION (13-15)
+/harmony rules                    # 13 - Audit regles
+/harmony rules --usage            # 14 - Usage dans le code
+/harmony rules --report           # 15 - Rapport conformite
+
+# 🛡️ HARMONY SENTINEL (16-20)
+/harmony sentinel                 # 16 - Status (defaut): Dashboard
+/harmony sentinel --status        # 16 - Status: Dashboard
+/harmony sentinel --learn         # 17 - Learn: Documenter erreur
+/harmony sentinel --reset         # 18 - Reset: Circuit breaker
+/harmony sentinel --check         # 19 - Check: Verification systeme
+/harmony sentinel --report        # 20 - Report: Rapport detaille
+
+# 📚 KNOWLEDGE & PROFILES (21-23)
+/harmony learn <url>              # 21 - Apprendre depuis URL
+/harmony learn --refresh          #   - Rafraichir knowledge
+/harmony profiles                 # 22 - Lister profiles
+/harmony profiles --active        #   - Profiles actifs
+/harmony profiles --add <name>    #   - Activer profile
+/harmony profiles --remove <name> #   - Desactiver profile
+/harmony specialties              # 23 - Lister specialties
+/harmony specialties --active     #   - Specialties actives
+/harmony specialties --add <name> #   - Activer specialty
+/harmony specialties --remove <n> #   - Desactiver specialty
+
+# 🔌 INTEGRATIONS (24-25)
+/harmony install <ide>            # 24 - Deployer vers IDE
+/harmony install --status         # 25 - Status integrations
+/harmony install --list           #   - Lister IDEs supportes
+
+# ✅ QUALITE HQVF (26-27)
+/harmony ucv <story>              # 26 - Creer UCVs
+/harmony ucv --validate <story>   # 27 - Valider couverture UCVs
+
+# 🆕 FRAMEWORK (28-30)
+/harmony init                     # 28 - Initialiser Harmony
+/harmony init --minimal           #   - Installation minimale
+/harmony upgrade                  # 29 - Mettre a jour
+/harmony upgrade --check          #   - Verifier updates
+/harmony export                   # 30 - Exporter config
+/harmony export --full            #   - Export complet
 \`\`\`
 
 ## Before Starting Work
 
 1. Check \`.claude/memory/workflow-state.json\` for current phase (1-5)
 2. Check \`.claude/memory/working.json\` for active story and blockers
-3. Check \`.claude/memory/circuit-breaker.json\` - if OPEN, run \`/harmony --mode sentinel --reset\`
+3. Check \`.claude/memory/circuit-breaker.json\` - if OPEN, run \`/harmony sentinel --reset\` (option 18)
 
 ## Workflow Rules (Must Follow)
 
@@ -877,7 +986,7 @@ use_case:
 
 | Issue | Solution |
 |-------|----------|
-| Circuit breaker OPEN | \`/harmony --mode sentinel --reset\` after analysis |
+| Circuit breaker OPEN | \`/harmony sentinel --reset\` (option 18) after analysis |
 | Wrong agent activated | Use explicit keywords from Agent Routing table |
 | Missing context | Check \`.claude/memory/working.json\` for active story |
 CLAUDE_MD_EOF

@@ -1,0 +1,200 @@
+# Continue Integration
+# Open-source AI coding assistant with YAML config
+
+integration:
+  id: continue
+  name: "Continue"
+  vendor: "Continue Dev"
+  version: "1.0.0"
+  type: "extension"
+  status: "partial-support"
+  description: "Open-source AI assistant with assistants system"
+
+# ═══════════════════════════════════════════════════════════════
+# CAPABILITIES
+# ═══════════════════════════════════════════════════════════════
+
+capabilities:
+  hooks:
+    supported: false
+    note: "No hook system"
+
+  memory:
+    supported: false
+    note: "No persistent memory system"
+
+  mcp:
+    supported: false
+    alternative: "Uses model providers directly"
+
+  assistants:
+    supported: true
+    location: ".continue/assistants/"
+    format: "YAML"
+    description: "Custom AI personas with specific behaviors"
+
+  config:
+    supported: true
+    formats:
+      - "config.yaml (recommended)"
+      - "config.json (legacy)"
+    location: ".continue/"
+
+# ═══════════════════════════════════════════════════════════════
+# CONFIG SYSTEM
+# ═══════════════════════════════════════════════════════════════
+
+config_system:
+  project_config:
+    location: ".continue/config.yaml"
+    format: "YAML"
+    schema: "v1"
+    contents:
+      - "models"
+      - "rules"
+      - "context providers"
+      - "slash commands"
+
+  global_config:
+    location: "~/.continue/config.yaml"
+    scope: "All projects"
+
+  assistants:
+    location: ".continue/assistants/*.yaml"
+    description: "Custom AI assistants (like agents)"
+    format: |
+      name: assistant-name
+      version: 1.0.0
+      schema: v1
+      models:
+        - name: Model-Name
+          provider: provider
+          model: model-id
+          roles: [chat, edit, apply]
+      rules:
+        - "Rule 1"
+        - "Rule 2"
+
+# ═══════════════════════════════════════════════════════════════
+# FILE STRUCTURE
+# ═══════════════════════════════════════════════════════════════
+
+file_structure:
+  ".continue/":
+    - "config.yaml"          # Main configuration
+    - "config.json"          # Legacy format
+
+  ".continue/assistants/":
+    - "harmony-developer.yaml"
+    - "harmony-tester.yaml"
+    - "harmony-analyst.yaml"
+    - "harmony-guardian.yaml"
+
+# ═══════════════════════════════════════════════════════════════
+# ASSISTANT FORMAT
+# ═══════════════════════════════════════════════════════════════
+
+assistant_format:
+  example: |
+    name: harmony-developer
+    version: 1.0.0
+    schema: v1
+
+    description: |
+      Amelia - Harmony Developer Agent
+      Implements features, fixes bugs, writes unit tests
+
+    models:
+      - name: Claude-Sonnet
+        provider: anthropic
+        model: claude-sonnet-4-20250514
+        apiKey: ${ANTHROPIC_API_KEY}
+        roles:
+          - chat
+          - edit
+          - apply
+
+    rules:
+      - "You are Amelia, the Developer agent"
+      - "Always check for a story before implementing"
+      - "Write unit tests for new code"
+      - "Follow the project's tech stack conventions"
+      - "Mark UCV verifications as you complete them"
+
+    context:
+      - type: file
+        path: ".harmony/agents/developer.md"
+
+# ═══════════════════════════════════════════════════════════════
+# HARMONY MAPPING
+# ═══════════════════════════════════════════════════════════════
+
+harmony_mapping:
+
+  guardian:
+    target: "config.yaml rules"
+    implementation: |
+      Guardian rules in config
+      No automatic enforcement
+      User must follow guidelines
+
+  sentinel:
+    target: "Not supported"
+    implementation: |
+      No persistent memory
+      Manual error tracking
+      Patterns in rules only
+
+  agents:
+    target: ".continue/assistants/*.yaml"
+    implementation: |
+      Each Harmony agent = Continue assistant
+      Separate YAML file per agent
+      Rules define agent behavior
+
+  tech_profiles:
+    target: "config.yaml context"
+    implementation: |
+      Profile content as context
+      Loaded via file context provider
+      Best practices in rules
+
+# ═══════════════════════════════════════════════════════════════
+# TEMPLATES
+# ═══════════════════════════════════════════════════════════════
+
+templates:
+  - "templates/config.yaml"
+  - "templates/assistants/harmony-developer.yaml"
+  - "templates/assistants/harmony-tester.yaml"
+  - "templates/assistants/harmony-analyst.yaml"
+  - "templates/assistants/harmony-guardian.yaml"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install continue"
+  steps:
+    1: "Create .continue/ directory"
+    2: "Generate config.yaml from template"
+    3: "Create assistant files for each agent"
+    4: "Configure model provider (manual)"
+    5: "Verify installation"
+
+  post_install: |
+    Continue integration installed!
+
+    Files created:
+    - .continue/config.yaml
+    - .continue/assistants/harmony-*.yaml
+
+    Manual steps:
+    1. Configure your model provider API key
+    2. Select an assistant in Continue UI
+
+    Limitations:
+    - No hooks (Guardian not enforced)
+    - No persistent memory (Sentinel limited)
+    - Manual agent selection required

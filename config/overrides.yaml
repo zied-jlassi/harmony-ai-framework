@@ -1,0 +1,146 @@
+# =============================================================================
+# Harmony Framework - Project Overrides
+# =============================================================================
+#
+# This file allows you to customize the Harmony framework for your project
+# without modifying the framework files directly.
+#
+# Benefits:
+#   - Framework updates won't overwrite your customizations
+#   - Easy to share project-specific rules
+#   - Clear separation of concerns
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PROJECT CONTEXT
+# -----------------------------------------------------------------------------
+project:
+  name: ""                    # Your project name (used in messages)
+  container_prefix: ""        # Docker container prefix (e.g., "myapp")
+  language: "en"              # Output language: "en" | "fr"
+
+# -----------------------------------------------------------------------------
+# DOCKER CONFIGURATION
+# -----------------------------------------------------------------------------
+docker:
+  required: false             # If true, blocks local package managers
+  container_prefix: "app"     # Prefix for docker exec suggestions
+
+# -----------------------------------------------------------------------------
+# RULES ENFORCER OVERRIDES
+# -----------------------------------------------------------------------------
+rules_enforcer:
+
+  # Additional dangerous patterns to block (CRITICAL - exit 2)
+  # These are added to the framework defaults
+  add_dangerous_patterns: []
+  # Example:
+  # add_dangerous_patterns:
+  #   - 'myproject.*DROP'
+  #   - 'rm -rf /data/production'
+
+  # Patterns to disable from framework defaults
+  # Use with caution!
+  disable_patterns: []
+  # Example:
+  # disable_patterns:
+  #   - 'prisma migrate reset'  # We allow this in dev
+
+  # Additional warning patterns (non-blocking)
+  add_warning_patterns: []
+  # Example:
+  # add_warning_patterns:
+  #   - 'chmod.*myproject'
+
+  # Additional allowed patterns (exceptions)
+  add_allowed_patterns: []
+  # Example:
+  # add_allowed_patterns:
+  #   - 'docker exec myproject-backend npm'
+
+  # Project-specific secrets patterns
+  add_secrets_patterns: []
+  # Example:
+  # add_secrets_patterns:
+  #   - '\.myproject-secrets$'
+  #   - 'MYPROJECT_API_KEY='
+
+# -----------------------------------------------------------------------------
+# GUARDIAN OVERRIDES
+# -----------------------------------------------------------------------------
+guardian:
+  enabled: true
+  mode: "warn"                # "warn" | "block"
+
+  # Additional allowed directories (no story check)
+  add_allowed_directories: []
+  # Example:
+  # add_allowed_directories:
+  #   - "scripts/"
+  #   - "tools/"
+
+  # Additional allowed file types
+  add_allowed_extensions: []
+  # Example:
+  # add_allowed_extensions:
+  #   - ".sql"
+  #   - ".sh"
+
+# -----------------------------------------------------------------------------
+# SENTINEL OVERRIDES
+# -----------------------------------------------------------------------------
+sentinel:
+  enabled: true
+  circuit_breaker:
+    enabled: true
+    max_failures: 3
+    cooldown_minutes: 5
+
+# -----------------------------------------------------------------------------
+# AGENTS OVERRIDES
+# -----------------------------------------------------------------------------
+agents:
+  # Disable specific agents
+  disabled: []
+  # Example:
+  # disabled:
+  #   - "pentest"
+  #   - "accessibility"
+
+  # Custom agent aliases
+  aliases: {}
+  # Example:
+  # aliases:
+  #   "dev": "game-developer"
+  #   "qa": "luna"
+
+# -----------------------------------------------------------------------------
+# HOOKS CHAIN
+# -----------------------------------------------------------------------------
+hooks:
+  # Additional pre-tool hooks (run after framework hooks)
+  additional_pre_hooks: []
+  # Example:
+  # additional_pre_hooks:
+  #   - ".harmony/local/hooks/my-custom-check.sh"
+
+  # Additional post-tool hooks
+  additional_post_hooks: []
+
+  # Hooks to skip
+  disabled_hooks: []
+  # Example:
+  # disabled_hooks:
+  #   - "guardian-checkpoint"  # Skip story check
+
+# -----------------------------------------------------------------------------
+# TEMPLATES OVERRIDES
+# -----------------------------------------------------------------------------
+templates:
+  # Custom template paths (override framework templates)
+  paths: {}
+  # Example:
+  # paths:
+  #   "story": ".harmony/local/templates/story.md"
+  #   "ucv": ".harmony/local/templates/ucv.md"

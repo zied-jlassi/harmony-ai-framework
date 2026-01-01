@@ -1,0 +1,213 @@
+# Cursor Integration
+# AI-first IDE with 5-level rules system
+
+integration:
+  id: cursor
+  name: "Cursor"
+  vendor: "Cursor Inc"
+  version: "1.0.0"
+  type: "ide"
+  status: "full-support"
+  description: "AI-first IDE with comprehensive rules system"
+
+# ═══════════════════════════════════════════════════════════════
+# CAPABILITIES
+# ═══════════════════════════════════════════════════════════════
+
+capabilities:
+  hooks:
+    supported: false
+    note: "No native hook system"
+
+  memory:
+    supported: true
+    type: "built-in"
+    note: "Cursor manages memories internally"
+    user_control: "limited"
+
+  mcp:
+    supported: true
+    config: "Cursor Settings > Features > MCP"
+    note: "Configured via UI, not files"
+
+  slash_commands:
+    supported: false
+    alternative: "Use @ mentions and prompts"
+
+  rules:
+    supported: true
+    levels: 5
+    description: |
+      1. User Rules (global, in Cursor Settings)
+      2. Workspace Rules (in Settings)
+      3. .cursor/rules/*.mdc (new, recommended)
+      4. .cursorrules (legacy, deprecated)
+      5. Inline rules (in prompts)
+
+# ═══════════════════════════════════════════════════════════════
+# RULES SYSTEM (5 LEVELS)
+# ═══════════════════════════════════════════════════════════════
+
+rules_system:
+  level_1_user:
+    location: "Cursor > Settings > Rules for AI"
+    scope: "All projects"
+    format: "Plain text"
+    use_for: "Personal preferences, global style"
+
+  level_2_workspace:
+    location: "Workspace settings"
+    scope: "Current workspace"
+    format: "Plain text"
+    use_for: "Team-wide conventions"
+
+  level_3_cursor_rules:
+    location: ".cursor/rules/*.mdc"
+    scope: "Project"
+    format: "MDC (Markdown Components)"
+    use_for: "Detailed project rules"
+    note: "NEW in 0.45+, recommended"
+    features:
+      - "Multiple rule files"
+      - "Conditional activation"
+      - "File pattern matching"
+
+  level_4_cursorrules:
+    location: ".cursorrules"
+    scope: "Project"
+    format: "Plain text"
+    use_for: "Legacy support"
+    note: "DEPRECATED, migrate to .cursor/rules/"
+
+  level_5_inline:
+    location: "In prompts"
+    scope: "Single interaction"
+    format: "Natural language"
+    use_for: "One-off instructions"
+
+# ═══════════════════════════════════════════════════════════════
+# FILE STRUCTURE
+# ═══════════════════════════════════════════════════════════════
+
+file_structure:
+  ".cursor/":
+    - "rules/"              # Rule files directory
+
+  ".cursor/rules/":
+    - "harmony-core.mdc"    # Core Harmony rules
+    - "harmony-guardian.mdc" # Guardian protocol
+    - "harmony-agents.mdc"  # Agent definitions
+    - "harmony-{profile}.mdc" # Tech profile rules
+
+  "project_root":
+    - ".cursorrules"        # Legacy (optional)
+
+# ═══════════════════════════════════════════════════════════════
+# MDC FORMAT
+# ═══════════════════════════════════════════════════════════════
+
+mdc_format:
+  description: "Markdown Components - Cursor's rule format"
+  example: |
+    ---
+    description: Harmony Guardian Protocol
+    globs: ["**/*.ts", "**/*.tsx"]
+    alwaysApply: false
+    ---
+
+    # Guardian Protocol
+
+    ## Intent Detection
+    When user mentions keywords like "develop", "implement", "code":
+    1. Check for existing story
+    2. Verify prerequisites
+    3. Route to appropriate agent
+
+    ## Agents
+    - Developer (Amelia): Implementation
+    - Tester (Emma): Testing
+    - Luna: Exploratory QA
+
+  frontmatter:
+    description: "Rule description (shown in UI)"
+    globs: "File patterns to activate rule"
+    alwaysApply: "Always include (true/false)"
+
+# ═══════════════════════════════════════════════════════════════
+# HARMONY MAPPING
+# ═══════════════════════════════════════════════════════════════
+
+harmony_mapping:
+
+  guardian:
+    target: ".cursor/rules/harmony-guardian.mdc"
+    implementation: |
+      Guardian rules as MDC file
+      Activated on code files
+      Intent detection in natural language
+
+  sentinel:
+    target: "Built-in memories + manual"
+    implementation: |
+      No direct mapping (no hooks)
+      Use Cursor's memory feature
+      Document patterns in rules
+
+  agents:
+    target: ".cursor/rules/harmony-agents.mdc"
+    implementation: |
+      Each agent as section in MDC
+      Activation keywords documented
+      Capabilities and restrictions listed
+
+  tech_profiles:
+    target: ".cursor/rules/harmony-{profile}.mdc"
+    implementation: |
+      One MDC file per active profile
+      Loaded based on file globs
+      Best practices as rules
+
+  specialties:
+    target: ".cursor/rules/harmony-{specialty}.mdc"
+    implementation: |
+      Specialty rules as MDC
+      Domain-specific patterns
+      Agent definitions included
+
+# ═══════════════════════════════════════════════════════════════
+# TEMPLATES
+# ═══════════════════════════════════════════════════════════════
+
+templates:
+  - "templates/rules/harmony-core.mdc"
+  - "templates/rules/harmony-guardian.mdc"
+  - "templates/rules/harmony-agents.mdc"
+  - "templates/.cursorrules.legacy"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install cursor"
+  steps:
+    1: "Create .cursor/rules/ directory"
+    2: "Generate MDC files from templates + profiles"
+    3: "Create legacy .cursorrules if needed"
+    4: "Configure MCP in Cursor settings (manual)"
+    5: "Verify installation"
+
+  post_install: |
+    Cursor integration installed!
+
+    Files created:
+    - .cursor/rules/harmony-core.mdc
+    - .cursor/rules/harmony-guardian.mdc
+    - .cursor/rules/harmony-agents.mdc
+
+    Manual steps:
+    1. Open Cursor Settings
+    2. Go to Features > MCP
+    3. Configure MCP servers if needed
+
+    Test by asking: "What Harmony agents are available?"

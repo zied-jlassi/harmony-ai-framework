@@ -1,0 +1,45 @@
+# Sass Profile - Level 1
+profile:
+  id: sass
+  name: "Sass/SCSS"
+  category: styling
+  level: 1
+  description: "Sass - variables, mixins, modules, nesting"
+  last_updated: null
+
+versioning:
+  latest: "1.x"
+  notes: "Dart Sass is the primary implementation"
+
+  versions:
+    "1.x":
+      features: ["@use/@forward", "Modules", "Built-in functions"]
+    "legacy":
+      deprecated: true
+      notes: "@import deprecated, use @use"
+
+dependencies:
+  required: [css]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://sass-lang.com/documentation/"
+      priority: 1
+
+  topics:
+    - variables        # $variable
+    - nesting          # nested rules
+    - mixins           # @mixin, @include
+    - modules          # @use, @forward
+    - functions        # @function
+    - control          # @if, @each, @for
+    - interpolation    # #{}
+
+loading:
+  strategy: jit
+  max_files_per_request: 2
+
+cross_references:
+  - "[[css/layout]]"

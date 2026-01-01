@@ -1,0 +1,92 @@
+# R-002: UCV Approval Required
+# No development without approved Use Case Verifications
+
+rule:
+  id: R-002
+  name: "UCV Approval Required"
+  category: quality
+  severity: error
+  description: |
+    Development cannot start until Use Case Verifications (UCVs) are:
+    1. Created for the story
+    2. Reviewed by stakeholders
+    3. Explicitly approved by the user
+
+enforcement:
+  mode: block  # warn | block
+  phases: [4]  # Only in Implementation phase
+  contexts:
+    - development
+    - feature
+
+conditions:
+  - type: prerequisite
+    check: "story.ucv_file exists"
+    description: "UCV file must exist for the story"
+
+  - type: state
+    check: "story.ucv_status == 'APPROVED'"
+    description: "UCVs must be approved before development"
+
+  - type: pattern
+    check: "story.ucv_verifications.length > 0"
+    description: "At least one verification must be defined"
+
+workflow:
+  # UCV creation workflow
+  creation:
+    trigger: "story created"
+    agent: clara
+    output: "STORY-{id}-UCV.md"
+
+  # UCV approval workflow
+  approval:
+    trigger: "ucv created"
+    requires: "user explicit approval"
+    statuses:
+      - PENDING    # Created, awaiting review
+      - APPROVED   # User approved
+      - REJECTED   # User requested changes
+
+actions:
+  on_violation:
+    message: |
+      🛡️ GUARDIAN CHECKPOINT - UCV REQUIRED
+
+      🚫 BLOCKED: Development without approved UCV
+
+      Story: {story_id}
+      UCV Status: {ucv_status}
+
+    suggestion: |
+      REQUIRED ACTIONS:
+
+      If UCV doesn't exist:
+      1. Generate UCVs: "create UCV for {story_id}"
+
+      If UCV exists but not approved:
+      2. Review the UCV file: docs/backlog/stories/{story_id}-UCV.md
+      3. Request user approval
+      4. Update status to APPROVED
+
+  on_success:
+    message: |
+      ✅ UCV approved - Development can proceed
+      Story: {story_id}
+      Verifications: {verification_count}
+      Coverage target: 100%
+
+# Validation matrix
+validation:
+  dev_column: true      # Developer marks implementation
+  test_column: true     # Tester marks test coverage
+  qa_column: true       # QA marks visual validation
+  completion: "all columns must be true for story completion"
+
+# Related
+related:
+  patterns:
+    - P-008-ucv-gate
+  agents:
+    - clara
+    - victor

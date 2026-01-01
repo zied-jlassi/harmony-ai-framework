@@ -1,0 +1,174 @@
+# Claude Code Integration
+# Full-featured integration with hooks, memory, MCP, slash commands
+
+integration:
+  id: claude-code
+  name: "Claude Code"
+  vendor: "Anthropic"
+  version: "1.0.0"
+  type: "cli"
+  status: "full-support"
+  description: "Anthropic's official CLI for Claude with full Harmony support"
+
+# ═══════════════════════════════════════════════════════════════
+# CAPABILITIES
+# ═══════════════════════════════════════════════════════════════
+
+capabilities:
+  hooks:
+    supported: true
+    types:
+      - PreToolUse      # Before any tool execution
+      - PostToolUse     # After tool execution
+      - Notification    # On events
+      - Stop            # On session end
+    location: ".claude/hooks/"
+    format: "shell scripts or commands"
+
+  memory:
+    supported: true
+    location: ".claude/memory/"
+    files:
+      - "workflow-state.json"    # Guardian state
+      - "circuit-breaker.json"   # Sentinel state
+      - "error-journal.json"     # Error history
+      - "learned-patterns.json"  # Patterns
+      - "session-handoff.md"     # Session continuity
+
+  mcp:
+    supported: true
+    config_file: ".mcp.json"
+    location: "project root"
+    note: "Don't redefine global MCPs from ~/.claude.json"
+
+  slash_commands:
+    supported: true
+    location: ".claude/commands/"
+    format: "markdown files"
+
+  skills:
+    supported: true
+    location: ".claude/commands/ or managed"
+    format: "markdown with frontmatter"
+
+  rules:
+    supported: true
+    file: "CLAUDE.md"
+    locations:
+      - "project root (shared with team)"
+      - "~/.claude/CLAUDE.md (personal)"
+      - "parent directories (monorepo)"
+    format: "markdown"
+
+# ═══════════════════════════════════════════════════════════════
+# FILE STRUCTURE
+# ═══════════════════════════════════════════════════════════════
+
+file_structure:
+  project_root:
+    - "CLAUDE.md"           # Project rules + agents
+    - ".mcp.json"           # MCP servers config
+
+  ".claude/":
+    - "settings.json"       # Claude Code settings
+    - "settings.local.json" # Local overrides (gitignored)
+
+  ".claude/hooks/":
+    - "rules-enforcer.sh"   # Interdictions check (FIRST)
+    - "pre-tool-use.sh"     # Guardian checkpoint
+    - "post-tool-use.sh"    # Sentinel learning
+    - "*.sh"                # Custom hooks
+
+  ".claude/memory/":
+    - "workflow-state.json"
+    - "circuit-breaker.json"
+    - "error-journal.json"
+    - "learned-patterns.json"
+    - "anti-patterns.json"
+
+  ".claude/commands/":
+    - "*.md"                # Custom slash commands
+
+# ═══════════════════════════════════════════════════════════════
+# HARMONY MAPPING
+# ═══════════════════════════════════════════════════════════════
+
+harmony_mapping:
+
+  guardian:
+    target: "CLAUDE.md + hooks"
+    implementation: |
+      1. Guardian rules in CLAUDE.md
+      2. Pre-tool hook for checkpoint
+      3. workflow-state.json for state
+
+  sentinel:
+    target: ".claude/memory/ + hooks"
+    implementation: |
+      1. Post-tool hook for error detection
+      2. circuit-breaker.json for state
+      3. error-journal.json for history
+
+  agents:
+    target: "CLAUDE.md sections"
+    implementation: |
+      1. Each agent as CLAUDE.md section
+      2. Activation keywords documented
+      3. Skills for complex workflows
+
+  tech_profiles:
+    target: "JIT loaded to context"
+    implementation: |
+      1. Profiles in .harmony/profiles/
+      2. Loaded on-demand via context
+      3. Cross-referenced in CLAUDE.md
+
+  specialties:
+    target: "CLAUDE.md + agents"
+    implementation: |
+      1. Specialty agents in CLAUDE.md
+      2. Domain patterns documented
+      3. Activated by keywords
+
+  workflows:
+    target: "Slash commands + skills"
+    implementation: |
+      1. /harmony commands
+      2. Workflow skills
+      3. Agent invocation
+
+# ═══════════════════════════════════════════════════════════════
+# TEMPLATES
+# ═══════════════════════════════════════════════════════════════
+
+templates:
+  - "templates/CLAUDE.md.template"
+  - "templates/hooks/guardian-checkpoint.sh"
+  - "templates/hooks/sentinel-post-tool.sh"
+  - "templates/memory/workflow-state.json"
+  - "templates/memory/circuit-breaker.json"
+  - "templates/mcp.json.template"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install claude-code"
+  steps:
+    1: "Create .claude/ directory structure"
+    2: "Generate CLAUDE.md from template + active profiles"
+    3: "Install hooks scripts"
+    4: "Initialize memory files"
+    5: "Configure MCP if needed"
+    6: "Verify installation"
+
+  post_install: |
+    Claude Code integration installed!
+
+    Files created:
+    - CLAUDE.md (project rules)
+    - .claude/hooks/ (Guardian + Sentinel)
+    - .claude/memory/ (persistent state)
+
+    Test with: claude "test harmony"

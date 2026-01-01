@@ -1,0 +1,34 @@
+# Java Profile - Level 0
+profile:
+  id: java
+  name: "Java"
+  version: "21 LTS / 22+"
+  category: languages
+  level: 0
+  description: "Java language - OOP, streams, records, virtual threads"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://docs.oracle.com/en/java/"
+      priority: 1
+    - url: "https://dev.java/"
+      priority: 2
+
+  topics:
+    - fundamentals     # types, classes, interfaces
+    - streams          # Stream API, collectors
+    - records          # immutable data classes
+    - virtual-threads  # Project Loom
+    - modules          # JPMS
+    - generics         # type parameters
+    - exceptions       # checked, unchecked
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

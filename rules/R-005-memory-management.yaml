@@ -1,0 +1,146 @@
+# R-005: Memory Management
+# Three-tier memory system rules
+
+rule:
+  id: R-005
+  name: "Memory Management Rules"
+  category: memory
+  severity: info
+  description: |
+    Governs the three-tier memory system:
+    - Working memory (in-context)
+    - Session memory (compressed)
+    - Long-term memory (persistent)
+
+enforcement:
+  mode: warn
+  phases: [1, 2, 3, 4, 5]  # All phases
+  contexts:
+    - all
+
+tiers:
+  working:
+    description: "In-context, immediate access"
+    max_items: 50
+    retention: "current context only"
+    location: "LLM context window"
+
+    includes:
+      - current_task
+      - active_story
+      - recent_errors
+      - active_patterns
+      - user_preferences
+
+  session:
+    description: "Compressed, session-scoped"
+    max_items: 200
+    retention: "current session"
+    location: "session storage"
+
+    includes:
+      - conversation_summary
+      - decisions_made
+      - files_modified
+      - patterns_applied
+
+    compression:
+      trigger: "context > 80% full"
+      method: "summarize older items"
+      preserve: "key decisions and patterns"
+
+  longterm:
+    description: "Persistent, survives sessions"
+    max_items: 1000
+    retention: "indefinite"
+    location: "${MEMORY_DIR}/"  # IDE-specific (e.g., .claude/memory/)
+
+    includes:
+      - error_journal
+      - learned_patterns
+      - user_preferences
+      - project_context
+      - workflow_state
+
+    files:
+      - workflow-state.json
+      - error-journal.json
+      - circuit-breaker.json
+      - learned-patterns.json
+      - user-preferences.json
+
+jit_loading:
+  description: "Just-In-Time context loading"
+  enabled: true
+
+  triggers:
+    - type: "topic_match"
+      action: "load related patterns"
+
+    - type: "error_similarity"
+      action: "load similar error solutions"
+
+    - type: "file_context"
+      action: "load file-related decisions"
+
+  limits:
+    max_items_per_load: 10
+    relevance_threshold: 0.7
+
+conditions:
+  - type: resource
+    check: "memory.working.items <= memory.working.max_items"
+    description: "Working memory within limits"
+
+  - type: resource
+    check: "memory.session.items <= memory.session.max_items"
+    description: "Session memory within limits"
+
+actions:
+  on_violation:
+    message: |
+      ⚠️ MEMORY LIMIT APPROACHING
+
+      Working memory: {working.items}/{working.max_items}
+      Session memory: {session.items}/{session.max_items}
+
+    suggestion: |
+      RECOMMENDED ACTIONS:
+
+      1. Compress older context:
+         - Summarize completed tasks
+         - Archive resolved errors
+
+      2. Persist important items to long-term:
+         - Save learned patterns
+         - Update error journal
+
+      3. Clear irrelevant context:
+         - Remove stale file references
+         - Clear completed todos
+
+  on_success:
+    message: |
+      ✅ Memory usage healthy
+      Working: {working.items}/{working.max_items}
+
+# Garbage collection
+gc:
+  enabled: true
+  triggers:
+    - "session end"
+    - "phase change"
+    - "story completion"
+
+  actions:
+    - compress_session_memory
+    - persist_patterns
+    - clear_stale_context
+
+# Related
+related:
+  patterns:
+    - P-002-three-tier-memory
+    - P-003-jit-context
+  agents:
+    - sentinel

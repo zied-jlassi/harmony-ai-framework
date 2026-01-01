@@ -1,0 +1,34 @@
+# Django Profile - Level 2
+profile:
+  id: django
+  name: "Django"
+  version: "5.x"
+  category: backend
+  level: 2
+  description: "Django - ORM, admin, DRF, async views"
+  last_updated: null
+
+dependencies:
+  required: [python]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://docs.djangoproject.com/"
+      priority: 1
+    - url: "https://www.django-rest-framework.org/"
+      priority: 2
+
+  topics:
+    - models           # ORM, migrations
+    - views            # function, class-based, async
+    - templates        # DTL
+    - admin            # admin site
+    - drf              # Django REST Framework
+    - forms            # forms, validation
+    - authentication   # users, permissions
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

@@ -1,0 +1,11 @@
+# Harmony Local Overrides
+# This directory contains project-specific overrides for the Harmony framework.
+# Files here take precedence over framework defaults.
+#
+# Structure:
+#   local/hooks/       - Override or extend hooks
+#   local/agents/      - Override or extend agents
+#   local/rules/       - Additional project rules
+#   local/patterns/    - Additional project patterns
+#
+# See: .harmony/docs/overrides.md for documentation

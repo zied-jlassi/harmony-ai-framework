@@ -1,0 +1,482 @@
+# Profiles Registry - Master Index
+# All tech profiles with dependencies and version detection
+# Updated: 2025-12-30
+
+version: "1.0.0"
+last_updated: "2025-12-30"
+
+# ═══════════════════════════════════════════════════════════════
+# DEPENDENCY LEVELS
+# L0: Languages (no deps)
+# L1: Runtimes/Preprocessors (require language)
+# L2: Frameworks (require runtime or language)
+# L3: Meta-frameworks/Tools (require framework)
+# ═══════════════════════════════════════════════════════════════
+
+profiles:
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 0 - LANGUAGES
+  # ───────────────────────────────────────────────────────────────
+
+  javascript:
+    level: 0
+    category: languages
+    path: languages/javascript/
+    requires: []
+    keywords: [js, javascript, es2024, ecmascript]
+    detection: null  # Base language
+
+  typescript:
+    level: 0
+    category: languages
+    path: languages/typescript/
+    requires: [javascript]
+    keywords: [ts, typescript, tsconfig]
+    detection:
+      file: "tsconfig.json"
+      exists: true
+
+  python:
+    level: 0
+    category: languages
+    path: languages/python/
+    requires: []
+    keywords: [python, py, pip]
+    detection:
+      files: ["requirements.txt", "pyproject.toml", "setup.py"]
+
+  php:
+    level: 0
+    category: languages
+    path: languages/php/
+    requires: []
+    keywords: [php, composer]
+    detection:
+      file: "composer.json"
+
+  java:
+    level: 0
+    category: languages
+    path: languages/java/
+    requires: []
+    keywords: [java, maven, gradle]
+    detection:
+      files: ["pom.xml", "build.gradle", "build.gradle.kts"]
+
+  kotlin:
+    level: 0
+    category: languages
+    path: languages/kotlin/
+    requires: [java]
+    keywords: [kotlin, kt]
+    detection:
+      file: "build.gradle.kts"
+      content: "kotlin"
+
+  go:
+    level: 0
+    category: languages
+    path: languages/go/
+    requires: []
+    keywords: [go, golang]
+    detection:
+      file: "go.mod"
+
+  rust:
+    level: 0
+    category: languages
+    path: languages/rust/
+    requires: []
+    keywords: [rust, cargo]
+    detection:
+      file: "Cargo.toml"
+
+  csharp:
+    level: 0
+    category: languages
+    path: languages/csharp/
+    requires: []
+    keywords: [csharp, "c#", dotnet]
+    detection:
+      files: ["*.csproj", "*.sln"]
+
+  ruby:
+    level: 0
+    category: languages
+    path: languages/ruby/
+    requires: []
+    keywords: [ruby, rb, gem]
+    detection:
+      file: "Gemfile"
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 0 - STYLING (base)
+  # ───────────────────────────────────────────────────────────────
+
+  css:
+    level: 0
+    category: styling
+    path: styling/css/
+    requires: []
+    keywords: [css, stylesheet]
+    detection: null  # Always available
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 1 - RUNTIMES & PREPROCESSORS
+  # ───────────────────────────────────────────────────────────────
+
+  nodejs:
+    level: 1
+    category: runtimes
+    path: runtimes/nodejs/
+    requires: [javascript]
+    keywords: [node, nodejs, npm, npx]
+    detection:
+      file: "package.json"
+
+  jvm:
+    level: 1
+    category: runtimes
+    path: runtimes/jvm/
+    requires: [java]
+    keywords: [jvm, java]
+    detection:
+      files: ["pom.xml", "build.gradle"]
+
+  dotnet:
+    level: 1
+    category: runtimes
+    path: runtimes/dotnet/
+    requires: [csharp]
+    keywords: [dotnet, ".net"]
+    detection:
+      files: ["*.csproj"]
+
+  sass:
+    level: 1
+    category: styling
+    path: styling/sass/
+    requires: [css]
+    keywords: [sass, scss]
+    detection:
+      files: ["*.scss", "*.sass"]
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 2 - BACKEND FRAMEWORKS
+  # ───────────────────────────────────────────────────────────────
+
+  nestjs:
+    level: 2
+    category: backend
+    path: backend/nestjs/
+    requires: [typescript, nodejs]
+    optional: [prisma, graphql]
+    keywords: [nestjs, "@nestjs"]
+    detection:
+      file: "package.json"
+      content: "@nestjs/core"
+
+  express:
+    level: 2
+    category: backend
+    path: backend/express/
+    requires: [javascript, nodejs]
+    keywords: [express]
+    detection:
+      file: "package.json"
+      content: "express"
+
+  fastify:
+    level: 2
+    category: backend
+    path: backend/fastify/
+    requires: [javascript, nodejs]
+    keywords: [fastify]
+    detection:
+      file: "package.json"
+      content: "fastify"
+
+  django:
+    level: 2
+    category: backend
+    path: backend/django/
+    requires: [python]
+    keywords: [django, drf]
+    detection:
+      file: "requirements.txt"
+      content: "django"
+
+  flask:
+    level: 2
+    category: backend
+    path: backend/flask/
+    requires: [python]
+    keywords: [flask]
+    detection:
+      file: "requirements.txt"
+      content: "flask"
+
+  laravel:
+    level: 2
+    category: backend
+    path: backend/laravel/
+    requires: [php]
+    keywords: [laravel, artisan]
+    detection:
+      file: "composer.json"
+      content: "laravel/framework"
+
+  symfony:
+    level: 2
+    category: backend
+    path: backend/symfony/
+    requires: [php]
+    keywords: [symfony]
+    detection:
+      file: "composer.json"
+      content: "symfony/framework-bundle"
+
+  springboot:
+    level: 2
+    category: backend
+    path: backend/springboot/
+    requires: [java, jvm]
+    optional: [kotlin]
+    keywords: [spring, springboot]
+    detection:
+      file: "pom.xml"
+      content: "spring-boot-starter"
+
+  rails:
+    level: 2
+    category: backend
+    path: backend/rails/
+    requires: [ruby]
+    keywords: [rails, activerecord]
+    detection:
+      file: "Gemfile"
+      content: "rails"
+
+  dotnet-core:
+    level: 2
+    category: backend
+    path: backend/dotnet-core/
+    requires: [csharp, dotnet]
+    keywords: [aspnet, aspnetcore]
+    detection:
+      file: "*.csproj"
+      content: "Microsoft.AspNetCore"
+
+  gin:
+    level: 2
+    category: backend
+    path: backend/gin/
+    requires: [go]
+    keywords: [gin]
+    detection:
+      file: "go.mod"
+      content: "gin-gonic"
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 2 - FRONTEND FRAMEWORKS
+  # ───────────────────────────────────────────────────────────────
+
+  angular:
+    level: 2
+    category: frontend
+    path: frontend/angular/
+    requires: [typescript]
+    keywords: [angular, "@angular"]
+    detection:
+      file: "angular.json"
+
+  react:
+    level: 2
+    category: frontend
+    path: frontend/react/
+    requires: [javascript]
+    optional: [typescript]
+    keywords: [react, jsx, tsx]
+    detection:
+      file: "package.json"
+      content: "react"
+
+  vue:
+    level: 2
+    category: frontend
+    path: frontend/vue/
+    requires: [javascript]
+    optional: [typescript]
+    keywords: [vue, vuejs]
+    detection:
+      file: "package.json"
+      content: "vue"
+
+  svelte:
+    level: 2
+    category: frontend
+    path: frontend/svelte/
+    requires: [javascript]
+    optional: [typescript]
+    keywords: [svelte]
+    detection:
+      file: "svelte.config.js"
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 2 - STYLING FRAMEWORKS
+  # ───────────────────────────────────────────────────────────────
+
+  tailwind:
+    level: 2
+    category: styling
+    path: styling/tailwind/
+    requires: [css]
+    keywords: [tailwind, tailwindcss]
+    detection:
+      files: ["tailwind.config.js", "tailwind.config.ts"]
+
+  bootstrap:
+    level: 2
+    category: styling
+    path: styling/bootstrap/
+    requires: [css]
+    optional: [sass, javascript]
+    keywords: [bootstrap]
+    detection:
+      file: "package.json"
+      content: "bootstrap"
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 2 - DATABASES
+  # ───────────────────────────────────────────────────────────────
+
+  postgresql:
+    level: 2
+    category: databases
+    path: databases/postgresql/
+    requires: []
+    keywords: [postgres, postgresql, pg]
+
+  mysql:
+    level: 2
+    category: databases
+    path: databases/mysql/
+    requires: []
+    keywords: [mysql, mariadb]
+
+  sqlite:
+    level: 2
+    category: databases
+    path: databases/sqlite/
+    requires: []
+    keywords: [sqlite, sqlite3]
+
+  mongodb:
+    level: 2
+    category: databases
+    path: databases/mongodb/
+    requires: []
+    keywords: [mongodb, mongo, nosql]
+
+  redis:
+    level: 2
+    category: databases
+    path: databases/redis/
+    requires: []
+    keywords: [redis, cache]
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 3 - META-FRAMEWORKS
+  # ───────────────────────────────────────────────────────────────
+
+  nextjs:
+    level: 3
+    category: meta
+    path: frontend/nextjs/
+    requires: [react]
+    optional: [typescript]
+    keywords: [nextjs, "next.js"]
+    detection:
+      file: "next.config.js"
+
+  nuxt:
+    level: 3
+    category: meta
+    path: frontend/nuxt/
+    requires: [vue]
+    optional: [typescript]
+    keywords: [nuxt, nuxtjs]
+    detection:
+      file: "nuxt.config.ts"
+
+  # ───────────────────────────────────────────────────────────────
+  # LEVEL 3 - TOOLS
+  # ───────────────────────────────────────────────────────────────
+
+  prisma:
+    level: 3
+    category: tools
+    path: tools/prisma/
+    requires: [typescript, nodejs]
+    keywords: [prisma, PrismaClient]
+    detection:
+      file: "prisma/schema.prisma"
+
+  graphql:
+    level: 3
+    category: tools
+    path: tools/graphql/
+    requires: []
+    keywords: [graphql, gql]
+    detection:
+      files: ["*.graphql", "schema.graphql"]
+
+  docker:
+    level: 3
+    category: tools
+    path: tools/docker/
+    requires: []
+    keywords: [docker, dockerfile, container]
+    detection:
+      files: ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"]
+
+# ═══════════════════════════════════════════════════════════════
+# RESOLUTION CONFIG
+# ═══════════════════════════════════════════════════════════════
+
+resolution:
+  algorithm: topological-sort
+
+  token_budget:
+    target: 60%
+    direct_deps: 30%
+    transitive_deps: 10%
+
+  caching:
+    enabled: true
+    ttl: 3600
+
+# ═══════════════════════════════════════════════════════════════
+# AUTO-DETECTION
+# ═══════════════════════════════════════════════════════════════
+
+auto_detection:
+  enabled: true
+  scan_files:
+    - "package.json"
+    - "composer.json"
+    - "requirements.txt"
+    - "Gemfile"
+    - "go.mod"
+    - "Cargo.toml"
+    - "pom.xml"
+    - "build.gradle"
+    - "tsconfig.json"
+    - "angular.json"
+    - "next.config.js"
+    - "nuxt.config.ts"
+    - "svelte.config.js"
+    - "tailwind.config.js"
+    - "prisma/schema.prisma"
+    - "Dockerfile"

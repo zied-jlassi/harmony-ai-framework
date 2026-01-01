@@ -1,0 +1,48 @@
+# Bootstrap Profile - Level 2
+profile:
+  id: bootstrap
+  name: "Bootstrap"
+  category: styling
+  level: 2
+  description: "Bootstrap - components, grid, utilities"
+  last_updated: null
+
+versioning:
+  latest: "5.x"
+  lts: "5.3"
+
+  versions:
+    "5.x":
+      released: "2021"
+      features: ["No jQuery", "RTL support", "Utilities API"]
+    "4.x":
+      deprecated: true
+      notes: "Still requires jQuery"
+
+  detection:
+    file: "package.json"
+    path: "dependencies.bootstrap"
+    fallback: "latest"
+
+dependencies:
+  required: [css]
+  optional: [sass, javascript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://getbootstrap.com/docs/"
+      version: "latest"
+
+  topics:
+    - grid             # container, row, col
+    - components       # buttons, cards, modals
+    - utilities        # spacing, colors, display
+    - forms            # form controls, validation
+    - javascript       # data attributes, events
+    - customization    # Sass variables, mixins
+    - icons            # Bootstrap Icons
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

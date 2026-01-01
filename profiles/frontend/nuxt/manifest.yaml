@@ -1,0 +1,52 @@
+# Nuxt Profile - Level 3 (Meta-framework)
+profile:
+  id: nuxt
+  name: "Nuxt"
+  category: frontend
+  level: 3
+  description: "Nuxt - file-based routing, auto-imports, SSR"
+  last_updated: null
+
+versioning:
+  latest: "3.x"
+  lts: "3.x"
+
+  versions:
+    "3.x":
+      released: "2022"
+      features: ["Nitro server", "Hybrid rendering", "Auto-imports"]
+    "2.x":
+      deprecated: true
+      notes: "Legacy, migrate to Nuxt 3"
+
+  detection:
+    file: "package.json"
+    path: "dependencies.nuxt"
+    fallback: "latest"
+
+dependencies:
+  required: [vue]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://nuxt.com/docs"
+      version: "latest"
+
+  topics:
+    - routing          # pages/, file-based
+    - auto-imports     # components, composables
+    - data-fetching    # useFetch, useAsyncData
+    - nitro            # server engine
+    - modules          # nuxt modules
+    - middleware       # route middleware
+    - layouts          # shared layouts
+
+loading:
+  strategy: jit
+  max_files_per_request: 3
+
+cross_references:
+  - "[[vue/composition-api]]"
+  - "[[vue/pinia]]"

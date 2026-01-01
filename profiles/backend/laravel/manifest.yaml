@@ -1,0 +1,32 @@
+# Laravel Profile - Level 2
+profile:
+  id: laravel
+  name: "Laravel"
+  version: "11.x"
+  category: backend
+  level: 2
+  description: "Laravel - Eloquent, Blade, queues, Sanctum"
+  last_updated: null
+
+dependencies:
+  required: [php]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://laravel.com/docs/"
+      priority: 1
+
+  topics:
+    - routing          # routes, middleware
+    - eloquent         # ORM, relationships
+    - blade            # templating
+    - controllers      # resource controllers
+    - migrations       # database migrations
+    - queues           # jobs, workers
+    - sanctum          # API authentication
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

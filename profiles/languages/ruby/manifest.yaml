@@ -1,0 +1,33 @@
+# Ruby Profile - Level 0
+profile:
+  id: ruby
+  name: "Ruby"
+  version: "3.3+"
+  category: languages
+  level: 0
+  description: "Ruby language - blocks, metaprogramming, YJIT"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://ruby-doc.org/"
+      priority: 1
+    - url: "https://www.rubyguides.com/"
+      priority: 2
+
+  topics:
+    - fundamentals     # classes, modules, mixins
+    - blocks           # yield, procs, lambdas
+    - metaprogramming  # define_method, method_missing
+    - ractors          # parallelism
+    - pattern-match    # case/in
+    - typing           # RBS, type annotations
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

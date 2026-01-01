@@ -1,0 +1,31 @@
+# SQLite Profile
+profile:
+  id: sqlite
+  name: "SQLite"
+  version: "3.x"
+  category: databases
+  level: 2
+  description: "SQLite - embedded, serverless, JSON, FTS"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://www.sqlite.org/docs.html"
+      priority: 1
+
+  topics:
+    - sql              # queries, triggers
+    - json             # JSON1 extension
+    - fts              # Full-Text Search
+    - wal              # Write-Ahead Logging
+    - virtual-tables   # extensions
+    - performance      # pragmas, optimization
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

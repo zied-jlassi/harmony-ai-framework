@@ -1,0 +1,38 @@
+# Spring Boot Profile - Level 2
+profile:
+  id: springboot
+  name: "Spring Boot"
+  version: "3.x"
+  category: backend
+  level: 2
+  description: "Spring Boot - auto-config, starters, actuator"
+  last_updated: null
+
+dependencies:
+  required: [java, jvm]
+  optional: [kotlin]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://spring.io/projects/spring-boot"
+      priority: 1
+    - url: "https://docs.spring.io/spring-boot/docs/current/reference/"
+      priority: 2
+
+  topics:
+    - starters         # spring-boot-starter-*
+    - auto-config      # @EnableAutoConfiguration
+    - controllers      # @RestController
+    - data             # Spring Data JPA, repositories
+    - security         # Spring Security
+    - actuator         # monitoring endpoints
+    - testing          # @SpringBootTest
+
+loading:
+  strategy: jit
+  max_files_per_request: 2
+
+cross_references:
+  - "[[java/fundamentals]]"
+  - "[[jvm/gc]]"

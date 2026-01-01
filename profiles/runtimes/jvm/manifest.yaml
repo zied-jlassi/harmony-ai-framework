@@ -1,0 +1,31 @@
+# JVM Runtime - Level 1
+profile:
+  id: jvm
+  name: "Java Virtual Machine"
+  version: "21+"
+  category: runtimes
+  level: 1
+  description: "JVM runtime - GC, JIT, modules"
+  last_updated: null
+
+dependencies:
+  required: [java]
+  optional: [kotlin]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://docs.oracle.com/en/java/javase/"
+      priority: 1
+
+  topics:
+    - gc               # garbage collectors (G1, ZGC, Shenandoah)
+    - jit              # JIT compilation
+    - memory           # heap, metaspace
+    - modules          # JPMS
+    - profiling        # JFR, async-profiler
+    - tuning           # JVM flags
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

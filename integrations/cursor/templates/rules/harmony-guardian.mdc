@@ -1,0 +1,51 @@
+---
+description: Harmony Guardian Protocol - Intent Detection and Routing
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py", "**/*.java", "**/*.php"]
+alwaysApply: false
+---
+
+# Guardian Protocol
+
+When the user asks to develop, implement, or modify code:
+
+## Step 1: Detect Intent
+
+| Keywords | Intent | Action |
+|----------|--------|--------|
+| develop, implement, code, build, add | IMPLEMENT | Check for story |
+| fix, bug, error, debug, repair | FIX | Check for story/bugfix |
+| test, TDD, coverage | TEST | Route to Tester |
+| refactor, optimize | REFACTOR | Check for story |
+
+## Step 2: Verify Prerequisites
+
+Before any implementation:
+
+1. **Story Exists?**
+   - Search in `docs/backlog/stories/`
+   - If not found, suggest creating one first
+
+2. **UCV Approved?**
+   - Check for `STORY-XXX-UCV.md`
+   - Verify status is APPROVED
+
+3. **Correct Phase?**
+   - Implementation requires Phase 4
+   - Check `workflow-state.json` if available
+
+## Step 3: Route to Agent
+
+- **IMPLEMENT/FIX** → Developer (Amelia)
+- **TEST** → Tester (Emma)
+- **EXPLORE** → Luna (QA)
+- **ANALYZE** → Analyst (Mary)
+- **DESIGN** → Architect (Winston)
+
+## Response Format
+
+When routing, briefly acknowledge:
+```
+Guardian: Intent [IMPLEMENT] detected
+Story: STORY-XXX found
+Proceeding with implementation...
+```

@@ -1,0 +1,31 @@
+# MySQL Profile
+profile:
+  id: mysql
+  name: "MySQL"
+  version: "8.x"
+  category: databases
+  level: 2
+  description: "MySQL - InnoDB, replication, performance"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://dev.mysql.com/doc/"
+      priority: 1
+
+  topics:
+    - sql              # queries, stored procedures
+    - innodb           # storage engine
+    - indexes          # B-tree, full-text
+    - replication      # async, semi-sync, group
+    - json             # JSON data type
+    - performance      # EXPLAIN, query optimization
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "last_updated": "",
+  "patterns": [],
+  "anti_patterns": [],
+  "statistics": {
+    "total_patterns": 0,
+    "total_anti_patterns": 0,
+    "total_applications": 0
+  },
+  "notes": "Learned patterns for Harmony Sentinel System. Extracted from resolved errors to prevent recurrence."
+}

@@ -1,0 +1,32 @@
+# C# Profile - Level 0
+profile:
+  id: csharp
+  name: "C#"
+  version: "12+"
+  category: languages
+  level: 0
+  description: "C# language - records, pattern matching, async"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://learn.microsoft.com/en-us/dotnet/csharp/"
+      priority: 1
+
+  topics:
+    - fundamentals     # types, classes, structs
+    - records          # record types
+    - patterns         # pattern matching
+    - async            # async/await, Task
+    - linq             # query expressions
+    - nullable         # nullable reference types
+    - generics         # type constraints
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

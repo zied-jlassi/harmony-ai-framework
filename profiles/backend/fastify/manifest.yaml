@@ -1,0 +1,31 @@
+# Fastify Profile - Level 2
+profile:
+  id: fastify
+  name: "Fastify"
+  version: "4.x"
+  category: backend
+  level: 2
+  description: "Fastify - fast Node.js framework, plugins, schema validation"
+  last_updated: null
+
+dependencies:
+  required: [javascript, nodejs]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://fastify.dev/docs/"
+      priority: 1
+
+  topics:
+    - routing          # routes, params
+    - plugins          # plugin system
+    - hooks            # lifecycle hooks
+    - validation       # JSON Schema
+    - serialization    # fast JSON
+    - decorators       # extend request/reply
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

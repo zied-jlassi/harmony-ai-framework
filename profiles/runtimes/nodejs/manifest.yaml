@@ -1,0 +1,45 @@
+# Node.js Profile
+# Level 1 - Runtime (requires JavaScript)
+# Knowledge populated via: /harmony learn
+
+profile:
+  id: nodejs
+  name: "Node.js"
+  version: "22.x LTS"
+  category: runtimes
+  level: 1
+  description: "Node.js runtime - modules, streams, file system, HTTP"
+  last_updated: null
+
+dependencies:
+  required:
+    - javascript    # Node.js runs JavaScript
+  optional:
+    - typescript    # Often used with TS
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://nodejs.org/docs/latest/api/"
+      priority: 1
+    - url: "https://nodejs.dev/learn"
+      priority: 2
+
+  topics:
+    - modules         # CommonJS, ESM
+    - file-system     # fs, path operations
+    - streams         # readable, writable, transform
+    - http            # server, client
+    - events          # EventEmitter
+    - buffers         # binary data
+    - child-process   # spawn, exec
+    - workers         # worker_threads
+    - async-hooks     # async context
+
+loading:
+  strategy: jit
+  max_files_per_request: 2
+
+cross_references:
+  - "[[javascript/async]]"
+  - "[[javascript/modules]]"

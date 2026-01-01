@@ -1,0 +1,74 @@
+# NestJS Profile
+# Level 2 - Framework (requires TypeScript + Node.js)
+# Knowledge populated via: /harmony learn
+
+profile:
+  id: nestjs
+  name: "NestJS"
+  category: backend
+  level: 2
+  description: "NestJS framework - modules, controllers, providers, guards"
+  last_updated: null
+
+# ═══════════════════════════════════════════════════════════════
+# VERSION MANAGEMENT - Critical for compatibility!
+# ═══════════════════════════════════════════════════════════════
+versioning:
+  latest: "11.x"
+  lts: "10.x"
+
+  versions:
+    "11.x":
+      released: "2024-12"
+      node_min: "20.x"
+      typescript_min: "5.3"
+    "10.x":
+      released: "2023-06"
+      node_min: "18.x"
+      typescript_min: "5.0"
+    "9.x":
+      deprecated: true
+      node_min: "16.x"
+
+  # Auto-detection from project files
+  detection:
+    file: "package.json"
+    path: "dependencies.@nestjs/core"
+    fallback: "latest"
+
+dependencies:
+  required:
+    - typescript
+    - nodejs
+  optional:
+    - prisma
+    - graphql
+  conflicts:
+    - express
+
+knowledge:
+  sources:
+    - url: "https://docs.nestjs.com/"
+      version: "latest"
+    - url: "https://docs.nestjs.com/v10/"
+      version: "10.x"
+
+  # Structure: knowledge/{common,v10,v11}/
+  topics:
+    - modules
+    - controllers
+    - providers
+    - guards
+    - interceptors
+    - pipes
+    - filters
+    - middleware
+    - testing
+
+loading:
+  strategy: jit
+  max_files_per_request: 3
+
+cross_references:
+  - "[[typescript/decorators]]"
+  - "[[nodejs/modules]]"

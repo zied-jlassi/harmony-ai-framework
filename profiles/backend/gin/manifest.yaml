@@ -1,0 +1,31 @@
+# Gin Profile - Level 2
+profile:
+  id: gin
+  name: "Gin (Go)"
+  version: "1.x"
+  category: backend
+  level: 2
+  description: "Gin - fast Go web framework"
+  last_updated: null
+
+dependencies:
+  required: [go]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://gin-gonic.com/docs/"
+      priority: 1
+
+  topics:
+    - routing          # routes, groups
+    - middleware       # custom middleware
+    - binding          # JSON, form binding
+    - validation       # struct validation
+    - rendering        # JSON, HTML, XML
+    - testing          # httptest
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

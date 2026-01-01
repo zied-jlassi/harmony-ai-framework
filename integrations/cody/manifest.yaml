@@ -1,0 +1,203 @@
+# Cody Integration
+# Sourcegraph's enterprise AI with Code Graph
+
+integration:
+  id: cody
+  name: "Cody"
+  vendor: "Sourcegraph"
+  version: "1.0.0"
+  type: "extension"
+  status: "partial-support"
+  description: "Enterprise AI with deep codebase understanding via Code Graph"
+
+# ═══════════════════════════════════════════════════════════════
+# CAPABILITIES
+# ═══════════════════════════════════════════════════════════════
+
+capabilities:
+  hooks:
+    supported: false
+    note: "No local hook system"
+
+  memory:
+    supported: false
+    alternative: "Code Graph provides context"
+    note: "Sourcegraph indexes and remembers codebase"
+
+  mcp:
+    supported: false
+    note: "Uses Sourcegraph infrastructure"
+
+  code_graph:
+    supported: true
+    description: "Deep codebase understanding"
+    features:
+      - "Cross-repository search"
+      - "Symbol definitions and usages"
+      - "Commit history analysis"
+      - "API call tracing"
+
+  prompts:
+    supported: true
+    type: "shareable"
+    description: "Custom prompts for specific tasks"
+
+  agents:
+    supported: true
+    types:
+      - "Code Review Agent"
+      - "Code Migration Agent"
+      - "Testing Agent"
+      - "Documentation Agent"
+    note: "Enterprise features, Early Access 2025"
+
+# ═══════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ═══════════════════════════════════════════════════════════════
+
+configuration:
+  type: "enterprise"
+  note: "Most config done via Sourcegraph instance"
+
+  local_options:
+    ide_extensions:
+      - "VS Code"
+      - "JetBrains IDEs"
+      - "Visual Studio"
+    web_app: "Sourcegraph web interface"
+
+  enterprise_features:
+    - "Self-hosting"
+    - "Custom API keys"
+    - "Data retention controls"
+    - "Granular permissions"
+
+# ═══════════════════════════════════════════════════════════════
+# FILE STRUCTURE
+# ═══════════════════════════════════════════════════════════════
+
+file_structure:
+  ".sourcegraph/":
+    - "settings.json"        # Local Sourcegraph settings (optional)
+
+  "prompts/":
+    - "harmony-*.md"         # Shared prompts for Harmony agents
+
+# ═══════════════════════════════════════════════════════════════
+# PROMPTS FORMAT
+# ═══════════════════════════════════════════════════════════════
+
+prompts_format:
+  description: "Shareable prompts for Cody"
+  example: |
+    # Harmony Developer Prompt
+
+    You are Amelia, the Harmony Developer agent.
+
+    ## Your Role
+    - Implement features according to stories
+    - Fix bugs with proper root cause analysis
+    - Write unit tests for new code
+    - Follow project conventions
+
+    ## Before Coding
+    1. Check if a story exists for this work
+    2. Verify UCVs are approved
+    3. Review relevant architecture docs
+
+    ## After Coding
+    1. Mark UCV verifications as completed
+    2. Run tests locally
+    3. Create meaningful commit messages
+
+    ## Tech Stack
+    Use the project's established patterns:
+    - Follow existing code style
+    - Use established libraries
+    - Maintain consistency
+
+# ═══════════════════════════════════════════════════════════════
+# HARMONY MAPPING
+# ═══════════════════════════════════════════════════════════════
+
+harmony_mapping:
+
+  guardian:
+    target: "Prompts"
+    implementation: |
+      Guardian rules as prompt guidelines
+      No automatic enforcement
+      User includes prompt when needed
+
+  sentinel:
+    target: "Code Graph (partial)"
+    implementation: |
+      Code Graph tracks code history
+      No explicit error journal
+      Patterns via search
+
+  agents:
+    target: "Prompts + Cody Agents"
+    implementation: |
+      Harmony agents as shareable prompts
+      Or map to Cody's native agents (Enterprise)
+      User selects prompt for task
+
+  tech_profiles:
+    target: "Context via Code Graph"
+    implementation: |
+      Code Graph understands codebase
+      Profiles loaded as prompts
+      Best practices in prompt text
+
+  code_graph_advantage:
+    description: |
+      Cody's Code Graph provides deep understanding:
+      - Find all usages of a function across repos
+      - Trace data flow through the codebase
+      - Understand API dependencies
+      This complements Harmony's knowledge system
+
+# ═══════════════════════════════════════════════════════════════
+# TEMPLATES
+# ═══════════════════════════════════════════════════════════════
+
+templates:
+  - "templates/prompts/harmony-developer.md"
+  - "templates/prompts/harmony-tester.md"
+  - "templates/prompts/harmony-analyst.md"
+  - "templates/prompts/harmony-guardian.md"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install cody"
+  steps:
+    1: "Create prompts/ directory"
+    2: "Generate prompt files for each agent"
+    3: "Configure Sourcegraph connection (manual)"
+    4: "Import prompts to Cody (manual)"
+    5: "Verify installation"
+
+  post_install: |
+    Cody integration installed!
+
+    Files created:
+    - prompts/harmony-*.md (shareable prompts)
+
+    Manual steps:
+    1. Connect to your Sourcegraph instance
+    2. Import prompts via Cody UI or share with team
+    3. Select appropriate prompt when starting tasks
+
+    Limitations:
+    - No hooks (Guardian not enforced)
+    - No local memory (use Code Graph)
+    - Enterprise features require Sourcegraph subscription
+
+    Advantage:
+    - Code Graph provides deep codebase understanding
+    - Cross-repository search and analysis
+    - Enterprise-grade security and compliance

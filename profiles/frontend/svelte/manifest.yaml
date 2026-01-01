@@ -1,0 +1,49 @@
+# Svelte Profile - Level 2
+profile:
+  id: svelte
+  name: "Svelte"
+  category: frontend
+  level: 2
+  description: "Svelte - compiler, runes, SvelteKit"
+  last_updated: null
+
+versioning:
+  latest: "5.x"
+  lts: "4.x"
+
+  versions:
+    "5.x":
+      released: "2024"
+      features: ["Runes", "$state", "$derived", "$effect"]
+      breaking: true
+    "4.x":
+      released: "2023"
+      features: ["Improved types"]
+
+  detection:
+    file: "package.json"
+    path: "devDependencies.svelte"
+    fallback: "latest"
+
+dependencies:
+  required: [javascript]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://svelte.dev/docs/"
+      version: "latest"
+
+  topics:
+    - runes            # $state, $derived, $effect (v5)
+    - components       # .svelte files
+    - reactivity       # reactive declarations
+    - stores           # writable, readable (v4)
+    - bindings         # bind:value
+    - actions          # use:action
+    - sveltekit        # meta-framework
+
+loading:
+  strategy: jit
+  max_files_per_request: 3

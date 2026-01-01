@@ -1,0 +1,32 @@
+# MongoDB Profile
+profile:
+  id: mongodb
+  name: "MongoDB"
+  version: "7.x"
+  category: databases
+  level: 2
+  description: "MongoDB - document store, aggregation, Atlas"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://www.mongodb.com/docs/"
+      priority: 1
+
+  topics:
+    - crud             # queries, updates
+    - aggregation      # pipeline stages
+    - indexes          # compound, text, geospatial
+    - schema           # validation, design patterns
+    - replication      # replica sets
+    - sharding         # horizontal scaling
+    - transactions     # ACID transactions
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

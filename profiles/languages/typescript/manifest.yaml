@@ -1,0 +1,42 @@
+# TypeScript Profile
+# Level 0 - Language (requires JavaScript)
+# Knowledge populated via: /harmony learn
+
+profile:
+  id: typescript
+  name: "TypeScript"
+  version: "5.x"
+  category: languages
+  level: 0
+  description: "TypeScript language knowledge - types, generics, decorators"
+  last_updated: null
+
+dependencies:
+  required:
+    - javascript    # TypeScript extends JavaScript
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://www.typescriptlang.org/docs/"
+      priority: 1
+    - url: "https://typescript-eslint.io/"
+      priority: 2
+
+  topics:
+    - types           # primitives, unions, intersections
+    - interfaces      # contracts, extends
+    - generics        # type parameters, constraints
+    - decorators      # class, method, property decorators
+    - utility-types   # Partial, Required, Pick, Omit
+    - type-guards     # narrowing, assertions
+    - config          # tsconfig.json options
+
+loading:
+  strategy: jit
+  max_files_per_request: 2
+
+cross_references:
+  - "[[javascript/fundamentals]]"
+  - "[[javascript/modules]]"

@@ -1,0 +1,35 @@
+---
+description: Harmony Framework Core Rules
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Harmony Framework
+
+This project uses the Harmony Framework for AI-assisted development.
+
+## Three Pillars
+
+1. **Guardian Protocol**: Protects workflow, routes to correct agent
+2. **Sentinel System**: Remembers errors, prevents repetition
+3. **HQVF**: Quality through verifiable use cases
+
+## Workflow Rules
+
+1. **NEVER develop without a story** - Check stories exist first
+2. **Strict role separation** - Each agent has one responsibility
+3. **UCV approval required** - No dev without approved UCVs
+4. **100% verification coverage** - Story DONE = all UCVs validated
+
+## Tech Stack
+
+{{#each TECH_PROFILES}}
+- {{name}} {{version}}
+{{/each}}
+
+## Response Style
+
+- Be concise and direct
+- Reference file paths with line numbers
+- Follow established patterns in the codebase
+- Ask before making architectural decisions

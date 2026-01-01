@@ -1,0 +1,31 @@
+# Flask Profile - Level 2
+profile:
+  id: flask
+  name: "Flask"
+  version: "3.x"
+  category: backend
+  level: 2
+  description: "Flask - micro-framework, blueprints, extensions"
+  last_updated: null
+
+dependencies:
+  required: [python]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://flask.palletsprojects.com/"
+      priority: 1
+
+  topics:
+    - routing          # routes, URL variables
+    - blueprints       # modular apps
+    - templates        # Jinja2
+    - extensions       # SQLAlchemy, WTForms
+    - context          # application, request context
+    - testing          # test client
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

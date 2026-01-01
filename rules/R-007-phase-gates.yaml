@@ -1,0 +1,190 @@
+# R-007: Phase Gates
+# Prerequisite requirements for phase transitions
+
+rule:
+  id: R-007
+  name: "Phase Gate Requirements"
+  category: phase
+  severity: error
+  description: |
+    Defines prerequisites that must be met before transitioning between phases.
+    Prevents skipping essential steps in the development lifecycle.
+
+enforcement:
+  mode: block
+  phases: [1, 2, 3, 4, 5]
+  contexts:
+    - phase_transition
+
+phases:
+  phase_1:
+    name: "Discovery"
+    description: "Understand the problem space"
+    outputs:
+      - product_brief
+      - stakeholder_analysis
+      - initial_requirements
+    agents:
+      - analyst
+    gate_to_phase_2:
+      required:
+        - "product_brief exists"
+        - "stakeholder_analysis complete"
+      optional:
+        - "competitive_analysis"
+
+  phase_2:
+    name: "Planning"
+    description: "Define what to build"
+    outputs:
+      - prd
+      - user_stories_draft
+      - roadmap
+    agents:
+      - analyst
+      - sm
+    gate_to_phase_3:
+      required:
+        - "prd approved"
+        - "core_requirements defined"
+      optional:
+        - "detailed_roadmap"
+
+  phase_3:
+    name: "Solutioning"
+    description: "Design how to build it"
+    outputs:
+      - architecture_document
+      - adrs
+      - technical_specs
+      - ux_designs
+    agents:
+      - architect
+      - nova  # For AI systems
+    gate_to_phase_4:
+      required:
+        - "architecture approved"
+        - "key_adrs documented"
+        - "epics defined"
+        - "stories ready"
+      optional:
+        - "ux_designs"
+        - "prototype"
+
+  phase_4:
+    name: "Implementation"
+    description: "Build the solution"
+    outputs:
+      - working_code
+      - tests
+      - documentation
+    agents:
+      - developer
+      - tester
+      - luna
+    gate_to_phase_5:
+      required:
+        - "all_stories DONE"
+        - "ucv_coverage 100%"
+        - "tests passing"
+        - "luna_validation complete"
+      optional:
+        - "performance_tests"
+        - "security_audit"
+
+  phase_5:
+    name: "Release"
+    description: "Deploy and retrospect"
+    outputs:
+      - deployed_system
+      - release_notes
+      - retrospective
+    agents:
+      - developer
+      - sm
+    gate_to_next_cycle:
+      required:
+        - "deployment successful"
+        - "retrospective complete"
+      optional:
+        - "metrics_baseline"
+
+conditions:
+  - type: phase_transition
+    check: "all required outputs for current phase exist"
+    description: "Phase outputs must be complete"
+
+  - type: phase_transition
+    check: "gate requirements for next phase are met"
+    description: "Gate requirements must be satisfied"
+
+actions:
+  on_violation:
+    message: |
+      🚧 PHASE GATE BLOCKED
+
+      Current Phase: {current_phase} ({phase_name})
+      Target Phase: {target_phase}
+
+      Missing Requirements:
+      {missing_requirements}
+
+    suggestion: |
+      REQUIRED ACTIONS:
+
+      Complete the following before advancing:
+      {required_actions}
+
+      Optional (recommended):
+      {optional_actions}
+
+  on_success:
+    message: |
+      ✅ Phase gate passed
+      Transitioning: Phase {current_phase} → Phase {target_phase}
+
+# Phase change triggers
+triggers:
+  phase_1_to_2:
+    command: "advance to planning"
+    checks:
+      - product_brief_exists
+      - stakeholder_buy_in
+
+  phase_2_to_3:
+    command: "advance to solutioning"
+    checks:
+      - prd_approved
+      - requirements_clear
+
+  phase_3_to_4:
+    command: "advance to implementation"
+    checks:
+      - architecture_approved
+      - stories_ready
+      - ucv_approved
+
+  phase_4_to_5:
+    command: "advance to release"
+    checks:
+      - all_stories_done
+      - tests_passing
+      - qa_complete
+
+# Skip rules (emergency only)
+skip_rules:
+  allowed: false  # Default: no skipping
+  exceptions:
+    - condition: "hotfix emergency"
+      allows: "skip to phase 4"
+      requires: "user explicit approval"
+      creates: "technical debt story"
+
+# Related
+related:
+  patterns:
+    - P-001-hybrid-orchestration
+    - P-007-story-based
+  agents:
+    - guardian
+    - harmony

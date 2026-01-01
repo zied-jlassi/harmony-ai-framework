@@ -1,0 +1,39 @@
+# JavaScript Profile
+# Level 0 - Base Language (no dependencies)
+# Knowledge populated via: /harmony learn
+
+profile:
+  id: javascript
+  name: "JavaScript"
+  version: "ES2024+"
+  category: languages
+  level: 0
+  description: "Core JavaScript language knowledge"
+  last_updated: null  # Set by /harmony learn
+
+dependencies:
+  required: []    # Base language - no deps
+  optional: []
+  conflicts: []
+
+knowledge:
+  # Populated by /harmony learn
+  # Example: /harmony learn https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  sources:
+    - url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+      priority: 1
+    - url: "https://javascript.info/"
+      priority: 2
+
+  topics:
+    - fundamentals    # variables, types, operators
+    - functions       # closures, scope, arrows
+    - async           # promises, async/await
+    - modules         # ES modules, imports
+    - objects         # prototypes, classes
+    - arrays          # methods, iteration
+    - errors          # handling, custom errors
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

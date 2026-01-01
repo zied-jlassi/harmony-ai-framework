@@ -1,0 +1,30 @@
+# .NET Runtime - Level 1
+profile:
+  id: dotnet
+  name: ".NET Runtime"
+  version: "8+"
+  category: runtimes
+  level: 1
+  description: ".NET runtime - CLR, AOT, GC"
+  last_updated: null
+
+dependencies:
+  required: [csharp]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://learn.microsoft.com/en-us/dotnet/"
+      priority: 1
+
+  topics:
+    - clr              # Common Language Runtime
+    - gc               # garbage collection
+    - aot              # Native AOT
+    - hosting          # Kestrel, IIS
+    - configuration    # appsettings, secrets
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

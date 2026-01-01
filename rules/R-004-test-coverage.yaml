@@ -1,0 +1,137 @@
+# R-004: Test Coverage Requirements
+# Minimum test coverage thresholds
+
+rule:
+  id: R-004
+  name: "Test Coverage Requirements"
+  category: quality
+  severity: warning
+  description: |
+    Ensures adequate test coverage for code changes.
+    Different thresholds for different code types.
+
+enforcement:
+  mode: warn  # warn | block
+  phases: [4]  # Implementation phase
+  contexts:
+    - development
+    - feature
+    - bugfix
+
+thresholds:
+  # Overall coverage targets
+  global:
+    statements: 80
+    branches: 75
+    functions: 80
+    lines: 80
+
+  # Per-directory overrides
+  directories:
+    "src/core/":
+      statements: 90
+      branches: 85
+      functions: 90
+      lines: 90
+
+    "src/utils/":
+      statements: 95
+      branches: 90
+      functions: 95
+      lines: 95
+
+    "src/api/":
+      statements: 85
+      branches: 80
+      functions: 85
+      lines: 85
+
+  # Excluded from coverage
+  excluded:
+    - "src/**/*.d.ts"
+    - "src/**/*.mock.ts"
+    - "src/**/index.ts"
+    - "src/types/"
+
+conditions:
+  - type: metric
+    check: "coverage.statements >= thresholds.statements"
+    description: "Statement coverage must meet threshold"
+
+  - type: metric
+    check: "coverage.branches >= thresholds.branches"
+    description: "Branch coverage must meet threshold"
+
+  - type: metric
+    check: "coverage.functions >= thresholds.functions"
+    description: "Function coverage must meet threshold"
+
+test_requirements:
+  # Each UCV verification needs a test
+  ucv_coverage: true
+
+  # Test types required
+  types:
+    unit:
+      required: true
+      pattern: "*.spec.ts"
+
+    integration:
+      required: true
+      pattern: "*.integration.spec.ts"
+
+    e2e:
+      required: false  # Optional
+      pattern: "*.e2e.spec.ts"
+
+actions:
+  on_violation:
+    message: |
+      ⚠️ TEST COVERAGE BELOW THRESHOLD
+
+      Current coverage:
+        Statements: {coverage.statements}% (target: {thresholds.statements}%)
+        Branches:   {coverage.branches}% (target: {thresholds.branches}%)
+        Functions:  {coverage.functions}% (target: {thresholds.functions}%)
+        Lines:      {coverage.lines}% (target: {thresholds.lines}%)
+
+      Uncovered files:
+      {uncovered_files}
+
+    suggestion: |
+      RECOMMENDED ACTIONS:
+
+      1. Run coverage report:
+         npm run test:coverage
+
+      2. Identify uncovered code paths
+
+      3. Add tests for missing coverage
+
+      4. Focus on critical paths first
+
+  on_success:
+    message: |
+      ✅ Test coverage meets requirements
+      Statements: {coverage.statements}%
+      Branches: {coverage.branches}%
+      Functions: {coverage.functions}%
+
+# UCV integration
+ucv_integration:
+  # Each verification should have at least one test
+  min_tests_per_verification: 1
+
+  # Tester marks TEST column when test exists
+  marking:
+    agent: tester
+    column: test
+    condition: "test exists AND passes"
+
+# Related
+related:
+  patterns:
+    - P-008-ucv-gate
+  agents:
+    - tester
+    - victor

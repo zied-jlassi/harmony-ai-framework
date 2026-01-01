@@ -1,0 +1,31 @@
+# Kotlin Profile - Level 0
+profile:
+  id: kotlin
+  name: "Kotlin"
+  version: "2.x"
+  category: languages
+  level: 0
+  description: "Kotlin language - coroutines, null safety, DSL"
+  last_updated: null
+
+dependencies:
+  required: [java]  # Kotlin runs on JVM
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://kotlinlang.org/docs/"
+      priority: 1
+
+  topics:
+    - fundamentals     # val/var, data classes
+    - null-safety      # ?, !!, let, elvis
+    - coroutines       # suspend, flow
+    - extensions       # extension functions
+    - dsl              # type-safe builders
+    - sealed           # sealed classes/interfaces
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

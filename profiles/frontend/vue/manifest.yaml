@@ -1,0 +1,53 @@
+# Vue.js Profile - Level 2
+profile:
+  id: vue
+  name: "Vue.js"
+  category: frontend
+  level: 2
+  description: "Vue - Composition API, SFC, Pinia"
+  last_updated: null
+
+versioning:
+  latest: "3.5"
+  lts: "3.4"
+
+  versions:
+    "3.5":
+      released: "2024"
+      features: ["Vapor mode", "Improved SSR"]
+    "3.4":
+      released: "2023"
+      features: ["defineModel", "v-bind shorthand"]
+    "2.x":
+      deprecated: true
+      notes: "Options API, migrate to Vue 3"
+
+  detection:
+    file: "package.json"
+    path: "dependencies.vue"
+    fallback: "latest"
+
+dependencies:
+  required: [javascript]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://vuejs.org/"
+      version: "latest"
+    - url: "https://v2.vuejs.org/"
+      version: "2.x"
+
+  topics:
+    - composition-api  # setup, ref, reactive
+    - sfc              # Single File Components
+    - directives       # v-if, v-for, v-model
+    - pinia            # state management
+    - routing          # vue-router
+    - transitions      # animations
+    - testing          # Vitest, Vue Test Utils
+
+loading:
+  strategy: jit
+  max_files_per_request: 3

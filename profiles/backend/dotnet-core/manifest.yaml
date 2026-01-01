@@ -1,0 +1,32 @@
+# ASP.NET Core Profile - Level 2
+profile:
+  id: dotnet-core
+  name: "ASP.NET Core"
+  version: "8+"
+  category: backend
+  level: 2
+  description: "ASP.NET Core - Web API, minimal API, Blazor"
+  last_updated: null
+
+dependencies:
+  required: [csharp, dotnet]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://learn.microsoft.com/en-us/aspnet/core/"
+      priority: 1
+
+  topics:
+    - minimal-api      # app.MapGet, endpoints
+    - controllers      # ApiController
+    - middleware       # request pipeline
+    - di               # dependency injection
+    - ef-core          # Entity Framework Core
+    - identity         # authentication, authorization
+    - blazor           # server, WASM
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

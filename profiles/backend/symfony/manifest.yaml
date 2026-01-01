@@ -1,0 +1,32 @@
+# Symfony Profile - Level 2
+profile:
+  id: symfony
+  name: "Symfony"
+  version: "7.x"
+  category: backend
+  level: 2
+  description: "Symfony - components, Doctrine, Twig, Messenger"
+  last_updated: null
+
+dependencies:
+  required: [php]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://symfony.com/doc/current/"
+      priority: 1
+
+  topics:
+    - routing          # annotations, YAML
+    - controllers      # AbstractController
+    - doctrine         # ORM, DBAL
+    - twig             # templating
+    - forms            # form builder
+    - security         # authentication, voters
+    - messenger        # async messages
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

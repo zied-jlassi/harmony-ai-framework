@@ -1,0 +1,32 @@
+# PostgreSQL Profile
+profile:
+  id: postgresql
+  name: "PostgreSQL"
+  version: "16+"
+  category: databases
+  level: 2
+  description: "PostgreSQL - advanced SQL, JSON, extensions"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://www.postgresql.org/docs/"
+      priority: 1
+
+  topics:
+    - sql              # queries, CTEs, window functions
+    - json             # JSONB, operators
+    - indexes          # B-tree, GIN, GiST, BRIN
+    - partitioning     # table partitioning
+    - replication      # streaming, logical
+    - extensions       # pg_trgm, PostGIS, timescaledb
+    - performance      # EXPLAIN, tuning
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

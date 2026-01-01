@@ -1,0 +1,70 @@
+{
+  "name": "harmony-ai-framework",
+  "version": "1.0.0-beta.13",
+  "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
+  "author": "Harmony AI Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harmony-ai/harmony-framework"
+  },
+  "homepage": "https://harmony-ai.dev",
+  "bugs": {
+    "url": "https://github.com/harmony-ai/harmony-framework/issues"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "framework",
+    "agents",
+    "workflow",
+    "memory",
+    "claude",
+    "cursor",
+    "windsurf",
+    "multi-agent",
+    "orchestration",
+    "auto-learning",
+    "quality-assurance"
+  ],
+  "bin": {
+    "harmony-init": "./bin/install.sh"
+  },
+  "scripts": {
+    "postinstall": "echo '\\n📦 Harmony installed! Run: npx harmony-init --help\\n'"
+  },
+  "files": [
+    "agents/",
+    "bin/",
+    "commands/",
+    "config/",
+    "docs/",
+    "hooks/",
+    "lib/",
+    "memory/templates/",
+    "patterns/",
+    "profiles/",
+    "rules/",
+    "specialties/",
+    "templates/",
+    "workflows/",
+    "checksums.sha256",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": ["darwin", "linux"],
+  "harmony": {
+    "version": "1.0.0",
+    "compatibleWith": ["claude-code", "cursor", "windsurf", "continue", "cody"],
+    "features": [
+      "guardian-protocol",
+      "sentinel-memory",
+      "hqvf-quality",
+      "multi-agent",
+      "3-tier-memory",
+      "ide-detection"
+    ]
+  }
+}

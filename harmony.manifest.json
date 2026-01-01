@@ -1,0 +1,109 @@
+{
+  "name": "Harmony Framework",
+  "version": "1.0.0",
+  "codename": "Genesis",
+  "tagline": "Self-Improving AI Development Framework",
+  "motto": "Learn. Protect. Deliver.",
+
+  "philosophy": {
+    "principle": "Improvement through Prompts and Memory, not model weight modification",
+    "core_beliefs": [
+      "The LLM remains intact - no fine-tuning required",
+      "Intelligence emerges from the framework architecture",
+      "Performance is guaranteed through systematic learning",
+      "Quality is verifiable, not assumed"
+    ]
+  },
+
+  "three_pillars": {
+    "guardian": {
+      "name": "Guardian Protocol",
+      "purpose": "Workflow protection and intent detection",
+      "features": ["intent-detection", "agent-routing", "phase-validation", "prerequisite-checking"]
+    },
+    "sentinel": {
+      "name": "Sentinel System",
+      "purpose": "Error memory and circuit breaker protection",
+      "features": ["error-journal", "circuit-breaker", "pattern-learning", "failure-prevention"]
+    },
+    "hqvf": {
+      "name": "Harmony Quality Verification Framework",
+      "purpose": "Quality assurance through verifiable use cases",
+      "features": ["ucv-generation", "ucv-validation", "coverage-tracking", "acceptance-criteria"]
+    }
+  },
+
+  "memory_architecture": {
+    "tier_1": {
+      "name": "Working Memory",
+      "location": "in-context",
+      "persistence": "current-message",
+      "purpose": "Active task context"
+    },
+    "tier_2": {
+      "name": "Session Memory",
+      "location": "external-compressed",
+      "persistence": "current-session",
+      "purpose": "Conversation history"
+    },
+    "tier_3": {
+      "name": "Long-term Memory",
+      "location": "persistent-storage",
+      "persistence": "permanent",
+      "purpose": "Learned patterns and errors"
+    }
+  },
+
+  "phases": {
+    "1": {"name": "Discovery", "description": "Requirements gathering and analysis"},
+    "2": {"name": "Planning", "description": "PRD creation and roadmapping"},
+    "3": {"name": "Solutioning", "description": "Architecture, design, and story creation"},
+    "4": {"name": "Implementation", "description": "Development, testing, and validation"},
+    "5": {"name": "Release", "description": "Deployment and monitoring"}
+  },
+
+  "agents": {
+    "core": ["guardian", "sentinel", "analyst", "architect", "developer", "tester"],
+    "specialists": ["nova", "luna", "clara", "victor"],
+    "sub_agents": ["riley", "milo", "oscar", "olivia", "grace", "sage"],
+    "extensible": ["game-developer", "game-designer", "legal", "security", "accessibility"]
+  },
+
+  "patterns": {
+    "P-001": "Hybrid Orchestration",
+    "P-002": "Three-Tier Memory",
+    "P-003": "JIT Context Loading",
+    "P-004": "Circuit Breaker",
+    "P-005": "Closed-Loop Learning",
+    "P-006": "Intent Detection",
+    "P-007": "Story-Based Development",
+    "P-008": "UCV Quality Gate"
+  },
+
+  "rules": {
+    "R-001": "Never develop without a story",
+    "R-002": "Strict role separation between agents",
+    "R-003": "UCV must be approved before development",
+    "R-004": "Exploratory QA before release",
+    "R-005": "100% verification coverage",
+    "R-006": "Handoff protocol between agents",
+    "R-007": "Circuit breaker after 3 failures"
+  },
+
+  "compatibility": {
+    "ai_assistants": ["Claude Code", "Cursor", "Windsurf", "Continue", "Cody"],
+    "llm_providers": ["Anthropic Claude", "OpenAI GPT", "Google Gemini", "Local LLMs"],
+    "platforms": ["Linux", "macOS", "Windows (WSL)"],
+    "languages": ["TypeScript", "JavaScript", "Python", "Go", "Rust", "Java"]
+  },
+
+  "installation": {
+    "methods": ["npm", "yarn", "pnpm", "manual"],
+    "commands": {
+      "npm": "npm install harmony-ai-framework",
+      "yarn": "yarn add harmony-ai-framework",
+      "pnpm": "pnpm add harmony-ai-framework",
+      "manual": "git clone https://github.com/harmony-ai/harmony-framework && ./install.sh"
+    }
+  }
+}

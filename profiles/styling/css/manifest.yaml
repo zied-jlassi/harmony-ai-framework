@@ -1,0 +1,51 @@
+# CSS Profile - Level 0
+profile:
+  id: css
+  name: "CSS"
+  category: styling
+  level: 0
+  description: "CSS - modern features, Grid, Container Queries, Layers"
+  last_updated: null
+
+versioning:
+  latest: "CSS3+"
+  notes: "CSS is evergreen, no strict versioning"
+
+  features:
+    "2024":
+      - "@container queries"
+      - "@layer"
+      - ":has() selector"
+      - "Subgrid"
+      - "color-mix()"
+    "2023":
+      - "Container queries"
+      - "Cascade layers"
+      - "@scope"
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://developer.mozilla.org/en-US/docs/Web/CSS"
+      priority: 1
+    - url: "https://css-tricks.com/"
+      priority: 2
+    - url: "https://web.dev/css"
+      priority: 3
+
+  topics:
+    - layout           # Grid, Flexbox
+    - container        # Container Queries
+    - layers           # @layer, cascade
+    - selectors        # :has, :is, :where
+    - variables        # custom properties
+    - animations       # transitions, keyframes
+    - responsive       # media queries, clamp()
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

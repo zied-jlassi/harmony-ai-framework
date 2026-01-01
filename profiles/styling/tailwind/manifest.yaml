@@ -1,0 +1,49 @@
+# Tailwind CSS Profile - Level 2
+profile:
+  id: tailwind
+  name: "Tailwind CSS"
+  category: styling
+  level: 2
+  description: "Tailwind - utility-first, JIT, plugins"
+  last_updated: null
+
+versioning:
+  latest: "4.x"
+  lts: "3.x"
+
+  versions:
+    "4.x":
+      released: "2024"
+      features: ["Oxide engine", "CSS-first config", "No build step option"]
+      breaking: true
+    "3.x":
+      released: "2022"
+      features: ["JIT by default", "Arbitrary values"]
+
+  detection:
+    file: "package.json"
+    path: "devDependencies.tailwindcss"
+    fallback: "latest"
+
+dependencies:
+  required: [css]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://tailwindcss.com/docs"
+      version: "latest"
+
+  topics:
+    - utilities        # utility classes
+    - responsive       # sm:, md:, lg:
+    - states           # hover:, focus:, dark:
+    - customization    # theme, extend
+    - plugins          # @plugin
+    - arbitrary        # [color:red]
+    - components       # @apply (sparingly)
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

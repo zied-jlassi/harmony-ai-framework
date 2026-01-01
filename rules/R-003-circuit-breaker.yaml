@@ -1,0 +1,111 @@
+# R-003: Circuit Breaker Protection
+# Halt operations after repeated failures
+
+rule:
+  id: R-003
+  name: "Circuit Breaker Protection"
+  category: quality
+  severity: critical
+  description: |
+    Prevents cascade failures by halting operations after N consecutive failures.
+    Forces diagnosis before continuing, saving context and preventing frustration.
+
+enforcement:
+  mode: block
+  phases: [1, 2, 3, 4, 5]  # All phases
+  contexts:
+    - all
+
+configuration:
+  max_failures: 3           # Failures before circuit opens
+  cooldown_minutes: 5       # Auto-reset attempt interval
+  auto_reset: false         # Require manual reset
+  half_open_attempts: 1     # Test attempts in half-open state
+
+states:
+  CLOSED:
+    description: "Normal operation - all operations allowed"
+    transitions:
+      - on: "failure"
+        if: "consecutive_failures < max_failures"
+        to: "CLOSED"
+      - on: "failure"
+        if: "consecutive_failures >= max_failures"
+        to: "OPEN"
+      - on: "success"
+        action: "reset consecutive_failures to 0"
+
+  OPEN:
+    description: "Blocked - diagnosis required"
+    transitions:
+      - on: "manual_reset"
+        to: "HALF_OPEN"
+      - on: "auto_reset"
+        if: "auto_reset enabled AND cooldown elapsed"
+        to: "HALF_OPEN"
+
+  HALF_OPEN:
+    description: "Testing - one attempt allowed"
+    transitions:
+      - on: "success"
+        to: "CLOSED"
+      - on: "failure"
+        to: "OPEN"
+
+conditions:
+  - type: state
+    check: "circuit_breaker.state != 'OPEN'"
+    description: "Circuit must not be open"
+
+actions:
+  on_violation:
+    message: |
+      🛑 CIRCUIT BREAKER OPEN
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {consecutive_failures} consecutive failures detected.
+      Operations are BLOCKED until diagnosis.
+
+      Last failures:
+      {failure_history}
+
+    suggestion: |
+      REQUIRED ACTIONS:
+
+      1. DIAGNOSE the root cause:
+         - Review error journal: ${MEMORY_DIR}/error-journal.json
+         - Identify common pattern in failures
+
+      2. FIX the underlying issue
+
+      3. RESET the circuit:
+         "reset circuit breaker"
+
+      4. TRY again (half-open mode - one attempt)
+
+  on_success:
+    message: |
+      ✅ Circuit breaker: CLOSED
+      Consecutive successes: {success_count}
+
+  on_reset:
+    message: |
+      🔄 Circuit breaker: HALF-OPEN
+      One test attempt allowed.
+      Next failure will re-open the circuit.
+
+# Learning integration
+learning:
+  enabled: true
+  on_circuit_open:
+    - extract_pattern: true
+    - log_to_journal: true
+    - suggest_prevention: true
+
+# Related
+related:
+  patterns:
+    - P-004-circuit-breaker
+    - P-005-closed-loop
+  agents:
+    - sentinel

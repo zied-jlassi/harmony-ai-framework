@@ -1,0 +1,195 @@
+# R-008: Git Safety Protocol
+# Prevents dangerous git operations that could cause data loss or repository damage
+
+id: R-008
+name: Git Safety Protocol
+version: 1.0.0
+status: active
+severity: critical
+enforcement: block
+
+description: |
+  Enforces safe git practices to prevent irreversible damage to the repository.
+  These rules protect against accidental data loss, history corruption, and
+  security incidents.
+
+rules:
+  # GIT-1: Force push protection
+  - id: GIT-1
+    name: No Force Push to Protected Branches
+    description: Never force push to main, master, develop, or release branches
+    trigger: "git push --force|git push -f"
+    target_branches:
+      - main
+      - master
+      - develop
+      - release/*
+    action: block
+    message: |
+      BLOCKED: Force push to protected branch is forbidden.
+
+      If you need to update a protected branch:
+      1. Create a new commit with the fix
+      2. Use regular push
+      3. For emergencies, request admin override
+
+  # GIT-2: Hard reset protection
+  - id: GIT-2
+    name: No Hard Reset Without Backup
+    description: Prevent git reset --hard without first creating a backup branch
+    trigger: "git reset --hard"
+    action: warn
+    message: |
+      WARNING: Hard reset will permanently lose uncommitted changes.
+
+      Before proceeding:
+      1. git stash (to save changes)
+      2. git branch backup-YYYYMMDD (to save current state)
+      3. Then: git reset --hard
+
+  # GIT-3: Branch verification
+  - id: GIT-3
+    name: Verify Branch Before Commit
+    description: Always check current branch before committing
+    trigger: "git commit"
+    action: remind
+    message: |
+      REMINDER: Verify you're on the correct branch before committing.
+      Current branch: $(git branch --show-current)
+
+      Tip: Use 'git status' to confirm
+
+  # GIT-4: No secrets in commits
+  - id: GIT-4
+    name: No Secrets in Commits
+    description: Block commits containing secrets, API keys, passwords
+    trigger: "git add|git commit"
+    patterns_to_block:
+      - "*.env"
+      - "*credentials*"
+      - "*secret*"
+      - "*.pem"
+      - "*.key"
+      - "password="
+      - "api_key="
+      - "secret_key="
+      - "PRIVATE KEY"
+    exceptions:
+      - "*.env.example"
+      - "*.env.template"
+    action: block
+    message: |
+      BLOCKED: Potential secret detected in staged files.
+
+      Never commit:
+      - .env files (use .env.example)
+      - API keys or tokens
+      - Passwords or credentials
+      - Private keys (.pem, .key)
+
+      Remove sensitive files:
+      git reset HEAD <file>
+
+  # GIT-5: Squash WIP commits
+  - id: GIT-5
+    name: Squash WIP Commits Before Merge
+    description: Clean up work-in-progress commits before merging to main
+    trigger: "git merge|git pull request"
+    patterns_to_flag:
+      - "WIP"
+      - "wip"
+      - "work in progress"
+      - "TODO"
+      - "FIXME"
+      - "temp"
+      - "test commit"
+    action: warn
+    message: |
+      WARNING: WIP commits detected in branch.
+
+      Before merging, consider squashing:
+      git rebase -i HEAD~N (where N = number of commits to squash)
+
+  # GIT-6: No merge without review
+  - id: GIT-6
+    name: Require Code Review Before Merge
+    description: All merges to protected branches require review
+    trigger: "git merge"
+    target_branches:
+      - main
+      - master
+      - develop
+    action: remind
+    message: |
+      REMINDER: Ensure this merge has been reviewed.
+
+      Checklist:
+      - [ ] Code review completed
+      - [ ] Tests passing
+      - [ ] No merge conflicts
+      - [ ] Documentation updated
+
+  # GIT-7: Tag releases
+  - id: GIT-7
+    name: Tag All Releases
+    description: Create annotated tags for all releases
+    trigger: "release"
+    action: remind
+    format: "v{major}.{minor}.{patch}"
+    message: |
+      REMINDER: Tag this release with semantic version.
+
+      git tag -a v1.2.3 -m "Release v1.2.3: Description"
+      git push origin v1.2.3
+
+  # GIT-8: No TODO/FIXME without issue
+  - id: GIT-8
+    name: No TODO Without Issue Reference
+    description: TODO and FIXME comments should reference an issue
+    trigger: "git commit"
+    patterns_to_check:
+      - "TODO(?!.*#\\d+)"    # TODO without #123
+      - "FIXME(?!.*#\\d+)"   # FIXME without #123
+    action: warn
+    message: |
+      WARNING: TODO/FIXME found without issue reference.
+
+      Good: // TODO #123: Implement caching
+      Bad:  // TODO: Implement caching
+
+      Create an issue and reference it, or remove the TODO.
+
+integration:
+  guardian:
+    enabled: true
+    hook: "pre-commit"
+
+  hooks:
+    pre-commit:
+      - check_branch
+      - check_secrets
+      - check_wip
+
+    pre-push:
+      - check_force_push
+      - check_protected_branch
+
+examples:
+  blocked:
+    - command: "git push --force origin main"
+      reason: "Force push to main is forbidden (GIT-1)"
+
+    - command: "git add .env"
+      reason: "Secrets file cannot be committed (GIT-4)"
+
+  allowed:
+    - command: "git push --force origin feature/my-branch"
+      reason: "Force push to feature branch is allowed"
+
+    - command: "git add .env.example"
+      reason: "Example env files are allowed"
+
+related:
+  - R-001-story-required.yaml
+  - guardian.md
+  - incident.md

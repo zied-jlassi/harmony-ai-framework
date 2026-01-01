@@ -1,0 +1,55 @@
+# Next.js Profile - Level 3 (Meta-framework)
+profile:
+  id: nextjs
+  name: "Next.js"
+  category: frontend
+  level: 3
+  description: "Next.js - App Router, Server Components, RSC"
+  last_updated: null
+
+versioning:
+  latest: "15.x"
+  lts: "14.x"
+
+  versions:
+    "15.x":
+      released: "2024-10"
+      features: ["Turbopack stable", "Async request APIs"]
+    "14.x":
+      released: "2023-10"
+      features: ["Server Actions stable", "Partial Prerendering"]
+    "13.x":
+      deprecated: true
+      features: ["App Router introduced"]
+
+  detection:
+    file: "package.json"
+    path: "dependencies.next"
+    fallback: "latest"
+
+dependencies:
+  required: [react]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://nextjs.org/docs"
+      version: "latest"
+
+  topics:
+    - app-router       # app/, layout, page
+    - server-components # RSC, use server
+    - server-actions   # form actions
+    - routing          # dynamic, parallel, intercepting
+    - data-fetching    # fetch, cache
+    - middleware       # edge functions
+    - api-routes       # route handlers
+
+loading:
+  strategy: jit
+  max_files_per_request: 3
+
+cross_references:
+  - "[[react/server-components]]"
+  - "[[react/hooks]]"

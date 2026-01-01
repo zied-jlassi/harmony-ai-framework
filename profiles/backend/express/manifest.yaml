@@ -1,0 +1,31 @@
+# Express Profile - Level 2
+profile:
+  id: express
+  name: "Express.js"
+  version: "4.x / 5.x"
+  category: backend
+  level: 2
+  description: "Express - middleware, routing, REST API"
+  last_updated: null
+
+dependencies:
+  required: [javascript, nodejs]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://expressjs.com/"
+      priority: 1
+
+  topics:
+    - routing          # routes, params, query
+    - middleware       # custom, error handling
+    - request-response # req, res, next
+    - static-files     # serving static
+    - security         # helmet, cors
+    - performance      # compression, caching
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

@@ -1,0 +1,52 @@
+# React Profile - Level 2
+profile:
+  id: react
+  name: "React"
+  category: frontend
+  level: 2
+  description: "React - components, hooks, Server Components"
+  last_updated: null
+
+versioning:
+  latest: "19.x"
+  lts: "18.x"
+
+  versions:
+    "19.x":
+      released: "2024-12"
+      features: ["use() hook", "Actions", "Server Components stable"]
+    "18.x":
+      released: "2022-03"
+      features: ["Concurrent", "Suspense", "Transitions"]
+    "17.x":
+      deprecated: true
+
+  detection:
+    file: "package.json"
+    path: "dependencies.react"
+    fallback: "latest"
+
+dependencies:
+  required: [javascript]
+  optional: [typescript]
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://react.dev/"
+      version: "latest"
+    - url: "https://legacy.reactjs.org/"
+      version: "17.x"
+
+  topics:
+    - components      # function components
+    - hooks           # useState, useEffect, custom
+    - context         # createContext, useContext
+    - refs            # useRef, forwardRef
+    - suspense        # lazy loading, data fetching
+    - server-components  # RSC
+    - testing         # Testing Library
+
+loading:
+  strategy: jit
+  max_files_per_request: 3

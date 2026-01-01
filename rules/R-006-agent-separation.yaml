@@ -1,0 +1,203 @@
+# R-006: Agent Role Separation
+# Each agent has one responsibility - no mixing
+
+rule:
+  id: R-006
+  name: "Agent Role Separation"
+  category: agents
+  severity: error
+  description: |
+    Strict separation of concerns between agents.
+    Each agent has one responsibility and cannot perform another agent's tasks.
+
+enforcement:
+  mode: block
+  phases: [1, 2, 3, 4, 5]  # All phases
+  contexts:
+    - all
+
+agents:
+  # Core Agents
+  guardian:
+    role: "Workflow Protection"
+    can_do:
+      - detect_intent
+      - route_to_agents
+      - check_prerequisites
+      - enforce_rules
+    cannot_do:
+      - write_code
+      - create_stories
+      - run_tests
+
+  sentinel:
+    role: "Memory & Resilience"
+    can_do:
+      - manage_memory
+      - track_errors
+      - control_circuit_breaker
+      - extract_patterns
+    cannot_do:
+      - write_code
+      - create_stories
+      - make_decisions
+
+  analyst:
+    role: "Requirements Analysis"
+    can_do:
+      - analyze_requirements
+      - create_briefs
+      - create_prds
+      - elicit_needs
+    cannot_do:
+      - write_code
+      - create_stories
+      - design_architecture
+
+  architect:
+    role: "Solution Design"
+    can_do:
+      - design_architecture
+      - create_adrs
+      - define_patterns
+      - technical_decisions
+    cannot_do:
+      - write_implementation_code
+      - create_stories
+      - run_tests
+
+  developer:
+    role: "Implementation"
+    can_do:
+      - implement_features
+      - fix_bugs
+      - mark_ucv_dev
+      - refactor_code
+    cannot_do:
+      - create_stories
+      - approve_ucv
+      - close_stories
+
+  tester:
+    role: "Quality Assurance"
+    can_do:
+      - write_tests
+      - run_tests
+      - mark_ucv_test
+      - coverage_analysis
+    cannot_do:
+      - implement_features
+      - create_stories
+      - approve_ucv
+
+  # Specialist Agents
+  sm:
+    role: "Scrum Master"
+    can_do:
+      - create_stories
+      - plan_sprints
+      - manage_backlog
+      - close_stories
+    cannot_do:
+      - write_code
+      - run_tests
+      - design_architecture
+
+  clara:
+    role: "UCV Writer"
+    can_do:
+      - create_ucv
+      - write_gherkin
+      - define_verifications
+    cannot_do:
+      - approve_ucv
+      - write_code
+      - run_tests
+
+  victor:
+    role: "UCV Validator"
+    can_do:
+      - validate_ucv_coverage
+      - check_completion
+      - report_gaps
+    cannot_do:
+      - create_ucv
+      - write_code
+      - modify_story
+
+  luna:
+    role: "Exploratory QA"
+    can_do:
+      - exploratory_testing
+      - mark_ucv_qa
+      - ux_validation
+      - accessibility_check
+    cannot_do:
+      - write_automated_tests
+      - implement_features
+      - create_stories
+
+  nova:
+    role: "AI Architecture"
+    can_do:
+      - design_ai_systems
+      - delegate_to_sub_agents
+      - ai_patterns
+    cannot_do:
+      - write_business_code
+      - create_stories
+
+conditions:
+  - type: role_check
+    check: "current_agent.can_do includes requested_operation"
+    description: "Agent must be authorized for the operation"
+
+  - type: role_check
+    check: "current_agent.cannot_do excludes requested_operation"
+    description: "Agent must not be prohibited from the operation"
+
+actions:
+  on_violation:
+    message: |
+      🛡️ ROLE SEPARATION VIOLATION
+
+      Agent: {agent_name} ({agent_role})
+      Attempted: {operation}
+
+      This operation belongs to: {correct_agent}
+
+    suggestion: |
+      REQUIRED ACTIONS:
+
+      1. Stop current operation
+
+      2. Invoke the correct agent:
+         {correct_agent_command}
+
+      3. Let each agent do their job
+
+  on_success:
+    message: |
+      ✅ Agent authorized for operation
+      Agent: {agent_name}
+      Operation: {operation}
+
+# Workflow routing
+routing:
+  create_story: sm
+  implement_feature: developer
+  write_tests: tester
+  create_ucv: clara
+  validate_ucv: victor
+  exploratory_qa: luna
+  design_architecture: architect
+  analyze_requirements: analyst
+  ai_design: nova
+
+# Related
+related:
+  patterns:
+    - P-001-hybrid-orchestration
+    - P-006-intent-detection
+  agents:
+    - guardian

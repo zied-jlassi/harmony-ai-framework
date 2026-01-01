@@ -1,0 +1,32 @@
+# Redis Profile
+profile:
+  id: redis
+  name: "Redis"
+  version: "7.x"
+  category: databases
+  level: 2
+  description: "Redis - cache, pub/sub, streams, modules"
+  last_updated: null
+
+dependencies:
+  required: []
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://redis.io/docs/"
+      priority: 1
+
+  topics:
+    - data-types       # strings, hashes, lists, sets, sorted sets
+    - commands         # GET, SET, HGET, LPUSH, etc.
+    - pub-sub          # messaging
+    - streams          # event streaming
+    - lua              # scripting
+    - cluster          # sharding
+    - modules          # RediSearch, RedisJSON
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

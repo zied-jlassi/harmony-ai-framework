@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "state": "CLOSED",
+  "consecutive_failures": 0,
+  "last_failure": null,
+  "last_success": null,
+  "max_failures": 3,
+  "cooldown_minutes": 5,
+  "auto_reset": false,
+  "history": [],
+  "notes": "Circuit breaker for Harmony Sentinel System. Opens after 3 consecutive failures to force diagnosis before continuing."
+}

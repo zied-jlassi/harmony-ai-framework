@@ -1,0 +1,80 @@
+# R-001: Story Required
+# No development without an active story
+
+rule:
+  id: R-001
+  name: "Story Required for Development"
+  category: workflow
+  severity: error
+  description: |
+    All code modifications must be tied to an active story.
+    This ensures traceability, documentation, and proper acceptance criteria.
+
+enforcement:
+  mode: block  # warn | block
+  phases: [4]  # Only in Implementation phase
+  contexts:
+    - development
+    - bugfix
+    - feature
+
+conditions:
+  - type: prerequisite
+    check: "workflow.active_story != null"
+    description: "An active story must be set"
+
+  - type: state
+    check: "workflow.active_story.status in ['TODO', 'IN_PROGRESS']"
+    description: "Story must be actionable"
+
+exceptions:
+  # Paths that don't require a story
+  allowed_paths:
+    - ".harmony/"
+    - ".claude/"
+    - "docs/"
+    - "*.md"
+    - "*.json"
+    - "*.yaml"
+    - "*.yml"
+    - ".gitignore"
+    - ".env*"
+
+  # Operations that don't require a story
+  allowed_operations:
+    - read
+    - search
+    - list
+
+actions:
+  on_violation:
+    message: |
+      🛡️ GUARDIAN CHECKPOINT - VIOLATION
+
+      🚫 BLOCKED: Code modification without active story
+
+      Current state:
+        Active story: None
+        Attempted: {operation} on {file_path}
+    suggestion: |
+      REQUIRED ACTIONS:
+      1. Create a story first:
+         "create story for [your feature]"
+
+      2. Or activate an existing story:
+         "activate STORY-XXX"
+
+      3. Then retry your operation
+
+  on_success:
+    message: |
+      ✅ Story requirement satisfied
+      Active: {story_id} - {story_title}
+
+# Related
+related:
+  patterns:
+    - P-007-story-based
+  agents:
+    - guardian
+    - sm

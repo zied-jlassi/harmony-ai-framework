@@ -1,0 +1,32 @@
+# Ruby on Rails Profile - Level 2
+profile:
+  id: rails
+  name: "Ruby on Rails"
+  version: "7.x"
+  category: backend
+  level: 2
+  description: "Rails - MVC, Active Record, Hotwire, Turbo"
+  last_updated: null
+
+dependencies:
+  required: [ruby]
+  optional: []
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://guides.rubyonrails.org/"
+      priority: 1
+
+  topics:
+    - mvc              # models, views, controllers
+    - active-record    # ORM, migrations, associations
+    - routing          # resourceful routes
+    - hotwire          # Turbo, Stimulus
+    - action-cable     # WebSockets
+    - active-job       # background jobs
+    - testing          # minitest, RSpec
+
+loading:
+  strategy: jit
+  max_files_per_request: 2

@@ -1,0 +1,169 @@
+# Integrations Registry - LLM/IDE Profiles
+# Harmony can be installed on multiple AI coding assistants
+# Each has its own configuration format and capabilities
+
+version: "1.0.0"
+last_updated: "2025-12-30"
+
+# ═══════════════════════════════════════════════════════════════
+# SUPPORTED INTEGRATIONS
+# ═══════════════════════════════════════════════════════════════
+
+integrations:
+
+  claude-code:
+    name: "Claude Code"
+    vendor: "Anthropic"
+    type: "cli"
+    status: "full-support"
+    description: "CLI AI coding assistant with hooks, memory, MCP"
+    path: claude-code/
+    features:
+      hooks: true
+      memory: true
+      mcp: true
+      slash_commands: true
+      agents: true
+      skills: true
+    config_files:
+      - ".claude/"
+      - "CLAUDE.md"
+      - ".mcp.json"
+
+  cursor:
+    name: "Cursor"
+    vendor: "Cursor Inc"
+    type: "ide"
+    status: "full-support"
+    description: "AI-first IDE with rules system"
+    path: cursor/
+    features:
+      hooks: false
+      memory: true        # Built-in memories
+      mcp: true
+      slash_commands: false
+      agents: false
+      rules_levels: 5     # User, Project, .cursor/rules, .cursorrules, inline
+    config_files:
+      - ".cursor/rules/"
+      - ".cursorrules"    # Legacy
+
+  windsurf:
+    name: "Windsurf"
+    vendor: "Codeium"
+    type: "ide"
+    status: "full-support"
+    description: "Agentic IDE with Cascade AI"
+    path: windsurf/
+    features:
+      hooks: false
+      memory: true        # Auto + manual memories
+      mcp: true
+      slash_commands: false
+      agents: true        # Cascade
+      cascade: true
+    config_files:
+      - "*.windsurfrules"
+      - "global_rules.md"
+
+  continue:
+    name: "Continue"
+    vendor: "Continue Dev"
+    type: "extension"
+    status: "partial-support"
+    description: "Open-source AI coding assistant"
+    path: continue/
+    features:
+      hooks: false
+      memory: false
+      mcp: false          # Uses providers
+      slash_commands: false
+      agents: true        # Assistants
+      assistants: true
+    config_files:
+      - ".continue/config.yaml"
+      - ".continue/config.json"
+      - ".continue/assistants/"
+
+  cody:
+    name: "Cody"
+    vendor: "Sourcegraph"
+    type: "extension"
+    status: "partial-support"
+    description: "Enterprise AI with Code Graph"
+    path: cody/
+    features:
+      hooks: false
+      memory: false
+      mcp: false
+      slash_commands: false
+      agents: true
+      code_graph: true    # Sourcegraph specific
+    config_files:
+      - ".sourcegraph/"
+      - "prompts/"
+
+# ═══════════════════════════════════════════════════════════════
+# FEATURE MAPPING
+# How Harmony concepts map to each integration
+# ═══════════════════════════════════════════════════════════════
+
+feature_mapping:
+
+  guardian_protocol:
+    claude-code: "hooks + CLAUDE.md rules"
+    cursor: ".cursor/rules/harmony-guardian.mdc"
+    windsurf: "harmony.windsurfrules section"
+    continue: "config.yaml rules"
+    cody: "prompts"
+
+  sentinel_memory:
+    claude-code: ".claude/memory/*.json"
+    cursor: "built-in memories (manual)"
+    windsurf: "auto-generated memories"
+    continue: "not supported"
+    cody: "not supported"
+
+  agents:
+    claude-code: "CLAUDE.md agent sections + skills"
+    cursor: "separate .mdc rule files"
+    windsurf: "rules sections"
+    continue: ".continue/assistants/*.yaml"
+    cody: "shared prompts"
+
+  tech_profiles:
+    claude-code: "loaded to CLAUDE.md context"
+    cursor: "loaded to rules context"
+    windsurf: "loaded to rules context"
+    continue: "loaded to config context"
+    cody: "loaded to prompts"
+
+  workflows:
+    claude-code: "slash commands + skills"
+    cursor: "manual prompts"
+    windsurf: "manual prompts"
+    continue: "manual prompts"
+    cody: "shared prompts"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install <target>"
+  targets:
+    - claude-code
+    - cursor
+    - windsurf
+    - continue
+    - cody
+    - all           # Install for all detected IDEs
+
+  workflow:
+    1: "Read .harmony/ configuration"
+    2: "Detect target IDE(s)"
+    3: "Load integration manifest"
+    4: "Transform Harmony content to target format"
+    5: "Generate config files from templates"
+    6: "Run installer script"
+    7: "Verify installation"

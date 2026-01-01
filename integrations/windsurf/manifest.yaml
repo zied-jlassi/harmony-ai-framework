@@ -1,0 +1,206 @@
+# Windsurf Integration
+# Agentic IDE with Cascade AI
+
+integration:
+  id: windsurf
+  name: "Windsurf"
+  vendor: "Codeium"
+  version: "1.0.0"
+  type: "ide"
+  status: "full-support"
+  description: "Agentic IDE with Cascade AI and auto-memories"
+
+# ═══════════════════════════════════════════════════════════════
+# CAPABILITIES
+# ═══════════════════════════════════════════════════════════════
+
+capabilities:
+  hooks:
+    supported: false
+    note: "No hook system"
+
+  memory:
+    supported: true
+    types:
+      user_generated: "Rules defined by user"
+      auto_generated: "Created by Cascade from interactions"
+    persistence: "Across conversations"
+
+  mcp:
+    supported: true
+    config: "Settings > MCP"
+    note: "One-click setup for many tools"
+
+  cascade:
+    supported: true
+    description: "Agentic AI that reads full repo"
+    features:
+      - "Multi-step task execution"
+      - "Automatic iteration until code works"
+      - "Full codebase awareness"
+      - "Terminal command execution"
+
+  rules:
+    supported: true
+    format: ".windsurfrules files"
+    location: "Project root"
+
+# ═══════════════════════════════════════════════════════════════
+# RULES SYSTEM
+# ═══════════════════════════════════════════════════════════════
+
+rules_system:
+  project_rules:
+    location: "*.windsurfrules"
+    scope: "Project"
+    format: "Markdown"
+    naming: "descriptive.windsurfrules"
+    examples:
+      - "harmony.windsurfrules"
+      - "backend.windsurfrules"
+      - "testing.windsurfrules"
+
+  global_rules:
+    location: "global_rules.md"
+    scope: "All projects"
+    format: "Markdown"
+    use_for: "Cross-project AI behavior"
+
+  memories:
+    user_memories:
+      description: "Explicitly defined by user"
+      examples:
+        - "Preferred APIs"
+        - "Communication style"
+        - "Project conventions"
+    auto_memories:
+      description: "Created by Cascade"
+      examples:
+        - "Code patterns observed"
+        - "User preferences inferred"
+
+# ═══════════════════════════════════════════════════════════════
+# FILE STRUCTURE
+# ═══════════════════════════════════════════════════════════════
+
+file_structure:
+  project_root:
+    - "harmony.windsurfrules"     # Main Harmony rules
+    - "*.windsurfrules"           # Additional rule files
+
+  global:
+    - "global_rules.md"           # Cross-project rules
+
+# ═══════════════════════════════════════════════════════════════
+# WINDSURFRULES FORMAT
+# ═══════════════════════════════════════════════════════════════
+
+windsurfrules_format:
+  description: "Markdown format for Windsurf rules"
+  example: |
+    # Harmony Framework Rules
+
+    ## Guardian Protocol
+
+    When I ask to develop, implement, or code something:
+    1. First check if a story exists for this work
+    2. Verify prerequisites are met
+    3. Route to the appropriate agent
+
+    ## Agents
+
+    ### Developer (Amelia)
+    - Implements features
+    - Fixes bugs
+    - Writes unit tests
+
+    ### Tester (Emma)
+    - Writes E2E tests
+    - Validates acceptance criteria
+
+    ### Luna
+    - Exploratory QA
+    - UX validation
+
+    ## Tech Stack
+
+    This project uses:
+    - Backend: NestJS with TypeScript
+    - Frontend: Angular
+    - Database: PostgreSQL
+
+    Follow best practices for these technologies.
+
+# ═══════════════════════════════════════════════════════════════
+# HARMONY MAPPING
+# ═══════════════════════════════════════════════════════════════
+
+harmony_mapping:
+
+  guardian:
+    target: "harmony.windsurfrules section"
+    implementation: |
+      Guardian rules as markdown section
+      Cascade reads and follows
+      Intent detection via natural language
+
+  sentinel:
+    target: "Auto-memories"
+    implementation: |
+      Cascade learns from errors automatically
+      No explicit error journal needed
+      Patterns stored in memories
+
+  agents:
+    target: "harmony.windsurfrules sections"
+    implementation: |
+      Each agent as markdown section
+      Cascade routes based on keywords
+      Capabilities listed naturally
+
+  tech_profiles:
+    target: "Loaded to windsurfrules"
+    implementation: |
+      Profile content added to rules
+      Best practices as guidelines
+      Cascade follows conventions
+
+  cascade_integration:
+    target: "Native"
+    implementation: |
+      Cascade is the execution agent
+      Full repo awareness built-in
+      Multi-step task execution native
+
+# ═══════════════════════════════════════════════════════════════
+# TEMPLATES
+# ═══════════════════════════════════════════════════════════════
+
+templates:
+  - "templates/harmony.windsurfrules"
+  - "templates/global_rules.md"
+
+# ═══════════════════════════════════════════════════════════════
+# INSTALLATION
+# ═══════════════════════════════════════════════════════════════
+
+installation:
+  command: "/harmony install windsurf"
+  steps:
+    1: "Generate harmony.windsurfrules from template + profiles"
+    2: "Create global_rules.md if not exists"
+    3: "Configure MCP in Windsurf settings (manual)"
+    4: "Verify installation"
+
+  post_install: |
+    Windsurf integration installed!
+
+    Files created:
+    - harmony.windsurfrules (project rules)
+
+    Cascade will now:
+    - Follow Guardian protocol
+    - Use Harmony agents
+    - Apply tech profile best practices
+
+    Test by asking: "What Harmony agents can help me?"

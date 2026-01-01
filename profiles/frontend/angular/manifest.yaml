@@ -1,0 +1,49 @@
+# Angular Profile
+# Level 2 - Framework (requires TypeScript)
+# Knowledge populated via: /harmony learn
+
+profile:
+  id: angular
+  name: "Angular"
+  version: "17.x / 18.x / 19.x"
+  category: frontend
+  level: 2
+  description: "Angular framework - components, signals, services, routing"
+  last_updated: null
+
+dependencies:
+  required:
+    - typescript    # Angular is TypeScript-first
+  optional:
+    - rxjs          # Reactive patterns (still used)
+  conflicts: []
+
+knowledge:
+  sources:
+    - url: "https://angular.dev/"
+      priority: 1
+    - url: "https://angular.io/docs"
+      priority: 2
+
+  topics:
+    - components      # @Component, templates, styles
+    - signals         # signal(), computed(), effect()
+    - services        # @Injectable, DI
+    - routing         # Routes, guards, resolvers
+    - forms           # reactive, template-driven
+    - http            # HttpClient, interceptors
+    - directives      # structural, attribute
+    - pipes           # transform display
+    - testing         # TestBed, component testing
+
+loading:
+  strategy: jit
+  max_files_per_request: 3
+  priority:
+    - components
+    - signals
+    - services
+
+cross_references:
+  - "[[typescript/decorators]]"
+  - "[[typescript/interfaces]]"

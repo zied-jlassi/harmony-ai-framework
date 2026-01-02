@@ -838,7 +838,7 @@ create_claude_md() {
     local claude_md="$PROJECT_DIR/CLAUDE.md"
     local project_name=$(basename "$PROJECT_DIR")
     local harmony_version="$VERSION"
-    local template_file="$SCRIPT_DIR/../integrations/claude-code/templates/CLAUDE.md.template"
+    local template_file="$SCRIPT_DIR/integrations/claude-code/templates/CLAUDE.md.template"
 
     print_step "5.6/6" "Configuring CLAUDE.md..."
 
@@ -1151,7 +1151,7 @@ show_tip() {
 # Show all onboarding tips
 show_onboarding_tips() {
     local tips_dir="$SCRIPT_DIR/tips"
-    local tip_total=7
+    local tip_total=8
     local tip_num=0
 
     # Check if tips directory exists
@@ -1208,6 +1208,10 @@ show_onboarding_tips() {
     # Tip 7: Profiles
     tip_num=$((tip_num + 1))
     show_tip "$tips_dir/06-profiles.md" $tip_num $tip_total "Votre boîte à outils"
+
+    # Tip 8: RouteLLM (Auto-detection)
+    tip_num=$((tip_num + 1))
+    show_tip "$tips_dir/08-routellm.md" $tip_num $tip_total "Detection automatique (RouteLLM)"
 
     echo ""
     print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"

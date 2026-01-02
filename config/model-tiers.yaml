@@ -1,0 +1,553 @@
+# =============================================================================
+# MODEL TIERS CONFIGURATION
+# =============================================================================
+# Harmony Framework v2.0
+#
+# OBJECTIF
+# --------
+# Ce fichier configure l'abstraction des modeles LLM pour permettre a Harmony
+# de fonctionner avec n'importe quel provider (Claude, OpenAI, Mistral, etc.)
+# sans modification du code.
+#
+# CONCEPTS CLES
+# -------------
+# 1. PROVIDER DETECTION: Auto-detection du provider LLM via variables d'env
+# 2. MODEL TIERS: 3 niveaux de modeles (T1=puissant, T2=equilibre, T3=rapide)
+# 3. ROUTER MODEL: Modele leger pour classifier les intentions (RouteLLM)
+# 4. PROJECT OVERRIDE: Possibilite de surcharger par projet
+#
+# DOCUMENTATION COMPLETE: docs/design/MODEL-TIERS-SYSTEM.md
+# =============================================================================
+
+version: "2.0"
+description: "Configuration multi-provider LLM avec RouteLLM"
+
+# =============================================================================
+# SECTION 1: DETECTION AUTOMATIQUE DU PROVIDER
+# =============================================================================
+# Harmony detecte automatiquement le provider LLM en cherchant dans l'ordre:
+# 1. Variables d'environnement (API keys)
+# 2. Fichiers de configuration
+# 3. Fallback vers "unknown"
+
+provider_detection:
+  # Ordre de detection (premier match gagne)
+  detection_order:
+    - check: "env"
+      var: "ANTHROPIC_API_KEY"
+      provider: "claude"
+
+    - check: "env"
+      var: "OPENAI_API_KEY"
+      provider: "openai"
+
+    - check: "env"
+      var: "GOOGLE_API_KEY"
+      provider: "google"
+
+    - check: "env"
+      var: "MISTRAL_API_KEY"
+      provider: "mistral"
+
+    - check: "env"
+      var: "GROQ_API_KEY"
+      provider: "groq"
+
+    - check: "env"
+      var: "OLLAMA_HOST"
+      provider: "ollama"
+
+    - check: "env"
+      var: "AZURE_OPENAI_ENDPOINT"
+      provider: "azure"
+
+    - check: "file"
+      path: ".claude/settings.json"
+      provider: "claude"
+
+    - check: "default"
+      provider: "unknown"
+
+  # Override manuel (decommenter pour forcer un provider)
+  # manual_override: "openai"
+
+# =============================================================================
+# SECTION 2: MAPPING DES MODELES PAR PROVIDER
+# =============================================================================
+# Chaque provider a des noms de modeles differents pour des capacites equivalentes.
+# Ce mapping permet d'utiliser des alias generiques (tier1, tier2, tier3, router)
+# qui sont traduits vers les vrais noms de modeles.
+#
+# STRUCTURE PAR TIER:
+# - tier1: Modele le plus puissant (architecture, raisonnement complexe)
+# - tier2: Modele equilibre (developpement quotidien)
+# - tier3: Modele rapide (classification, taches simples)
+# - router: Modele pour RouteLLM (classification d'intention)
+
+providers:
+
+  # ---------------------------------------------------------------------------
+  # ANTHROPIC CLAUDE
+  # ---------------------------------------------------------------------------
+  # Provider par defaut pour Claude Code
+  # Documentation: https://docs.anthropic.com/claude/docs/models-overview
+  # ---------------------------------------------------------------------------
+  claude:
+    name: "Anthropic Claude"
+    api_type: "anthropic"
+
+    models:
+      tier1:
+        id: "claude-opus-4-5-20251101"
+        alias: "opus"
+        description: "Raisonnement complexe, architecture, audit securite"
+        context_window: 200000
+        cost_input_1k: 0.015
+        cost_output_1k: 0.075
+
+      tier2:
+        id: "claude-sonnet-4-20250514"
+        alias: "sonnet"
+        description: "Developpement, code review, implementation"
+        context_window: 200000
+        cost_input_1k: 0.003
+        cost_output_1k: 0.015
+
+      tier3:
+        id: "claude-3-5-haiku-20241022"
+        alias: "haiku"
+        description: "Taches rapides, validation, formatting"
+        context_window: 200000
+        cost_input_1k: 0.00025
+        cost_output_1k: 0.00125
+
+      router:
+        id: "claude-3-5-haiku-20241022"
+        alias: "haiku"
+        description: "Classification d'intention RouteLLM"
+        max_tokens: 150
+        temperature: 0.1
+        rationale: |
+          Haiku est ideal comme router car:
+          - Tres rapide (< 500ms)
+          - Cout minimal ($0.25/1M tokens)
+          - Suffisant pour classification simple
+          - Meme qualite que GPT-4 pour cette tache
+
+    default_tier: "tier2"
+
+  # ---------------------------------------------------------------------------
+  # OPENAI
+  # ---------------------------------------------------------------------------
+  # Alternative principale
+  # Documentation: https://platform.openai.com/docs/models
+  # ---------------------------------------------------------------------------
+  openai:
+    name: "OpenAI"
+    api_type: "openai"
+
+    models:
+      tier1:
+        id: "gpt-4o"
+        alias: "gpt4o"
+        description: "Raisonnement avance, vision, long contexte"
+        context_window: 128000
+        cost_input_1k: 0.005
+        cost_output_1k: 0.015
+
+      tier2:
+        id: "gpt-4o-mini"
+        alias: "gpt4o-mini"
+        description: "Equilibre cout/performance"
+        context_window: 128000
+        cost_input_1k: 0.00015
+        cost_output_1k: 0.0006
+
+      tier3:
+        id: "gpt-4o-mini"
+        alias: "gpt4o-mini"
+        description: "Taches rapides (meme modele que T2)"
+        context_window: 128000
+        cost_input_1k: 0.00015
+        cost_output_1k: 0.0006
+
+      router:
+        id: "gpt-4o-mini"
+        alias: "gpt4o-mini"
+        description: "Router RouteLLM"
+        max_tokens: 150
+        temperature: 0.1
+        rationale: |
+          GPT-4o-mini comme router car:
+          - Tres economique ($0.15/1M tokens)
+          - Performance excellente sur classification
+          - Latence faible
+
+    default_tier: "tier2"
+
+  # ---------------------------------------------------------------------------
+  # GOOGLE GEMINI
+  # ---------------------------------------------------------------------------
+  # Documentation: https://ai.google.dev/models/gemini
+  # ---------------------------------------------------------------------------
+  google:
+    name: "Google Gemini"
+    api_type: "google"
+
+    models:
+      tier1:
+        id: "gemini-1.5-pro"
+        alias: "gemini-pro"
+        description: "Long contexte (2M tokens), multimodal"
+        context_window: 2000000
+
+      tier2:
+        id: "gemini-1.5-flash"
+        alias: "gemini-flash"
+        description: "Rapide et equilibre"
+        context_window: 1000000
+
+      tier3:
+        id: "gemini-1.5-flash-8b"
+        alias: "gemini-8b"
+        description: "Ultra-leger, tres rapide"
+        context_window: 1000000
+
+      router:
+        id: "gemini-1.5-flash-8b"
+        alias: "gemini-8b"
+        description: "Router ultra-rapide"
+        max_tokens: 150
+        temperature: 0.1
+
+    default_tier: "tier2"
+
+  # ---------------------------------------------------------------------------
+  # MISTRAL
+  # ---------------------------------------------------------------------------
+  # Provider francais, bonne alternative europeenne
+  # Documentation: https://docs.mistral.ai/
+  # ---------------------------------------------------------------------------
+  mistral:
+    name: "Mistral AI"
+    api_type: "mistral"
+
+    models:
+      tier1:
+        id: "mistral-large-latest"
+        alias: "mistral-large"
+        description: "Modele flagship"
+        context_window: 128000
+
+      tier2:
+        id: "mistral-medium-latest"
+        alias: "mistral-medium"
+        description: "Equilibre"
+        context_window: 32000
+
+      tier3:
+        id: "mistral-small-latest"
+        alias: "mistral-small"
+        description: "Rapide et leger"
+        context_window: 32000
+
+      router:
+        id: "mistral-small-latest"
+        alias: "mistral-small"
+        description: "Router economique"
+        max_tokens: 150
+        temperature: 0.1
+
+    default_tier: "tier2"
+
+  # ---------------------------------------------------------------------------
+  # GROQ (Inference ultra-rapide)
+  # ---------------------------------------------------------------------------
+  # Ideal pour le router grace a sa latence tres faible
+  # Documentation: https://groq.com/
+  # ---------------------------------------------------------------------------
+  groq:
+    name: "Groq"
+    api_type: "groq"
+
+    models:
+      tier1:
+        id: "llama-3.3-70b-versatile"
+        alias: "llama70b"
+        description: "Llama 3.3 70B - tres capable"
+        context_window: 128000
+
+      tier2:
+        id: "llama-3.1-8b-instant"
+        alias: "llama8b"
+        description: "Llama 3.1 8B - rapide"
+        context_window: 128000
+
+      tier3:
+        id: "llama-3.1-8b-instant"
+        alias: "llama8b"
+        description: "Meme modele, optimise vitesse"
+        context_window: 128000
+
+      router:
+        id: "llama-3.1-8b-instant"
+        alias: "llama8b"
+        description: "Router ultra-rapide"
+        max_tokens: 150
+        temperature: 0.1
+        rationale: |
+          Groq + Llama 8B = combinaison ideale pour router:
+          - Latence < 100ms
+          - Gratuit jusqu'a 6000 requetes/min
+          - Qualite suffisante pour classification
+
+    default_tier: "tier2"
+    recommendation: "Excellent choix pour router_model grace a la latence minimale"
+
+  # ---------------------------------------------------------------------------
+  # OLLAMA (Modeles locaux)
+  # ---------------------------------------------------------------------------
+  # Pour execution 100% locale, RGPD compliance, offline
+  # Documentation: https://ollama.ai/
+  # ---------------------------------------------------------------------------
+  ollama:
+    name: "Ollama (Local)"
+    api_type: "ollama"
+    base_url: "http://localhost:11434"
+
+    models:
+      tier1:
+        id: "codellama:70b"
+        alias: "codellama-70b"
+        description: "Codellama 70B - necessite GPU puissant"
+        requirements: "48GB+ VRAM"
+
+      tier2:
+        id: "codellama:34b"
+        alias: "codellama-34b"
+        description: "Codellama 34B - GPU mid-range"
+        requirements: "24GB+ VRAM"
+
+      tier3:
+        id: "codellama:7b"
+        alias: "codellama-7b"
+        description: "Codellama 7B - leger"
+        requirements: "8GB+ VRAM"
+
+      router:
+        id: "codellama:7b"
+        alias: "codellama-7b"
+        description: "Router local"
+        max_tokens: 150
+        temperature: 0.1
+        note: "Peut etre lent selon le hardware"
+
+    default_tier: "tier2"
+    note: "Execution 100% locale, aucune donnee envoyee a l'exterieur"
+
+  # ---------------------------------------------------------------------------
+  # AZURE OPENAI
+  # ---------------------------------------------------------------------------
+  # Pour entreprises avec contrat Azure
+  # ---------------------------------------------------------------------------
+  azure:
+    name: "Azure OpenAI"
+    api_type: "azure"
+
+    models:
+      tier1:
+        id: "${AZURE_GPT4_DEPLOYMENT}"
+        alias: "azure-gpt4"
+        description: "Deployment GPT-4"
+
+      tier2:
+        id: "${AZURE_GPT35_DEPLOYMENT}"
+        alias: "azure-gpt35"
+        description: "Deployment GPT-3.5"
+
+      tier3:
+        id: "${AZURE_GPT35_DEPLOYMENT}"
+        alias: "azure-gpt35"
+        description: "Meme deployment"
+
+      router:
+        id: "${AZURE_GPT35_DEPLOYMENT}"
+        alias: "azure-gpt35"
+        max_tokens: 150
+        temperature: 0.1
+
+    default_tier: "tier2"
+    note: "Les noms de deployment doivent etre configures via variables d'environnement"
+
+  # ---------------------------------------------------------------------------
+  # PROVIDER INCONNU / FALLBACK
+  # ---------------------------------------------------------------------------
+  unknown:
+    name: "Provider Inconnu"
+    api_type: "unknown"
+
+    models:
+      tier1: { id: null }
+      tier2: { id: null }
+      tier3: { id: null }
+      router: { id: null }
+
+    default_tier: null
+
+    behavior:
+      router_disabled: true
+      fallback_to_keywords: true
+      warning_message: |
+        Aucun provider LLM detecte.
+        L'auto-detection d'intention (RouteLLM) est desactivee.
+        Le routage fonctionne uniquement par mots-cles.
+
+        Pour activer RouteLLM, configurez un provider:
+        - ANTHROPIC_API_KEY pour Claude
+        - OPENAI_API_KEY pour OpenAI
+        - Ou un autre provider supporte
+
+# =============================================================================
+# SECTION 3: CONFIGURATION ROUTELLM
+# =============================================================================
+# Le router model est utilise pour classifier automatiquement les intentions
+# quand les mots-cles ne matchent pas clairement.
+#
+# FLUX:
+# 1. User input arrive
+# 2. Cherche mots-cles dans routing-rules.yaml
+# 3. Si pas de match clair → appelle router model
+# 4. Router retourne: {intent, agent, confidence}
+# 5. Selon confidence → route automatiquement ou demande confirmation
+
+router_config:
+  # Activer/desactiver RouteLLM
+  enabled: true
+
+  # Comment selectionner le modele router
+  model_selection:
+    # Strategie par defaut: utiliser le router du provider detecte
+    strategy: "provider_router"
+
+    # Alternatives possibles:
+    # strategy: "explicit"       # Utiliser explicit_model ci-dessous
+    # strategy: "groq_always"    # Toujours Groq pour la vitesse
+    # strategy: "local_only"     # Ollama uniquement (RGPD)
+
+    # Si strategy = "explicit", specifier le modele:
+    # explicit_model:
+    #   provider: "groq"
+    #   model_id: "llama-3.1-8b-instant"
+
+  # Comportement quand router non disponible
+  fallback:
+    strategy: "keywords_only"
+    show_warning: true
+    log_to_metrics: true
+
+  # Parametres du router
+  parameters:
+    max_tokens: 150           # Limiter la reponse
+    temperature: 0.1          # Basse pour consistance
+    timeout_ms: 3000          # Max 3 secondes
+
+  # Optimisations
+  optimizations:
+    cache_enabled: true
+    cache_ttl_minutes: 30
+    skip_if_keyword_match: true    # Ne pas appeler si keyword clair
+    batch_similar_queries: false   # Future feature
+
+  # Limites de cout
+  cost_control:
+    max_daily_calls: 1000
+    warn_at_percentage: 80
+    circuit_breaker_threshold: 100  # Appels/heure max
+
+# =============================================================================
+# SECTION 4: ROUTING PAR COMPLEXITE DE TACHE
+# =============================================================================
+# Assigne automatiquement le bon tier selon le type de tache
+
+task_routing:
+  # Taches → Tier
+  tier1_tasks:
+    - architecture_design
+    - security_audit
+    - complex_refactoring
+    - multi_file_analysis
+    - adr_creation
+    - system_design
+
+  tier2_tasks:
+    - feature_implementation
+    - code_review
+    - test_writing
+    - bug_fixing
+    - documentation
+    - api_design
+
+  tier3_tasks:
+    - simple_fixes
+    - formatting
+    - quick_lookups
+    - status_checks
+    - intent_classification
+    - validation
+
+  # Override pour taches en background
+  background_tasks:
+    exploration: "tier3"
+    linting: "tier3"
+    validation: "tier3"
+    health_check: "tier3"
+
+# =============================================================================
+# SECTION 5: OVERRIDE PAR PROJET
+# =============================================================================
+# Les projets peuvent surcharger ces parametres dans .harmony/config.yaml
+
+project_override:
+  enabled: true
+  config_path: ".harmony/config.yaml"
+
+  # Schema des overrides supportes:
+  #
+  # .harmony/config.yaml:
+  # ```yaml
+  # llm:
+  #   # Forcer un provider specifique
+  #   provider: "openai"
+  #
+  #   # Utiliser un modele router specifique
+  #   router:
+  #     provider: "groq"
+  #     model: "llama-3.1-8b-instant"
+  #
+  #   # Changer le tier par defaut
+  #   default_tier: "tier1"
+  #
+  #   # Desactiver RouteLLM (keywords only)
+  #   disable_router: true
+  # ```
+
+# =============================================================================
+# SECTION 6: METRIQUES
+# =============================================================================
+
+metrics:
+  enabled: true
+  log_file: ".harmony/memory/model-metrics.log"
+
+  track:
+    - model_usage_by_tier
+    - router_calls_count
+    - router_accuracy
+    - cost_per_session
+    - latency_percentiles
+
+  targets:
+    router_accuracy: 0.90       # 90% routing correct
+    tier3_usage: 0.40           # 40% sur petits modeles
+    cost_reduction: 0.50        # 50% economie vs T1 toujours
+    avg_router_latency_ms: 500  # < 500ms en moyenne

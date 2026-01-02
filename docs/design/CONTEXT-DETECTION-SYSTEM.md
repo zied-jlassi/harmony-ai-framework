@@ -883,3 +883,161 @@ Le Context Detection System transforme Harmony en **systeme de gouvernance proje
 - Respecte les choix utilisateur (meme les refus)
 - Trace tout pour responsabilisation
 - Permet la reactivation a tout moment
+
+---
+
+## INTENT AUTO-DETECTION (RouteLLM Pattern)
+
+### Probleme
+
+> **Les nouveaux utilisateurs ne connaissent pas les mots-cles declencheurs**
+
+Exemple:
+```
+Utilisateur novice: "J'aimerais bien organiser le code source"
+
+AVEC mots-cles uniquement:
+└── Aucun match → Fallback "general-purpose" → Experience degradee
+
+AVEC RouteLLM:
+└── Haiku analyse: "organiser le code" → Intent: REFACTOR
+└── Mapping: REFACTOR → developer
+└── Route vers developer avec confiance 0.87
+```
+
+### Solution: RouteLLM (LMSYS/Stanford 2024)
+
+> **Source**: [LMSYS Blog](https://lmsys.org/blog/2024-07-01-routellm/) | [GitHub](https://github.com/lm-sys/RouteLLM)
+
+**Principe**: Utiliser un petit modele (Haiku) comme "router" pour classifier les requetes utilisateur avant de les envoyer au bon agent.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                HARMONY INTENT DETECTION FLOW                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  USER INPUT                                                      │
+│      │                                                           │
+│      ▼                                                           │
+│  ┌─────────────────────────────────────────────────────────────┐ │
+│  │           STEP 1: KEYWORD MATCHING (Instant, Free)          │ │
+│  │  • Check routing-rules.yaml patterns                         │ │
+│  │  • If match with confidence > 0.7 → Route immediately       │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│      │                                                           │
+│      │ NO MATCH or LOW CONFIDENCE                                │
+│      ▼                                                           │
+│  ┌─────────────────────────────────────────────────────────────┐ │
+│  │           STEP 2: HAIKU INTENT CLASSIFIER                   │ │
+│  │  • Send user input to Haiku (cheap, fast: ~150 tokens)      │ │
+│  │  • Returns: {intent, context_flags, suggested_agent, conf}  │ │
+│  │  • Cached for 30 min (similar queries)                      │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│      │                                                           │
+│      ├─── Confidence >= 0.85 ───▶ AUTO-ROUTE (silent)           │
+│      │                                                           │
+│      ├─── Confidence 0.60-0.85 ──▶ ROUTE + MENTION to user      │
+│      │    "Je vous dirige vers le Developer..."                 │
+│      │                                                           │
+│      ├─── Confidence 0.40-0.60 ──▶ ASK USER to confirm          │
+│      │    "Voulez-vous que je vous dirige vers Developer?"      │
+│      │                                                           │
+│      └─── Confidence < 0.40 ───▶ ASK USER to clarify            │
+│           "Pouvez-vous preciser votre besoin?"                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Configuration dans routing-rules.yaml
+
+```yaml
+auto_detection:
+  enabled: true
+  router_model: "haiku"  # Petit modele, rapide, economique
+
+  triggers:
+    - no_keyword_match       # Mots-cles n'ont rien matche
+    - ambiguous_keywords     # Plusieurs agents pourraient matcher
+    - low_confidence         # Match keyword mais confiance < 0.7
+    - user_request_explicit  # User demande "quel agent utiliser?"
+
+  classification_prompt: |
+    Analyze this user request and determine:
+    1. PRIMARY_INTENT: One of [ANALYZE, DESIGN, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE]
+    2. CONTEXT_FLAGS: Which flags apply? [has_ui, has_db_schema, personal_data, security_critical, is_game, needs_docs]
+    3. SUGGESTED_AGENT: Which agent should handle this?
+    4. CONFIDENCE: 0.0 to 1.0
+
+    User request: "{user_input}"
+
+    Respond in JSON format.
+
+  thresholds:
+    high_confidence: 0.85     # Auto-route
+    medium_confidence: 0.60   # Route + mention
+    low_confidence: 0.40      # Ask confirmation
+    reject: 0.40              # Ask clarification
+
+  cost_settings:
+    max_tokens_for_routing: 150
+    cache_similar_queries: true
+    cache_ttl_minutes: 30
+    fallback_on_error: "general-purpose"
+```
+
+### Mapping Intent → Agent
+
+| Intent | Agent | Description |
+|--------|-------|-------------|
+| ANALYZE | analyst | Analyse besoins, requirements |
+| DESIGN | architect | Architecture, ADRs, patterns |
+| PLAN | scrum-master | Stories, sprints, backlog |
+| IMPLEMENT | developer | Code, features, refactoring |
+| TEST | tester | Tests, coverage, validation |
+| REVIEW | review-agent | Code review, PR |
+| DOCUMENT | tech-writer | Documentation, README |
+| FIX | developer | Bugs, corrections |
+| DEPLOY | devops-agent | CI/CD, infrastructure |
+| EXPLORE | exploratory-qa | Tests exploratoires, QA |
+
+### Exemples d'Auto-Detection
+
+| Input Utilisateur | Keywords Match? | Haiku Analysis | Result |
+|-------------------|-----------------|----------------|--------|
+| "implemente le login" | ✅ "implemente" → dev | N/A | developer |
+| "j'aimerais organiser le code" | ❌ | Intent: REFACTOR → dev | developer |
+| "c'est quoi le probleme ici?" | ❌ | Intent: FIX → dev | developer |
+| "on devrait faire des tests" | ⚠️ Ambigu | Intent: TEST → tester | tester |
+| "peut-on ameliorer ça?" | ❌ | Intent: REFACTOR → dev | developer |
+| "verifie si c'est correct" | ❌ | Intent: REVIEW → review | review-agent |
+
+### Avantages du Pattern RouteLLM
+
+| Avantage | Description |
+|----------|-------------|
+| **UX amelioree** | Nouveaux utilisateurs guides automatiquement |
+| **Cout minimal** | Haiku: ~$0.00025/call, cache 30 min |
+| **Latence faible** | 150 tokens max, reponse < 500ms |
+| **Fallback gracieux** | Toujours une action (meme si demander clarification) |
+| **Apprentissage** | Logs permettent d'ameliorer les keywords |
+
+### Metriques a Suivre
+
+```yaml
+metrics:
+  track_auto_detection_usage: true
+  log_file: ".harmony/memory/routing-metrics.log"
+
+  targets:
+    keyword_match_rate: 0.70      # 70% devrait matcher direct
+    auto_detection_accuracy: 0.85 # 85% correct quand Haiku utilise
+    avg_routing_latency_ms: 300   # < 300ms pour routage total
+```
+
+### Implementation (TODO)
+
+1. [ ] Ajouter section `auto_detection` dans `routing-rules.yaml`
+2. [ ] Implementer appel Haiku dans Guardian Protocol
+3. [ ] Creer cache pour requetes similaires
+4. [ ] Logger les decisions pour amelioration continue
+5. [ ] Tests avec utilisateurs novices

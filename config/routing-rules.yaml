@@ -1,0 +1,378 @@
+# Routing Rules Configuration
+# Harmony Framework v2.0
+# Pattern: Intent Detection + Agent Routing + RouteLLM Auto-Detection
+
+version: "2.0"
+description: "Agent routing with keywords AND automatic context analysis via Haiku"
+
+routing:
+  orchestrator: "scrum-master"
+  enabled: true
+
+# =============================================================================
+# AUTO-DETECTION SYSTEM (RouteLLM Pattern)
+# =============================================================================
+# When keywords don't match, use Haiku to analyze user intent
+# See: docs/design/CONTEXT-DETECTION-SYSTEM.md for full documentation
+# =============================================================================
+
+auto_detection:
+  enabled: true
+
+  # Modele router pour classification d'intention
+  # Par defaut: haiku (optimal pour Claude Code)
+  # Configurable: voir config/model-tiers.yaml
+  # Override projet: .harmony/config.yaml → llm.router.model
+  router_model: "haiku"
+
+  triggers:
+    - no_keyword_match
+    - ambiguous_keywords
+    - low_confidence
+    - user_request_explicit
+
+  classification_prompt: |
+    Analyze this user request and determine:
+    1. PRIMARY_INTENT: One of [ANALYZE, DESIGN, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE]
+    2. CONTEXT_FLAGS: Which apply? [has_ui, has_db_schema, personal_data, security_critical, is_game, needs_docs]
+    3. SUGGESTED_AGENT: Which agent should handle this?
+    4. CONFIDENCE: 0.0 to 1.0
+
+    User request: "{user_input}"
+
+    Respond in JSON: {"primary_intent":"...","context_flags":[...],"suggested_agent":"...","confidence":0.X}
+
+  thresholds:
+    high_confidence: 0.85
+    medium_confidence: 0.60
+    low_confidence: 0.40
+    reject: 0.40
+
+  cost_settings:
+    max_tokens_for_routing: 150
+    cache_similar_queries: true
+    cache_ttl_minutes: 30
+    fallback_on_error: "general-purpose"
+
+  intent_agent_map:
+    ANALYZE: "analyst"
+    DESIGN: "architect"
+    PLAN: "scrum-master"
+    IMPLEMENT: "developer"
+    TEST: "tester"
+    REVIEW: "review-agent"
+    DOCUMENT: "tech-writer"
+    FIX: "developer"
+    DEPLOY: "devops-agent"
+    EXPLORE: "exploratory-qa"
+
+# =============================================================================
+# AGENT DETECTION PATTERNS
+# =============================================================================
+detection_patterns:
+  analyst:
+    keywords: [analyse, research, compare, gap, requirements, brief, discovery]
+    patterns: ["(?i)analyse.*code", "(?i)compare.*version", "(?i)research.*topic"]
+    priority: 2
+    tier: 1
+
+  developer:
+    keywords: [implement, code, fix, refactor, build, create, add]
+    patterns: ["(?i)create.*service", "(?i)add.*endpoint", "(?i)implement.*feature", "(?i)fix.*bug"]
+    priority: 3
+    tier: 2
+
+  tester:
+    keywords: [test, e2e, coverage, validate, qa, spec]
+    patterns: ["(?i)write.*test", "(?i)add.*spec", "(?i)test.*coverage"]
+    priority: 4
+    tier: 2
+
+  architect:
+    keywords: [architecture, design, adr, pattern, system, diagram]
+    patterns: ["(?i)design.*system", "(?i)review.*architecture", "(?i)create.*adr"]
+    priority: 1
+    tier: 1
+
+  scrum-master:
+    keywords: [story, stories, sprint, backlog, planifier, planning, scrum, epic]
+    patterns: ["(?i)create.*story", "(?i)plan.*sprint", "(?i)manage.*backlog"]
+    priority: 2
+    tier: 3
+
+  exploratory-qa:
+    keywords: [exploratoire, exploratory, smoke, regression, parcours, journey, release, go-no-go]
+    patterns: ["(?i)test.*exploratoire", "(?i)exploratory.*test", "(?i)smoke.*test", "(?i)before.*release"]
+    priority: 3
+    tier: 2
+
+  review-agent:
+    keywords: [review, code-review, pr, pull-request, merge]
+    patterns: ["(?i)review.*code", "(?i)check.*pr"]
+    priority: 2
+    tier: 2
+
+  ucv-writer:
+    keywords: [ucv, use-case, verification, hqvf, criteres, acceptance]
+    patterns: ["(?i)create.*ucv", "(?i)generate.*use.*case"]
+    priority: 2
+    tier: 2
+
+  ucv-validator:
+    keywords: [validate, valider, coverage, couverture, 100%, complete]
+    patterns: ["(?i)validate.*ucv", "(?i)check.*coverage"]
+    priority: 2
+    tier: 2
+
+  rgpd-agent:
+    keywords: [rgpd, gdpr, donnees-personnelles, personal-data, consent, retention]
+    patterns: ["(?i)rgpd.*compliance", "(?i)personal.*data"]
+    priority: 1
+    trigger: personal_data
+    tier: 3
+
+  security-agent:
+    keywords: [security, securite, auth, authentication, owasp, vulnerability]
+    patterns: ["(?i)security.*review", "(?i)audit.*securite"]
+    priority: 0
+    trigger: security_critical
+    tier: 1
+
+  database-agent:
+    keywords: [database, schema, migration, prisma, sql, entity]
+    patterns: ["(?i)design.*schema", "(?i)create.*migration"]
+    priority: 2
+    trigger: has_db_schema
+    tier: 2
+
+  legal-agent:
+    keywords: [legal, compliance, mineurs, privacy, terms]
+    patterns: ["(?i)check.*compliance"]
+    priority: 0
+    trigger: legal_compliance
+    tier: 3
+
+  pentest-agent:
+    keywords: [pentest, penetration, vulnerability, exploit, injection, xss]
+    patterns: ["(?i)pentest.*app", "(?i)find.*vulnerability"]
+    priority: 1
+    trigger: security_critical
+    tier: 1
+
+  dependency-agent:
+    keywords: [dependency, package, npm, vulnerabilities, license, audit]
+    patterns: ["(?i)check.*dependencies", "(?i)audit.*packages"]
+    priority: 4
+    trigger: new_dependencies
+    tier: 3
+
+  performance-agent:
+    keywords: [performance, optimization, benchmark, latency, throughput]
+    patterns: ["(?i)optimize.*performance", "(?i)improve.*speed"]
+    priority: 3
+    trigger: performance_critical
+    tier: 2
+
+  devops-agent:
+    keywords: [devops, deploy, docker, kubernetes, ci, cd, pipeline]
+    patterns: ["(?i)deploy.*production", "(?i)configure.*ci"]
+    priority: 4
+    trigger: needs_infra
+    tier: 4
+
+  ux-designer:
+    keywords: [ux, ui, wireframe, mockup, user-experience, accessibility]
+    patterns: ["(?i)design.*ux", "(?i)create.*wireframe"]
+    priority: 3
+    tier: 2
+
+  i18n-agent:
+    keywords: [i18n, internationalization, translation, localization]
+    patterns: ["(?i)translate.*string", "(?i)add.*language"]
+    priority: 4
+    trigger: has_i18n
+    tier: 3
+
+  accessibility-agent:
+    keywords: [accessibility, a11y, wcag, screen-reader, keyboard, aria]
+    patterns: ["(?i)accessibility.*audit", "(?i)wcag.*compliance"]
+    priority: 3
+    trigger: has_ui
+    tier: 3
+
+  tech-writer:
+    keywords: [documentation, readme, guide, tutorial, changelog]
+    patterns: ["(?i)write.*documentation", "(?i)update.*readme"]
+    priority: 5
+    tier: 3
+
+  lint-agent:
+    keywords: [lint, eslint, prettier, format, code-style]
+    patterns: ["(?i)run.*lint"]
+    priority: 5
+    auto: true
+    tier: 4
+
+  atlas:
+    keywords: [architecture, clean, mvc, structure, validation]
+    patterns: ["(?i)validate.*architecture", "(?i)clean.*architecture"]
+    priority: 2
+    tier: 4
+
+  harmony:
+    keywords: [coherence, harmony, orphan, broken, duplicate, manifest]
+    patterns: ["(?i)check.*coherence", "(?i)audit.*framework"]
+    priority: 1
+    tier: 4
+
+  backlog-agent:
+    keywords: [backlog, dashboard, visualize, kanban, board]
+    patterns: ["(?i)backlog.*dashboard"]
+    priority: 4
+    category: meta
+    tier: 4
+
+  party-agent:
+    keywords: [party, discussion, multi-agent, brainstorm, debate]
+    patterns: ["(?i)party.*mode", "(?i)multi.*agent"]
+    priority: 3
+    category: meta
+    tier: 4
+
+  quick-flow-agent:
+    keywords: [quick, fast, rapid, shortcut, express]
+    patterns: ["(?i)quick.*flow", "(?i)fast.*track"]
+    priority: 4
+    category: meta
+    tier: 4
+
+  quick-flow-solo-dev:
+    keywords: [solo, single, alone, individual]
+    patterns: ["(?i)solo.*dev"]
+    priority: 4
+    category: meta
+    tier: 4
+
+  supervisor-agent:
+    keywords: [supervisor, orchestrate, coordinate, manage, oversee]
+    patterns: ["(?i)supervise.*agents"]
+    priority: 2
+    category: meta
+    tier: 4
+
+  game-designer:
+    keywords: [game-design, gdd, mechanics, core-loop, gameplay, player]
+    patterns: ["(?i)design.*game", "(?i)core.*loop"]
+    priority: 2
+    trigger: is_game
+    tier: 1
+
+  game-architect:
+    keywords: [game-architecture, ecs, state-machine, multiplayer, netcode]
+    patterns: ["(?i)game.*architecture", "(?i)multiplayer.*design"]
+    priority: 1
+    trigger: is_game
+    replaces: architect
+    tier: 1
+
+  game-sm:
+    keywords: [game-sprint, playtest, game-story, milestone]
+    patterns: ["(?i)game.*sprint", "(?i)plan.*playtest"]
+    priority: 2
+    trigger: is_game
+    replaces: scrum-master
+    tier: 2
+
+  game-developer:
+    keywords: [game-dev, unity, godot, fps, cross-platform]
+    patterns: ["(?i)implement.*game", "(?i)unity.*code"]
+    priority: 3
+    trigger: is_game
+    replaces: developer
+    tier: 2
+
+  ai-architect:
+    keywords: [ai, rag, llm, orchestration, memory, embedding]
+    patterns: ["(?i)ai.*system", "(?i)rag.*pipeline"]
+    priority: 1
+    tier: 1
+
+# =============================================================================
+# PARALLEL EXECUTION GROUPS
+# =============================================================================
+parallel_groups:
+  compliance_checks:
+    agents: [rgpd-agent, security-agent, database-agent, legal-agent]
+    parallel: true
+    step: "2.5"
+
+  code_quality_checks:
+    agents: [security-agent, i18n-agent, lint-agent, atlas, dependency-agent]
+    parallel: true
+    step: "4.5"
+
+  security_validation:
+    agents: [pentest-agent, accessibility-agent, devops-agent]
+    parallel: true
+    step: "6.5"
+
+  quality_validation:
+    agents: [ucv-validator]
+    parallel: false
+    step: "6.8"
+
+  meta_validation:
+    agents: [harmony]
+    parallel: true
+    anytime: true
+
+# =============================================================================
+# HANDOFF PROTOCOL
+# =============================================================================
+handoff_protocol:
+  pre_handoff:
+    format: "HANDOFF: {from} -> {to} | Date: {timestamp} | Files: {files}"
+
+  aggregation:
+    max_tokens: 2000
+    format: compact_summary
+    include: [status, files_changed, summary, blockers]
+
+# =============================================================================
+# TASK CONFIGURATION
+# =============================================================================
+task_config:
+  exploration:
+    model: haiku
+    run_in_background: true
+
+  implementation:
+    model: sonnet
+    run_in_background: false
+
+  complex:
+    model: opus
+    run_in_background: false
+
+# =============================================================================
+# FALLBACK
+# =============================================================================
+fallback:
+  agent: "general-purpose"
+  model: sonnet
+  message: "Could not determine agent. Please clarify your request."
+
+# =============================================================================
+# METRICS
+# =============================================================================
+metrics:
+  track_routing: true
+  track_auto_detection_usage: true
+  track_parallel_savings: true
+  log_file: ".harmony/memory/routing-metrics.log"
+
+  targets:
+    keyword_match_rate: 0.70
+    auto_detection_accuracy: 0.85
+    efficiency_gain: 2.0
+    parallel_savings: 0.60

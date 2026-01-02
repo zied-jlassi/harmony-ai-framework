@@ -1,0 +1,410 @@
+# Pipeline Orchestration Configuration
+# Harmony Framework v2.0
+# Pattern: 3-Phase Pipeline with Conditional Agents
+# Agents: 34 total (7 core + 27 conditional/specialized)
+
+version: "2.0"
+description: "Full feature development pipeline with conditional agent activation"
+
+# =============================================================================
+# PIPELINE OVERVIEW
+# =============================================================================
+# Minimal: 7 steps (core agents only)
+# Maximal: 21+ steps (all conditional agents activated)
+#
+# PHASE 1: ANALYSE & DESIGN (Steps 1-3)
+# PHASE 2: IMPLEMENTATION (Steps 4-5)
+# PHASE 3: VALIDATION (Steps 6-7)
+# =============================================================================
+
+# =============================================================================
+# CONTEXT FLAGS (detected from story/task)
+# =============================================================================
+context_flags:
+  has_ui:
+    description: "Story involves user interface"
+    detect_patterns:
+      - "(?i)ui|interface|screen|page|component|button|form"
+      - "(?i)frontend|front-end|vue|react|angular"
+    triggers: [ux-designer, accessibility-agent]
+
+  has_i18n:
+    description: "Multi-language support needed"
+    detect_patterns:
+      - "(?i)i18n|translation|multilingual|language"
+    triggers: [i18n-agent]
+
+  has_db_schema:
+    description: "Database schema changes"
+    detect_patterns:
+      - "(?i)database|schema|migration|table|column"
+      - "(?i)prisma|sql|postgresql|entity"
+    triggers: [database-agent]
+
+  personal_data:
+    description: "Handles personal/sensitive data"
+    detect_patterns:
+      - "(?i)personal|user.*data|email|password|profile"
+      - "(?i)rgpd|gdpr|consent|privacy"
+    triggers: [rgpd-agent]
+
+  legal_compliance:
+    description: "Legal/compliance requirements"
+    detect_patterns:
+      - "(?i)legal|compliance|regulation|minors|children"
+    triggers: [legal-agent]
+
+  security_critical:
+    description: "Security-sensitive feature"
+    detect_patterns:
+      - "(?i)security|auth|password|token|jwt|oauth"
+      - "(?i)encryption|vulnerability|owasp"
+    triggers: [security-agent, pentest-agent]
+
+  new_dependencies:
+    description: "New external dependencies added"
+    detect_patterns:
+      - "(?i)install|package|dependency|npm|library"
+    triggers: [dependency-agent]
+
+  performance_critical:
+    description: "Performance-sensitive feature"
+    detect_patterns:
+      - "(?i)performance|optimization|speed|latency"
+    triggers: [performance-agent]
+
+  needs_infra:
+    description: "Infrastructure changes needed"
+    detect_patterns:
+      - "(?i)deploy|docker|kubernetes|ci|cd|pipeline"
+    triggers: [devops-agent]
+
+  is_mobile:
+    description: "Mobile/React Native development"
+    detect_patterns:
+      - "(?i)mobile|react.native|expo|ios|android"
+    triggers: [mobile-agent]
+    replaces: developer
+
+  needs_docs:
+    description: "Documentation required"
+    detect_patterns:
+      - "(?i)documentation|readme|guide|tutorial"
+    triggers: [tech-writer]
+
+  is_game:
+    description: "Game development project"
+    detect_patterns:
+      - "(?i)game|gaming|jeu|player|score|level"
+    triggers: [game-designer, game-architect, game-sm, game-developer]
+    replaces:
+      architect: game-architect
+      scrum-master: game-sm
+      developer: game-developer
+
+# =============================================================================
+# PIPELINE PHASES
+# =============================================================================
+phases:
+  # ---------------------------------------------------------------------------
+  # PHASE 1: ANALYSE & DESIGN
+  # ---------------------------------------------------------------------------
+  analyse_design:
+    name: "Analyse & Design"
+    steps:
+      - step: 1
+        agent: analyst
+        type: core
+        always: true
+        gate:
+          name: "requirements_complete"
+          criteria: [requirements_documented, acceptance_criteria_defined]
+
+      - step: 1.5
+        agent: ux-designer
+        type: conditional
+        trigger: has_ui
+        gate:
+          name: "ux_design_complete"
+          criteria: [wireframes_created, user_flow_documented]
+
+      - step: 2
+        agent: architect
+        type: core
+        always: true
+        replaced_by: game-architect
+        replace_trigger: is_game
+        gate:
+          name: "architecture_complete"
+          criteria: [adr_created, system_design_documented]
+
+      - step: 2.5a
+        agent: rgpd-agent
+        type: conditional
+        trigger: personal_data
+        parallel_group: compliance_checks
+
+      - step: 2.5b
+        agent: security-agent
+        type: conditional
+        trigger: security_critical
+        parallel_group: compliance_checks
+
+      - step: 2.5c
+        agent: database-agent
+        type: conditional
+        trigger: has_db_schema
+        parallel_group: compliance_checks
+
+      - step: 2.5d
+        agent: legal-agent
+        type: conditional
+        trigger: legal_compliance
+        parallel_group: compliance_checks
+
+      - step: 3
+        agent: scrum-master
+        type: core
+        always: true
+        replaced_by: game-sm
+        replace_trigger: is_game
+        gate:
+          name: "stories_created"
+          criteria: [stories_written, acceptance_criteria_complete]
+
+      # Step 3.5: UCV Writer - Generate UCVs for story (HQVF)
+      - step: 3.5
+        agent: ucv-writer
+        type: quality
+        always: true
+        gate:
+          name: "ucv_generated"
+          criteria: [ucv_document_created, verifications_defined]
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2: IMPLEMENTATION
+  # ---------------------------------------------------------------------------
+  implementation:
+    name: "Implementation"
+    depends_on: analyse_design
+    steps:
+      - step: 4
+        agent: developer
+        type: core
+        always: true
+        replaced_by:
+          - agent: mobile-agent
+            trigger: is_mobile
+          - agent: game-developer
+            trigger: is_game
+        gate:
+          name: "implementation_complete"
+          criteria: [code_written, unit_tests_passing, ucv_dev_checked]
+
+      - step: 4.5a
+        agent: security-agent
+        type: conditional
+        trigger: security_critical
+        parallel_group: code_quality_checks
+
+      - step: 4.5b
+        agent: i18n-agent
+        type: conditional
+        trigger: has_i18n
+        parallel_group: code_quality_checks
+
+      - step: 4.5c
+        agent: lint-agent
+        type: auto
+        always: true
+
+      - step: 4.5d
+        agent: atlas
+        type: auto
+        always: true
+
+      - step: 4.5e
+        agent: dependency-agent
+        type: conditional
+        trigger: new_dependencies
+
+      - step: 5
+        agent: tester
+        type: core
+        always: true
+        gate:
+          name: "tests_complete"
+          criteria: [e2e_tests_passing, coverage_80_percent, ucv_test_checked]
+
+      - step: 5.5
+        agent: performance-agent
+        type: conditional
+        trigger: performance_critical
+
+  # ---------------------------------------------------------------------------
+  # PHASE 3: VALIDATION
+  # ---------------------------------------------------------------------------
+  validation:
+    name: "Validation"
+    depends_on: implementation
+    steps:
+      - step: 6
+        agent: exploratory-qa
+        type: core
+        always: true
+        gate:
+          name: "qa_passed"
+          criteria: [exploratory_session_complete, no_critical_bugs, ucv_qa_checked]
+
+      - step: 6.5a
+        agent: pentest-agent
+        type: conditional
+        trigger: security_critical
+        parallel_group: security_validation
+
+      - step: 6.5b
+        agent: accessibility-agent
+        type: conditional
+        trigger: has_ui
+        parallel_group: security_validation
+
+      - step: 6.5c
+        agent: devops-agent
+        type: conditional
+        trigger: needs_infra
+        parallel_group: security_validation
+
+      # Step 6.8: UCV Validator - Verify 100% UCV coverage (HQVF)
+      - step: 6.8
+        agent: ucv-validator
+        type: quality
+        always: true
+        gate:
+          name: "ucv_validated"
+          criteria: [all_dev_checked, all_test_checked, all_qa_checked, coverage_100_percent]
+
+      - step: 7
+        agent: review-agent
+        type: core
+        always: true
+        gate:
+          name: "review_approved"
+          criteria: [code_reviewed, approval_received]
+
+      - step: 7.5
+        agent: tech-writer
+        type: conditional
+        trigger: needs_docs
+
+# =============================================================================
+# AGENT INVENTORY
+# =============================================================================
+agent_inventory:
+  core:
+    - analyst
+    - architect
+    - scrum-master
+    - developer
+    - tester
+    - exploratory-qa
+    - review-agent
+
+  quality_hqvf:
+    - ucv-writer
+    - ucv-validator
+
+  auto:
+    - lint-agent
+    - atlas
+
+  conditional:
+    - ux-designer
+    - i18n-agent
+    - accessibility-agent
+    - database-agent
+    - rgpd-agent
+    - legal-agent
+    - security-agent
+    - pentest-agent
+    - dependency-agent
+    - performance-agent
+    - devops-agent
+    - mobile-agent
+    - tech-writer
+
+  gaming:
+    - game-designer
+    - game-architect
+    - game-sm
+    - game-developer
+
+  meta:
+    - party-agent
+    - quick-flow-agent
+    - quick-flow-solo-dev
+    - supervisor-agent
+    - backlog-agent
+
+  ai_specialists:
+    - ai-architect
+
+# =============================================================================
+# PARALLEL EXECUTION GROUPS
+# =============================================================================
+parallel_groups:
+  compliance_checks:
+    description: "Steps 2.5a-d can run in parallel"
+    agents: [rgpd-agent, security-agent, database-agent, legal-agent]
+
+  code_quality_checks:
+    description: "Steps 4.5a-e can run in parallel"
+    agents: [security-agent, i18n-agent, lint-agent, atlas, dependency-agent]
+
+  security_validation:
+    description: "Steps 6.5a-c can run in parallel"
+    agents: [pentest-agent, accessibility-agent, devops-agent]
+
+# =============================================================================
+# HQVF - Harmony Quality Verification Framework
+# =============================================================================
+hqvf:
+  description: "Use Case Verifiable system with triple validation"
+  agents:
+    writer: ucv-writer
+    validator: ucv-validator
+
+  workflow:
+    - step: "3.5"
+      action: "Generate UCVs from story requirements"
+      gate: "User approval required before implementation"
+    - step: "4"
+      action: "Developer marks [x] dev for each verification"
+    - step: "5"
+      action: "Tester marks [x] test for each verification"
+    - step: "6"
+      action: "QA marks [x] qa for each verification"
+    - step: "6.8"
+      action: "Validator confirms 100% coverage"
+
+  completion_criteria:
+    - all_verifications_dev_checked
+    - all_verifications_test_checked
+    - all_verifications_qa_checked
+    - coverage_100_percent
+
+# =============================================================================
+# METRICS
+# =============================================================================
+metrics:
+  track_pipeline_execution: true
+  log_file: ".harmony/memory/pipeline-metrics.log"
+
+  pipeline_stats:
+    minimal_steps: 9   # 7 core + 2 HQVF
+    maximal_steps: 23  # All conditional + HQVF
+    average_steps: 14
+
+  timing_targets:
+    phase_analyse_design: "< 30 min"
+    phase_implementation: "< 2 hours"
+    phase_validation: "< 1 hour"

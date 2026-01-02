@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "os": null,
+  "tips_seen": {
+    "welcome": false,
+    "go": false,
+    "harmony": false,
+    "sentinel": false,
+    "agents": false,
+    "profiles": false,
+    "sandbox": false
+  }
+}

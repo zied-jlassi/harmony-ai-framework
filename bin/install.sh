@@ -302,6 +302,7 @@ create_directory_structure() {
         ".harmony/patterns"
         ".harmony/rules"
         ".harmony/templates"
+        ".harmony/tips"
         ".harmony/workflows"
     )
 
@@ -348,6 +349,7 @@ copy_framework_files() {
             "rules"
             "specialties"
             "templates"
+            "tips"
             "workflows"
         )
 
@@ -994,6 +996,102 @@ CLAUDE_MD_EOF
     print_success "Created CLAUDE.md with Harmony instructions"
 }
 
+# Show a single tip with Space+Enter confirmation
+show_tip() {
+    local tip_file=$1
+    local tip_num=$2
+    local tip_total=$3
+    local tip_title=$4
+
+    echo ""
+    print_message "$PURPLE" "╔══════════════════════════════════════════════════════════╗"
+    printf "${PURPLE}║  💡 TIP %d/%d: %-43s ║${NC}\n" "$tip_num" "$tip_total" "$tip_title"
+    print_message "$PURPLE" "╠══════════════════════════════════════════════════════════╣"
+    echo ""
+
+    # Display tip content (skip markdown headers)
+    if [[ -f "$tip_file" ]]; then
+        grep -v "^#" "$tip_file" | grep -v "^$" | head -20
+    fi
+
+    echo ""
+    print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
+    echo ""
+
+    # Wait for Space + Enter
+    printf "${YELLOW}[ ] J'ai lu ce tip (Espace puis Entrée pour continuer)${NC}"
+
+    while true; do
+        read -rsn1 key
+        if [[ "$key" == " " ]]; then
+            printf "\r${GREEN}[✓] J'ai lu ce tip                                  ${NC}\n"
+            read -r
+            break
+        fi
+    done
+}
+
+# Show all onboarding tips
+show_onboarding_tips() {
+    local tips_dir="$SCRIPT_DIR/tips"
+    local tip_total=7
+    local tip_num=0
+
+    # Check if tips directory exists
+    if [[ ! -d "$tips_dir" ]]; then
+        print_warning "Tips directory not found. Skipping onboarding."
+        return
+    fi
+
+    echo ""
+    print_message "$CYAN" "╔══════════════════════════════════════════════════════════╗"
+    print_message "$CYAN" "║           📚 ONBOARDING - Découvrez Harmony              ║"
+    print_message "$CYAN" "║                                                          ║"
+    print_message "$CYAN" "║   Ces tips vous aideront à bien démarrer.                ║"
+    print_message "$CYAN" "║   Appuyez sur ESPACE puis ENTRÉE après chaque tip.       ║"
+    print_message "$CYAN" "╚══════════════════════════════════════════════════════════╝"
+    echo ""
+    read -rp "Appuyez sur Entrée pour commencer..."
+
+    # Tip 1: Welcome
+    ((tip_num++))
+    show_tip "$tips_dir/01-welcome.md" $tip_num $tip_total "Bienvenue dans Harmony"
+
+    # Tip 2: Sandbox (Linux only)
+    ((tip_num++))
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        show_tip "$tips_dir/07-sandbox.md" $tip_num $tip_total "Sandbox Claude Code (Recommandé)"
+    else
+        show_tip "$tips_dir/07-sandbox.md" $tip_num $tip_total "Sandbox (Linux uniquement)"
+    fi
+
+    # Tip 3: /go
+    ((tip_num++))
+    show_tip "$tips_dir/02-go.md" $tip_num $tip_total "Commande /go"
+
+    # Tip 4: /harmony
+    ((tip_num++))
+    show_tip "$tips_dir/03-harmony.md" $tip_num $tip_total "Menu /harmony"
+
+    # Tip 5: Sentinel
+    ((tip_num++))
+    show_tip "$tips_dir/04-sentinel.md" $tip_num $tip_total "Protection Sentinel"
+
+    # Tip 6: Agents
+    ((tip_num++))
+    show_tip "$tips_dir/05-agents.md" $tip_num $tip_total "Invoquer les agents"
+
+    # Tip 7: Profiles
+    ((tip_num++))
+    show_tip "$tips_dir/06-profiles.md" $tip_num $tip_total "Votre boîte à outils"
+
+    echo ""
+    print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"
+    print_message "$GREEN" "║         ✅ ONBOARDING TERMINÉ - Vous êtes prêt !         ║"
+    print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
+    echo ""
+}
+
 # Print summary
 print_summary() {
     print_step "6/6" "Installation complete!"
@@ -1027,6 +1125,7 @@ main() {
     initialize_memory
     create_slash_commands
     create_claude_md
+    show_onboarding_tips
     print_summary
 }
 

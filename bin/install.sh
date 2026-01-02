@@ -833,19 +833,89 @@ CMD_EOF
     print_success "Created $cmd_count slash commands in .claude/commands/"
 }
 
-# Create CLAUDE.md if it doesn't exist
+# Create or update CLAUDE.md with Harmony Framework
 create_claude_md() {
     local claude_md="$PROJECT_DIR/CLAUDE.md"
+    local project_name=$(basename "$PROJECT_DIR")
+    local harmony_version="$VERSION"
+    local template_file="$SCRIPT_DIR/../integrations/claude-code/templates/CLAUDE.md.template"
 
-    # Don't overwrite existing CLAUDE.md
-    if [[ -f "$claude_md" ]] && [[ "$FORCE" != true ]]; then
-        print_warning "CLAUDE.md already exists. Skipping (use --force to overwrite)."
+    print_step "5.6/6" "Configuring CLAUDE.md..."
+
+    # Harmony header block (must be at TOP for Claude to see it first)
+    local harmony_header
+    read -r -d '' harmony_header << 'HARMONY_HEADER'
+## 🛡️ HARMONY FRAMEWORK (ACTIVE)
+
+> **IMPORTANT**: This project uses the Harmony AI Framework. Read `.harmony/docs/` for full documentation.
+
+| Pillar | Role |
+|--------|------|
+| **Guardian** | Intent detection, agent routing, workflow protection |
+| **Sentinel** | Error memory, circuit breaker (3 failures = stop) |
+| **HQVF** | Use Case Verifiables, triple validation (Dev+Test+QA) |
+
+**Essential:** `/go` (session start) • `/harmony` (30 commands) • `/harmony quick` (validation)
+
+**Data:** `.harmony/` (framework) • `.claude/memory/` (project data)
+
+---
+
+HARMONY_HEADER
+
+    # Case 1: CLAUDE.md doesn't exist → Create from template
+    if [[ ! -f "$claude_md" ]]; then
+        if [[ -f "$template_file" ]]; then
+            sed -e "s/{{PROJECT_NAME}}/${project_name}/g" \
+                -e "s/{{PROJECT_DESCRIPTION}}/A new project (Discovery phase)/g" \
+                -e "s/{{HARMONY_VERSION}}/${harmony_version}/g" \
+                -e '/{{#if /d' -e '/{{#each /d' -e '/{{\/if}}/d' -e '/{{\/each}}/d' \
+                -e '/{{name}}/d' -e '/{{version}}/d' \
+                "$template_file" > "$claude_md"
+            print_success "Created CLAUDE.md from template"
+        else
+            echo "# ${project_name}" > "$claude_md"
+            echo "" >> "$claude_md"
+            echo "$harmony_header" >> "$claude_md"
+            print_success "Created CLAUDE.md (minimal)"
+        fi
         return
     fi
 
-    print_step "5.6/6" "Creating CLAUDE.md..."
+    # Case 2: CLAUDE.md exists with Harmony → Skip
+    if grep -q "HARMONY FRAMEWORK" "$claude_md"; then
+        print_success "CLAUDE.md already configured with Harmony"
+        return
+    fi
 
-    # Get project name from directory
+    # Case 3: CLAUDE.md exists without Harmony → Prepend at TOP (after first # header)
+    print_message "$YELLOW" "Adding Harmony section to existing CLAUDE.md..."
+
+    local tmp_file=$(mktemp)
+    local header_found=false
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        echo "$line" >> "$tmp_file"
+        # Insert Harmony header right after the first # heading
+        if [[ "$header_found" == false ]] && [[ "$line" =~ ^#[[:space:]] ]]; then
+            echo "" >> "$tmp_file"
+            echo "$harmony_header" >> "$tmp_file"
+            header_found=true
+        fi
+    done < "$claude_md"
+
+    # If no header found, prepend at very top
+    if [[ "$header_found" == false ]]; then
+        echo "$harmony_header" | cat - "$claude_md" > "$tmp_file"
+    fi
+
+    mv "$tmp_file" "$claude_md"
+    print_success "Added Harmony section to CLAUDE.md (at top)"
+}
+
+# Legacy template below (kept for backward compatibility)
+_create_claude_md_legacy() {
+    local claude_md="$PROJECT_DIR/CLAUDE.md"
     local project_name=$(basename "$PROJECT_DIR")
 
     cat > "$claude_md" << CLAUDE_MD_EOF

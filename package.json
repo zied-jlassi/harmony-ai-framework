@@ -1,6 +1,6 @@
 {
   "name": "harmony-ai-framework",
-  "version": "1.0.0-beta.13",
+  "version": "1.0.0",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
@@ -54,10 +54,19 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "os": ["darwin", "linux"],
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "harmony": {
     "version": "1.0.0",
-    "compatibleWith": ["claude-code", "cursor", "windsurf", "continue", "cody"],
+    "compatibleWith": [
+      "claude-code",
+      "cursor",
+      "windsurf",
+      "continue",
+      "cody"
+    ],
     "features": [
       "guardian-protocol",
       "sentinel-memory",

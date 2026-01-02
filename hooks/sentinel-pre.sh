@@ -109,6 +109,7 @@ find_relevant_patterns() {
             js|jsx) category="javascript" ;;
             py) category="python" ;;
             sql) category="database" ;;
+            sh|bash) category="bash-scripting" ;;
             docker*|Dockerfile) category="docker" ;;
         esac
 
@@ -120,6 +121,28 @@ find_relevant_patterns() {
     fi
 
     echo "$patterns"
+}
+
+# Detect bash context and show pitfalls
+detect_bash_context() {
+    local file_path="$1"
+    local ext="${file_path##*.}"
+
+    if [[ "$ext" == "sh" ]] || [[ "$ext" == "bash" ]]; then
+        echo ""
+        echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${CYAN}🐚 BASH CONTEXT DETECTED${NC}"
+        echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${YELLOW}⚠️  Quick reminders (set -e):${NC}"
+        echo -e "   • ${RED}((var++))${NC} → ${GREEN}var=\$((var + 1))${NC}"
+        echo -e "   • ${RED}grep pattern file${NC} → ${GREEN}grep pattern file || true${NC}"
+        echo -e "${YELLOW}⚠️  macOS compatibility:${NC}"
+        echo -e "   • ${RED}sha256sum${NC} → ${GREEN}shasum -a 256${NC}"
+        echo -e "   • ${RED}readlink -f${NC} → ${GREEN}manual loop${NC}"
+        echo -e "   • ${RED}sed -i 'cmd'${NC} → ${GREEN}sed -i'' 'cmd'${NC}"
+        echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
+    fi
 }
 
 # Print circuit breaker warning
@@ -222,6 +245,11 @@ main() {
 
     if [[ -n "$errors" ]] || [[ -n "$patterns" ]]; then
         print_error_history "$errors" "$patterns"
+    fi
+
+    # Detect bash context and show pitfalls
+    if [[ -n "$file_path" ]]; then
+        detect_bash_context "$file_path"
     fi
 
     exit 0

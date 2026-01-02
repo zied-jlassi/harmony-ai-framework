@@ -1,0 +1,32 @@
+# Bash Profile
+# Auto-activates when .sh or .bash files are edited
+
+name: bash
+version: "1.0.0"
+category: languages
+
+detection:
+  file_extensions: [".sh", ".bash"]
+  file_patterns: ["*.sh", "*.bash", "Makefile"]
+  content_patterns:
+    - "#!/bin/bash"
+    - "#!/bin/sh"
+
+knowledge:
+  - knowledge/bash-pitfalls.md
+
+rules:
+  - "NEVER use ((var++)) with set -e"
+  - "ALWAYS use cross-platform functions for sha256/readlink"
+  - "ALWAYS add || true after grep if set -e is enabled"
+
+quick_fixes:
+  arithmetic_increment:
+    bad: "((count++))"
+    good: "count=$((count + 1))"
+  sha256_cross_platform:
+    bad: "sha256sum file"
+    good: "sha256_cmd file  # with wrapper function"
+  sed_inplace:
+    bad: "sed -i 's/a/b/' file"
+    good: "sed -i'' 's/a/b/' file"

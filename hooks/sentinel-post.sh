@@ -12,6 +12,7 @@ set -e
 HARMONY_DIR=".harmony"
 ERROR_JOURNAL="${HARMONY_DIR}/memory/error-journal.json"
 CIRCUIT_BREAKER="${HARMONY_DIR}/memory/circuit-breaker.json"
+PATTERNS_REGISTRY="${HARMONY_DIR}/patterns/patterns-registry.yaml"
 TOOL_NAME="${1:-unknown}"
 TOOL_INPUT="${2:-{}}"
 TOOL_OUTPUT="${3:-}"
@@ -22,6 +23,8 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
 NC='\033[0m'
 
 # Ensure memory directory exists
@@ -114,6 +117,132 @@ detect_severity() {
         echo "medium"
     else
         echo "low"
+    fi
+}
+
+# Match error against patterns registry
+match_patterns() {
+    local output="$1"
+    local file_path="$2"
+
+    local registry_file=""
+    local parser_cmd=""
+
+    # Auto-detect: prefer JSON+jq, fallback to YAML+yq
+    if [[ -f "${HARMONY_DIR}/patterns/patterns-registry.json" ]] && command -v jq &>/dev/null; then
+        registry_file="${HARMONY_DIR}/patterns/patterns-registry.json"
+        parser_cmd="jq"
+    elif [[ -f "$PATTERNS_REGISTRY" ]] && command -v yq &>/dev/null; then
+        registry_file="$PATTERNS_REGISTRY"
+        parser_cmd="yq"
+    else
+        # No parser available, skip pattern matching
+        return 1
+    fi
+
+    local ext=""
+    if [[ -n "$file_path" ]]; then
+        ext=".${file_path##*.}"
+    fi
+
+    # Get patterns count
+    local pattern_count
+    pattern_count=$($parser_cmd '.patterns | length' "$registry_file" 2>/dev/null || echo "0")
+
+    local i=0
+    while [[ $i -lt $pattern_count ]]; do
+        # Get pattern error_patterns
+        local error_patterns
+        error_patterns=$($parser_cmd -r ".patterns[$i].error_patterns[]?" "$registry_file" 2>/dev/null || true)
+
+        # Check if any error pattern matches
+        while IFS= read -r pattern; do
+            if [[ -n "$pattern" ]] && echo "$output" | grep -qiE "$pattern" 2>/dev/null; then
+                # Pattern matched! Get the quick fix
+                local pattern_id pattern_name quick_fix_desc quick_fix_suggestion doc severity
+                pattern_id=$($parser_cmd -r ".patterns[$i].id" "$registry_file" 2>/dev/null)
+                pattern_name=$($parser_cmd -r ".patterns[$i].name" "$registry_file" 2>/dev/null)
+                quick_fix_desc=$($parser_cmd -r ".patterns[$i].quick_fix.description" "$registry_file" 2>/dev/null)
+                quick_fix_suggestion=$($parser_cmd -r ".patterns[$i].quick_fix.suggestion // .patterns[$i].quick_fix.replace // empty" "$registry_file" 2>/dev/null)
+                doc=$($parser_cmd -r ".patterns[$i].doc" "$registry_file" 2>/dev/null)
+                severity=$($parser_cmd -r ".patterns[$i].severity" "$registry_file" 2>/dev/null)
+
+                print_pattern_match "$pattern_id" "$pattern_name" "$quick_fix_desc" "$quick_fix_suggestion" "$doc" "$severity"
+                return 0
+            fi
+        done <<< "$error_patterns"
+
+        i=$((i + 1))
+    done
+
+    return 1
+}
+
+# Print pattern match with quick fix
+print_pattern_match() {
+    local pattern_id="$1"
+    local pattern_name="$2"
+    local quick_fix_desc="$3"
+    local quick_fix_suggestion="$4"
+    local doc="$5"
+    local severity="$6"
+
+    echo ""
+    echo -e "${MAGENTA}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${MAGENTA}🔮 PATTERN DETECTED - AUTO-RESOLUTION AVAILABLE${NC}"
+    echo -e "${MAGENTA}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    echo -e "${CYAN}Pattern:${NC} ${pattern_id} - ${pattern_name}"
+    echo -e "${CYAN}Severity:${NC} ${severity}"
+    echo ""
+    echo -e "${GREEN}✨ QUICK FIX:${NC}"
+    echo -e "   ${quick_fix_desc}"
+    echo ""
+    if [[ -n "$quick_fix_suggestion" ]] && [[ "$quick_fix_suggestion" != "null" ]]; then
+        echo -e "${YELLOW}📝 Suggestion:${NC}"
+        echo "$quick_fix_suggestion" | sed 's/^/   /'
+        echo ""
+    fi
+    if [[ -n "$doc" ]] && [[ "$doc" != "null" ]]; then
+        echo -e "${BLUE}📖 Documentation:${NC} ${doc}"
+    fi
+    echo ""
+    echo -e "${MAGENTA}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+}
+
+# Check for bash-specific pitfalls in error
+check_bash_pitfalls() {
+    local output="$1"
+    local file_path="$2"
+
+    local ext=""
+    if [[ -n "$file_path" ]]; then
+        ext="${file_path##*.}"
+    fi
+
+    # Only for bash files
+    if [[ "$ext" != "sh" ]] && [[ "$ext" != "bash" ]]; then
+        return
+    fi
+
+    # Check for ((var++)) with set -e issue
+    if echo "$output" | grep -qiE "exit.*code.*1|exited.*1|command.*failed" 2>/dev/null; then
+        echo ""
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${YELLOW}🐚 BASH PITFALL CHECK${NC}"
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
+        echo -e "${RED}Common causes of unexpected exit code 1:${NC}"
+        echo -e "  • ${RED}((var++))${NC} with set -e when var=0"
+        echo -e "    ${GREEN}Fix: var=\$((var + 1))${NC}"
+        echo ""
+        echo -e "  • ${RED}grep${NC} returning no matches"
+        echo -e "    ${GREEN}Fix: grep pattern file || true${NC}"
+        echo ""
+        echo -e "${CYAN}Check your script for these patterns!${NC}"
+        echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
     fi
 }
 
@@ -251,6 +380,20 @@ print_failure() {
     echo -e "${YELLOW}Error recorded: ${error_id}${NC}"
 }
 
+# Try to auto-resolve with patterns
+try_auto_resolve() {
+    local file_path
+    file_path=$(echo "$TOOL_INPUT" | jq -r '.file_path // .path // ""' 2>/dev/null || echo "")
+
+    # First, try pattern registry matching
+    if match_patterns "$TOOL_OUTPUT" "$file_path"; then
+        return 0
+    fi
+
+    # Then check bash-specific pitfalls
+    check_bash_pitfalls "$TOOL_OUTPUT" "$file_path"
+}
+
 # Main logic
 main() {
     ensure_memory_dir
@@ -267,6 +410,8 @@ main() {
             error_id=$(record_error)
             update_circuit_failure
             print_failure "$error_id"
+            # Try auto-resolution
+            try_auto_resolve
         else
             update_circuit_success
             # Only print success for potentially risky operations
@@ -282,6 +427,8 @@ main() {
         error_id=$(record_error)
         update_circuit_failure
         print_failure "$error_id"
+        # Try auto-resolution
+        try_auto_resolve
     fi
 
     exit 0

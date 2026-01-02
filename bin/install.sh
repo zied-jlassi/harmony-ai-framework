@@ -21,6 +21,35 @@
 
 set -e
 
+# =============================================================================
+# CROSS-PLATFORM COMPATIBILITY
+# =============================================================================
+
+# SHA256 checksum command (sha256sum on Linux, shasum -a 256 on macOS)
+sha256_cmd() {
+    if command -v sha256sum &>/dev/null; then
+        sha256sum "$@"
+    elif command -v shasum &>/dev/null; then
+        shasum -a 256 "$@"
+    else
+        echo "WARNING: No SHA256 tool found" >&2
+        return 1
+    fi
+}
+
+# Verify checksums (cross-platform)
+verify_checksums() {
+    local checksum_file="$1"
+    if command -v sha256sum &>/dev/null; then
+        sha256sum -c "$checksum_file" --quiet 2>/dev/null
+    elif command -v shasum &>/dev/null; then
+        shasum -a 256 -c "$checksum_file" --quiet 2>/dev/null
+    else
+        echo "WARNING: Cannot verify checksums - no SHA256 tool" >&2
+        return 0  # Don't fail if no tool available
+    fi
+}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -385,11 +414,16 @@ copy_framework_files() {
         if [[ -f "$SCRIPT_DIR/checksums.sha256" ]]; then
             cp "$SCRIPT_DIR/checksums.sha256" "$PROJECT_DIR/.harmony/"
             cd "$PROJECT_DIR/.harmony"
-            if sha256sum -c checksums.sha256 --quiet 2>/dev/null; then
+            if verify_checksums checksums.sha256; then
                 print_success "All framework files copied ($file_count files, checksums verified)"
             else
                 print_error "Checksum verification failed! Files may be corrupted."
-                sha256sum -c checksums.sha256 2>&1 | grep -v ": OK"
+                # Show failed files (cross-platform)
+                if command -v sha256sum &>/dev/null; then
+                    sha256sum -c checksums.sha256 2>&1 | grep -v ": OK" || true
+                elif command -v shasum &>/dev/null; then
+                    shasum -a 256 -c checksums.sha256 2>&1 | grep -v ": OK" || true
+                fi
                 exit 1
             fi
             cd - > /dev/null
@@ -406,7 +440,7 @@ copy_framework_files() {
             for cf in "${critical_files[@]}"; do
                 if [[ ! -f "$PROJECT_DIR/.harmony/$cf" ]]; then
                     print_error "Critical file missing: $cf"
-                    ((missing++))
+                    missing=$((missing + 1))
                 fi
             done
 
@@ -1011,24 +1045,37 @@ show_tip() {
 
     # Display tip content (skip markdown headers)
     if [[ -f "$tip_file" ]]; then
-        grep -v "^#" "$tip_file" | grep -v "^$" | head -20
+        # Use || true to prevent set -e exit if grep finds no matches
+        grep -v "^#" "$tip_file" 2>/dev/null | grep -v "^$" | head -20 || true
     fi
 
     echo ""
     print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
     echo ""
 
-    # Wait for Space + Enter
-    printf "${YELLOW}[ ] J'ai lu ce tip (Espace puis Entrée pour continuer)${NC}"
+    # Check if TTY is available for interactive input (test in subshell)
+    if (exec </dev/tty) 2>/dev/null; then
+        # Interactive mode: wait for Space + Enter
+        printf "${YELLOW}[ ] J'ai lu ce tip (Espace puis Entrée pour continuer)${NC}"
 
-    while true; do
-        read -rsn1 key
-        if [[ "$key" == " " ]]; then
-            printf "\r${GREEN}[✓] J'ai lu ce tip                                  ${NC}\n"
-            read -r
-            break
-        fi
-    done
+        while true; do
+            read -rsn1 key </dev/tty 2>/dev/null
+            if [[ "$key" == " " ]]; then
+                printf "\r${GREEN}[✓] J'ai lu ce tip                                  ${NC}\n"
+                read -r </dev/tty 2>/dev/null
+                break
+            elif [[ -z "$key" ]]; then
+                # EOF or error - break out
+                printf "\r${YELLOW}[→] Continué automatiquement                       ${NC}\n"
+                break
+            fi
+        done
+    else
+        # Non-interactive: auto-advance with delay
+        printf "${CYAN}[⏳ Lecture auto dans 3s...]${NC}"
+        sleep 3
+        printf "\r${GREEN}[✓] Tip lu                                          ${NC}\n"
+    fi
 }
 
 # Show all onboarding tips
@@ -1051,14 +1098,21 @@ show_onboarding_tips() {
     print_message "$CYAN" "║   Appuyez sur ESPACE puis ENTRÉE après chaque tip.       ║"
     print_message "$CYAN" "╚══════════════════════════════════════════════════════════╝"
     echo ""
-    read -rp "Appuyez sur Entrée pour commencer..."
+
+    # Check if TTY is available for interactive input
+    if (exec </dev/tty) 2>/dev/null; then
+        read -rp "Appuyez sur Entrée pour commencer..." </dev/tty
+    else
+        echo "Mode non-interactif détecté. Affichage automatique des tips (3s par tip)..."
+        sleep 2
+    fi
 
     # Tip 1: Welcome
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/01-welcome.md" $tip_num $tip_total "Bienvenue dans Harmony"
 
     # Tip 2: Sandbox (Linux only)
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         show_tip "$tips_dir/07-sandbox.md" $tip_num $tip_total "Sandbox Claude Code (Recommandé)"
     else
@@ -1066,23 +1120,23 @@ show_onboarding_tips() {
     fi
 
     # Tip 3: /go
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/02-go.md" $tip_num $tip_total "Commande /go"
 
     # Tip 4: /harmony
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/03-harmony.md" $tip_num $tip_total "Menu /harmony"
 
     # Tip 5: Sentinel
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/04-sentinel.md" $tip_num $tip_total "Protection Sentinel"
 
     # Tip 6: Agents
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/05-agents.md" $tip_num $tip_total "Invoquer les agents"
 
     # Tip 7: Profiles
-    ((tip_num++))
+    tip_num=$((tip_num + 1))
     show_tip "$tips_dir/06-profiles.md" $tip_num $tip_total "Votre boîte à outils"
 
     echo ""
@@ -1107,8 +1161,8 @@ print_summary() {
     echo ""
     print_message "$YELLOW" "Next steps:"
     echo "  1. Review .harmony/docs/getting-started.md"
-    echo "  2. Configure user preferences in .harmony/memory/user-preferences.json"
-    echo "  3. Start using Harmony in your AI assistant"
+    echo "  2. Run /go to start your session"
+    echo "  3. Memory files are in .claude/memory/ (project-specific data)"
     echo ""
     print_message "$PURPLE" "Happy coding with Harmony! 🎵"
 }

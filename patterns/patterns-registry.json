@@ -1,0 +1,177 @@
+{
+  "version": "1.0.0",
+  "description": "Smart pattern matching for auto-resolution",
+  "patterns": [
+    {
+      "id": "PAT-BASH-001",
+      "name": "Bash set -e arithmetic",
+      "category": "bash",
+      "file_types": [
+        ".sh",
+        ".bash"
+      ],
+      "triggers": [
+        "set -e",
+        "((.*++))",
+        "((.*--))"
+      ],
+      "error_patterns": [
+        "exit code 1",
+        "script.*exit.*unexpect",
+        "command.*failed"
+      ],
+      "detection_code": "grep -E '\\(\\([a-zA-Z_]+\\+\\+\\)\\)|\\(\\([a-zA-Z_]+--\\)\\)' \"$FILE\"\n",
+      "quick_fix": {
+        "description": "Replace ((var++)) with var=$((var + 1))",
+        "search": "\\(\\(([a-zA-Z_]+)\\+\\+\\)\\)",
+        "replace": "\\1=$((\\1 + 1))"
+      },
+      "doc": "patterns/P-011-cross-platform.md#11-arithmetic-with-set--e",
+      "severity": "critical"
+    },
+    {
+      "id": "PAT-BASH-002",
+      "name": "macOS sha256sum missing",
+      "category": "bash",
+      "file_types": [
+        ".sh",
+        ".bash"
+      ],
+      "triggers": [
+        "sha256sum",
+        "checksum"
+      ],
+      "error_patterns": [
+        "sha256sum.*not found",
+        "sha256sum.*command not found",
+        "No such file.*sha256sum"
+      ],
+      "quick_fix": {
+        "description": "Use cross-platform sha256 function",
+        "suggestion": "sha256_cmd() {\n    command -v sha256sum &>/dev/null && sha256sum \"$@\" || shasum -a 256 \"$@\"\n}\n"
+      },
+      "doc": "patterns/P-011-cross-platform.md#12-sha256-checksums",
+      "severity": "high"
+    },
+    {
+      "id": "PAT-BASH-003",
+      "name": "macOS readlink -f missing",
+      "category": "bash",
+      "file_types": [
+        ".sh",
+        ".bash"
+      ],
+      "triggers": [
+        "readlink -f",
+        "readlink --canonicalize"
+      ],
+      "error_patterns": [
+        "readlink.*illegal option",
+        "readlink.*-f.*not recognized"
+      ],
+      "quick_fix": {
+        "description": "Use manual symlink resolution loop",
+        "search": "readlink -f",
+        "replace": "# See P-011 for portable readlink"
+      },
+      "doc": "patterns/P-011-cross-platform.md#13-symlink-resolution",
+      "severity": "high"
+    },
+    {
+      "id": "PAT-BASH-004",
+      "name": "macOS sed -i syntax",
+      "category": "bash",
+      "file_types": [
+        ".sh",
+        ".bash"
+      ],
+      "triggers": [
+        "sed -i"
+      ],
+      "error_patterns": [
+        "sed.*undefined label",
+        "sed.*extra characters",
+        "sed.*-i.*expects"
+      ],
+      "quick_fix": {
+        "description": "Use sed -i'' (no space) for cross-platform",
+        "search": "sed -i '",
+        "replace": "sed -i'' '"
+      },
+      "doc": "patterns/P-011-cross-platform.md#14-sed-in-place",
+      "severity": "medium"
+    },
+    {
+      "id": "PAT-BASH-005",
+      "name": "grep exit code with set -e",
+      "category": "bash",
+      "file_types": [
+        ".sh",
+        ".bash"
+      ],
+      "triggers": [
+        "grep",
+        "set -e"
+      ],
+      "error_patterns": [
+        "grep.*exit.*1",
+        "no matches found"
+      ],
+      "quick_fix": {
+        "description": "Add || true after grep",
+        "search": "(grep [^|]+)$",
+        "replace": "\\1 || true"
+      },
+      "doc": "patterns/P-011-cross-platform.md#14-grep-exit-code",
+      "severity": "medium"
+    },
+    {
+      "id": "PAT-TS-001",
+      "name": "Path alias not configured",
+      "category": "typescript",
+      "file_types": [
+        ".ts",
+        ".tsx",
+        ".js",
+        ".jsx"
+      ],
+      "triggers": [
+        "@/",
+        "Cannot find module"
+      ],
+      "error_patterns": [
+        "Cannot find module '@/",
+        "Module not found.*@/"
+      ],
+      "quick_fix": {
+        "description": "Add paths config to tsconfig.json",
+        "suggestion": "{\n  \"compilerOptions\": {\n    \"baseUrl\": \"./src\",\n    \"paths\": { \"@/*\": [\"*\"] }\n  }\n}\n"
+      },
+      "doc": "patterns/P-011-cross-platform.md",
+      "severity": "high"
+    },
+    {
+      "id": "PAT-NPM-001",
+      "name": "Directory not in package.json files",
+      "category": "npm",
+      "file_types": [
+        "package.json"
+      ],
+      "triggers": [
+        "npm publish",
+        "Directory not found"
+      ],
+      "error_patterns": [
+        "Directory not found",
+        "ENOENT.*node_modules",
+        "file not found after publish"
+      ],
+      "quick_fix": {
+        "description": "Add directory to package.json files array",
+        "suggestion": "Check new directories are in package.json 'files' array"
+      },
+      "doc": "patterns/P-011-cross-platform.md",
+      "severity": "high"
+    }
+  ]
+}

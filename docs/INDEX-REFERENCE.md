@@ -13,29 +13,29 @@
 |------------|---------|--------|
 | **Creer une story** | Scrum Master | `agents/scrum-master.md` |
 | **Implementer du code** | Developer | `agents/developer.md` |
-| **Creer des UCVs** | UCV Writer | `agents/specialists/ucv-writer.md` |
-| **Tester UCVs manuellement** | UCV QA | `agents/specialists/ucv-qa.md` |
-| **Valider 100% UCVs** | UCV Validator | `agents/specialists/ucv-validator.md` |
+| **Creer des UCVs** | UCV Writer | `agents/ucv-writer.md` |
+| **Tester UCVs manuellement** | UCV QA | `agents/ucv-qa.md` |
+| **Valider 100% UCVs** | UCV Validator | `agents/ucv-validator.md` |
 | **Designer l'architecture** | Architect | `agents/architect.md` |
 | **Analyser les besoins** | Analyst | `agents/analyst.md` |
 | **Tester automatiquement** | Tester | `agents/tester.md` |
-| **Tests exploratoires** | Exploratory QA | `agents/specialists/exploratory-qa.md` |
-| **Concevoir RAG/IA** | AI Architect | `agents/specialists/ai-architect.md` |
-| **Audit accessibilite** | Accessibility | `agents/compliance/accessibility.md` |
-| **Audit securite** | Security | `agents/compliance/security.md` |
+| **Tests exploratoires** | Exploratory QA | `agents/exploratory-qa.md` |
+| **Concevoir RAG/IA** | AI Architect | `agents/ai-architect.md` |
+| **Audit accessibilite** | Accessibility | `agents/accessibility.md` |
+| **Audit securite** | Security | `agents/security.md` |
 
 ---
 
 ## Structure Agents - Reference Canonique
 
 ```
-framework/agents/
+framework/agents/              # Structure plate - TOUS les agents au meme niveau
 |
-+-- CORE AGENTS (Toujours charges)
++-- CORE AGENTS
 |   +-- analyst.md           # Business Analyst
 |   +-- architect.md         # Technical Architect
 |   +-- developer.md         # Developer
-|   +-- scrum-master.md      # Scrum Master (PAS specialists/sm.md!)
+|   +-- scrum-master.md      # Scrum Master
 |   +-- tester.md            # QA Engineer
 |   +-- guardian.md          # Intent Router
 |   +-- harmony.md           # Framework Orchestrator
@@ -51,33 +51,40 @@ framework/agents/
 |   +-- supervisor.md        # Multi-Agent Supervisor
 |   +-- party.md             # Multi-Agent Brainstorming
 |
-+-- specialists/             # Agents specialises CORE
++-- SPECIALISTS (dans agents/, pas de sous-dossier)
 |   +-- exploratory-qa.md    # QA Exploratoire
 |   +-- ai-architect.md      # AI/LLM Systems
 |   +-- ucv-writer.md        # UCV Writer v2.0
 |   +-- ucv-qa.md            # UCV QA - Manual browser testing
 |   +-- ucv-validator.md     # UCV Validator v2.0
-|   |
-|   +-- sub-agents/          # Sous-agents AI Architect
-|       +-- rag-architect.md         # RAG Pipelines
-|       +-- memory-architect.md      # Memory Systems
-|       +-- orchestration-architect.md # Multi-Agent Orchestration
-|       +-- observability-architect.md # LLM Observability
-|       +-- graphrag-architect.md    # GraphRAG
-|       +-- safety-architect.md      # Safety & Guardrails
 |
-+-- compliance/              # Agents conformite
++-- COMPLIANCE (dans agents/, pas de sous-dossier)
 |   +-- security.md          # Security Auditor
 |   +-- accessibility.md     # Accessibility (WCAG/RGAA/EAA)
 |   +-- rgpd.md              # RGPD/Privacy
 |   +-- pentest.md           # Penetration Tester
 |
-+-- cognitive/               # Modules cognitifs
++-- cognitive/               # Exception: Modules cognitifs (patterns raisonnement)
     +-- react.md             # ReAct Pattern
     +-- reflection.md        # Self-Reflection
     +-- self-consistency.md  # Multi-Path
     +-- lats.md              # Language Agent Tree Search
     +-- graph-of-thoughts.md # Graph-based Reasoning
+```
+
+### AI Knowledge (Specialties)
+
+```
+framework/specialties/ai/     # Specialty AI Systems
+|
++-- manifest.yaml            # Detection (langchain, openai, etc.)
++-- knowledge/               # Knowledge bases (PAS des agents)
+    +-- rag-patterns.md              # RAG Pipelines (/ai:riley)
+    +-- memory-patterns.md           # Memory Systems (/ai:milo)
+    +-- orchestration-patterns.md    # Multi-Agent (/ai:oscar)
+    +-- observability-patterns.md    # LLM Observability (/ai:olivia)
+    +-- graphrag-patterns.md         # GraphRAG (/ai:grace)
+    +-- safety-patterns.md           # Safety & Guardrails (/ai:sage)
 ```
 
 ---
@@ -178,19 +185,29 @@ framework/profiles/
 
 ```bash
 # Agents
-/hf:agent:sm [story-id]       # Scrum Master
-/hf:agent:dev [story-id]      # Developer
-/hf:agent:architect [topic]   # Architect
-/hf:agent:ucv-writer [story]  # UCV Writer
-/hf:agent:ucv-qa [story]      # UCV QA (browser testing)
-/hf:agent:ucv-validator [story] # UCV Validator
-/hf:agent:qa [module]         # Exploratory QA
+/hf:agent:sm [story-id]              # Scrum Master
+/hf:agent:dev [story-id]             # Developer
+/hf:agent:architect [topic]          # Architect
+/hf:agent:ucv-writer [story]         # UCV Writer
+/hf:agent:ucv-qa [story]             # UCV QA (browser testing)
+/hf:agent:ucv-validator [story]      # UCV Validator
+/hf:agent:exploratory-qa [module]    # Exploratory QA
+/hf:agent:ai-architect               # AI Architect
+
+# AI Knowledge Domains (via AI Architect)
+/ai:riley                     # RAG Patterns
+/ai:milo                      # Memory Patterns
+/ai:oscar                     # Orchestration Patterns
+/ai:olivia                    # Observability Patterns
+/ai:grace                     # GraphRAG Patterns
+/ai:sage                      # Safety Patterns
 
 # Compliance
-/accessibility [module]       # Audit WCAG/RGAA/EAA
-/accessibility --wcag AA      # Niveau WCAG specifique
-/security [module]            # Audit securite OWASP
-/rgpd [module]                # Audit RGPD/GDPR
+/hf:agent:accessibility [module]  # Audit WCAG/RGAA/EAA
+/hf:agent:accessibility --wcag AA # Niveau WCAG specifique
+/hf:agent:security [module]       # Audit securite OWASP
+/hf:agent:rgpd [module]           # Audit RGPD/GDPR
+/hf:agent:pentest                 # Security Testing
 
 # Workflows
 /hf:workflow:dev-story [story-id]  # Dev story

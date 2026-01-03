@@ -404,7 +404,7 @@ agents:
   # EXPLORATORY-QA - Manual Testing & UX Validation
   # ═══════════════════════════════════════════════════════════════
   exploratory-qa:
-    file: agents/specialists/exploratory-qa.md
+    file: agents/exploratory-qa.md
     phase: [4]
     tier: 2
     model: sonnet
@@ -450,7 +450,7 @@ agents:
   # UCV-WRITER - Use Case Verification Writing
   # ═══════════════════════════════════════════════════════════════
   ucv-writer:
-    file: agents/specialists/ucv-writer.md
+    file: agents/ucv-writer.md
     phase: [3]
     tier: 2
     model: sonnet
@@ -495,7 +495,7 @@ agents:
   # UCV-QA - Manual UCV Testing in Browser
   # ═══════════════════════════════════════════════════════════════
   ucv-qa:
-    file: agents/specialists/ucv-qa.md
+    file: agents/ucv-qa.md
     phase: [4]
     tier: 2
     model: sonnet
@@ -542,7 +542,7 @@ agents:
   # UCV-VALIDATOR - Use Case Verification Validation
   # ═══════════════════════════════════════════════════════════════
   ucv-validator:
-    file: agents/specialists/ucv-validator.md
+    file: agents/ucv-validator.md
     phase: [4]
     tier: 2
     model: sonnet
@@ -621,7 +621,7 @@ agents:
   # AI-ARCHITECT - AI/LLM Systems Design
   # ═══════════════════════════════════════════════════════════════
   ai-architect:
-    file: agents/specialists/ai-architect.md
+    file: agents/ai-architect.md
     phase: [2, 3]
     tier: 1
     model: opus
@@ -678,7 +678,7 @@ agents:
 # ═══════════════════════════════════════════════════════════════════
 
   security:
-    file: agents/compliance/security.md
+    file: agents/security.md
     phase: [3, 4]
     tier: 2
     model: sonnet
@@ -717,7 +717,7 @@ agents:
       prerequisites: []
 
   pentest:
-    file: agents/compliance/pentest.md
+    file: agents/pentest.md
     phase: [4]
     tier: 1
     model: opus
@@ -750,7 +750,7 @@ agents:
       prerequisites: []
 
   rgpd:
-    file: agents/compliance/rgpd.md
+    file: agents/rgpd.md
     phase: [1, 2, 3, 4]
     tier: 2
     model: sonnet
@@ -794,7 +794,7 @@ agents:
   # ACCESSIBILITY - WCAG/RGAA Compliance
   # ═══════════════════════════════════════════════════════════════
   accessibility:
-    file: agents/compliance/accessibility.md
+    file: agents/accessibility.md
     phase: [3, 4]
     tier: 2
     model: sonnet

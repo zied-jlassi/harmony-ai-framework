@@ -862,7 +862,7 @@ Architecture for [Feature] is complete and approved.
 - [Developer](developer.md) - Implements the architecture
 - [SM](scrum-master.md) - Creates stories from architecture
 - [Atlas](atlas.md) - Validates Clean Architecture compliance
-- [Security Agent](compliance/security.md) - Reviews security aspects
+- [Security Agent](security.md) - Reviews security aspects
 
 ---
 

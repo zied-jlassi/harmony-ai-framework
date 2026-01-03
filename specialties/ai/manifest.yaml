@@ -1,0 +1,85 @@
+# AI Systems Specialty
+# Purpose: Knowledge for building AI/LLM applications
+# Version: 1.0.0
+
+specialty:
+  id: ai
+  name: "AI Systems"
+  version: "1.0.0"
+  description: "Expertise for building AI/LLM applications: RAG, Memory, Orchestration, Safety"
+
+# Detection: When to activate this specialty
+detection:
+  package_has:
+    - langchain
+    - llama-index
+    - llamaindex
+    - openai
+    - anthropic
+    - "@anthropic-ai/sdk"
+    - chromadb
+    - pinecone
+    - pinecone-client
+    - weaviate-client
+    - qdrant-client
+    - mem0
+    - "@langchain/core"
+    - transformers
+    - sentence-transformers
+
+  file_patterns:
+    - "**/rag/**"
+    - "**/embeddings/**"
+    - "**/vector/**"
+    - "**/llm/**"
+    - "**/agents/**/*.py"  # Python AI agents
+
+  config_indicators:
+    - is_ai: true
+
+# Context set when specialty is active
+sets:
+  is_ai: true
+  specialty: ai
+
+# Agent enhancement
+agent_mapping:
+  architect: ai-architect  # Uses AI Architect instead of standard
+
+# Knowledge domains loaded
+knowledge:
+  domains:
+    - id: rag
+      file: knowledge/rag-patterns.md
+      keywords: [rag, retrieval, vector, embedding, chunking, reranking]
+      description: "RAG pipelines, Vector DBs, Embeddings"
+
+    - id: memory
+      file: knowledge/memory-patterns.md
+      keywords: [memory, context, session, conversation, mem0]
+      description: "3-Tier Memory, Mem0, Context Management"
+
+    - id: orchestration
+      file: knowledge/orchestration-patterns.md
+      keywords: [orchestration, multi-agent, handoff, supervisor, swarm]
+      description: "Multi-Agent Systems, Handoffs, HOAF"
+
+    - id: safety
+      file: knowledge/safety-patterns.md
+      keywords: [safety, guardrails, injection, hallucination, constitutional]
+      description: "Guardrails, Prompt Injection, Safety"
+
+    - id: observability
+      file: knowledge/observability-patterns.md
+      keywords: [observability, tracing, langsmith, evaluation, metrics]
+      description: "LLM Observability, Tracing, Evaluation"
+
+    - id: graphrag
+      file: knowledge/graphrag-patterns.md
+      keywords: [graph, knowledge graph, neo4j, entity, multi-hop]
+      description: "Knowledge Graphs, GraphRAG, Entity Extraction"
+
+# How knowledge is loaded
+loading:
+  strategy: on_demand  # Load only when keywords detected
+  fallback: rag        # Default domain if ambiguous

@@ -100,6 +100,6 @@ Templates use `{variable}` syntax for interpolation:
 ## Related
 
 - [Scrum Master Agent](../agents/scrum-master.md)
-- [UCV Writer Agent](../agents/specialists/ucv-writer.md)
+- [UCV Writer Agent](../agents/ucv-writer.md)
 - [Architect Agent](../agents/architect.md)
 

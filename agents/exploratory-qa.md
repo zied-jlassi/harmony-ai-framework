@@ -910,7 +910,7 @@ NO-GO until BUG-002 fixed.
 - [Tester](../tester.md) - Automated testing partner
 - [UCV Validator ✅](ucv-validator.md) - UCV validation
 - [Developer](../developer.md) - Bug fix handoff
-- [Accessibility](../compliance/accessibility.md) - Deep a11y expertise
+- [Accessibility](accessibility.md) - Deep a11y expertise
 
 ---
 

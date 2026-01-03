@@ -306,8 +306,8 @@ verifications:
 
 ## Related
 
-- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
-- [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
+- [UCV Writer Agent 📝](../agents/ucv-writer.md)
+- [UCV Validator Agent ✅](../agents/ucv-validator.md)
 - [UCV Template](../templates/ucv.md)
 - [P-008: UCV Quality Gate](../patterns/P-008-ucv-gate.md)
 

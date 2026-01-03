@@ -262,7 +262,7 @@ triggers:
 
 - [Developer Agent](../agents/developer.md)
 - [Scrum Master](../agents/scrum-master.md)
-- [Exploratory QA Agent 🔍](../agents/specialists/exploratory-qa.md)
+- [Exploratory QA Agent 🔍](../agents/exploratory-qa.md)
 - [REX Workflow](./rex.md)
 - [Retrospective Template](../templates/retrospective.md)
 

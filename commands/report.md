@@ -86,7 +86,7 @@
 |-------|-------------|
 | See Also links | Links to other agents exist |
 | Related agents | Referenced agents exist |
-| Sub-agent refs | Sub-agents exist in sub-agents/ |
+| AI Knowledge refs | Knowledge files exist in specialties/ai/knowledge/ |
 | Specialty agents | Specialty agents in specialties/*/agents/ |
 
 ### Profile References

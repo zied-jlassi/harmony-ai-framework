@@ -178,15 +178,18 @@ your-project/
 │   │   ├── architect.md
 │   │   ├── developer.md
 │   │   ├── tester.md
-│   │   └── specialists/
-│   │       ├── ai-architect.md
-│   │       ├── exploratory-qa.md
-│   │       ├── ucv-writer.md
-│   │       ├── ucv-validator.md
-│   │       ├── security.md
-│   │       ├── rgpd.md
-│   │       ├── accessibility.md
-│   │       └── pentest.md
+│   │   ├── ai-architect.md
+│   │   ├── exploratory-qa.md
+│   │   ├── ucv-writer.md
+│   │   ├── ucv-validator.md
+│   │   ├── ucv-qa.md
+│   │   ├── security.md
+│   │   ├── rgpd.md
+│   │   ├── accessibility.md
+│   │   ├── pentest.md
+│   │   └── cognitive/           # Reasoning patterns
+│   │       ├── react.md
+│   │       └── reflection.md
 │   ├── config/
 │   │   ├── harmony.config.js
 │   │   ├── intent-router.json

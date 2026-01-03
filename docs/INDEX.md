@@ -62,15 +62,15 @@ Inclut:
 - [Sentinel Agent](../agents/sentinel.md) - Memoire et apprentissage
 
 **Specialists:**
-- [UCV QA](../agents/specialists/ucv-qa.md) - Validation UCV en browser
-- [UCV Writer](../agents/specialists/ucv-writer.md) - Creation UCVs
-- [UCV Validator](../agents/specialists/ucv-validator.md) - Verification 100%
-- [Exploratory QA](../agents/specialists/exploratory-qa.md) - QA exploratoire
+- [UCV QA](../agents/ucv-qa.md) - Validation UCV en browser
+- [UCV Writer](../agents/ucv-writer.md) - Creation UCVs
+- [UCV Validator](../agents/ucv-validator.md) - Verification 100%
+- [Exploratory QA](../agents/exploratory-qa.md) - QA exploratoire
 
 **Compliance:**
-- [Accessibility](../agents/compliance/accessibility.md) - WCAG/RGAA/EAA
-- [Security](../agents/compliance/security.md) - Audit securite
-- [RGPD](../agents/compliance/rgpd.md) - Conformite GDPR
+- [Accessibility](../agents/accessibility.md) - WCAG/RGAA/EAA
+- [Security](../agents/security.md) - Audit securite
+- [RGPD](../agents/rgpd.md) - Conformite GDPR
 
 ### Workflows
 
@@ -108,8 +108,12 @@ harmony-framework/
 │   └── P-XXX-*.md         ← Documentation patterns
 ├── agents/
 │   ├── INDEX.md           ← Index des agents
-│   ├── specialists/       ← UCV QA, Exploratory QA
-│   └── compliance/        ← Accessibility, Security, RGPD
+│   ├── *.md               ← Tous les agents (flat structure)
+│   └── cognitive/         ← Patterns de raisonnement (ReAct, Reflection...)
+├── specialties/
+│   └── ai/                ← Specialty AI Systems
+│       ├── manifest.yaml  ← Detection et config
+│       └── knowledge/     ← RAG, Memory, Orchestration patterns
 ├── routing/               ← Detection et routage agents
 │   ├── INDEX.md
 │   ├── detection-patterns.yaml

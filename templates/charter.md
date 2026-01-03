@@ -183,4 +183,4 @@
 
 - Story: [STORY-{story_id}](../stories/STORY-{story_id}.md)
 - UCV: [STORY-{story_id}-UCV](../stories/STORY-{story_id}-UCV.md)
-- Exploratory QA Agent: [Exploratory QA 🔍](../agents/specialists/exploratory-qa.md)
+- Exploratory QA Agent: [Exploratory QA 🔍](../agents/exploratory-qa.md)

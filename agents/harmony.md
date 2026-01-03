@@ -403,6 +403,6 @@ Returns framework status report
 
 - [Guardian](guardian.md) - Intent detection
 - [Sentinel](sentinel.md) - Error memory
-- [UCV Writer 📝](specialists/ucv-writer.md) - UCV creation
-- [UCV Validator ✅](specialists/ucv-validator.md) - UCV validation
+- [UCV Writer 📝](ucv-writer.md) - UCV creation
+- [UCV Validator ✅](ucv-validator.md) - UCV validation
 

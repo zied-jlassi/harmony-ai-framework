@@ -322,9 +322,7 @@ create_directory_structure() {
     local dirs=(
         ".harmony"
         ".harmony/agents"
-        ".harmony/agents/specialists"
-        ".harmony/agents/specialists/sub-agents"
-        ".harmony/agents/compliance"
+        ".harmony/agents/cognitive"
         ".harmony/docs"
         ".harmony/hooks"
         ".harmony/memory"
@@ -333,6 +331,9 @@ create_directory_structure() {
         ".harmony/templates"
         ".harmony/tips"
         ".harmony/workflows"
+        ".harmony/specialties"
+        ".harmony/specialties/ai"
+        ".harmony/specialties/ai/knowledge"
     )
 
     for dir in "${dirs[@]}"; do
@@ -798,7 +799,7 @@ harmony ucv STORY-XXX           # Creer UCVs
 | Sentinel | `.harmony/commands/sentinel.md` |
 | Profiles | `.harmony/profiles/` |
 | Specialties | `.harmony/specialties/` |
-| UCV | `.harmony/agents/specialists/ucv-*.md` |
+| UCV | `.harmony/agents/ucv-*.md` |
 
 ## Execution
 

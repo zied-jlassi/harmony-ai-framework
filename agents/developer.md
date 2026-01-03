@@ -1247,7 +1247,7 @@ useEffect(() => {
 - [Sentinel](sentinel.md) - Tracks errors, circuit breaker
 - [Atlas](atlas.md) - Validates Clean Architecture
 - [Tester](tester.md) - Tests your code
-- [Exploratory QA 🔍](specialists/exploratory-qa.md) - Exploratory QA
+- [Exploratory QA 🔍](exploratory-qa.md) - Exploratory QA
 - [Architect](architect.md) - Design decisions
 
 ---

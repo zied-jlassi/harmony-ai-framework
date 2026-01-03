@@ -1076,9 +1076,8 @@ export default defineConfig({
 ## Related Agents
 
 - [Developer](developer.md) - Provides code to test
-- [Exploratory QA 🔍](specialists/exploratory-qa.md) - Exploratory QA after testing
-- [UCV Validator ✅](specialists/ucv-validator.md) - Validates UCV coverage
-- [TEA](specialists/tea.md) - Test strategy design (if available)
+- [Exploratory QA 🔍](exploratory-qa.md) - Exploratory QA after testing
+- [UCV Validator ✅](ucv-validator.md) - Validates UCV coverage
 
 ---
 

@@ -48,16 +48,16 @@ agents:
     tier: 2
 
   # Specialist Agents
-  ai:
-    path: agents/specialists/ai-architect.md
+  ai-architect:
+    path: agents/ai-architect.md
     description: "AI/LLM architect - RAG, multi-agent, memory systems"
     arguments: "[ai-topic]"
     triggers: [ai, llm, rag, agent, memory]
     phase: 3
     tier: 1
 
-  qa:
-    path: agents/specialists/exploratory-qa.md
+  exploratory-qa:
+    path: agents/exploratory-qa.md
     description: "Exploratory QA - manual testing, UX validation, accessibility"
     arguments: "[module-or-feature]"
     triggers: [qa, explore, exploratory, ux-test]
@@ -65,7 +65,7 @@ agents:
     tier: 2
 
   ucv-writer:
-    path: agents/specialists/ucv-writer.md
+    path: agents/ucv-writer.md
     description: "UCV Writer - creates Use Case Verifiables for stories"
     arguments: "[story-id]"
     triggers: [ucv, verifiable, use-case]
@@ -73,12 +73,53 @@ agents:
     tier: 2
 
   ucv-validator:
-    path: agents/specialists/ucv-validator.md
+    path: agents/ucv-validator.md
     description: "UCV Validator - validates 100% UCV coverage"
     arguments: "[story-id]"
     triggers: [validate, coverage, ucv-check]
     phase: 4
     tier: 2
+
+  ucv-qa:
+    path: agents/ucv-qa.md
+    description: "UCV QA - manual browser validation of UCVs"
+    arguments: "[story-id]"
+    triggers: [ucv-qa, browser-test]
+    phase: 4
+    tier: 2
+
+  # Compliance Agents
+  accessibility:
+    path: agents/accessibility.md
+    description: "Accessibility auditor - WCAG 2.2, RGAA 4.1.2, EAA 2025"
+    arguments: "[module]"
+    triggers: [a11y, accessibility, wcag, rgaa]
+    phase: 4
+    tier: 2
+
+  security:
+    path: agents/security.md
+    description: "Security auditor - OWASP Top 10, vulnerabilities"
+    arguments: "[module]"
+    triggers: [security, owasp, vulnerability]
+    phase: 4
+    tier: 2
+
+  rgpd:
+    path: agents/rgpd.md
+    description: "RGPD/GDPR compliance auditor"
+    arguments: "[module]"
+    triggers: [rgpd, gdpr, privacy]
+    phase: 4
+    tier: 2
+
+  pentest:
+    path: agents/pentest.md
+    description: "Penetration testing agent"
+    arguments: "[target]"
+    triggers: [pentest, penetration, security-test]
+    phase: 4
+    tier: 1
 
   # Additional Core Agents
   ux:

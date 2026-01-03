@@ -78,15 +78,19 @@ agents/developer.md
 ### R3: Structure plate par catégorie
 
 ```
-agents/
+agents/                     # Structure PLATE - tous les agents au même niveau
 ├── [core agents]           # analyst, architect, developer, etc.
-├── specialists/            # Un niveau max de profondeur
-│   └── sub-agents/         # Exception: AI architects (6 sous-agents)
-├── compliance/             # security, rgpd, pentest
-└── cognitive/              # react, reflection, lats, etc.
+├── [specialists]           # ai-architect, exploratory-qa, ucv-*, etc.
+├── [compliance]            # security, rgpd, pentest, accessibility
+└── cognitive/              # Exception: patterns de raisonnement
+    └── react.md, reflection.md, lats.md, etc.
+
+specialties/ai/             # Knowledge AI (pas des agents)
+├── manifest.yaml           # Detection (langchain, openai, etc.)
+└── knowledge/              # Patterns RAG, Memory, Orchestration...
 ```
 
-**Raison**: Navigation prévisible. Pas de nesting infini.
+**Raison**: Navigation prévisible. Pas de nesting infini. AI knowledge dans specialties/.
 
 ### R4: Specialties pour contenu domain-specific
 
@@ -152,22 +156,16 @@ framework/agents/
 │   ├── supervisor.md        # Multi-Agent Supervisor
 │   └── party.md             # Multi-Agent Brainstorming
 │
-├── specialists/             # [5 agents spécialisés]
+├── [SPECIALISTS - au même niveau, pas de sous-dossier]
 │   ├── exploratory-qa.md    # Luna - QA Exploratoire
 │   ├── ai-architect.md      # Nova - AI/LLM Systems
-│   ├── ucv-writer.md        # Clara - UCV Writer v2.0 ← VERSION RICHE
-│   ├── ucv-validator.md     # Victor - UCV Validator v2.0 ← VERSION RICHE
-│   │
-│   └── sub-agents/          # [6 AI Architects - sous Nova]
-│       ├── rag-architect.md         # Riley - RAG Pipelines
-│       ├── memory-architect.md      # Milo - 3-Tier Memory
-│       ├── orchestration-architect.md # Oscar - Multi-Agent
-│       ├── observability-architect.md # Olivia - Tracing/Eval
-│       ├── graphrag-architect.md    # Grace - Knowledge Graphs
-│       └── safety-architect.md      # Sage - Guardrails
+│   ├── ucv-writer.md        # Clara - UCV Writer v2.0
+│   ├── ucv-validator.md     # Victor - UCV Validator v2.0
+│   └── ucv-qa.md            # UCV QA - Browser validation
 │
-├── compliance/              # [3 agents conformité]
+├── [COMPLIANCE - au même niveau, pas de sous-dossier]
 │   ├── security.md          # Security Auditor
+│   ├── accessibility.md     # WCAG/RGAA/EAA
 │   ├── rgpd.md              # RGPD/Privacy Expert
 │   └── pentest.md           # Penetration Tester
 │
@@ -188,12 +186,12 @@ framework/agents/
 | Implémenter code | Developer | `agents/developer.md` |
 | Écrire tests automatisés | Tester | `agents/tester.md` |
 | Planifier sprints/stories | Scrum Master | `agents/scrum-master.md` |
-| Tests exploratoires UI | Luna | `specialists/exploratory-qa.md` |
-| Créer UCVs | Clara | `specialists/ucv-writer.md` |
-| Valider UCVs | Victor | `specialists/ucv-validator.md` |
-| Concevoir RAG | Riley | `specialists/sub-agents/rag-architect.md` |
-| Concevoir mémoire | Milo | `specialists/sub-agents/memory-architect.md` |
-| Multi-agents | Oscar | `specialists/sub-agents/orchestration-architect.md` |
+| Tests exploratoires UI | Luna | `agents/exploratory-qa.md` |
+| Créer UCVs | Clara | `agents/ucv-writer.md` |
+| Valider UCVs | Victor | `agents/ucv-validator.md` |
+| Concevoir RAG | Riley | `specialties/ai/knowledge/rag-patterns.md` |
+| Concevoir mémoire | Milo | `specialties/ai/knowledge/memory-patterns.md` |
+| Multi-agents | Oscar | `specialties/ai/knowledge/orchestration-patterns.md` |
 
 ---
 
@@ -379,38 +377,40 @@ use_cases:
 
 ---
 
-## 7. Duplications et Résolutions
+## 7. Structure Actuelle (Post-Restructure 2026-01)
 
-### Duplications identifiées
+### Restructuration effectuée ✅
 
-| Fichier à SUPPRIMER | Fichier à GARDER | Raison |
-|---------------------|------------------|--------|
-| `specialists/sm.md` | `agents/scrum-master.md` | scrum-master.md: 35KB, v2, 9 caps, HQVF intégré |
-| `sub-agents/ucv-writer.md` | `specialists/ucv-writer.md` | specialists: v2.0, 395 lignes, complet |
-| `sub-agents/ucv-validator.md` | `specialists/ucv-validator.md` | specialists: v2.0, 383 lignes, complet |
+La structure agents a été aplatie. Tous les agents sont maintenant au même niveau dans `agents/`:
 
-### Actions à effectuer
+| Ancien Chemin | Nouveau Chemin | Status |
+|---------------|----------------|--------|
+| `agents/specialists/*.md` | `agents/*.md` | ✅ Déplacé |
+| `agents/compliance/*.md` | `agents/*.md` | ✅ Déplacé |
+| `agents/specialists/sub-agents/*.md` | `specialties/ai/knowledge/*-patterns.md` | ✅ Déplacé |
 
-```bash
-# 1. Supprimer les duplications
-rm framework/agents/specialists/sm.md
-rm framework/agents/specialists/sub-agents/ucv-writer.md
-rm framework/agents/specialists/sub-agents/ucv-validator.md
+### AI Knowledge (pas des agents)
 
-# 2. Mettre à jour les références
-# Rechercher: specialists/sm.md → Remplacer: agents/scrum-master.md
-# Rechercher: sub-agents/ucv-writer.md → Remplacer: specialists/ucv-writer.md
-# Rechercher: sub-agents/ucv-validator.md → Remplacer: specialists/ucv-validator.md
-```
+Les sous-agents AI ont été renommés en **knowledge files** dans `specialties/ai/knowledge/`:
+
+| Ancien | Nouveau | Commande |
+|--------|---------|----------|
+| `rag-architect.md` | `rag-patterns.md` | `/ai:riley` |
+| `memory-architect.md` | `memory-patterns.md` | `/ai:milo` |
+| `orchestration-architect.md` | `orchestration-patterns.md` | `/ai:oscar` |
+| `observability-architect.md` | `observability-patterns.md` | `/ai:olivia` |
+| `graphrag-architect.md` | `graphrag-patterns.md` | `/ai:grace` |
+| `safety-architect.md` | `safety-patterns.md` | `/ai:sage` |
 
 ### Règle pour le futur
 
 ```
 AVANT de créer un nouvel agent:
-1. Vérifier qu'il n'existe pas déjà
-2. Déterminer sa catégorie (core, specialist, compliance, cognitive)
-3. Suivre R1-R5
-4. Mettre à jour ce document
+1. Vérifier qu'il n'existe pas déjà dans agents/
+2. Placer DIRECTEMENT dans agents/ (pas de sous-dossier)
+3. Exception: cognitive/ pour les patterns de raisonnement
+4. Suivre R1-R5
+5. Mettre à jour ce document
 ```
 
 ---

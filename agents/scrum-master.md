@@ -1070,9 +1070,9 @@ So that [benefit].
 - [Developer](developer.md) - Implements stories created by SM
 - [Tester](tester.md) - Tests implementations
 - [Architect](architect.md) - Reviews technical approach
-- [Exploratory QA](specialists/exploratory-qa.md) - Exploratory QA before release
-- [UCV Writer](specialists/ucv-writer.md) - UCV Writer
-- [UCV Validator](specialists/ucv-validator.md) - UCV Validator
+- [Exploratory QA](exploratory-qa.md) - Exploratory QA before release
+- [UCV Writer](ucv-writer.md) - UCV Writer
+- [UCV Validator](ucv-validator.md) - UCV Validator
 
 ---
 

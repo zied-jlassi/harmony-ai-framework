@@ -52,24 +52,24 @@ Les agents Harmony sont organises en 4 categories:
 
 | Agent | Fichier | Description | Invocation |
 |-------|---------|-------------|------------|
-| **UCV Writer** | [specialists/ucv-writer.md](specialists/ucv-writer.md) | Creation UCVs | `/ucv-writer STORY-XXX` |
-| **UCV QA** | [specialists/ucv-qa.md](specialists/ucv-qa.md) | Validation UCV en browser | `/ucv-qa STORY-XXX` |
-| **UCV Validator** | [specialists/ucv-validator.md](specialists/ucv-validator.md) | Verification 100% coverage | `/ucv-validator STORY-XXX` |
-| **Exploratory QA** | [specialists/exploratory-qa.md](specialists/exploratory-qa.md) | QA Exploratoire | `/exploratory-qa [module]` |
-| **AI Architect** | [specialists/ai-architect.md](specialists/ai-architect.md) | AI/LLM Systems | Contextuel |
+| **UCV Writer** | [ucv-writer.md](ucv-writer.md) | Creation UCVs | `/hf:agent:ucv-writer STORY-XXX` |
+| **UCV QA** | [ucv-qa.md](ucv-qa.md) | Validation UCV en browser | `/hf:agent:ucv-qa STORY-XXX` |
+| **UCV Validator** | [ucv-validator.md](ucv-validator.md) | Verification 100% coverage | `/hf:agent:ucv-validator STORY-XXX` |
+| **Exploratory QA** | [exploratory-qa.md](exploratory-qa.md) | QA Exploratoire | `/hf:agent:exploratory-qa [module]` |
+| **AI Architect** | [ai-architect.md](ai-architect.md) | AI/LLM Systems | `/hf:agent:ai-architect` |
 
-### Sub-Agents (AI Architect)
+### AI Knowledge Domains
 
-> Sous-agents specialises pour l'architecture IA.
+> Knowledge bases loaded by AI Architect for specialized domains.
 
-| Agent | Fichier | Domaine |
-|-------|---------|---------|
-| RAG Architect | [specialists/sub-agents/rag-architect.md](specialists/sub-agents/rag-architect.md) | RAG Pipelines |
-| Memory Architect | [specialists/sub-agents/memory-architect.md](specialists/sub-agents/memory-architect.md) | Memory Systems |
-| Orchestration Architect | [specialists/sub-agents/orchestration-architect.md](specialists/sub-agents/orchestration-architect.md) | Multi-Agent |
-| Observability Architect | [specialists/sub-agents/observability-architect.md](specialists/sub-agents/observability-architect.md) | Observability |
-| GraphRAG Architect | [specialists/sub-agents/graphrag-architect.md](specialists/sub-agents/graphrag-architect.md) | GraphRAG |
-| Safety Architect | [specialists/sub-agents/safety-architect.md](specialists/sub-agents/safety-architect.md) | Safety & Guardrails |
+| Domain | Fichier | Alias |
+|--------|---------|-------|
+| RAG Patterns | [../specialties/ai/knowledge/rag-patterns.md](../specialties/ai/knowledge/rag-patterns.md) | `/ai:riley` |
+| Memory Patterns | [../specialties/ai/knowledge/memory-patterns.md](../specialties/ai/knowledge/memory-patterns.md) | `/ai:milo` |
+| Orchestration Patterns | [../specialties/ai/knowledge/orchestration-patterns.md](../specialties/ai/knowledge/orchestration-patterns.md) | `/ai:oscar` |
+| Observability Patterns | [../specialties/ai/knowledge/observability-patterns.md](../specialties/ai/knowledge/observability-patterns.md) | `/ai:olivia` |
+| GraphRAG Patterns | [../specialties/ai/knowledge/graphrag-patterns.md](../specialties/ai/knowledge/graphrag-patterns.md) | `/ai:grace` |
+| Safety Patterns | [../specialties/ai/knowledge/safety-patterns.md](../specialties/ai/knowledge/safety-patterns.md) | `/ai:sage` |
 
 ---
 
@@ -79,10 +79,10 @@ Les agents Harmony sont organises en 4 categories:
 
 | Agent | Fichier | Standards | Invocation |
 |-------|---------|-----------|------------|
-| **Accessibility** | [compliance/accessibility.md](compliance/accessibility.md) | WCAG 2.2, RGAA 4.1.2, EAA 2025 | `/accessibility [module]` |
-| **Security** | [compliance/security.md](compliance/security.md) | OWASP Top 10 | `/security [module]` |
-| **RGPD** | [compliance/rgpd.md](compliance/rgpd.md) | GDPR/RGPD | `/rgpd [module]` |
-| **Pentest** | [compliance/pentest.md](compliance/pentest.md) | Security Testing | Contextuel |
+| **Accessibility** | [accessibility.md](accessibility.md) | WCAG 2.2, RGAA 4.1.2, EAA 2025 | `/hf:agent:accessibility [module]` |
+| **Security** | [security.md](security.md) | OWASP Top 10 | `/hf:agent:security [module]` |
+| **RGPD** | [rgpd.md](rgpd.md) | GDPR/RGPD | `/hf:agent:rgpd [module]` |
+| **Pentest** | [pentest.md](pentest.md) | Security Testing | `/hf:agent:pentest` |
 
 ---
 
@@ -126,17 +126,27 @@ Les agents Harmony sont organises en 4 categories:
 
 ```bash
 # Specialists
-/ucv-writer STORY-XXX       # Creer UCVs
-/ucv-qa STORY-XXX           # Valider en browser
-/ucv-qa STORY-XXX --uc UC-002  # UCV specifique
-/ucv-validator STORY-XXX    # Verifier 100%
-/exploratory-qa [module]    # Session exploratoire
+/hf:agent:ucv-writer STORY-XXX       # Creer UCVs
+/hf:agent:ucv-qa STORY-XXX           # Valider en browser
+/hf:agent:ucv-qa STORY-XXX --uc UC-002  # UCV specifique
+/hf:agent:ucv-validator STORY-XXX    # Verifier 100%
+/hf:agent:exploratory-qa [module]    # Session exploratoire
+/hf:agent:ai-architect               # AI Systems Architecture
+
+# AI Knowledge Domains (via AI Architect)
+/ai:riley    # RAG Patterns
+/ai:milo     # Memory Patterns
+/ai:oscar    # Orchestration Patterns
+/ai:olivia   # Observability Patterns
+/ai:grace    # GraphRAG Patterns
+/ai:sage     # Safety Patterns
 
 # Compliance
-/accessibility [module]     # Audit WCAG/RGAA/EAA
-/accessibility --wcag AA    # Niveau specifique
-/security [module]          # Audit OWASP
-/rgpd [module]              # Audit RGPD
+/hf:agent:accessibility [module]     # Audit WCAG/RGAA/EAA
+/hf:agent:accessibility --wcag AA    # Niveau specifique
+/hf:agent:security [module]          # Audit OWASP
+/hf:agent:rgpd [module]              # Audit RGPD
+/hf:agent:pentest                    # Security Testing
 ```
 
 ---

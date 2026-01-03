@@ -296,5 +296,5 @@ Brief/PRD for [Feature] is complete and approved.
 
 - [Architect](architect.md) - Receives handoff for design
 - [Scrum Master](scrum-master.md) - Creates stories from PRD
-- [UCV Writer 📝](specialists/ucv-writer.md) - Creates UCVs from requirements
+- [UCV Writer 📝](ucv-writer.md) - Creates UCVs from requirements
 

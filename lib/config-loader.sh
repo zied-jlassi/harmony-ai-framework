@@ -331,20 +331,17 @@ resolve_agent() {
         fi
     done < <(get_config_array "agents.disabled")
 
-    # Check local override
+    # Check local override (flat structure)
     local local_agent="${HARMONY_DIR}/local/agents/${agent_name}.md"
-    local specialist_agent="${HARMONY_DIR}/local/agents/specialists/${agent_name}.md"
     local framework_agent="${HARMONY_DIR}/agents/${agent_name}.md"
-    local framework_specialist="${HARMONY_DIR}/agents/specialists/${agent_name}.md"
+    local cognitive_agent="${HARMONY_DIR}/agents/cognitive/${agent_name}.md"
 
     if [[ -f "$local_agent" ]]; then
         echo "$local_agent"
-    elif [[ -f "$specialist_agent" ]]; then
-        echo "$specialist_agent"
     elif [[ -f "$framework_agent" ]]; then
         echo "$framework_agent"
-    elif [[ -f "$framework_specialist" ]]; then
-        echo "$framework_specialist"
+    elif [[ -f "$cognitive_agent" ]]; then
+        echo "$cognitive_agent"
     else
         echo ""
     fi

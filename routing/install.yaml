@@ -38,7 +38,7 @@ skills:
     name: ucv-qa
     displayName: "UCV QA Tester"
     description: "Manual UCV validation in browser"
-    agent: agents/specialists/ucv-qa.md
+    agent: agents/ucv-qa.md
     triggers:
       - "/ucv-qa"
       - "ucv qa"
@@ -67,7 +67,7 @@ skills:
     name: accessibility
     displayName: "Accessibility Auditor"
     description: "WCAG/RGAA compliance audit"
-    agent: agents/compliance/accessibility.md
+    agent: agents/accessibility.md
     triggers:
       - "/accessibility"
       - "a11y"
@@ -96,7 +96,7 @@ skills:
     name: exploratory-qa
     displayName: "Exploratory QA"
     description: "Free exploration testing session"
-    agent: agents/specialists/exploratory-qa.md
+    agent: agents/exploratory-qa.md
     triggers:
       - "/exploratory-qa"
       - "luna"
@@ -120,7 +120,7 @@ skills:
     name: ucv-validator
     displayName: "UCV Validator"
     description: "Verify 100% UCV coverage"
-    agent: agents/specialists/ucv-validator.md
+    agent: agents/ucv-validator.md
     triggers:
       - "/ucv-validator"
       - "valider ucv"
@@ -143,7 +143,7 @@ skills:
     name: security
     displayName: "Security Auditor"
     description: "Security vulnerability audit"
-    agent: agents/compliance/security.md
+    agent: agents/security.md
     triggers:
       - "/security"
       - "securite"
@@ -163,7 +163,7 @@ skills:
     name: rgpd
     displayName: "RGPD Compliance"
     description: "GDPR/RGPD compliance check"
-    agent: agents/compliance/rgpd.md
+    agent: agents/rgpd.md
     triggers:
       - "/rgpd"
       - "gdpr"

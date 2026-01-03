@@ -137,7 +137,7 @@ AI Architect leads a team of specialized AI sub-agents:
 | **Grace** | Grace | GraphRAG, Knowledge Graphs |
 | **Sage** | Sage | AI Safety, Guardrails |
 
-See [Sub-Agents Documentation](sub-agents/README.md) for details.
+See [AI Knowledge Documentation](../specialties/ai/knowledge/) for details.
 
 ---
 
@@ -1162,12 +1162,12 @@ mcp_tools:
 ## Related Agents
 
 - [Architect](../architect.md) - Overall system architecture
-- [Riley](sub-agents/riley.md) - RAG specialist
-- [Milo](sub-agents/milo.md) - Memory specialist
-- [Oscar](sub-agents/oscar.md) - Orchestration specialist
-- [Olivia](sub-agents/olivia.md) - Observability specialist
-- [Grace](sub-agents/grace.md) - GraphRAG specialist
-- [Sage](sub-agents/sage.md) - Safety specialist
+- [Riley - RAG Patterns](../specialties/ai/knowledge/rag-patterns.md) - RAG specialist
+- [Milo - Memory Patterns](../specialties/ai/knowledge/memory-patterns.md) - Memory specialist
+- [Oscar - Orchestration Patterns](../specialties/ai/knowledge/orchestration-patterns.md) - Orchestration specialist
+- [Olivia - Observability Patterns](../specialties/ai/knowledge/observability-patterns.md) - Observability specialist
+- [Grace - GraphRAG Patterns](../specialties/ai/knowledge/graphrag-patterns.md) - GraphRAG specialist
+- [Sage - Safety Patterns](../specialties/ai/knowledge/safety-patterns.md) - Safety specialist
 
 ---
 

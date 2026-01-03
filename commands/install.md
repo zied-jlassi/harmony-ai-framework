@@ -41,15 +41,44 @@ harmony install --status
 
 ```
 .claude/
-├── commands/harmony.md       # Slash command
+├── commands/
+│   ├── harmony.md              # Main orchestrator (/harmony)
+│   ├── hf-agent-dev.md         # /hf:agent:dev
+│   ├── hf-agent-architect.md   # /hf:agent:architect
+│   ├── hf-agent-analyst.md     # /hf:agent:analyst
+│   ├── hf-agent-tester.md      # /hf:agent:tester
+│   ├── hf-agent-sm.md          # /hf:agent:sm
+│   ├── hf-agent-ai.md          # /hf:agent:ai
+│   ├── hf-agent-qa.md          # /hf:agent:qa
+│   ├── hf-agent-ucv-writer.md  # /hf:agent:ucv-writer
+│   ├── hf-agent-ucv-validator.md # /hf:agent:ucv-validator
+│   ├── hf-workflow-*.md        # /hf:workflow:* commands
+│   ├── hf-testarch-*.md        # /hf:testarch:* commands
+│   └── hf-diagram-*.md         # /hf:diagram:* commands
 ├── hooks/
-│   ├── harmony-sentinel.sh   # Error memory
-│   └── guardian-checkpoint.sh # Story enforcement
+│   ├── harmony-sentinel.sh     # Error memory
+│   └── guardian-checkpoint.sh  # Story enforcement
 ├── memory/
 │   ├── error-journal.json
 │   ├── circuit-breaker.json
 │   └── workflow-state.json
-└── settings.local.json       # Hooks config
+└── settings.local.json         # Hooks config
+```
+
+#### Command Generation
+
+Commands are generated from YAML registries using `bin/generate-commands.sh`:
+
+```bash
+# Generate commands in target project
+./framework/bin/generate-commands.sh /path/to/project/.claude/commands
+
+# Registry files (source of truth):
+# - commands/agents.yaml     → /hf:agent:* (13 commands)
+# - commands/workflows.yaml  → /hf:workflow:* (8 commands)
+# - commands/testarch.yaml   → /hf:testarch:* (4 commands)
+# - commands/diagrams.yaml   → /hf:diagram:* (4 commands)
+# Total: 29 commands
 ```
 
 ### Cursor

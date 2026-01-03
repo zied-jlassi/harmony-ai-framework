@@ -831,6 +831,16 @@ CMD_EOF
 
     local cmd_count=$(ls -1 "$commands_dir"/*.md 2>/dev/null | wc -l)
     print_success "Created $cmd_count slash commands in .claude/commands/"
+
+    # Generate /hf:* commands from YAML registries
+    print_message "$CYAN" "  Generating /hf:* commands..."
+    if [[ -x "$SCRIPT_DIR/bin/generate-commands.sh" ]]; then
+        "$SCRIPT_DIR/bin/generate-commands.sh" "$commands_dir" > /dev/null 2>&1
+        local hf_count=$(ls -1 "$commands_dir"/hf-*.md 2>/dev/null | wc -l)
+        print_success "Generated $hf_count /hf:* commands (agents, workflows, testarch, diagrams)"
+    else
+        print_warning "generate-commands.sh not found. /hf:* commands not generated."
+    fi
 }
 
 # Create or update CLAUDE.md with Harmony Framework

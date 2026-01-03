@@ -335,6 +335,21 @@ Each verification should:
 
 ---
 
+## Verification Types Reference
+
+| Type | Example | When to Use |
+|------|---------|-------------|
+| **visual** | Popin visible centree | UI visibility checks |
+| **element** | Bouton X present | DOM element existence |
+| **value** | Email pre-rempli | Field content validation |
+| **state** | Bouton disabled | Component state checks |
+| **api** | POST /users → 201 | Backend response validation |
+| **data** | Donnees persistees en DB | Database integrity |
+| **behavior** | Click exterieur ferme | Interaction patterns |
+| **a11y** | Focus trap actif | Accessibility requirements |
+
+---
+
 ## Handoff Protocol
 
 When UCV Writer completes UCVs:

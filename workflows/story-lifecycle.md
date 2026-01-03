@@ -313,7 +313,7 @@ Coverage: 3/3 = 100% ✅
 
 ## Related
 
-- [SM Agent](../agents/specialists/sm.md)
+- [Scrum Master](../agents/scrum-master.md)
 - [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
 - [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
 - [Developer Agent](../agents/developer.md)

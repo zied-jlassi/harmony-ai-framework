@@ -99,7 +99,7 @@ Templates use `{variable}` syntax for interpolation:
 
 ## Related
 
-- [SM Agent](../agents/specialists/sm.md)
-- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
+- [Scrum Master Agent](../agents/scrum-master.md)
+- [UCV Writer Agent](../agents/specialists/ucv-writer.md)
 - [Architect Agent](../agents/architect.md)
 

@@ -11,7 +11,7 @@ primary_agents:
   - sm
 agent_files:
   analyst: "{harmony_root}/agents/analyst.md"
-  sm: "{harmony_root}/agents/specialists/sm.md"
+  sm: "{harmony_root}/agents/scrum-master.md"
 
 # Prerequisites (Phase Gate)
 prerequisite:
@@ -328,7 +328,7 @@ feature:
 ## Related
 
 - [Analyst Agent](../agents/analyst.md)
-- [SM Agent](../agents/specialists/sm.md)
+- [Scrum Master](../agents/scrum-master.md)
 - [PRD Template](../templates/prd.md)
 - [Epic Template](../templates/epic.md)
 

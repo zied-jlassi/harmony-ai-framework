@@ -249,7 +249,7 @@ triggers:
 
 - [Architect Agent](../agents/architect.md)
 - [AI Architect Agent 🧠](../agents/specialists/ai-architect.md)
-- [SM Agent](../agents/specialists/sm.md)
+- [Scrum Master](../agents/scrum-master.md)
 - [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
 - [Story Template](../templates/story.md)
 - [UCV Template](../templates/ucv.md)

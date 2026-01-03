@@ -346,7 +346,7 @@ Patterns extracted during REX become available for:
 
 ## Related
 
-- [SM Agent](../agents/specialists/sm.md)
+- [Scrum Master](../agents/scrum-master.md)
 - [Sentinel Agent](../agents/sentinel.md)
 - [Retrospective Template](../templates/retrospective.md)
 - [P-005: Closed-Loop Learning](../patterns/P-005-closed-loop.md)

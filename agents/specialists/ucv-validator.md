@@ -311,6 +311,41 @@ Complete missing verifications and re-validate.
 
 ---
 
+## Validation Thresholds (Decision Matrix)
+
+| Threshold | Status | Decision | SM Action |
+|-----------|--------|----------|-----------|
+| 100% | PASS | Story → DONE autorise | Mark story DONE |
+| 80-99% | PARTIAL | Warning, lister manquants | Push agents to complete |
+| <80% | FAIL | Bloquer, retour obligatoire | Block and escalate |
+
+### Threshold Rules
+
+```
++-------------------------------------------------------------------+
+|                    VALIDATION THRESHOLDS                            |
++-------------------------------------------------------------------+
+|                                                                   |
+|  PASS (100%):                                                    |
+|  └── Story can be marked DONE                                    |
+|  └── All verifications complete by ALL validators               |
+|                                                                   |
+|  PARTIAL (80-99%):                                               |
+|  └── Warning status                                              |
+|  └── List missing verifications                                  |
+|  └── Notify responsible agents                                   |
+|  └── Re-validate after completion                                |
+|                                                                   |
+|  FAIL (<80%):                                                    |
+|  └── Hard block - story cannot progress                          |
+|  └── Mandatory return to development/testing                     |
+|  └── Detailed gap report generated                               |
+|                                                                   |
++-------------------------------------------------------------------+
+```
+
+---
+
 ## Integration with Story Lifecycle
 
 ```

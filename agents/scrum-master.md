@@ -969,14 +969,110 @@ Then [resultat attendu]
 
 ---
 
+## Story Template (Reference)
+
+```markdown
+# STORY-[NUMBER]: [Title]
+
+## Metadata
+- **Epic**: EPIC-[NUMBER]
+- **Status**: TODO | IN_PROGRESS | DONE
+- **Priority**: HIGH | MEDIUM | LOW
+- **Points**: [Estimation]
+- **Sprint**: Sprint [NUMBER]
+- **Assigned**: [Agent Name]
+
+## Description
+[User story format]
+
+As a [role],
+I want to [action],
+So that [benefit].
+
+## Acceptance Criteria
+1. [Criterion 1]
+2. [Criterion 2]
+3. [Criterion 3]
+
+## Technical Notes
+- [Technical consideration 1]
+- [Technical consideration 2]
+
+## Dependencies
+- [STORY-XXX] must be complete
+- [External dependency]
+
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## UCV Reference
+- UCV File: `STORY-[NUMBER]-UCV.md`
+- Status: PENDING | APPROVED
+- Verifications: [X] total
+
+## Links
+- Architecture: [ADR-XXX]
+- PRD Section: [Link]
+- Figma: [Link]
+```
+
+---
+
+## Post-Story Actions (OBLIGATOIRE)
+
+> **REGLE CRITIQUE**: Apres CHAQUE creation de story, le SM DOIT automatiquement invoquer UCV Writer.
+
+### Workflow Automatique
+
+```
++-------------------------------------------------------------------+
+|                    POST-STORY ACTIONS                              |
++-------------------------------------------------------------------+
+|                                                                   |
+|  AFTER STORY CREATION:                                           |
+|                                                                   |
+|  1. Story file created (STORY-XXX.md)                            |
+|                                                                   |
+|  2. INVOKE UCV Writer (MANDATORY)                                |
+|     +-- Command: /harmony ucv STORY-XXX (option 26)              |
+|     +-- Or: "UCV Writer, create UCVs for STORY-XXX"              |
+|                                                                   |
+|  3. WAIT FOR USER APPROVAL                                       |
+|     +-- UCVs must be APPROVED before dev can start               |
+|                                                                   |
+|  4. MARK STORY READY                                             |
+|     +-- Update status in story file                              |
+|                                                                   |
+|  NEVER mark a story as READY without UCVs being APPROVED!        |
+|                                                                   |
++-------------------------------------------------------------------+
+```
+
+### Commands to Invoke UCV Writer
+
+```bash
+# Option 1: Via Harmony skill
+/harmony ucv STORY-XXX   # Option 26 - Creer UCVs
+
+# Option 2: Direct invocation
+"UCV Writer, creer les UCVs pour STORY-XXX"
+
+# Option 3: Natural language
+"Generer les use cases verifiables pour STORY-XXX"
+```
+
+---
+
 ## Related Agents
 
 - [Developer](developer.md) - Implements stories created by SM
 - [Tester](tester.md) - Tests implementations
 - [Architect](architect.md) - Reviews technical approach
-- [Exploratory QA 🔍](specialists/exploratory-qa.md) - Exploratory QA before release
-- [UCV Writer 📝](specialists/ucv-writer.md) - UCV Writer
-- [UCV Validator ✅](specialists/ucv-validator.md) - UCV Validator
+- [Exploratory QA](specialists/exploratory-qa.md) - Exploratory QA before release
+- [UCV Writer](specialists/ucv-writer.md) - UCV Writer
+- [UCV Validator](specialists/ucv-validator.md) - UCV Validator
 
 ---
 

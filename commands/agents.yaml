@@ -1,0 +1,120 @@
+# Harmony Framework - Agent Commands Registry
+# Usage: /hf:agent:<name> [arguments]
+# These are aliases pointing to existing agent definitions
+
+version: "1.0"
+prefix: "/hf:agent"
+
+agents:
+  # Core Agents
+  dev:
+    path: agents/developer.md
+    description: "Expert full-stack developer - implementation, TDD, Clean Architecture"
+    arguments: "[story-id]"
+    triggers: [dev, developer, implement, code, fix]
+    phase: 4
+    tier: 2
+
+  architect:
+    path: agents/architect.md
+    description: "Software architect - system design, ADRs, technical decisions"
+    arguments: "[topic-or-decision]"
+    triggers: [architect, architecture, design, adr]
+    phase: 3
+    tier: 1
+
+  analyst:
+    path: agents/analyst.md
+    description: "Business analyst - requirements, briefs, PRD"
+    arguments: "[topic]"
+    triggers: [analyst, analyze, requirements, brief]
+    phase: 1
+    tier: 2
+
+  tester:
+    path: agents/tester.md
+    description: "QA engineer - test strategy, automation, coverage"
+    arguments: "[scope-or-story]"
+    triggers: [tester, test, qa, testing]
+    phase: 4
+    tier: 2
+
+  sm:
+    path: agents/scrum-master.md
+    description: "Scrum Master - stories, sprints, planning, SPIDR, INVEST"
+    arguments: "[action-or-story]"
+    triggers: [sm, scrum, sprint, planning, story, backlog]
+    phase: 3
+    tier: 2
+
+  # Specialist Agents
+  ai:
+    path: agents/specialists/ai-architect.md
+    description: "AI/LLM architect - RAG, multi-agent, memory systems"
+    arguments: "[ai-topic]"
+    triggers: [ai, llm, rag, agent, memory]
+    phase: 3
+    tier: 1
+
+  qa:
+    path: agents/specialists/exploratory-qa.md
+    description: "Exploratory QA - manual testing, UX validation, accessibility"
+    arguments: "[module-or-feature]"
+    triggers: [qa, explore, exploratory, ux-test]
+    phase: 4
+    tier: 2
+
+  ucv-writer:
+    path: agents/specialists/ucv-writer.md
+    description: "UCV Writer - creates Use Case Verifiables for stories"
+    arguments: "[story-id]"
+    triggers: [ucv, verifiable, use-case]
+    phase: 3
+    tier: 2
+
+  ucv-validator:
+    path: agents/specialists/ucv-validator.md
+    description: "UCV Validator - validates 100% UCV coverage"
+    arguments: "[story-id]"
+    triggers: [validate, coverage, ucv-check]
+    phase: 4
+    tier: 2
+
+  # Additional Core Agents
+  ux:
+    path: agents/ux-designer.md
+    description: "UX Designer - wireframes, user flows, accessibility"
+    arguments: "[feature-or-screen]"
+    triggers: [ux, design, wireframe, user-flow]
+    phase: 2
+    tier: 2
+
+  pm:
+    path: agents/product-manager.md
+    description: "Product Manager - roadmap, priorities, stakeholders"
+    arguments: "[topic]"
+    triggers: [pm, product, roadmap, priority]
+    phase: 1
+    tier: 2
+
+  docs:
+    path: agents/tech-writer.md
+    description: "Tech Writer - documentation, guides, API docs"
+    arguments: "[doc-type]"
+    triggers: [docs, documentation, techwriter, readme]
+    phase: 4
+    tier: 2
+
+  review:
+    path: agents/review.md
+    description: "Code Reviewer - code review, best practices, security"
+    arguments: "[pr-or-files]"
+    triggers: [review, code-review, pr]
+    phase: 4
+    tier: 2
+
+# Example usage:
+# /hf:agent:dev STORY-042
+# /hf:agent:architect "design authentication system"
+# /hf:agent:ucv-writer STORY-042
+# /hf:agent:qa user-profile

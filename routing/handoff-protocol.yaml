@@ -1,0 +1,319 @@
+# Handoff Protocol Configuration
+# Purpose: Define structured handoff format between agents
+# Version: 1.0.0
+
+---
+
+# ═══════════════════════════════════════════════════════════════════
+# HANDOFF PROTOCOL
+# ═══════════════════════════════════════════════════════════════════
+#
+# When one agent completes and needs to pass work to another,
+# a structured handoff ensures no context is lost.
+
+handoff_format:
+  version: "1.0"
+
+  required_fields:
+    - from_agent      # Agent completing
+    - to_agent        # Agent receiving
+    - context         # What was done
+    - deliverables    # Files/artifacts created
+    - next_action     # What needs to happen next
+
+  optional_fields:
+    - blockers        # Any issues encountered
+    - recommendations # Suggestions for next agent
+    - references      # Related docs/files
+
+# ═══════════════════════════════════════════════════════════════════
+# HANDOFF TEMPLATES BY TRANSITION
+# ═══════════════════════════════════════════════════════════════════
+transitions:
+
+  # ───────────────────────────────────────────────────────────────
+  # SCRUM-MASTER → UCV-WRITER
+  # ───────────────────────────────────────────────────────────────
+  scrum-master_to_ucv-writer:
+    trigger: story_created
+    template: |
+      ## Handoff: Scrum Master → UCV Writer
+
+      **Story Created**: {story_id}
+      **Title**: {story_title}
+      **Epic**: {epic_id}
+
+      ### Context
+      {story_summary}
+
+      ### Deliverables
+      - Story file: `docs/backlog/stories/{story_id}.md`
+
+      ### Next Action
+      Create Use Case Verifications (UCVs) for this story.
+
+      ### References
+      - Epic: `docs/backlog/epics/{epic_id}.md`
+      - PRD: `docs/prd.md`
+      - Architecture: `docs/architecture/`
+
+  # ───────────────────────────────────────────────────────────────
+  # UCV-WRITER → USER (Approval Gate)
+  # ───────────────────────────────────────────────────────────────
+  ucv-writer_to_user:
+    trigger: ucv_created
+    template: |
+      ## Handoff: UCV Writer → User Approval
+
+      **Story**: {story_id}
+      **UCVs Created**: {ucv_count}
+      **Verifications**: {verification_count}
+
+      ### Summary
+      {ucv_summary}
+
+      ### Deliverables
+      - UCV file: `docs/backlog/stories/{story_id}-UCV.md`
+
+      ### Approval Required
+      Please review the UCVs and:
+      - [ ] Verify all acceptance criteria are covered
+      - [ ] Check Gherkin scenarios are clear
+      - [ ] Confirm edge cases are included
+
+      **Approve** to proceed to development or **Request Changes**.
+
+  # ───────────────────────────────────────────────────────────────
+  # USER → DEVELOPER (After Approval)
+  # ───────────────────────────────────────────────────────────────
+  user_to_developer:
+    trigger: ucv_approved
+    template: |
+      ## Handoff: Approved → Developer
+
+      **Story**: {story_id} - {story_title}
+      **UCVs**: APPROVED
+      **Verifications to implement**: {verification_count}
+
+      ### Implementation Guide
+
+      For each verification:
+      1. Read the Gherkin scenario
+      2. Implement the required behavior
+      3. Mark `[dev] ✓` when complete
+      4. Commit with `Refs: {story_id}`
+
+      ### Deliverables Expected
+      - All `[dev]` checkboxes marked
+      - Code committed with story reference
+
+      ### Files
+      - Story: `docs/backlog/stories/{story_id}.md`
+      - UCV: `docs/backlog/stories/{story_id}-UCV.md`
+
+  # ───────────────────────────────────────────────────────────────
+  # DEVELOPER → TESTER
+  # ───────────────────────────────────────────────────────────────
+  developer_to_tester:
+    trigger: dev_completed
+    template: |
+      ## Handoff: Developer → Tester
+
+      **Story**: {story_id}
+      **Implementation**: COMPLETE
+      **Verifications implemented**: {dev_count}/{total_count}
+
+      ### Context
+      {implementation_summary}
+
+      ### Files Changed
+      {files_changed}
+
+      ### Next Action
+      Write automated tests for each verification:
+      1. Read each verification in UCV file
+      2. Write test(s) covering the verification
+      3. Run tests to ensure they pass
+      4. Mark `[test] ✓` when complete
+
+      ### Deliverables Expected
+      - All `[test]` checkboxes marked
+      - Test files created/updated
+      - All tests passing
+
+  # ───────────────────────────────────────────────────────────────
+  # TESTER → UCV-QA
+  # ───────────────────────────────────────────────────────────────
+  tester_to_ucv-qa:
+    trigger: test_completed
+    template: |
+      ## Handoff: Tester → UCV QA
+
+      **Story**: {story_id}
+      **Tests**: COMPLETE
+      **Coverage**: {test_coverage}%
+
+      ### Context
+      All automated tests are passing.
+      Manual browser validation required.
+
+      ### Next Action
+      For each verification in UCV file:
+      1. Navigate to the relevant page
+      2. Execute the Gherkin scenario manually
+      3. Take screenshot as evidence
+      4. Mark `[qa] ✓` if behavior matches
+      5. Report issue if behavior differs
+
+      ### Deliverables Expected
+      - All `[qa]` checkboxes marked (or issues reported)
+      - Screenshots in `docs/qa/{story_id}/`
+      - QA report
+
+  # ───────────────────────────────────────────────────────────────
+  # UCV-QA → EXPLORATORY-QA
+  # ───────────────────────────────────────────────────────────────
+  ucv-qa_to_exploratory-qa:
+    trigger: ucv_qa_completed
+    template: |
+      ## Handoff: UCV QA → Exploratory QA
+
+      **Story**: {story_id}
+      **UCV QA**: {qa_passed}/{qa_total} passed
+      **Status**: {ucv_qa_status}
+
+      ### Context
+      Systematic UCV validation complete.
+      Free exploration session required before closure.
+
+      ### Session Requirements
+      - Duration: 60-90 minutes
+      - Focus: {story_title}
+      - Module: {affected_module}
+
+      ### Exploration Areas
+      - Unexpected bugs
+      - Edge cases
+      - UX/Usability issues
+      - Performance concerns
+
+      ### Deliverables Expected
+      - Go/No-Go recommendation
+      - Bug reports (if any)
+      - UX improvement suggestions
+
+  # ───────────────────────────────────────────────────────────────
+  # EXPLORATORY-QA → UCV-VALIDATOR
+  # ───────────────────────────────────────────────────────────────
+  exploratory-qa_to_ucv-validator:
+    trigger: exploratory_completed
+    template: |
+      ## Handoff: Exploratory QA → UCV Validator
+
+      **Story**: {story_id}
+      **Exploratory Result**: {exploratory_result}
+      **Bugs Found**: {bugs_found}
+
+      ### Context
+      {exploratory_summary}
+
+      ### Next Action
+      Final validation - verify 100% UCV coverage:
+      1. Check all `[dev]` marked
+      2. Check all `[test]` marked
+      3. Check all `[qa]` marked
+      4. Confirm coverage = 100%
+      5. Issue Go/No-Go decision
+
+      ### Deliverables Expected
+      - Verification matrix
+      - Go/No-Go decision
+      - Handoff to Scrum Master if Go
+
+  # ───────────────────────────────────────────────────────────────
+  # UCV-VALIDATOR → SCRUM-MASTER (Closure)
+  # ───────────────────────────────────────────────────────────────
+  ucv-validator_to_scrum-master:
+    trigger: validation_complete
+    template: |
+      ## Handoff: UCV Validator → Scrum Master (Closure)
+
+      **Story**: {story_id}
+      **Validation**: {validation_status}
+      **Coverage**: {coverage}%
+
+      ### Verification Matrix
+      | Verification | Dev | Test | QA | Complete |
+      |--------------|-----|------|----|-----------|
+      {verification_matrix}
+
+      ### Decision
+      {decision}: {decision_reason}
+
+      ### Next Action
+      {next_action}
+
+# ═══════════════════════════════════════════════════════════════════
+# HANDOFF STORAGE
+# ═══════════════════════════════════════════════════════════════════
+storage:
+  location: ".claude/memory/handoffs/"
+  format: json
+  retention_days: 30
+
+  file_naming: "{story_id}_{from_agent}_to_{to_agent}_{timestamp}.json"
+
+# ═══════════════════════════════════════════════════════════════════
+# FAILURE HANDOFFS
+# ═══════════════════════════════════════════════════════════════════
+failure_handoffs:
+
+  # When UCV QA finds failures
+  ucv-qa_failure:
+    to_agent: developer
+    template: |
+      ## Handoff: UCV QA → Developer (Fix Required)
+
+      **Story**: {story_id}
+      **Failed Verifications**: {failed_count}
+
+      ### Issues Found
+      {issues_list}
+
+      ### Required Action
+      Fix the following issues and re-mark `[dev]` when complete:
+      {fix_list}
+
+  # When Exploratory QA finds bugs
+  exploratory-qa_bugs:
+    to_agent: scrum-master
+    template: |
+      ## Handoff: Exploratory QA → Scrum Master (Bugs Found)
+
+      **Story**: {story_id}
+      **Bugs Found**: {bug_count}
+      **Severity**: {max_severity}
+
+      ### Bugs
+      {bugs_list}
+
+      ### Recommendation
+      {recommendation}
+
+      ### Required Action
+      Create bug stories or add tasks to current story.
+
+  # When Validation fails
+  ucv-validator_failure:
+    to_agent: scrum-master
+    template: |
+      ## Handoff: UCV Validator → Scrum Master (Validation Failed)
+
+      **Story**: {story_id}
+      **Coverage**: {coverage}% (required: 100%)
+
+      ### Missing Coverage
+      {missing_list}
+
+      ### Required Action
+      Story cannot be closed. Route back to appropriate agent.

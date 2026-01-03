@@ -10,21 +10,35 @@
 |-------|-------|
 | **Workflow ID** | WF-STORY-LIFECYCLE |
 | **Phase** | 3-4 (Solutioning to Implementation) |
-| **Agents** | SM, UCV Writer, Developer, Tester, Exploratory QA, UCV Validator |
+| **Agents** | Scrum Master, UCV Writer, Developer, Tester, UCV QA, UCV Validator, Exploratory QA (optional) |
+| **Version** | 2.0 |
+| **Updated** | 2026-01-03 |
 
 ---
 
 ## Purpose
 
-Defines the complete lifecycle of a user story:
-- Creation by SM
-- UCV generation by UCV Writer
-- Approval by user
-- Implementation by Developer
-- Testing by Tester
-- Validation by Exploratory QA
-- Verification by UCV Validator
-- Closure by SM
+Defines the complete lifecycle of a user story from creation to completion.
+
+### Agents Involved
+
+| Agent | Role | Checkpoint |
+|-------|------|------------|
+| **Scrum Master** | Creates story from epic | STORY-XXX.md |
+| **UCV Writer** | Generates use case verifications | STORY-XXX-UCV.md |
+| **User** | Approves UCVs (GATE) | status: APPROVED |
+| **Developer** | Implements each verification | [dev] ✓ |
+| **Tester** | Writes automated tests | [test] ✓ |
+| **UCV QA** | Manually validates each UCV | [qa] ✓ |
+| **UCV Validator** | Verifies 100% coverage | Go/No-Go |
+| **Exploratory QA** | Free exploration (MANDATORY) | Go/No-Go |
+
+### Key Distinction
+
+| Agent | What they do | Type |
+|-------|--------------|------|
+| **UCV QA** | Tests EACH UCV systematically in browser | Structured |
+| **Exploratory QA** | Free exploration to find unexpected bugs | Unstructured |
 
 ---
 
@@ -131,7 +145,7 @@ Defines the complete lifecycle of a user story:
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 5: TESTING                    │                       │
-│  │ Agent: Tester (Tester)                │                       │
+│  │ Agent: Tester                       │                       │
 │  │                                      │                       │
 │  │ • Write tests for each verification  │                       │
 │  │ • Run tests                          │                       │
@@ -141,19 +155,33 @@ Defines the complete lifecycle of a user story:
 │                     │                                           │
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
-│  │ PHASE 6: QA VALIDATION              │                       │
-│  │ Agent: Exploratory QA                         │                       │
+│  │ PHASE 6: UCV QA VALIDATION          │                       │
+│  │ Agent: UCV QA                       │                       │
 │  │                                      │                       │
-│  │ • Exploratory testing                │                       │
-│  │ • Visual verification                │                       │
-│  │ • Mark [qa] checkboxes               │                       │
-│  │ • Report issues                      │                       │
+│  │ • Test EACH UCV in browser          │                       │
+│  │ • Follow Gherkin scenarios          │                       │
+│  │ • Take screenshots as evidence      │                       │
+│  │ • Mark [qa] checkboxes              │                       │
+│  │ • Report failures if any            │                       │
+│  └──────────────────┬──────────────────┘                       │
+│                     │                                           │
+│                     │                                           │
+│                     ▼                                           │
+│  ┌─────────────────────────────────────┐                       │
+│  │ PHASE 6b: EXPLORATORY QA            │                       │
+│  │ Agent: Exploratory QA (Luna)        │                       │
+│  │                                      │                       │
+│  │ • Free exploration testing           │                       │
+│  │ • Find unexpected bugs               │                       │
+│  │ • UX/Usability issues               │                       │
+│  │ • Edge cases discovery              │                       │
+│  │ • Go/No-Go decision                 │                       │
 │  └──────────────────┬──────────────────┘                       │
 │                     │                                           │
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 7: VERIFICATION               │                       │
-│  │ Agent: UCV Validator                       │                       │
+│  │ Agent: UCV Validator                │                       │
 │  │                                      │                       │
 │  │ • Check all [dev] marked             │                       │
 │  │ • Check all [test] marked            │                       │
@@ -266,15 +294,51 @@ Defines the complete lifecycle of a user story:
 
 ---
 
-### Phase 6: QA Validation
+### Phase 6: UCV QA Validation
 
-**Agent:** Exploratory QA
+**Agent:** UCV QA
+
+**Prerequisites:**
+- All `[dev]` checkboxes marked
+- All `[test]` checkboxes marked
+- Application running and accessible
 
 **Activities:**
-- Exploratory testing session
-- Visual verification
-- Mark `[x] qa` as validated
-- Report any issues found
+- Read STORY-XXX-UCV.md
+- For each verification:
+  - Navigate to the relevant page
+  - Execute the Gherkin scenario
+  - Verify expected behavior
+  - Take screenshot as evidence
+  - Mark `[x] qa` if PASS
+  - Document issue if FAIL
+
+**Output:**
+- UCV file with `[qa]` marks
+- Screenshots in `docs/qa/STORY-XXX/`
+- QA report
+
+---
+
+### Phase 6b: Exploratory QA (MANDATORY)
+
+**Agent:** Exploratory QA (Luna)
+
+**Purpose:**
+Session timeboxee d'exploration libre avant release.
+Obligatoire pour toute story avant validation finale.
+
+**Activities:**
+- Free exploration testing session (60-90 min)
+- Find unexpected bugs
+- Discover edge cases
+- UX/Usability issues
+- Go/No-Go decision
+
+**Output:**
+- Bug reports (if issues found)
+- UX improvement suggestions
+- Go/No-Go recommendation
 
 ---
 
@@ -313,12 +377,45 @@ Coverage: 3/3 = 100% ✅
 
 ## Related
 
-- [Scrum Master](../agents/scrum-master.md)
-- [UCV Writer Agent 📝](../agents/specialists/ucv-writer.md)
-- [UCV Validator Agent ✅](../agents/specialists/ucv-validator.md)
-- [Developer Agent](../agents/developer.md)
-- [Tester Agent](../agents/tester.md)
-- [Exploratory QA Agent 🔍](../agents/specialists/exploratory-qa.md)
+### Agents
+
+| Agent | File | Role |
+|-------|------|------|
+| Scrum Master | [scrum-master.md](../agents/scrum-master.md) | Story creation |
+| UCV Writer | [ucv-writer.md](../agents/specialists/ucv-writer.md) | UCV generation |
+| Developer | [developer.md](../agents/developer.md) | Implementation |
+| Tester | [tester.md](../agents/tester.md) | Automated tests |
+| **UCV QA** | [ucv-qa.md](../agents/specialists/ucv-qa.md) | Manual UCV validation |
+| Exploratory QA | [exploratory-qa.md](../agents/specialists/exploratory-qa.md) | Free exploration |
+| UCV Validator | [ucv-validator.md](../agents/specialists/ucv-validator.md) | 100% verification |
+
+### Templates
+
 - [Story Template](../templates/story.md)
 - [UCV Template](../templates/ucv.md)
+
+### Commands
+
+```bash
+# Story creation
+/scrum-master create-story EPIC-XXX
+
+# UCV generation
+/ucv-writer STORY-XXX
+
+# Implementation
+/developer STORY-XXX
+
+# Testing
+/tester STORY-XXX
+
+# UCV QA validation
+/ucv-qa STORY-XXX
+
+# Exploratory QA (optional)
+/exploratory-qa [module]
+
+# Final verification
+/ucv-validator STORY-XXX
+```
 

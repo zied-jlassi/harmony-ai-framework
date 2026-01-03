@@ -1,0 +1,159 @@
+# Routing Algorithm Configuration
+# Purpose: Define scoring weights and decision thresholds
+# Version: 1.0.0
+
+---
+
+# ═══════════════════════════════════════════════════════════════════
+# SCORING WEIGHTS
+# ═══════════════════════════════════════════════════════════════════
+#
+# Formula: score(agent) =
+#   KEYWORD_WEIGHT * max(keyword_scores) +
+#   CONTEXT_WEIGHT * context_score +
+#   REGEX_WEIGHT * max(regex_scores)
+#
+scoring:
+  weights:
+    keyword: 0.50   # Weight for keyword matching
+    context: 0.30   # Weight for context conditions (phase, prerequisites)
+    regex: 0.20     # Weight for regex pattern matching
+
+  # Bonus/penalty modifiers
+  modifiers:
+    phase_match: 0.20       # Bonus when agent's phase matches current phase
+    specialty_match: 0.25   # Bonus when specialty context matches
+    prerequisite_fail: -1.0 # Penalty when prerequisite not met (blocks)
+
+# ═══════════════════════════════════════════════════════════════════
+# DECISION THRESHOLDS
+# ═══════════════════════════════════════════════════════════════════
+thresholds:
+
+  # Phase 2: Confidence check
+  confident:
+    min_score: 0.85      # Minimum score to consider confident
+    min_delta: 0.30      # Minimum gap to second-best agent
+
+  # Phase 3: LLM classification
+  llm_fallback:
+    min_confidence: 0.70  # LLM confidence threshold to accept
+    model: haiku          # Model to use for disambiguation
+    timeout_ms: 2000      # Timeout for LLM call
+
+  # User clarification
+  ask_user:
+    below_confidence: 0.50  # Ask user if LLM confidence below this
+
+# ═══════════════════════════════════════════════════════════════════
+# DECISION FLOW
+# ═══════════════════════════════════════════════════════════════════
+decision_flow:
+
+  phase_1_scoring:
+    description: "Calculate scores for all agents"
+    steps:
+      - Calculate keyword score (max match in user's language)
+      - Calculate context score (phase match, prerequisites)
+      - Calculate regex score (pattern matches)
+      - Apply weighted sum
+      - Sort agents by score descending
+
+  phase_2_confidence:
+    description: "Check if result is confident"
+    conditions:
+      confident:
+        - top_score >= thresholds.confident.min_score
+        - (top_score - second_score) >= thresholds.confident.min_delta
+      action_if_confident: "Route to top agent (FAST PATH)"
+      action_if_not: "Continue to Phase 3"
+
+  phase_3_llm:
+    description: "Use LLM for disambiguation"
+    input:
+      - user_message
+      - top_3_candidates
+      - current_context
+    output:
+      - selected_agent
+      - confidence
+      - reasoning
+    conditions:
+      accept:
+        - llm_confidence >= thresholds.llm_fallback.min_confidence
+      action_if_accept: "Route to LLM-selected agent"
+      action_if_not: "Continue to Phase 4"
+
+  phase_4_user:
+    description: "Ask user for clarification"
+    trigger: "LLM confidence < thresholds.ask_user.below_confidence"
+    format:
+      question: "I detected multiple possible intents. Which agent should handle this?"
+      options:
+        - agent_1: "{name} - {description}"
+        - agent_2: "{name} - {description}"
+        - other: "Let me clarify my request"
+
+# ═══════════════════════════════════════════════════════════════════
+# BLOCKING CONDITIONS
+# ═══════════════════════════════════════════════════════════════════
+blocking:
+
+  # Agents that REQUIRE story to exist
+  require_story:
+    - developer
+    - ucv-writer
+
+  # Agents that REQUIRE UCV approval
+  require_ucv:
+    - developer
+
+  # Actions when blocked
+  on_block:
+    no_story:
+      message: "No story found for this task. Creating story first."
+      redirect_to: scrum-master
+
+    no_ucv:
+      message: "Story exists but UCVs not approved. Creating UCVs first."
+      redirect_to: ucv-writer
+
+# ═══════════════════════════════════════════════════════════════════
+# PERFORMANCE METRICS
+# ═══════════════════════════════════════════════════════════════════
+metrics:
+
+  # Expected latency per phase
+  latency:
+    phase_1: "~10ms"
+    phase_2: "~1ms"
+    phase_3: "~500ms"
+    phase_4: "variable (user input)"
+
+  # Expected distribution
+  distribution:
+    fast_path: 0.80        # 80% resolved by rules
+    llm_path: 0.15         # 15% need LLM
+    user_clarification: 0.05  # 5% need user input
+
+# ═══════════════════════════════════════════════════════════════════
+# LOGGING
+# ═══════════════════════════════════════════════════════════════════
+logging:
+  enabled: true
+  level: info  # debug, info, warn, error
+
+  events:
+    - routing_started
+    - scores_calculated
+    - confident_decision
+    - ambiguous_decision
+    - llm_called
+    - llm_response
+    - user_asked
+    - final_decision
+
+  output:
+    file: ".claude/memory/routing-log.json"
+    max_entries: 1000
+    retention_days: 30

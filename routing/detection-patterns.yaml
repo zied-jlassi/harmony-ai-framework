@@ -1,0 +1,849 @@
+# Detection Patterns Configuration
+# Purpose: Define keywords, regex, and context conditions for agent detection
+# Version: 1.0.0
+
+---
+
+# Core Agents Detection Patterns
+agents:
+
+  # ═══════════════════════════════════════════════════════════════
+  # ANALYST - Business Analysis & Requirements
+  # ═══════════════════════════════════════════════════════════════
+  analyst:
+    file: agents/analyst.md
+    phase: [1, 2]
+    tier: 1
+    model: opus
+
+    keywords:
+      en:
+        - word: analyze
+          score: 0.95
+        - word: requirement
+          score: 0.90
+        - word: need
+          score: 0.70
+        - word: understand
+          score: 0.75
+        - word: research
+          score: 0.80
+        - word: brief
+          score: 0.85
+        - word: prd
+          score: 0.95
+        - word: stakeholder
+          score: 0.80
+
+      fr:
+        - word: analyser
+          score: 0.95
+        - word: analyse
+          score: 0.90
+        - word: besoin
+          score: 0.85
+        - word: comprendre
+          score: 0.75
+        - word: recherche
+          score: 0.80
+        - word: brief
+          score: 0.85
+        - word: cahier des charges
+          score: 0.95
+        - word: exigence
+          score: 0.90
+
+    regex:
+      - pattern: "(?:analyse|analyze)\\s+(?:the|les|des)?\\s*(?:requirement|besoin|need)"
+        score: 0.95
+      - pattern: "(?:create|creer)\\s+(?:a|un|une)?\\s*(?:brief|prd)"
+        score: 0.90
+      - pattern: "(?:understand|comprendre)\\s+(?:the|le|la)?\\s*(?:problem|probleme|need|besoin)"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # ARCHITECT - System Design & Technical Decisions
+  # ═══════════════════════════════════════════════════════════════
+  architect:
+    file: agents/architect.md
+    phase: [2, 3]
+    tier: 1
+    model: opus
+
+    keywords:
+      en:
+        - word: architecture
+          score: 0.95
+        - word: design
+          score: 0.80
+        - word: adr
+          score: 0.95
+        - word: pattern
+          score: 0.75
+        - word: structure
+          score: 0.70
+        - word: technical decision
+          score: 0.90
+        - word: component
+          score: 0.70
+        - word: system design
+          score: 0.90
+        - word: integration
+          score: 0.75
+
+      fr:
+        - word: architecture
+          score: 0.95
+        - word: conception
+          score: 0.85
+        - word: concevoir
+          score: 0.85
+        - word: adr
+          score: 0.95
+        - word: pattern
+          score: 0.75
+        - word: structurer
+          score: 0.75
+        - word: decision technique
+          score: 0.90
+        - word: composant
+          score: 0.70
+
+    regex:
+      - pattern: "(?:design|concevoir|architect)\\s+(?:the|le|la|une)?\\s*(?:system|architecture|solution)"
+        score: 0.95
+      - pattern: "(?:create|creer)\\s+(?:an?|un|une)?\\s*adr"
+        score: 0.95
+      - pattern: "(?:technical|technique)\\s+(?:decision|choix)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - prd_exists
+      conditions:
+        - has_db_schema: 0.10
+        - has_api: 0.10
+
+  # ═══════════════════════════════════════════════════════════════
+  # SCRUM-MASTER - Sprint & Story Management
+  # ═══════════════════════════════════════════════════════════════
+  scrum-master:
+    file: agents/scrum-master.md
+    phase: [3, 4]
+    tier: 3
+    model: sonnet
+
+    keywords:
+      en:
+        - word: story
+          score: 0.90
+        - word: sprint
+          score: 0.95
+        - word: backlog
+          score: 0.90
+        - word: planning
+          score: 0.85
+        - word: epic
+          score: 0.85
+        - word: velocity
+          score: 0.80
+        - word: burndown
+          score: 0.85
+
+      fr:
+        - word: story
+          score: 0.90
+        - word: sprint
+          score: 0.95
+        - word: backlog
+          score: 0.90
+        - word: planifier
+          score: 0.85
+        - word: planification
+          score: 0.85
+        - word: epic
+          score: 0.85
+
+    regex:
+      - pattern: "(?:create|creer)\\s+(?:a|une)?\\s*story"
+        score: 0.95
+      - pattern: "(?:plan|planifier)\\s+(?:the|le)?\\s*sprint"
+        score: 0.95
+      - pattern: "(?:manage|gerer)\\s+(?:the|le)?\\s*backlog"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - architecture_exists
+
+  # ═══════════════════════════════════════════════════════════════
+  # DEVELOPER - Code Implementation
+  # ═══════════════════════════════════════════════════════════════
+  developer:
+    file: agents/developer.md
+    phase: [4]
+    tier: 2
+    model: inherit
+
+    keywords:
+      en:
+        - word: develop
+          score: 0.90
+        - word: implement
+          score: 0.95
+        - word: code
+          score: 0.90
+        - word: build
+          score: 0.80
+        - word: fix
+          score: 0.85
+        - word: bug
+          score: 0.85
+        - word: feature
+          score: 0.75
+        - word: refactor
+          score: 0.85
+
+      fr:
+        - word: developper
+          score: 0.90
+        - word: implementer
+          score: 0.95
+        - word: coder
+          score: 0.95
+        - word: construire
+          score: 0.75
+        - word: corriger
+          score: 0.85
+        - word: bug
+          score: 0.85
+        - word: fonctionnalite
+          score: 0.75
+        - word: refactorer
+          score: 0.85
+
+    regex:
+      - pattern: "(?:implement|implementer|code|coder)\\s+(?:the|le|la|une)?\\s*(?:feature|function|method|fonctionnalite)"
+        score: 0.95
+      - pattern: "(?:fix|corriger)\\s+(?:the|le|la)?\\s*(?:bug|error|erreur|issue)"
+        score: 0.95
+      - pattern: "(?:add|ajouter)\\s+(?:a|un|une)?\\s*(?:feature|endpoint|method)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - story_exists
+        - ucv_approved
+      blocking_conditions:
+        - requires_story: true
+
+  # ═══════════════════════════════════════════════════════════════
+  # TESTER - Test Automation
+  # ═══════════════════════════════════════════════════════════════
+  tester:
+    file: agents/tester.md
+    phase: [4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: test
+          score: 0.90
+        - word: testing
+          score: 0.90
+        - word: coverage
+          score: 0.85
+        - word: tdd
+          score: 0.95
+        - word: unit test
+          score: 0.95
+        - word: e2e
+          score: 0.90
+        - word: integration test
+          score: 0.90
+
+      fr:
+        - word: test
+          score: 0.90
+        - word: tester
+          score: 0.90
+        - word: couverture
+          score: 0.85
+        - word: tdd
+          score: 0.95
+        - word: test unitaire
+          score: 0.95
+        - word: test integration
+          score: 0.90
+
+    regex:
+      - pattern: "(?:write|ecrire)\\s+(?:a|des)?\\s*tests?"
+        score: 0.95
+      - pattern: "(?:test|tester)\\s+(?:the|le|la)?\\s*(?:feature|function|component)"
+        score: 0.90
+      - pattern: "(?:increase|augmenter)\\s+(?:test)?\\s*coverage"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # UX-DESIGNER - User Experience & Interface Design
+  # ═══════════════════════════════════════════════════════════════
+  ux-designer:
+    file: agents/ux-designer.md
+    phase: [2, 3]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: ux
+          score: 0.95
+        - word: ui
+          score: 0.90
+        - word: interface
+          score: 0.80
+        - word: wireframe
+          score: 0.95
+        - word: prototype
+          score: 0.90
+        - word: user flow
+          score: 0.90
+        - word: mockup
+          score: 0.90
+        - word: design system
+          score: 0.85
+
+      fr:
+        - word: ux
+          score: 0.95
+        - word: ui
+          score: 0.90
+        - word: interface
+          score: 0.80
+        - word: wireframe
+          score: 0.95
+        - word: prototype
+          score: 0.90
+        - word: maquette
+          score: 0.90
+        - word: parcours utilisateur
+          score: 0.90
+
+    regex:
+      - pattern: "(?:design|concevoir|creer)\\s+(?:a|une|le|la)?\\s*(?:wireframe|mockup|maquette|prototype)"
+        score: 0.95
+      - pattern: "(?:ux|ui)\\s+(?:design|review|audit)"
+        score: 0.90
+      - pattern: "(?:user|utilisateur)\\s+(?:flow|journey|parcours)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+      conditions:
+        - has_ui: 0.15
+
+  # ═══════════════════════════════════════════════════════════════
+  # PRODUCT-MANAGER - Product Strategy
+  # ═══════════════════════════════════════════════════════════════
+  product-manager:
+    file: agents/product-manager.md
+    phase: [1, 2]
+    tier: 2
+    model: opus
+
+    keywords:
+      en:
+        - word: product
+          score: 0.85
+        - word: roadmap
+          score: 0.95
+        - word: prioritize
+          score: 0.85
+        - word: mvp
+          score: 0.90
+        - word: stakeholder
+          score: 0.75
+        - word: market
+          score: 0.70
+
+      fr:
+        - word: produit
+          score: 0.85
+        - word: roadmap
+          score: 0.95
+        - word: prioriser
+          score: 0.85
+        - word: mvp
+          score: 0.90
+        - word: partie prenante
+          score: 0.75
+
+    regex:
+      - pattern: "(?:define|definir)\\s+(?:the|le|la)?\\s*(?:product|roadmap|mvp)"
+        score: 0.90
+      - pattern: "(?:prioritize|prioriser)\\s+(?:features|fonctionnalites)"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # EXPLORATORY-QA - Manual Testing & UX Validation
+  # ═══════════════════════════════════════════════════════════════
+  exploratory-qa:
+    file: agents/specialists/exploratory-qa.md
+    phase: [4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: explore
+          score: 0.85
+        - word: exploratory
+          score: 0.95
+        - word: manual test
+          score: 0.90
+        - word: usability
+          score: 0.85
+        - word: edge case
+          score: 0.85
+        - word: bug hunt
+          score: 0.90
+
+      fr:
+        - word: explorer
+          score: 0.85
+        - word: exploratoire
+          score: 0.95
+        - word: test manuel
+          score: 0.90
+        - word: utilisabilite
+          score: 0.85
+        - word: cas limite
+          score: 0.85
+
+    regex:
+      - pattern: "(?:exploratory|exploratoire)\\s+(?:test|qa|session)"
+        score: 0.95
+      - pattern: "(?:find|trouver)\\s+(?:edge|cas)\\s+(?:cases|limites)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # UCV-WRITER - Use Case Verification Writing
+  # ═══════════════════════════════════════════════════════════════
+  ucv-writer:
+    file: agents/specialists/ucv-writer.md
+    phase: [3]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: ucv
+          score: 0.95
+        - word: use case
+          score: 0.90
+        - word: verification
+          score: 0.80
+        - word: acceptance criteria
+          score: 0.85
+        - word: gherkin
+          score: 0.90
+
+      fr:
+        - word: ucv
+          score: 0.95
+        - word: cas utilisation
+          score: 0.90
+        - word: verification
+          score: 0.80
+        - word: critere acceptation
+          score: 0.85
+        - word: gherkin
+          score: 0.90
+
+    regex:
+      - pattern: "(?:create|creer|write|ecrire)\\s+(?:the|les|des)?\\s*ucv"
+        score: 0.95
+      - pattern: "(?:use\\s*case|cas\\s*utilisation)\\s+(?:verification|verifiable)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - story_exists
+
+  # ═══════════════════════════════════════════════════════════════
+  # UCV-QA - Manual UCV Testing in Browser
+  # ═══════════════════════════════════════════════════════════════
+  ucv-qa:
+    file: agents/specialists/ucv-qa.md
+    phase: [4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: ucv qa
+          score: 0.95
+        - word: ucv test
+          score: 0.90
+        - word: test ucv
+          score: 0.90
+        - word: validate ucv manually
+          score: 0.90
+        - word: manual ucv
+          score: 0.85
+
+      fr:
+        - word: ucv qa
+          score: 0.95
+        - word: tester ucv
+          score: 0.90
+        - word: valider ucv manuellement
+          score: 0.90
+        - word: qa ucv
+          score: 0.90
+
+    regex:
+      - pattern: "(?:ucv)\\s+(?:qa|test)"
+        score: 0.95
+      - pattern: "(?:test|tester)\\s+(?:the|les)?\\s*ucv"
+        score: 0.90
+      - pattern: "(?:manual|manuel)\\s+(?:ucv|validation)"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - ucv_approved
+        - dev_completed
+        - test_completed
+
+  # ═══════════════════════════════════════════════════════════════
+  # UCV-VALIDATOR - Use Case Verification Validation
+  # ═══════════════════════════════════════════════════════════════
+  ucv-validator:
+    file: agents/specialists/ucv-validator.md
+    phase: [4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: validate ucv
+          score: 0.95
+        - word: verify coverage
+          score: 0.90
+        - word: ucv check
+          score: 0.90
+        - word: ucv 100
+          score: 0.85
+
+      fr:
+        - word: valider ucv
+          score: 0.95
+        - word: verifier couverture
+          score: 0.90
+        - word: couverture 100
+          score: 0.85
+
+    regex:
+      - pattern: "(?:validate|valider)\\s+(?:the|les)?\\s*ucv"
+        score: 0.95
+      - pattern: "(?:check|verifier)\\s+ucv\\s+(?:coverage|couverture)"
+        score: 0.90
+      - pattern: "100\\s*%?\\s*(?:ucv|coverage|couverture)"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites:
+        - qa_completed
+
+  # ═══════════════════════════════════════════════════════════════
+  # REVIEW - Code Review
+  # ═══════════════════════════════════════════════════════════════
+  review:
+    file: agents/review.md
+    phase: [4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: review
+          score: 0.90
+        - word: code review
+          score: 0.95
+        - word: pr review
+          score: 0.95
+        - word: pull request
+          score: 0.85
+
+      fr:
+        - word: review
+          score: 0.90
+        - word: revue de code
+          score: 0.95
+        - word: relecture
+          score: 0.85
+
+    regex:
+      - pattern: "(?:review|revoir)\\s+(?:the|le|la)?\\s*(?:code|pr|pull\\s*request)"
+        score: 0.95
+      - pattern: "(?:code|pr)\\s+review"
+        score: 0.95
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # AI-ARCHITECT - AI/LLM Systems Design
+  # ═══════════════════════════════════════════════════════════════
+  ai-architect:
+    file: agents/specialists/ai-architect.md
+    phase: [2, 3]
+    tier: 1
+    model: opus
+
+    keywords:
+      en:
+        - word: ai
+          score: 0.85
+        - word: llm
+          score: 0.95
+        - word: rag
+          score: 0.95
+        - word: embedding
+          score: 0.90
+        - word: vector
+          score: 0.85
+        - word: agent
+          score: 0.70
+        - word: orchestration
+          score: 0.80
+        - word: memory
+          score: 0.70
+
+      fr:
+        - word: ia
+          score: 0.85
+        - word: llm
+          score: 0.95
+        - word: rag
+          score: 0.95
+        - word: embedding
+          score: 0.90
+        - word: vecteur
+          score: 0.85
+        - word: orchestration
+          score: 0.80
+        - word: memoire
+          score: 0.70
+
+    regex:
+      - pattern: "(?:design|concevoir)\\s+(?:an?|un|une)?\\s*(?:ai|ia|llm|rag)\\s+(?:system|systeme)"
+        score: 0.95
+      - pattern: "(?:rag|retrieval)\\s+(?:pipeline|architecture)"
+        score: 0.95
+      - pattern: "(?:multi-?agent|orchestration)"
+        score: 0.85
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+# ═══════════════════════════════════════════════════════════════════
+# COMPLIANCE AGENTS
+# ═══════════════════════════════════════════════════════════════════
+
+  security:
+    file: agents/compliance/security.md
+    phase: [3, 4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: security
+          score: 0.95
+        - word: vulnerability
+          score: 0.95
+        - word: owasp
+          score: 0.95
+        - word: audit
+          score: 0.80
+        - word: secure
+          score: 0.75
+
+      fr:
+        - word: securite
+          score: 0.95
+        - word: vulnerabilite
+          score: 0.95
+        - word: owasp
+          score: 0.95
+        - word: audit
+          score: 0.80
+
+    regex:
+      - pattern: "(?:security|securite)\\s+(?:audit|review|check)"
+        score: 0.95
+      - pattern: "(?:check|verifier)\\s+(?:for)?\\s*(?:vulnerability|vulnerabilite)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  pentest:
+    file: agents/compliance/pentest.md
+    phase: [4]
+    tier: 1
+    model: opus
+
+    keywords:
+      en:
+        - word: pentest
+          score: 0.95
+        - word: penetration
+          score: 0.90
+        - word: exploit
+          score: 0.85
+        - word: hack
+          score: 0.80
+
+      fr:
+        - word: pentest
+          score: 0.95
+        - word: penetration
+          score: 0.90
+        - word: exploitation
+          score: 0.85
+
+    regex:
+      - pattern: "(?:pentest|penetration)\\s+(?:test|testing)"
+        score: 0.95
+
+    context:
+      phase_match_bonus: 0.20
+      prerequisites: []
+
+  rgpd:
+    file: agents/compliance/rgpd.md
+    phase: [1, 2, 3, 4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: gdpr
+          score: 0.95
+        - word: privacy
+          score: 0.90
+        - word: data protection
+          score: 0.90
+        - word: consent
+          score: 0.85
+        - word: pii
+          score: 0.90
+
+      fr:
+        - word: rgpd
+          score: 0.95
+        - word: vie privee
+          score: 0.90
+        - word: protection donnees
+          score: 0.90
+        - word: consentement
+          score: 0.85
+        - word: donnees personnelles
+          score: 0.90
+
+    regex:
+      - pattern: "(?:gdpr|rgpd)\\s+(?:compliance|conformite|check)"
+        score: 0.95
+      - pattern: "(?:data|donnees)\\s+(?:protection|privacy)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.10
+      prerequisites: []
+
+  # ═══════════════════════════════════════════════════════════════
+  # ACCESSIBILITY - WCAG/RGAA Compliance
+  # ═══════════════════════════════════════════════════════════════
+  accessibility:
+    file: agents/compliance/accessibility.md
+    phase: [3, 4]
+    tier: 2
+    model: sonnet
+
+    keywords:
+      en:
+        - word: accessibility
+          score: 0.95
+        - word: a11y
+          score: 0.95
+        - word: wcag
+          score: 0.95
+        - word: screen reader
+          score: 0.90
+        - word: aria
+          score: 0.85
+        - word: contrast
+          score: 0.80
+        - word: keyboard navigation
+          score: 0.85
+
+      fr:
+        - word: accessibilite
+          score: 0.95
+        - word: a11y
+          score: 0.95
+        - word: wcag
+          score: 0.95
+        - word: rgaa
+          score: 0.95
+        - word: lecteur ecran
+          score: 0.90
+        - word: aria
+          score: 0.85
+        - word: contraste
+          score: 0.80
+        - word: navigation clavier
+          score: 0.85
+
+    regex:
+      - pattern: "(?:accessibility|accessibilite|a11y)\\s+(?:audit|check|review)"
+        score: 0.95
+      - pattern: "(?:wcag|rgaa)\\s+(?:compliance|conformite)"
+        score: 0.95
+      - pattern: "(?:screen\\s*reader|lecteur\\s*ecran)"
+        score: 0.90
+
+    context:
+      phase_match_bonus: 0.15
+      prerequisites: []
+      conditions:
+        - has_ui: 0.20

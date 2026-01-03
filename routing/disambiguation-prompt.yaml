@@ -1,0 +1,236 @@
+# Disambiguation Prompt Configuration
+# Purpose: Template for LLM classification when rule-based scoring is ambiguous
+# Version: 1.0.0
+
+---
+
+# ═══════════════════════════════════════════════════════════════════
+# LLM DISAMBIGUATION TEMPLATE
+# ═══════════════════════════════════════════════════════════════════
+#
+# Used when:
+# - Top score < 0.85 OR
+# - Delta between top 2 < 0.30
+
+system_prompt: |
+  You are an intent classifier for a software development framework.
+  Your task is to determine which agent should handle a user request.
+
+  Analyze the user message and context, then select the most appropriate agent.
+  Consider:
+  - The primary intent (what the user wants to achieve)
+  - Technical keywords and their semantic meaning
+  - Current project phase and context
+  - Language (French or English)
+
+response_format:
+  type: json
+  schema:
+    selected_agent: string  # Agent ID
+    confidence: number      # 0.0 to 1.0
+    reasoning: string       # Brief explanation
+    alternative: string     # Second choice if confidence < 0.80
+
+# ═══════════════════════════════════════════════════════════════════
+# AGENT DESCRIPTIONS (for LLM context)
+# ═══════════════════════════════════════════════════════════════════
+agents_context:
+
+  # --- CORE AGENTS ---
+
+  analyst:
+    description: "Analyzes business requirements, creates product briefs and PRDs"
+    use_when: "User wants to understand needs, define requirements, or create specifications"
+    keywords_hint: ["analyze", "requirement", "need", "brief", "prd", "understand"]
+
+  architect:
+    description: "Designs system architecture, makes technical decisions, creates ADRs"
+    use_when: "User wants to design a system, make technical choices, or structure components"
+    keywords_hint: ["architecture", "design", "adr", "pattern", "structure", "technical decision"]
+
+  scrum-master:
+    description: "Manages sprints, creates stories, handles backlog"
+    use_when: "User wants to plan work, create stories, or manage sprint"
+    keywords_hint: ["story", "sprint", "backlog", "epic", "planning"]
+
+  developer:
+    description: "Implements code, fixes bugs, adds features"
+    use_when: "User wants to write code, implement features, or fix issues"
+    keywords_hint: ["develop", "implement", "code", "fix", "bug", "feature"]
+    prerequisite: "Story must exist with approved UCVs"
+
+  tester:
+    description: "Writes automated tests, ensures code coverage"
+    use_when: "User wants to write tests, improve coverage, or follow TDD"
+    keywords_hint: ["test", "coverage", "tdd", "unit test", "e2e"]
+
+  ux-designer:
+    description: "Designs user interfaces, creates wireframes and prototypes"
+    use_when: "User wants to design UI/UX, create mockups, or plan user flows"
+    keywords_hint: ["ux", "ui", "interface", "wireframe", "prototype", "mockup"]
+
+  product-manager:
+    description: "Defines product strategy, manages roadmap, prioritizes features"
+    use_when: "User wants to define product vision, prioritize, or plan roadmap"
+    keywords_hint: ["product", "roadmap", "prioritize", "mvp"]
+
+  # --- QA AGENTS ---
+
+  exploratory-qa:
+    description: "Performs manual exploratory testing, finds unexpected bugs"
+    use_when: "User wants free exploration testing, UX validation, or bug hunting"
+    keywords_hint: ["explore", "exploratory", "manual test", "usability", "edge case"]
+
+  ucv-writer:
+    description: "Creates Use Case Verifications for stories"
+    use_when: "User wants to write UCVs, define acceptance criteria, or create Gherkin scenarios"
+    keywords_hint: ["ucv", "use case", "verification", "gherkin", "acceptance criteria"]
+
+  ucv-qa:
+    description: "Manually tests each UCV in browser, validates UI behavior"
+    use_when: "User wants to manually test each verification, validate in browser"
+    keywords_hint: ["ucv qa", "test ucv", "manual ucv", "validate ucv"]
+
+  ucv-validator:
+    description: "Validates 100% UCV coverage before story closure"
+    use_when: "User wants to verify all UCVs are complete, check coverage"
+    keywords_hint: ["validate ucv", "verify coverage", "ucv 100%"]
+
+  # --- CODE QUALITY ---
+
+  review:
+    description: "Reviews code, provides feedback on pull requests"
+    use_when: "User wants code review or PR feedback"
+    keywords_hint: ["review", "code review", "pr review", "pull request"]
+
+  # --- AI/LLM ---
+
+  ai-architect:
+    description: "Designs AI/LLM systems, RAG pipelines, multi-agent orchestration"
+    use_when: "User wants to design AI systems, implement RAG, or orchestrate agents"
+    keywords_hint: ["ai", "llm", "rag", "embedding", "vector", "orchestration"]
+
+  # --- COMPLIANCE ---
+
+  security:
+    description: "Audits security, checks for vulnerabilities"
+    use_when: "User wants security review or vulnerability check"
+    keywords_hint: ["security", "vulnerability", "owasp", "audit"]
+
+  pentest:
+    description: "Performs penetration testing"
+    use_when: "User wants penetration testing or exploit validation"
+    keywords_hint: ["pentest", "penetration", "exploit"]
+
+  rgpd:
+    description: "Ensures GDPR/RGPD compliance"
+    use_when: "User wants privacy compliance check or data protection review"
+    keywords_hint: ["gdpr", "rgpd", "privacy", "data protection"]
+
+  accessibility:
+    description: "Ensures WCAG/RGAA accessibility compliance"
+    use_when: "User wants accessibility audit, a11y review, or inclusive design check"
+    keywords_hint: ["accessibility", "a11y", "wcag", "rgaa", "screen reader", "aria", "contrast"]
+
+# ═══════════════════════════════════════════════════════════════════
+# DISAMBIGUATION PROMPT TEMPLATE
+# ═══════════════════════════════════════════════════════════════════
+prompt_template: |
+  ## User Message
+  {user_message}
+
+  ## Context
+  - Current Phase: {current_phase}
+  - Project Type: {project_type}
+  - Active Story: {active_story}
+
+  ## Top Candidates (from rule-based scoring)
+  {candidates_list}
+
+  ## Task
+  Select the most appropriate agent to handle this request.
+  If the intent is ambiguous, prefer the agent that matches the primary action verb.
+
+  Examples of disambiguation:
+  - "developper une interface" -> developer (action is "developper")
+  - "designer une interface" -> ux-designer (action is "designer")
+  - "analyser les besoins interface" -> analyst (action is "analyser")
+
+  Return your decision in JSON format.
+
+# ═══════════════════════════════════════════════════════════════════
+# EXAMPLES
+# ═══════════════════════════════════════════════════════════════════
+examples:
+
+  - input: "developper une interface dashboard admin"
+    candidates:
+      - agent: developer
+        score: 0.64
+      - agent: ux-designer
+        score: 0.73
+    expected:
+      selected_agent: developer
+      confidence: 0.85
+      reasoning: "Primary action verb 'developper' indicates code implementation, not design"
+      alternative: ux-designer
+
+  - input: "creer une maquette pour le dashboard"
+    candidates:
+      - agent: ux-designer
+        score: 0.75
+      - agent: developer
+        score: 0.60
+    expected:
+      selected_agent: ux-designer
+      confidence: 0.90
+      reasoning: "'maquette' is a design artifact, UX designer is appropriate"
+      alternative: null
+
+  - input: "ajouter des tests pour le module auth"
+    candidates:
+      - agent: tester
+        score: 0.80
+      - agent: developer
+        score: 0.65
+    expected:
+      selected_agent: tester
+      confidence: 0.95
+      reasoning: "'tests' is the primary noun, tester handles test writing"
+      alternative: null
+
+  - input: "valider les UCVs de STORY-042"
+    candidates:
+      - agent: ucv-validator
+        score: 0.70
+      - agent: ucv-qa
+        score: 0.65
+    expected:
+      selected_agent: ucv-validator
+      confidence: 0.85
+      reasoning: "'valider' in context of story completion suggests final validation"
+      alternative: ucv-qa
+
+  - input: "tester les UCVs de STORY-042 dans le navigateur"
+    candidates:
+      - agent: ucv-qa
+        score: 0.75
+      - agent: ucv-validator
+        score: 0.60
+    expected:
+      selected_agent: ucv-qa
+      confidence: 0.90
+      reasoning: "'tester dans le navigateur' indicates manual browser testing"
+      alternative: null
+
+  - input: "verifier l'accessibilite du formulaire"
+    candidates:
+      - agent: accessibility
+        score: 0.80
+      - agent: exploratory-qa
+        score: 0.55
+    expected:
+      selected_agent: accessibility
+      confidence: 0.95
+      reasoning: "'accessibilite' directly maps to accessibility agent"
+      alternative: null

@@ -1,0 +1,227 @@
+# Routing Module Installation
+# Purpose: Register routing configuration with Harmony Framework
+# Version: 1.0.0
+
+---
+
+# ═══════════════════════════════════════════════════════════════════
+# MODULE METADATA
+# ═══════════════════════════════════════════════════════════════════
+module:
+  name: routing
+  version: "1.0.0"
+  description: "Agent detection, routing, and orchestration"
+  author: Harmony Framework
+  category: core
+
+# ═══════════════════════════════════════════════════════════════════
+# REQUIRED FILES
+# ═══════════════════════════════════════════════════════════════════
+files:
+  required:
+    - detection-patterns.yaml
+    - routing-algorithm.yaml
+    - disambiguation-prompt.yaml
+    - parallel-groups.yaml
+    - handoff-protocol.yaml
+    - contextual-routing.yaml
+    - README.md
+    - INDEX.md
+
+# ═══════════════════════════════════════════════════════════════════
+# SKILL REGISTRATIONS
+# ═══════════════════════════════════════════════════════════════════
+skills:
+
+  # --- UCV QA ---
+  ucv-qa:
+    name: ucv-qa
+    displayName: "UCV QA Tester"
+    description: "Manual UCV validation in browser"
+    agent: agents/specialists/ucv-qa.md
+    triggers:
+      - "/ucv-qa"
+      - "ucv qa"
+      - "tester ucv"
+      - "valider ucv manuellement"
+    arguments:
+      - name: story_id
+        required: true
+        hint: "STORY-XXX"
+      - name: uc
+        required: false
+        hint: "UC-001"
+      - name: verbose
+        required: false
+        flag: true
+      - name: dry-run
+        required: false
+        flag: true
+    phase: 4
+    prerequisites:
+      - dev_completed
+      - test_completed
+
+  # --- Accessibility ---
+  accessibility:
+    name: accessibility
+    displayName: "Accessibility Auditor"
+    description: "WCAG/RGAA compliance audit"
+    agent: agents/compliance/accessibility.md
+    triggers:
+      - "/accessibility"
+      - "a11y"
+      - "accessibilite"
+      - "wcag"
+      - "rgaa"
+    arguments:
+      - name: module
+        required: false
+        hint: "[module]"
+      - name: wcag
+        required: false
+        values: ["A", "AA", "AAA"]
+      - name: rgaa
+        required: false
+        flag: true
+      - name: full
+        required: false
+        flag: true
+    phase: [3, 4]
+    conditions:
+      - has_ui: true
+
+  # --- Exploratory QA ---
+  exploratory-qa:
+    name: exploratory-qa
+    displayName: "Exploratory QA"
+    description: "Free exploration testing session"
+    agent: agents/specialists/exploratory-qa.md
+    triggers:
+      - "/exploratory-qa"
+      - "luna"
+      - "exploration"
+      - "qa exploratoire"
+    arguments:
+      - name: module
+        required: false
+        hint: "[module]"
+      - name: smoke
+        required: false
+        flag: true
+      - name: session
+        required: false
+        hint: "90"
+    phase: 4
+    mandatory_before_closure: true
+
+  # --- UCV Validator ---
+  ucv-validator:
+    name: ucv-validator
+    displayName: "UCV Validator"
+    description: "Verify 100% UCV coverage"
+    agent: agents/specialists/ucv-validator.md
+    triggers:
+      - "/ucv-validator"
+      - "valider ucv"
+      - "verifier couverture"
+      - "100% ucv"
+    arguments:
+      - name: story_id
+        required: true
+        hint: "STORY-XXX"
+      - name: strict
+        required: false
+        flag: true
+    phase: 4
+    prerequisites:
+      - ucv_qa_completed
+      - exploratory_completed
+
+  # --- Security ---
+  security:
+    name: security
+    displayName: "Security Auditor"
+    description: "Security vulnerability audit"
+    agent: agents/compliance/security.md
+    triggers:
+      - "/security"
+      - "securite"
+      - "vulnerability"
+      - "owasp"
+    arguments:
+      - name: module
+        required: false
+        hint: "[module]"
+      - name: owasp
+        required: false
+        flag: true
+    phase: [3, 4]
+
+  # --- RGPD ---
+  rgpd:
+    name: rgpd
+    displayName: "RGPD Compliance"
+    description: "GDPR/RGPD compliance check"
+    agent: agents/compliance/rgpd.md
+    triggers:
+      - "/rgpd"
+      - "gdpr"
+      - "privacy"
+      - "donnees personnelles"
+    arguments:
+      - name: module
+        required: false
+        hint: "[module]"
+      - name: audit
+        required: false
+        flag: true
+    phase: [1, 2, 3, 4]
+
+# ═══════════════════════════════════════════════════════════════════
+# HOOKS REGISTRATION
+# ═══════════════════════════════════════════════════════════════════
+hooks:
+
+  # Pre-tool-use: Check routing before agent selection
+  pre-routing:
+    event: user_message
+    script: |
+      # Load detection patterns
+      # Calculate scores
+      # Route to appropriate agent
+
+  # Post-agent: Handle handoffs
+  post-agent:
+    event: agent_complete
+    script: |
+      # Check for handoff protocol
+      # Create handoff document if needed
+      # Route to next agent
+
+# ═══════════════════════════════════════════════════════════════════
+# MEMORY STATE
+# ═══════════════════════════════════════════════════════════════════
+memory:
+  state_file: ".claude/memory/routing-state.json"
+  log_file: ".claude/memory/routing-log.json"
+
+  tracked:
+    - current_agent
+    - last_routing_decision
+    - routing_history
+    - handoffs_pending
+
+# ═══════════════════════════════════════════════════════════════════
+# VALIDATION
+# ═══════════════════════════════════════════════════════════════════
+validation:
+  on_install:
+    - check_files_exist
+    - validate_yaml_syntax
+    - verify_agent_references
+
+  on_startup:
+    - load_detection_patterns
+    - validate_thresholds
+    - check_agent_availability

@@ -1,0 +1,267 @@
+# Contextual Routing Configuration
+# Purpose: Specialty agent selection based on project context
+# Version: 1.0.0
+
+---
+
+# ═══════════════════════════════════════════════════════════════════
+# CONTEXT DETECTION
+# ═══════════════════════════════════════════════════════════════════
+#
+# Detects project context to route to specialized agents
+
+context_detection:
+
+  # Gaming context indicators
+  gaming:
+    keywords:
+      - game
+      - jeu
+      - player
+      - joueur
+      - score
+      - level
+      - niveau
+      - leaderboard
+      - achievement
+      - quest
+      - inventory
+
+    file_patterns:
+      - "**/game/**"
+      - "**/gaming/**"
+      - "**/player/**"
+      - "**/*game*.ts"
+      - "**/*player*.ts"
+
+    config_indicators:
+      - "gaming" in project_type
+      - has_game_module: true
+
+  # Admin/Dashboard context
+  admin:
+    keywords:
+      - admin
+      - dashboard
+      - backoffice
+      - management
+      - users
+      - utilisateurs
+      - gestion
+
+    file_patterns:
+      - "**/admin/**"
+      - "**/dashboard/**"
+      - "**/backoffice/**"
+
+    config_indicators:
+      - "admin" in project_type
+      - has_admin_module: true
+
+  # API/Backend context
+  api:
+    keywords:
+      - api
+      - endpoint
+      - rest
+      - graphql
+      - service
+      - backend
+
+    file_patterns:
+      - "**/api/**"
+      - "**/services/**"
+      - "**/*.controller.ts"
+      - "**/*.service.ts"
+
+    config_indicators:
+      - has_api: true
+
+  # Frontend context
+  frontend:
+    keywords:
+      - frontend
+      - ui
+      - component
+      - page
+      - view
+      - interface
+
+    file_patterns:
+      - "**/components/**"
+      - "**/pages/**"
+      - "**/views/**"
+      - "**/*.tsx"
+      - "**/*.vue"
+
+    config_indicators:
+      - has_ui: true
+
+# ═══════════════════════════════════════════════════════════════════
+# SPECIALTY AGENT MAPPING
+# ═══════════════════════════════════════════════════════════════════
+#
+# When a context is detected, map core agents to specialty versions
+
+specialties:
+
+  # ───────────────────────────────────────────────────────────────
+  # GAMING SPECIALTY
+  # ───────────────────────────────────────────────────────────────
+  gaming:
+    conditions:
+      - context: gaming
+        score: 0.25  # Bonus for gaming agents
+
+    agent_mapping:
+      architect: specialties/gaming/agents/game-architect
+      developer: specialties/gaming/agents/game-developer
+      scrum-master: specialties/gaming/agents/game-scrum-master
+      tester: specialties/gaming/agents/game-tester
+      ux-designer: specialties/gaming/agents/game-designer
+
+    additional_agents:
+      - specialties/gaming/agents/game-balance
+      - specialties/gaming/agents/game-narrative
+
+    workflows:
+      - specialties/gaming/workflows/game-feature
+      - specialties/gaming/workflows/game-balance-review
+
+  # ───────────────────────────────────────────────────────────────
+  # MEDICAL SPECIALTY
+  # ───────────────────────────────────────────────────────────────
+  medical:
+    conditions:
+      - context: medical
+        score: 0.25
+
+    agent_mapping:
+      architect: specialties/medical/agents/medical-architect
+      developer: specialties/medical/agents/medical-developer
+      security: specialties/medical/agents/hipaa-compliance
+
+    additional_agents:
+      - specialties/medical/agents/clinical-validator
+
+    compliance_required:
+      - hipaa
+      - rgpd
+
+  # ───────────────────────────────────────────────────────────────
+  # FINTECH SPECIALTY
+  # ───────────────────────────────────────────────────────────────
+  fintech:
+    conditions:
+      - context: fintech
+        score: 0.25
+
+    agent_mapping:
+      architect: specialties/fintech/agents/fintech-architect
+      security: specialties/fintech/agents/pci-compliance
+
+    compliance_required:
+      - pci-dss
+      - rgpd
+
+# ═══════════════════════════════════════════════════════════════════
+# TECH PROFILES
+# ═══════════════════════════════════════════════════════════════════
+#
+# Technology-specific knowledge profiles
+
+tech_profiles:
+
+  nestjs:
+    conditions:
+      - file_exists: "nest-cli.json"
+      - package_has: "@nestjs/core"
+
+    knowledge:
+      - profiles/nestjs/patterns.md
+      - profiles/nestjs/testing.md
+      - profiles/nestjs/best-practices.md
+
+    agent_enhancements:
+      developer:
+        - nestjs_patterns
+        - dependency_injection
+      tester:
+        - nestjs_testing
+        - e2e_supertest
+      architect:
+        - nestjs_modules
+        - clean_architecture
+
+  angular:
+    conditions:
+      - file_exists: "angular.json"
+      - package_has: "@angular/core"
+
+    knowledge:
+      - profiles/angular/patterns.md
+      - profiles/angular/testing.md
+
+    agent_enhancements:
+      developer:
+        - angular_patterns
+        - rxjs_patterns
+      tester:
+        - angular_testing
+        - jasmine_karma
+
+  react:
+    conditions:
+      - package_has: "react"
+      - package_has: "react-dom"
+
+    knowledge:
+      - profiles/react/patterns.md
+      - profiles/react/hooks.md
+
+    agent_enhancements:
+      developer:
+        - react_patterns
+        - hooks_best_practices
+      tester:
+        - react_testing_library
+        - jest
+
+# ═══════════════════════════════════════════════════════════════════
+# ROUTING RULES
+# ═══════════════════════════════════════════════════════════════════
+routing_rules:
+
+  # Priority: Specialty > Tech Profile > Core Agent
+  priority:
+    - specialty_agent
+    - tech_enhanced_agent
+    - core_agent
+
+  # Score calculation
+  scoring:
+    specialty_match: 0.25
+    tech_profile_match: 0.15
+    context_match: 0.10
+
+  # Fallback to core if no specialty
+  fallback:
+    enabled: true
+    to: core_agent
+
+# ═══════════════════════════════════════════════════════════════════
+# CONTEXT STATE
+# ═══════════════════════════════════════════════════════════════════
+state:
+  storage: ".claude/memory/context-state.json"
+
+  tracked:
+    - detected_contexts
+    - active_specialty
+    - active_tech_profile
+    - last_detection_time
+
+  refresh:
+    on_session_start: true
+    on_file_change: true
+    manual: "/harmony --mode context-refresh"

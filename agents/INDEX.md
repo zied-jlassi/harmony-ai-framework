@@ -60,16 +60,18 @@ Les agents Harmony sont organises en 4 categories:
 
 ### AI Knowledge Domains
 
-> Knowledge bases loaded by AI Architect for specialized domains.
+> Knowledge bases chargées par AI Architect selon sélection dans le menu interactif.
 
-| Domain | Fichier | Alias |
-|--------|---------|-------|
-| RAG Patterns | [../specialties/ai/knowledge/rag-patterns.md](../specialties/ai/knowledge/rag-patterns.md) | `/ai:riley` |
-| Memory Patterns | [../specialties/ai/knowledge/memory-patterns.md](../specialties/ai/knowledge/memory-patterns.md) | `/ai:milo` |
-| Orchestration Patterns | [../specialties/ai/knowledge/orchestration-patterns.md](../specialties/ai/knowledge/orchestration-patterns.md) | `/ai:oscar` |
-| Observability Patterns | [../specialties/ai/knowledge/observability-patterns.md](../specialties/ai/knowledge/observability-patterns.md) | `/ai:olivia` |
-| GraphRAG Patterns | [../specialties/ai/knowledge/graphrag-patterns.md](../specialties/ai/knowledge/graphrag-patterns.md) | `/ai:grace` |
-| Safety Patterns | [../specialties/ai/knowledge/safety-patterns.md](../specialties/ai/knowledge/safety-patterns.md) | `/ai:sage` |
+| # | Domain | Fichier | Description |
+|---|--------|---------|-------------|
+| 1 | RAG Patterns | [rag-patterns.md](../specialties/ai/knowledge/rag-patterns.md) | Pipelines RAG, Vector DBs, Embeddings, Chunking |
+| 2 | Memory Patterns | [memory-patterns.md](../specialties/ai/knowledge/memory-patterns.md) | 3-Tier Memory, Mem0, Context Engineering |
+| 3 | Orchestration | [orchestration-patterns.md](../specialties/ai/knowledge/orchestration-patterns.md) | Multi-Agent, Supervisor, Handoff, HOAF |
+| 4 | Safety Patterns | [safety-patterns.md](../specialties/ai/knowledge/safety-patterns.md) | Guardrails, Hallucination, Prompt Injection |
+| 5 | Observability | [observability-patterns.md](../specialties/ai/knowledge/observability-patterns.md) | Tracing, LangSmith, Evaluation, Metrics |
+| 6 | GraphRAG | [graphrag-patterns.md](../specialties/ai/knowledge/graphrag-patterns.md) | Knowledge Graphs, Neo4j, Entity Extraction |
+
+**Accès**: `/hf:agent:ai-architect` → Menu interactif avec sélection des domaines
 
 ---
 
@@ -131,15 +133,10 @@ Les agents Harmony sont organises en 4 categories:
 /hf:agent:ucv-qa STORY-XXX --uc UC-002  # UCV specifique
 /hf:agent:ucv-validator STORY-XXX    # Verifier 100%
 /hf:agent:exploratory-qa [module]    # Session exploratoire
-/hf:agent:ai-architect               # AI Systems Architecture
 
-# AI Knowledge Domains (via AI Architect)
-/ai:riley    # RAG Patterns
-/ai:milo     # Memory Patterns
-/ai:oscar    # Orchestration Patterns
-/ai:olivia   # Observability Patterns
-/ai:grace    # GraphRAG Patterns
-/ai:sage     # Safety Patterns
+# AI Architect (menu interactif avec selection domaines)
+/hf:agent:ai-architect               # Menu: RAG, Memory, Orchestration, Safety, Observability, GraphRAG
+/hf:agent:ai-architect "question"    # Mode AnyThing: auto-detect domaines
 
 # Compliance
 /hf:agent:accessibility [module]     # Audit WCAG/RGAA/EAA

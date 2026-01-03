@@ -46,9 +46,10 @@ sets:
 agent_mapping:
   architect: ai-architect  # Uses AI Architect instead of standard
 
-# Knowledge domains loaded
+# Knowledge domains loaded (15 domains)
 knowledge:
   domains:
+    # CORE PATTERNS
     - id: rag
       file: knowledge/rag-patterns.md
       keywords: [rag, retrieval, vector, embedding, chunking, reranking]
@@ -56,12 +57,12 @@ knowledge:
 
     - id: memory
       file: knowledge/memory-patterns.md
-      keywords: [memory, context, session, conversation, mem0]
+      keywords: [memory, context, session, conversation, mem0, memgpt]
       description: "3-Tier Memory, Mem0, Context Management"
 
     - id: orchestration
       file: knowledge/orchestration-patterns.md
-      keywords: [orchestration, multi-agent, handoff, supervisor, swarm]
+      keywords: [orchestration, multi-agent, handoff, supervisor, swarm, crew]
       description: "Multi-Agent Systems, Handoffs, HOAF"
 
     - id: safety
@@ -71,7 +72,7 @@ knowledge:
 
     - id: observability
       file: knowledge/observability-patterns.md
-      keywords: [observability, tracing, langsmith, evaluation, metrics]
+      keywords: [observability, tracing, langsmith, evaluation, metrics, monitoring]
       description: "LLM Observability, Tracing, Evaluation"
 
     - id: graphrag
@@ -79,7 +80,56 @@ knowledge:
       keywords: [graph, knowledge graph, neo4j, entity, multi-hop]
       description: "Knowledge Graphs, GraphRAG, Entity Extraction"
 
+    # AGENTIC & PROMPTING
+    - id: agentic
+      file: knowledge/agentic-patterns.md
+      keywords: [agent, react, reflexion, plan, execute, autonomous, tool use]
+      description: "Agentic AI, ReAct, Reflexion, Plan-Execute"
+
+    - id: prompt-engineering
+      file: knowledge/prompt-engineering-patterns.md
+      keywords: [prompt, few-shot, chain of thought, dspy, ape, opro, template]
+      description: "Prompt Engineering, DSPy, APE, CoT"
+
+    # PRODUCTION & OPS
+    - id: llmops
+      file: knowledge/llmops-patterns.md
+      keywords: [llmops, ci, cd, deployment, versioning, lifecycle, production]
+      description: "LLMOps, CI/CD, Versioning, Lifecycle"
+
+    - id: evaluation
+      file: knowledge/evaluation-patterns.md
+      keywords: [evaluation, benchmark, llm-as-judge, ragas, bleu, rouge, human eval]
+      description: "LLM Evaluation, Benchmarks, RAGAS"
+
+    - id: finetuning
+      file: knowledge/finetuning-patterns.md
+      keywords: [finetuning, rlhf, lora, qlora, dpo, peft, alignment, sft]
+      description: "Fine-tuning, RLHF, LoRA, QLoRA, DPO"
+
+    - id: tool-integration
+      file: knowledge/tool-integration-patterns.md
+      keywords: [tool, function calling, mcp, api, integration, plugin]
+      description: "Function Calling, MCP, Tool Use, APIs"
+
+    - id: cost-optimization
+      file: knowledge/cost-optimization-patterns.md
+      keywords: [cost, optimization, routing, cache, semantic cache, token, budget]
+      description: "Cost Optimization, LLM Routing, Caching"
+
+    # ADVANCED
+    - id: streaming
+      file: knowledge/streaming-patterns.md
+      keywords: [streaming, real-time, sse, websocket, ttft, progressive]
+      description: "Streaming, Real-time, SSE, WebSockets"
+
+    - id: multimodal
+      file: knowledge/multimodal-patterns.md
+      keywords: [multimodal, vision, image, audio, video, document, ocr]
+      description: "Vision, Audio, Video, Multimodal AI"
+
 # How knowledge is loaded
 loading:
   strategy: on_demand  # Load only when keywords detected
   fallback: rag        # Default domain if ambiguous
+  max_domains: 5       # Max domains loaded at once

@@ -194,13 +194,9 @@ framework/profiles/
 /hf:agent:exploratory-qa [module]    # Exploratory QA
 /hf:agent:ai-architect               # AI Architect
 
-# AI Knowledge Domains (via AI Architect)
-/ai:riley                     # RAG Patterns
-/ai:milo                      # Memory Patterns
-/ai:oscar                     # Orchestration Patterns
-/ai:olivia                    # Observability Patterns
-/ai:grace                     # GraphRAG Patterns
-/ai:sage                      # Safety Patterns
+# AI Architect (menu interactif)
+/hf:agent:ai-architect               # Menu selection domaines (1-6 ou AnyThing)
+/hf:agent:ai-architect "question"    # Auto-detect domaines selon question
 
 # Compliance
 /hf:agent:accessibility [module]  # Audit WCAG/RGAA/EAA

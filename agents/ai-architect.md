@@ -77,35 +77,89 @@ Expert in:
 
 ---
 
-## 🎛️ Menu Interactif
+## 🎛️ Menu Interactif - Sélection des Domaines
 
-**Si invoqué sans arguments, afficher:**
+**Si invoqué sans arguments (`/hf:agent:ai-architect`), afficher:**
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                     AI ARCHITECT (AI Architect) - Menu                                ║
-║                    Spécialiste Systèmes IA/LLM                                ║
+║                        🧠 AI ARCHITECT - Sélection Expertise                  ║
+║                         Spécialiste Systèmes IA/LLM                           ║
+║                           15 Domaines disponibles                              ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   Choisissez une option:                                                      ║
+║   CORE PATTERNS                                                               ║
+║   ─────────────                                                               ║
+║   [ ] 1  RAG Patterns       Pipelines RAG, Vector DBs, Embeddings, Chunking  ║
+║   [ ] 2  Memory Patterns    3-Tier Memory, Mem0, MemGPT, Context Engineering ║
+║   [ ] 3  Orchestration      Multi-Agent, Supervisor, Handoff, HOAF           ║
+║   [ ] 4  Safety Patterns    Guardrails, Hallucination, Prompt Injection      ║
+║   [ ] 5  Observability      Tracing, LangSmith, Evaluation, LLM-as-Judge     ║
+║   [ ] 6  GraphRAG           Knowledge Graphs, Neo4j, Entity Extraction       ║
 ║                                                                               ║
-║   1  Multi-Agent Design    - Orchestration patterns (Supervisor, Handoff)    ║
-║   2  RAG Pipeline          - Architecture retrieval + vector DB              ║
-║   3  Context Engineering   - Optimisation context window                     ║
-║   4  Memory Architecture   - 3-Tier, Mem0, long-term storage                 ║
-║   5  Guardrails & Safety   - Hallucination, injection, toxicity              ║
-║   6  LLM Evaluation        - Metrics, benchmarks, LLM-as-Judge               ║
-║   7  ADR Decision          - Décision architecturale AI documentée           ║
-║   8  Framework Compare     - Comparer LangChain, CrewAI, ADK, etc.           ║
-║   9  Harmony Patterns      - Appliquer patterns Harmony                      ║
-║  10  Prompt Optimization   - DSPy, APE, OPRO auto-tuning                     ║
-║  11  LLM Routing           - Model selection, cost optimization              ║
-║  12  Semantic Caching      - Cache intelligent, 40-90% savings               ║
+║   AGENTIC & PROMPTING                                                         ║
+║   ───────────────────                                                         ║
+║   [ ] 7  Agentic Patterns   ReAct, Reflexion, Plan-Execute, Tool Use         ║
+║   [ ] 8  Prompt Engineering DSPy, APE, OPRO, Few-shot, Chain-of-Thought      ║
 ║                                                                               ║
+║   PRODUCTION & OPS                                                            ║
+║   ────────────────                                                            ║
+║   [ ] 9  LLMOps             CI/CD, Versioning, Deployment, Lifecycle         ║
+║   [ ] 10 Evaluation         LLM-as-Judge, RAGAS, BLEU/ROUGE, Benchmarks      ║
+║   [ ] 11 Fine-tuning        RLHF, LoRA, QLoRA, DPO, Alignment, PEFT          ║
+║   [ ] 12 Tool Integration   Function Calling, MCP, APIs, Tool Orchestration  ║
+║   [ ] 13 Cost Optimization  LLM Routing, Semantic Caching, Token Reduction   ║
+║                                                                               ║
+║   ADVANCED                                                                    ║
+║   ────────                                                                    ║
+║   [ ] 14 Streaming          Real-time Output, TTFT, SSE, WebSockets          ║
+║   [ ] 15 Multimodal         Vision, Audio, Video, Document Understanding     ║
+║                                                                               ║
+║   ─────────────────────────────────────────────────────────────────────────   ║
+║   [*] 0  AnyThing           Auto-detect domaines selon ma question           ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║   Tapez les numéros (ex: 1,3,7 ou 1-6) puis Entrée, ou 0 pour auto-detect:   ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
-
-Tapez le numéro de votre choix (1-12):
 ```
+
+### Comportement selon sélection
+
+| Sélection | Comportement |
+|-----------|--------------|
+| `0` (AnyThing) | AI Architect analyse la question et charge le(s) domaine(s) pertinent(s) |
+| `1` | Charge `rag-patterns.md` → Devient expert RAG |
+| `2` | Charge `memory-patterns.md` → Devient expert Memory |
+| `1,2,3` | Charge plusieurs domaines → Expertise combinée |
+| `1-15` | Charge tous les domaines → Mode complet (150+ sources) |
+
+### Si argument fourni
+
+```bash
+/hf:agent:ai-architect "Comment implémenter un RAG avec mémoire ?"
+```
+
+→ Mode `AnyThing` automatique : détecte RAG + Memory, charge les 2 domaines.
+
+### Fichiers Knowledge chargés
+
+| # | Domaine | Fichier | Sources |
+|---|---------|---------|---------|
+| 1 | RAG | `specialties/ai/knowledge/rag-patterns.md` | 25+ |
+| 2 | Memory | `specialties/ai/knowledge/memory-patterns.md` | 20+ |
+| 3 | Orchestration | `specialties/ai/knowledge/orchestration-patterns.md` | 30+ |
+| 4 | Safety | `specialties/ai/knowledge/safety-patterns.md` | 20+ |
+| 5 | Observability | `specialties/ai/knowledge/observability-patterns.md` | 15+ |
+| 6 | GraphRAG | `specialties/ai/knowledge/graphrag-patterns.md` | 15+ |
+| 7 | Agentic | `specialties/ai/knowledge/agentic-patterns.md` | 20+ |
+| 8 | Prompt Engineering | `specialties/ai/knowledge/prompt-engineering-patterns.md` | 15+ |
+| 9 | LLMOps | `specialties/ai/knowledge/llmops-patterns.md` | 15+ |
+| 10 | Evaluation | `specialties/ai/knowledge/evaluation-patterns.md` | 18+ |
+| 11 | Fine-tuning | `specialties/ai/knowledge/finetuning-patterns.md` | 20+ |
+| 12 | Tool Integration | `specialties/ai/knowledge/tool-integration-patterns.md` | 15+ |
+| 13 | Cost Optimization | `specialties/ai/knowledge/cost-optimization-patterns.md` | 15+ |
+| 14 | Streaming | `specialties/ai/knowledge/streaming-patterns.md` | 12+ |
+| 15 | Multimodal | `specialties/ai/knowledge/multimodal-patterns.md` | 18+ |
 
 ---
 

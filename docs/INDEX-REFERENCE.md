@@ -1,6 +1,6 @@
 # Harmony Framework - Index de Reference Rapide
 
-> **Version**: 1.0.1
+> **Version**: 1.1.0
 > **Date**: 2026-01-03
 > **Status**: ✅ VALIDATED - Toutes les references verifiees
 > **Purpose**: Navigation rapide dans le framework sans relecture
@@ -14,12 +14,15 @@
 | **Creer une story** | Scrum Master | `agents/scrum-master.md` |
 | **Implementer du code** | Developer | `agents/developer.md` |
 | **Creer des UCVs** | UCV Writer | `agents/specialists/ucv-writer.md` |
-| **Valider les UCVs** | UCV Validator | `agents/specialists/ucv-validator.md` |
+| **Tester UCVs manuellement** | UCV QA | `agents/specialists/ucv-qa.md` |
+| **Valider 100% UCVs** | UCV Validator | `agents/specialists/ucv-validator.md` |
 | **Designer l'architecture** | Architect | `agents/architect.md` |
 | **Analyser les besoins** | Analyst | `agents/analyst.md` |
 | **Tester automatiquement** | Tester | `agents/tester.md` |
 | **Tests exploratoires** | Exploratory QA | `agents/specialists/exploratory-qa.md` |
 | **Concevoir RAG/IA** | AI Architect | `agents/specialists/ai-architect.md` |
+| **Audit accessibilite** | Accessibility | `agents/compliance/accessibility.md` |
+| **Audit securite** | Security | `agents/compliance/security.md` |
 
 ---
 
@@ -52,6 +55,7 @@ framework/agents/
 |   +-- exploratory-qa.md    # Luna - QA Exploratoire
 |   +-- ai-architect.md      # Nova - AI/LLM Systems
 |   +-- ucv-writer.md        # Clara - UCV Writer v2.0
+|   +-- ucv-qa.md            # UCV QA - Manual browser testing
 |   +-- ucv-validator.md     # Victor - UCV Validator v2.0
 |   |
 |   +-- sub-agents/          # Sous-agents de Nova UNIQUEMENT
@@ -64,6 +68,7 @@ framework/agents/
 |
 +-- compliance/              # Agents conformite
 |   +-- security.md          # Security Auditor
+|   +-- accessibility.md     # Accessibility (WCAG/RGAA/EAA)
 |   +-- rgpd.md              # RGPD/Privacy
 |   +-- pentest.md           # Penetration Tester
 |
@@ -177,8 +182,15 @@ framework/profiles/
 /hf:agent:dev [story-id]      # Developer
 /hf:agent:architect [topic]   # Architect
 /hf:agent:ucv-writer [story]  # UCV Writer
+/hf:agent:ucv-qa [story]      # UCV QA (browser testing)
 /hf:agent:ucv-validator [story] # UCV Validator
-/hf:agent:qa [module]         # Exploratory QA
+/hf:agent:qa [module]         # Exploratory QA (Luna)
+
+# Compliance
+/accessibility [module]       # Audit WCAG/RGAA/EAA
+/accessibility --wcag AA      # Niveau WCAG specifique
+/security [module]            # Audit securite OWASP
+/rgpd [module]                # Audit RGPD/GDPR
 
 # Workflows
 /hf:workflow:dev-story [story-id]  # Dev story
@@ -213,9 +225,10 @@ framework/profiles/
 3. USER approuve (GATE bloquant)
 4. DEV implemente + coche [dev]
 5. TEA teste + coche [test]
-6. Luna valide + coche [qa]
-7. UCV Validator verifie 100%
-8. Story DONE
+6. UCV QA valide en browser + coche [qa]
+7. Luna exploration (OBLIGATOIRE) → Go/No-Go
+8. UCV Validator verifie 100%
+9. Story DONE
 ```
 
 ---

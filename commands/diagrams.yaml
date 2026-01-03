@@ -1,0 +1,72 @@
+# Harmony Framework - Diagram Commands Registry
+# Usage: /hf:diagram:<name> [arguments]
+# These are aliases pointing to existing diagram workflows
+
+version: "1.0"
+prefix: "/hf:diagram"
+
+diagrams:
+  # Generic Diagram
+  create:
+    path: workflows/diagrams/diagram/workflow.yaml
+    description: "Create a diagram - auto-detect type from context"
+    arguments: "[description]"
+    phase: 2
+    output: [mermaid, excalidraw, ascii]
+
+  # Flowchart
+  flowchart:
+    path: workflows/diagrams/flowchart/workflow.yaml
+    description: "Create flowchart - process flows, decision trees"
+    arguments: "[process-name]"
+    phase: 2
+    output: [mermaid, excalidraw]
+
+  # Wireframe
+  wireframe:
+    path: workflows/diagrams/wireframe/workflow.yaml
+    description: "Create UI wireframe - screen layouts, components"
+    arguments: "[screen-name]"
+    phase: 2
+    output: [excalidraw, ascii]
+
+  # Dataflow
+  dataflow:
+    path: workflows/diagrams/dataflow/workflow.yaml
+    description: "Create dataflow diagram - data movement, transformations"
+    arguments: "[system-name]"
+    phase: 3
+    output: [mermaid, excalidraw]
+
+  # Sequence (via generic)
+  sequence:
+    path: workflows/diagrams/diagram/workflow.yaml
+    description: "Create sequence diagram - interactions, API calls"
+    arguments: "[interaction-name]"
+    phase: 3
+    output: [mermaid]
+    default_type: sequence
+
+  # Architecture (via generic)
+  architecture:
+    path: workflows/diagrams/diagram/workflow.yaml
+    description: "Create architecture diagram - components, layers"
+    arguments: "[system-name]"
+    phase: 3
+    output: [mermaid, excalidraw]
+    default_type: architecture
+
+  # ERD (via generic)
+  erd:
+    path: workflows/diagrams/diagram/workflow.yaml
+    description: "Create Entity Relationship Diagram - database schema"
+    arguments: "[domain-name]"
+    phase: 3
+    output: [mermaid]
+    default_type: erd
+
+# Example usage:
+# /hf:diagram:flowchart "user registration process"
+# /hf:diagram:wireframe "login screen"
+# /hf:diagram:dataflow "order processing"
+# /hf:diagram:erd "user management"

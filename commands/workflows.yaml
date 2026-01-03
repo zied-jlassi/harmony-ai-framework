@@ -1,0 +1,101 @@
+# Harmony Framework - Workflow Commands Registry
+# Usage: /hf:workflow:<name> [arguments]
+# These are aliases pointing to existing workflow definitions
+
+version: "1.0"
+prefix: "/hf:workflow"
+
+workflows:
+  # Implementation Phase Workflows
+  dev-story:
+    path: workflows/4-implementation/dev-story/workflow.yaml
+    description: "Complete story development workflow - from story to done"
+    arguments: "[story-id]"
+    phase: 4
+    requires: [story-exists, ucv-approved]
+
+  create-story:
+    path: workflows/4-implementation/create-story/workflow.yaml
+    description: "Create a new story with acceptance criteria"
+    arguments: "[epic-or-feature]"
+    phase: 3
+    requires: [architecture-exists]
+
+  code-review:
+    path: workflows/4-implementation/code-review/workflow.yaml
+    description: "Code review workflow - PR review, feedback, approval"
+    arguments: "[pr-number-or-files]"
+    phase: 4
+    requires: [changes-committed]
+
+  sprint-planning:
+    path: workflows/4-implementation/sprint-planning/workflow.yaml
+    description: "Sprint planning - select stories, estimate, commit"
+    arguments: "[sprint-number]"
+    phase: 3
+    requires: [backlog-exists]
+
+  sprint-status:
+    path: workflows/4-implementation/sprint-status/workflow.yaml
+    description: "Sprint status report - progress, blockers, burndown"
+    arguments: ""
+    phase: 4
+    requires: [sprint-active]
+
+  retrospective:
+    path: workflows/4-implementation/retrospective/workflow.yaml
+    description: "Sprint retrospective - what went well, improvements"
+    arguments: "[sprint-number]"
+    phase: 4
+    requires: [sprint-completed]
+
+  correct-course:
+    path: workflows/4-implementation/correct-course/workflow.yaml
+    description: "Course correction - adjust scope, priorities, approach"
+    arguments: "[reason]"
+    phase: 4
+    requires: []
+
+  # Project Documentation Workflows
+  document-project:
+    path: workflows/document-project/workflow.yaml
+    description: "Generate project documentation - structure, architecture"
+    arguments: "[scope: full|summary]"
+    phase: 1
+    requires: []
+
+  # Quick Flow Workflows
+  quick-dev:
+    path: workflows/quick-flow/quick-dev/workflow.yaml
+    description: "Quick development - fast iteration without full ceremony"
+    arguments: "[feature]"
+    phase: 4
+    requires: []
+
+  tech-spec:
+    path: workflows/quick-flow/tech-spec/workflow.yaml
+    description: "Technical specification - detailed tech design"
+    arguments: "[feature]"
+    phase: 3
+    requires: []
+
+  # Workflow Status
+  status:
+    path: workflows/workflow-status/workflow.yaml
+    description: "Show current workflow status and phase"
+    arguments: ""
+    phase: 0
+    requires: []
+
+  init:
+    path: workflows/workflow-status/init/workflow.yaml
+    description: "Initialize Harmony workflow in project"
+    arguments: "[project-type]"
+    phase: 0
+    requires: []
+
+# Example usage:
+# /hf:workflow:dev-story STORY-042
+# /hf:workflow:create-story "user authentication"
+# /hf:workflow:code-review 123
+# /hf:workflow:sprint-planning 5

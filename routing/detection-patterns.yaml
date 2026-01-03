@@ -847,3 +847,70 @@ agents:
       prerequisites: []
       conditions:
         - has_ui: 0.20
+        - is_responsive: 0.10  # Bonus for responsive testing
+
+# ═══════════════════════════════════════════════════════════════════
+# CONTEXT CONDITIONS (GLOBAL)
+# ═══════════════════════════════════════════════════════════════════
+#
+# These conditions modify agent scores based on project state
+#
+# | Condition | Description | Score Modifier |
+# |-----------|-------------|----------------|
+# | is_responsive | Responsive web (default true if has_ui) | Viewport testing |
+# | is_mobile | Mobile app (React Native, Expo, Flutter) | +0.20 for mobile agents |
+# | has_ui | UI/frontend work | +0.10-0.20 for UI agents |
+# | has_db_schema | Database changes | +0.10 for architect |
+# | requires_story | Story must exist | -1.0 if no story (blocks) |
+# | requires_ucv | UCV must be approved | -1.0 if no UCV (blocks) |
+# | phase_match | Current phase matches agent | +0.20 if match |
+
+context_conditions:
+
+  # ═══════════════════════════════════════════════════════════════
+  # RESPONSIVE WEB (DEFAULT FOR UI)
+  # ═══════════════════════════════════════════════════════════════
+  is_responsive:
+    description: "Responsive web development (default for has_ui)"
+    default_when: "has_ui == true"
+    effects:
+      - viewport_testing: true
+      - agents_affected:
+          - developer: +0.05
+          - tester: +0.10
+          - ucv-qa: +0.10  # Multi-viewport validation
+          - exploratory-qa: +0.10
+          - accessibility: +0.15
+
+    viewports:
+      - Mobile S (320x568)
+      - Mobile M (375x667)
+      - Mobile L (425x896)
+      - Tablet (768x1024)
+      - Laptop (1024x768)
+      - Desktop (1440x900)
+
+  # ═══════════════════════════════════════════════════════════════
+  # MOBILE APP
+  # ═══════════════════════════════════════════════════════════════
+  is_mobile:
+    description: "Mobile app development (React Native, Expo, Flutter)"
+    detected_when:
+      - package_has: "react-native"
+      - package_has: "expo"
+      - package_has: "@capacitor/core"
+      - file_exists: "pubspec.yaml"
+    effects:
+      - mobile_specialty: true
+      - profile_loaded: "profiles/mobile/{framework}"
+      - agents_affected:
+          - developer: +0.20  # Mobile specialist
+          - tester: +0.15
+          - ucv-qa: +0.15  # Device viewport testing
+          - exploratory-qa: +0.15
+
+    devices:
+      - iPhone SE (375x667)
+      - iPhone 14 Pro (393x852)
+      - Pixel 7 (412x915)
+      - iPad (820x1180)

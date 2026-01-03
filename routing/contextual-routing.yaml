@@ -12,6 +12,98 @@
 
 context_detection:
 
+  # ═══════════════════════════════════════════════════════════════
+  # PROJECT TYPE DETECTION (3-Phase Approach)
+  # ═══════════════════════════════════════════════════════════════
+  #
+  # Phase 1: Fast detection via dependency files (~10ms)
+  # Phase 2: Confidence check (score > 0.85?)
+  # Phase 3: LLM fallback for ambiguous cases (~500ms)
+  #
+  project_detection:
+    # Phase 1: Check dependency files
+    dependency_files:
+      node: "package.json"
+      php: "composer.json"
+      java: ["pom.xml", "build.gradle"]
+      python: ["requirements.txt", "pyproject.toml"]
+      ruby: "Gemfile"
+      rust: "Cargo.toml"
+      go: "go.mod"
+      dart: "pubspec.yaml"
+
+    # Auto-detected flags from dependencies
+    auto_flags:
+      has_ui:
+        node: [react, vue, "@angular/core", svelte, next]
+        php: ["laravel/framework"]  # + resources/views/
+        java: ["spring-boot-starter-thymeleaf"]
+        python: [django, flask, streamlit]
+        file_patterns: ["**/*.tsx", "**/*.vue", "**/templates/**"]
+
+      has_api:
+        node: ["@nestjs/core", express, fastify]
+        php: ["laravel/framework", "slim/slim"]
+        java: ["spring-boot-starter-web"]
+        python: [fastapi, "django-rest-framework"]
+        file_patterns: ["**/*.controller.ts", "**/routes/**"]
+
+      is_mobile:
+        node: [react-native, expo, "@capacitor/core"]
+        dart: [flutter]
+        file_exists: ["app.json", "metro.config.js", "pubspec.yaml"]
+
+    # Phase 2: Confidence threshold
+    confidence:
+      threshold: 0.85
+      delta_required: 0.30
+
+    # Phase 3: LLM fallback if detection fails or ambiguous
+    llm_fallback:
+      enabled: true
+      model: haiku  # Fast and cheap
+      prompt_template: |
+        Analyze this project structure and determine:
+        - has_ui: true/false (has frontend/UI)
+        - has_api: true/false (has backend/API)
+        - is_mobile: true/false (mobile app)
+        - is_responsive: true/false (if has_ui)
+
+        Project files: {file_list}
+        Dependencies: {dependencies}
+
+  # ═══════════════════════════════════════════════════════════════
+  # MONOREPO DETECTION (Multi-Module Projects)
+  # ═══════════════════════════════════════════════════════════════
+  #
+  # Pour projets avec plusieurs sous-projets (frontend, backend, mobile...)
+  # Chaque module est détecté par SON propre package.json/composer.json
+  #
+  monorepo:
+    # Indicateurs de monorepo au niveau root
+    indicators:
+      - file: "package.json"
+        field: "workspaces"       # npm/yarn/pnpm
+      - file: "pnpm-workspace.yaml"
+      - file: "lerna.json"
+      - file: "nx.json"
+      - file: "turbo.json"
+
+    # Chaque module détecté par son propre dependency file
+    # Exemple: /apps/frontend/package.json contient "react" → has_ui: true
+    detection_per_module:
+      enabled: true
+      # Utilise la même logique auto_flags sur le package.json du module
+      method: "same_as_auto_flags"
+
+    # Scope au dossier courant
+    scope_by: "current_directory"
+
+    # Si user édite /apps/frontend/Button.tsx
+    # → Lire /apps/frontend/package.json
+    # → Appliquer auto_flags
+    # → has_ui: true, is_responsive: true
+
   # Gaming context indicators
   gaming:
     keywords:
@@ -97,6 +189,41 @@ context_detection:
     config_indicators:
       - has_ui: true
 
+  # Mobile context (React Native, Expo, Flutter)
+  mobile:
+    keywords:
+      - mobile
+      - app
+      - ios
+      - android
+      - react native
+      - expo
+      - flutter
+      - capacitor
+      - native
+
+    file_patterns:
+      - "**/ios/**"
+      - "**/android/**"
+      - "**/app.json"
+      - "**/metro.config.js"
+      - "**/*.swift"
+      - "**/*.kt"
+      - "**/pubspec.yaml"
+
+    package_indicators:
+      - react-native
+      - expo
+      - "@capacitor/core"
+
+    file_exists:
+      - app.json
+      - metro.config.js
+      - pubspec.yaml
+
+    config_indicators:
+      - is_mobile: true
+
 # ═══════════════════════════════════════════════════════════════════
 # SPECIALTY AGENT MAPPING
 # ═══════════════════════════════════════════════════════════════════
@@ -163,6 +290,37 @@ specialties:
     compliance_required:
       - pci-dss
       - rgpd
+
+  # ───────────────────────────────────────────────────────────────
+  # MOBILE SPECIALTY (JIT Context Loading)
+  # ───────────────────────────────────────────────────────────────
+  mobile:
+    conditions:
+      - context: mobile
+        score: 0.25
+      - is_mobile: true
+        score: 0.30
+
+    # Same agents, enhanced with mobile context
+    agent_mapping:
+      developer: specialties/mobile/agents/mobile
+      tester: tester  # Same agent + mobile profile
+      ucv-qa: ucv-qa  # Same agent + mobile viewports
+      exploratory-qa: exploratory-qa  # Same agent + mobile devices
+
+    # Tech profile loaded based on detection
+    profiles:
+      - expo  # if expo detected
+      - react-native  # if react-native detected
+      - flutter  # if flutter detected
+
+    # Additional knowledge loaded
+    knowledge:
+      - profiles/mobile/manifest.yaml
+      - profiles/mobile/{detected_framework}/profile.yaml
+
+    viewports:
+      reference: profiles/mobile/manifest.yaml#viewports.mobile_devices
 
 # ═══════════════════════════════════════════════════════════════════
 # TECH PROFILES
@@ -250,6 +408,40 @@ routing_rules:
     to: core_agent
 
 # ═══════════════════════════════════════════════════════════════════
+# RESPONSIVE WEB (DEFAULT FOR UI PROJECTS)
+# ═══════════════════════════════════════════════════════════════════
+responsive:
+  # Default: true for all projects with has_ui
+  default:
+    condition: "has_ui == true"
+    sets:
+      is_responsive: true
+
+  # Violation detection patterns
+  violations:
+    reference: profiles/mobile/manifest.yaml#responsive.violations
+
+  # Warning prompt when violation detected
+  on_violation:
+    action: prompt
+    message: |
+      ⚠️ Code non-responsive détecté
+      Le site est prévu responsive, mais ce code ne l'est pas.
+      Options:
+      [1] Corriger le problème (recommandé)
+      [2] Désactiver le responsive pour ce projet
+
+  # Action on user choice to disable
+  on_disable:
+    sets:
+      is_responsive: false
+    storage: ".claude/memory/project-config.json"
+
+  # Viewports for responsive testing
+  viewports:
+    reference: profiles/mobile/manifest.yaml#viewports.responsive
+
+# ═══════════════════════════════════════════════════════════════════
 # CONTEXT STATE
 # ═══════════════════════════════════════════════════════════════════
 state:
@@ -259,6 +451,9 @@ state:
     - detected_contexts
     - active_specialty
     - active_tech_profile
+    - is_responsive
+    - is_mobile
+    - mobile_framework
     - last_detection_time
 
   refresh:

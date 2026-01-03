@@ -52,19 +52,19 @@ framework/agents/
 |   +-- party.md             # Multi-Agent Brainstorming
 |
 +-- specialists/             # Agents specialises CORE
-|   +-- exploratory-qa.md    # Luna - QA Exploratoire
-|   +-- ai-architect.md      # Nova - AI/LLM Systems
-|   +-- ucv-writer.md        # Clara - UCV Writer v2.0
+|   +-- exploratory-qa.md    # QA Exploratoire
+|   +-- ai-architect.md      # AI/LLM Systems
+|   +-- ucv-writer.md        # UCV Writer v2.0
 |   +-- ucv-qa.md            # UCV QA - Manual browser testing
-|   +-- ucv-validator.md     # Victor - UCV Validator v2.0
+|   +-- ucv-validator.md     # UCV Validator v2.0
 |   |
-|   +-- sub-agents/          # Sous-agents de Nova UNIQUEMENT
-|       +-- rag-architect.md         # Riley
-|       +-- memory-architect.md      # Milo
-|       +-- orchestration-architect.md # Oscar
-|       +-- observability-architect.md # Olivia
-|       +-- graphrag-architect.md    # Grace
-|       +-- safety-architect.md      # Sage
+|   +-- sub-agents/          # Sous-agents AI Architect
+|       +-- rag-architect.md         # RAG Pipelines
+|       +-- memory-architect.md      # Memory Systems
+|       +-- orchestration-architect.md # Multi-Agent Orchestration
+|       +-- observability-architect.md # LLM Observability
+|       +-- graphrag-architect.md    # GraphRAG
+|       +-- safety-architect.md      # Safety & Guardrails
 |
 +-- compliance/              # Agents conformite
 |   +-- security.md          # Security Auditor
@@ -184,7 +184,7 @@ framework/profiles/
 /hf:agent:ucv-writer [story]  # UCV Writer
 /hf:agent:ucv-qa [story]      # UCV QA (browser testing)
 /hf:agent:ucv-validator [story] # UCV Validator
-/hf:agent:qa [module]         # Exploratory QA (Luna)
+/hf:agent:qa [module]         # Exploratory QA
 
 # Compliance
 /accessibility [module]       # Audit WCAG/RGAA/EAA
@@ -221,12 +221,12 @@ framework/profiles/
 
 ```
 1. SM cree story
-2. UCV Writer (Clara) genere UCVs
+2. UCV Writer genere UCVs
 3. USER approuve (GATE bloquant)
 4. DEV implemente + coche [dev]
 5. TEA teste + coche [test]
 6. UCV QA valide en browser + coche [qa]
-7. Luna exploration (OBLIGATOIRE) → Go/No-Go
+7. Exploratory QA (OBLIGATOIRE) → Go/No-Go
 8. UCV Validator verifie 100%
 9. Story DONE
 ```

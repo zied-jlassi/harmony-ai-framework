@@ -1,0 +1,80 @@
+# Expo Profile
+# Purpose: Expo SDK managed workflow patterns and knowledge
+# Version: 1.0.0
+
+profile:
+  id: expo
+  name: "Expo (React Native)"
+  version: "1.0.0"
+  description: "Expo SDK managed workflow for React Native"
+
+detection:
+  package_has:
+    - "expo"
+  file_exists:
+    - "app.json"
+
+# Context set when this profile is active
+sets:
+  is_mobile: true
+  mobile_framework: "expo"
+  build_system: "eas"
+
+# Stack information
+stack:
+  framework: "Expo SDK 54+"
+  language: "TypeScript"
+  runtime: "React Native 0.82+"
+
+  core:
+    - expo: "SDK 54+"
+    - expo-router: "File-based navigation"
+    - typescript: "5.9+"
+
+  state:
+    - zustand: "State management"
+    - tanstack-query: "Server state"
+    - async-storage: "Local persistence"
+    - secure-store: "Sensitive data"
+
+  ui:
+    - nativewind: "TailwindCSS for RN"
+    - react-native-reanimated: "60fps animations"
+    - expo-haptics: "Touch feedback"
+    - expo-av: "Audio/video"
+
+  testing:
+    - jest: "Unit tests"
+    - maestro: "E2E tests (recommended)"
+    - detox: "E2E tests (alternative)"
+
+# Commands available
+commands:
+  dev:
+    - "npx expo start"
+    - "npx expo start --ios"
+    - "npx expo start --android"
+  build:
+    - "eas build --platform ios"
+    - "eas build --platform android"
+    - "eas build --platform all"
+  test:
+    - "npm test"
+    - "maestro test .maestro/"
+  submit:
+    - "eas submit --platform ios"
+    - "eas submit --platform android"
+
+# Patterns to apply
+patterns:
+  - offline-first
+  - touch-optimized
+  - platform-specific-files
+  - child-safe-ux
+
+# Knowledge sources
+knowledge:
+  - url: "https://docs.expo.dev/"
+    priority: 1
+  - url: "https://reactnative.dev/docs/"
+    priority: 2

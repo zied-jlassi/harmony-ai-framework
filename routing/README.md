@@ -113,15 +113,63 @@ Default weights:
 
 ---
 
-## Context Conditions
+## Project Type Detection (3-Phase + Monorepo)
 
-Context conditions modify agent scores based on project state:
+### 3-Phase Detection
+
+| Phase | Latency | Description |
+|-------|---------|-------------|
+| **1. Fast** | ~10ms | Check dependency files (package.json, composer.json, etc.) |
+| **2. Confidence** | - | Score > 0.85 AND delta > 0.30? |
+| **3. LLM Fallback** | ~500ms | Haiku analyzes project if ambiguous |
+
+### Auto-Detected Flags
+
+| Flag | How Detected | Example |
+|------|--------------|---------|
+| `has_ui` | react, vue, angular in package.json | `"react": "^18.0"` |
+| `has_api` | @nestjs, express, fastapi | `"@nestjs/core": "*"` |
+| `is_mobile` | react-native, expo, flutter | `"expo": "~52"` |
+| `is_responsive` | Default true if has_ui | Viewport testing |
+
+### Monorepo Support
+
+Pour projets multi-modules (frontend, backend, mobile...) :
+
+```
+/project
+├── package.json (workspaces: ["apps/*"])
+├── /apps
+│   ├── /frontend/package.json → "react" → has_ui: true
+│   ├── /mobile/package.json → "expo" → is_mobile: true
+│   └── /api/package.json → "@nestjs/core" → has_api: true
+```
+
+**Logique :**
+1. Détection monorepo (workspaces, lerna.json, nx.json, turbo.json)
+2. Scope au **dossier courant** de l'utilisateur
+3. Chaque module détecté par **son propre** package.json
+
+### Responsive & Legacy Projects
+
+- `is_responsive: true` par défaut pour `has_ui: true`
+- Si code non-responsive détecté → Warning
+- Désactiver via `.claude/memory/project-config.json`:
+  ```json
+  { "is_responsive": false }
+  ```
+
+---
+
+## Context Conditions
 
 | Condition | Description | Score Modifier |
 |-----------|-------------|----------------|
+| `has_ui` | UI/frontend (auto-detected) | +0.1-0.2 for UI agents |
+| `has_api` | Backend/API (auto-detected) | neutral |
+| `is_responsive` | Responsive web (default if has_ui) | Viewport testing |
+| `is_mobile` | Mobile app (auto-detected) | +0.2 for mobile agents |
 | `is_game` | Gaming-related context | +0.2 for gaming agents |
-| `is_admin` | Admin dashboard context | neutral |
-| `has_ui` | UI/frontend work | +0.1 for ux-designer |
 | `has_db_schema` | Database changes | +0.1 for architect |
 | `requires_story` | Story must exist | -1.0 if no story (blocks) |
 | `requires_ucv` | UCV must be approved | -1.0 if no UCV (blocks) |
@@ -133,6 +181,8 @@ Context conditions modify agent scores based on project state:
 
 When a specialty context is detected, specialized agents are preferred:
 
+### Gaming Specialty
+
 ```yaml
 gaming:
   conditions: [is_game: true]
@@ -141,6 +191,39 @@ gaming:
     developer: specialties/gaming/agents/game-developer
     scrum-master: specialties/gaming/agents/game-scrum-master
 ```
+
+### Mobile Specialty (JIT Context Loading)
+
+Pour les apps mobiles, les mêmes agents sont utilisés avec un contexte enrichi :
+
+```yaml
+mobile:
+  conditions: [is_mobile: true]
+  agent_mapping:
+    developer: specialties/mobile/agents/mobile  # Enhanced dev
+    tester: tester                               # + mobile profile
+    ucv-qa: ucv-qa                               # + device viewports
+    exploratory-qa: exploratory-qa              # + mobile devices
+```
+
+**Viewports de test (is_mobile: true) :**
+
+| Device | Width | Height | Platform |
+|--------|-------|--------|----------|
+| iPhone SE | 375 | 667 | iOS |
+| iPhone 14 Pro | 393 | 852 | iOS |
+| Pixel 7 | 412 | 915 | Android |
+| iPad | 820 | 1180 | iOS |
+
+**Viewports de test (is_responsive: true) :**
+
+| Name | Width | Height |
+|------|-------|--------|
+| Mobile S | 320 | 568 |
+| Mobile M | 375 | 667 |
+| Tablet | 768 | 1024 |
+| Laptop | 1024 | 768 |
+| Desktop | 1440 | 900 |
 
 ---
 

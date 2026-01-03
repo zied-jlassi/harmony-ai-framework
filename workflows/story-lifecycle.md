@@ -169,7 +169,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 │                     ▼                                           │
 │  ┌─────────────────────────────────────┐                       │
 │  │ PHASE 6b: EXPLORATORY QA            │                       │
-│  │ Agent: Exploratory QA (Luna)        │                       │
+│  │ Agent: Exploratory QA               │                       │
 │  │                                      │                       │
 │  │ • Free exploration testing           │                       │
 │  │ • Find unexpected bugs               │                       │
@@ -322,7 +322,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 
 ### Phase 6b: Exploratory QA (MANDATORY)
 
-**Agent:** Exploratory QA (Luna)
+**Agent:** Exploratory QA
 
 **Purpose:**
 Session timeboxee d'exploration libre avant release.

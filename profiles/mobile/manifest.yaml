@@ -1,0 +1,140 @@
+# Mobile & Responsive Profiles
+# Purpose: Technology stack profiles for mobile and responsive development
+# Version: 1.0.0
+
+profile_category:
+  id: mobile
+  name: "Mobile & Responsive"
+  description: "Cross-platform mobile apps and responsive web development"
+
+# ═══════════════════════════════════════════════════════════════════
+# RESPONSIVE (DEFAULT FOR ALL UI PROJECTS)
+# ═══════════════════════════════════════════════════════════════════
+#
+# DETECTION: 3-Phase approach (voir contextual-routing.yaml)
+# - Phase 1: Fichiers de dépendances (package.json, etc.) ~10ms
+# - Phase 2: Confidence check
+# - Phase 3: LLM fallback si ambiguë ~500ms
+#
+# Pour projets legacy non-responsive:
+# - User peut désactiver via warning prompt
+# - Ou manuellement dans .claude/memory/project-config.json
+#
+responsive:
+  default: true
+  condition: "has_ui == true"
+
+  # Patterns anti-responsive (déclenchent warning)
+  violations:
+    patterns:
+      - pattern: "width:\\s*\\d+px"
+        exclude: ["max-width", "min-width"]
+        message: "Fixed width - use %, vw, rem, or max-width"
+
+      - pattern: "height:\\s*\\d+px"
+        exclude: ["max-height", "min-height", "line-height"]
+        message: "Fixed height - use vh, %, auto, or min-height"
+
+    file_patterns: ["**/*.tsx", "**/*.jsx", "**/*.css", "**/*.scss"]
+
+  # Warning → User choisit [1] Fix ou [2] Disable
+  on_disable:
+    set: "is_responsive: false"
+    file: ".claude/memory/project-config.json"
+
+# ═══════════════════════════════════════════════════════════════════
+# MOBILE APP DETECTION
+# ═══════════════════════════════════════════════════════════════════
+detection:
+  react-native:
+    package_has:
+      - "react-native"
+    file_exists:
+      - "metro.config.js"
+    sets:
+      is_mobile: true
+      mobile_framework: "react-native"
+
+  expo:
+    package_has:
+      - "expo"
+    file_exists:
+      - "app.json"
+    sets:
+      is_mobile: true
+      mobile_framework: "expo"
+
+  flutter:
+    file_exists:
+      - "pubspec.yaml"
+      - "lib/main.dart"
+    sets:
+      is_mobile: true
+      mobile_framework: "flutter"
+
+  capacitor:
+    package_has:
+      - "@capacitor/core"
+    sets:
+      is_mobile: true
+      mobile_framework: "capacitor"
+
+# ═══════════════════════════════════════════════════════════════════
+# TESTING VIEWPORTS
+# ═══════════════════════════════════════════════════════════════════
+viewports:
+  # For is_responsive (web responsive testing)
+  responsive:
+    - name: "Mobile S"
+      width: 320
+      height: 568
+    - name: "Mobile M"
+      width: 375
+      height: 667
+    - name: "Mobile L"
+      width: 425
+      height: 896
+    - name: "Tablet"
+      width: 768
+      height: 1024
+    - name: "Laptop"
+      width: 1024
+      height: 768
+    - name: "Desktop"
+      width: 1440
+      height: 900
+
+  # For is_mobile (mobile app testing)
+  mobile_devices:
+    - name: "iPhone SE"
+      width: 375
+      height: 667
+      platform: ios
+    - name: "iPhone 14 Pro"
+      width: 393
+      height: 852
+      platform: ios
+    - name: "Pixel 7"
+      width: 412
+      height: 915
+      platform: android
+    - name: "iPad"
+      width: 820
+      height: 1180
+      platform: ios
+
+# ═══════════════════════════════════════════════════════════════════
+# AVAILABLE PROFILES
+# ═══════════════════════════════════════════════════════════════════
+profiles:
+  - id: expo
+    path: expo/
+    description: "Expo managed workflow (recommended)"
+
+  - id: react-native
+    path: react-native/
+    description: "React Native bare workflow"
+
+  - id: flutter
+    path: flutter/
+    description: "Flutter/Dart cross-platform"

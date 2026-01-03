@@ -56,11 +56,11 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 
 | Agent | What they do | Output |
 |-------|--------------|--------|
-| **UCV Writer** (Clara) | Creates UCVs from story | STORY-XXX-UCV.md |
-| **Tester** (Emma) | Writes automated tests | .spec.ts files |
-| **Exploratory QA** (Luna) | Free exploration, finds unexpected bugs | Bug reports |
+| **UCV Writer** | Creates UCVs from story | STORY-XXX-UCV.md |
+| **Tester** | Writes automated tests | .spec.ts files |
+| **Exploratory QA** | Free exploration, finds unexpected bugs | Bug reports |
 | **UCV QA** (this) | Tests each UCV manually | [qa] ✓ checkmarks |
-| **UCV Validator** (Victor) | Checks 100% completion | Go/No-Go |
+| **UCV Validator** | Checks 100% completion | Go/No-Go |
 
 ---
 
@@ -117,16 +117,25 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 
 ```bash
 # Validate all UCVs for a story
-/ucv-qa STORY-XXX
+/hf:agent:ucv-qa STORY-XXX
 
 # Validate a specific use case only
-/ucv-qa STORY-XXX --uc UC-002
+/hf:agent:ucv-qa STORY-XXX --uc UC-002
 
 # Validate with verbose output (all screenshots)
-/ucv-qa STORY-XXX --verbose
+/hf:agent:ucv-qa STORY-XXX --verbose
 
 # Dry run - show what would be tested without executing
-/ucv-qa STORY-XXX --dry-run
+/hf:agent:ucv-qa STORY-XXX --dry-run
+
+# Validate on specific viewport(s) - for responsive testing
+/hf:agent:ucv-qa STORY-XXX --viewport mobile     # Mobile S (320x568)
+/hf:agent:ucv-qa STORY-XXX --viewport tablet     # Tablet (768x1024)
+/hf:agent:ucv-qa STORY-XXX --viewport all        # All 6 responsive viewports
+
+# Mobile app testing (when is_mobile: true)
+/hf:agent:ucv-qa STORY-XXX --device "iPhone 14"  # Specific device
+/hf:agent:ucv-qa STORY-XXX --device all          # All mobile devices
 ```
 
 ---
@@ -317,6 +326,103 @@ When a verification fails:
     Expected: Error message visible below field
     Actual: Error only in console
     Screenshot: docs/qa/STORY-042/V-002-2.png
+```
+
+---
+
+## Viewport Testing (Responsive & Mobile)
+
+When `is_responsive: true` (default for UI projects) or `is_mobile: true`, UCV-QA validates across multiple viewports.
+
+### Responsive Web Viewports
+
+| Name | Width | Height | When Used |
+|------|-------|--------|-----------|
+| Mobile S | 320 | 568 | `--viewport mobile` or `--viewport all` |
+| Mobile M | 375 | 667 | `--viewport all` |
+| Mobile L | 425 | 896 | `--viewport all` |
+| Tablet | 768 | 1024 | `--viewport tablet` or `--viewport all` |
+| Laptop | 1024 | 768 | `--viewport all` |
+| Desktop | 1440 | 900 | Default or `--viewport all` |
+
+### Mobile Device Viewports
+
+| Device | Width | Height | Platform | When Used |
+|--------|-------|--------|----------|-----------|
+| iPhone SE | 375 | 667 | iOS | `--device all` |
+| iPhone 14 Pro | 393 | 852 | iOS | `--device "iPhone 14"` |
+| Pixel 7 | 412 | 915 | Android | `--device all` |
+| iPad | 820 | 1180 | iOS | `--device all` |
+
+### Viewport Validation Process
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              VIEWPORT VALIDATION PROCESS                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  FOR EACH VIEWPORT (if responsive/mobile):                      │
+│                                                                  │
+│  1. RESIZE BROWSER                                              │
+│     → mcp_playwright_resize({ width: X, height: Y })            │
+│                                                                  │
+│  2. FOR EACH VERIFICATION                                       │
+│     → Navigate to page                                          │
+│     → Execute action                                            │
+│     → Verify expected result                                    │
+│     → Take screenshot: V-001-1_{viewport}.png                   │
+│                                                                  │
+│  3. COMPARE RESULTS                                             │
+│     → All viewports should pass                                 │
+│     → Report viewport-specific failures                         │
+│                                                                  │
+│  OUTPUT: Screenshots per viewport in docs/qa/STORY-XXX/         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Screenshot Naming Convention
+
+```
+docs/qa/STORY-XXX/
+├── V-001-1.png                    # Default (Desktop)
+├── V-001-1_mobile-s.png           # Mobile S viewport
+├── V-001-1_mobile-m.png           # Mobile M viewport
+├── V-001-1_tablet.png             # Tablet viewport
+├── V-001-1_iphone-14-pro.png      # iPhone 14 Pro (mobile app)
+└── REPORT.md
+```
+
+### Example: Multi-Viewport Session
+
+```
+User: /ucv-qa STORY-042 --viewport all
+
+🧪 UCV QA: Validating with all responsive viewports.
+
+📱 Testing Mobile S (320x568)...
+   V-001-1: Popin visible centree ✅
+   V-001-2: Email pre-rempli ✅
+
+📱 Testing Mobile M (375x667)...
+   V-001-1: Popin visible centree ✅
+   V-001-2: Email pre-rempli ✅
+
+📱 Testing Tablet (768x1024)...
+   V-001-1: Popin visible centree ✅
+   V-001-2: Email pre-rempli ✅
+
+🖥️ Testing Desktop (1440x900)...
+   V-001-1: Popin visible centree ✅
+   V-001-2: Email pre-rempli ✅
+
+📊 Viewport Results:
+   Mobile S:  2/2 ✅
+   Mobile M:  2/2 ✅
+   Tablet:    2/2 ✅
+   Desktop:   2/2 ✅
+
+✅ All viewports validated successfully.
 ```
 
 ---

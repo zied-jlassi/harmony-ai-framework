@@ -55,21 +55,21 @@ Les agents Harmony sont organises en 4 categories:
 | **UCV Writer** | [specialists/ucv-writer.md](specialists/ucv-writer.md) | Creation UCVs | `/ucv-writer STORY-XXX` |
 | **UCV QA** | [specialists/ucv-qa.md](specialists/ucv-qa.md) | Validation UCV en browser | `/ucv-qa STORY-XXX` |
 | **UCV Validator** | [specialists/ucv-validator.md](specialists/ucv-validator.md) | Verification 100% coverage | `/ucv-validator STORY-XXX` |
-| **Exploratory QA** | [specialists/exploratory-qa.md](specialists/exploratory-qa.md) | Luna - QA Exploratoire | `/exploratory-qa [module]` |
-| **AI Architect** | [specialists/ai-architect.md](specialists/ai-architect.md) | Nova - AI/LLM Systems | Contextuel |
+| **Exploratory QA** | [specialists/exploratory-qa.md](specialists/exploratory-qa.md) | QA Exploratoire | `/exploratory-qa [module]` |
+| **AI Architect** | [specialists/ai-architect.md](specialists/ai-architect.md) | AI/LLM Systems | Contextuel |
 
-### Sub-Agents (Nova)
+### Sub-Agents (AI Architect)
 
-> Sous-agents specialises de Nova pour l'architecture IA.
+> Sous-agents specialises pour l'architecture IA.
 
 | Agent | Fichier | Domaine |
 |-------|---------|---------|
-| Riley | [specialists/sub-agents/rag-architect.md](specialists/sub-agents/rag-architect.md) | RAG Pipelines |
-| Milo | [specialists/sub-agents/memory-architect.md](specialists/sub-agents/memory-architect.md) | Memory Systems |
-| Oscar | [specialists/sub-agents/orchestration-architect.md](specialists/sub-agents/orchestration-architect.md) | Multi-Agent |
-| Olivia | [specialists/sub-agents/observability-architect.md](specialists/sub-agents/observability-architect.md) | Observability |
-| Grace | [specialists/sub-agents/graphrag-architect.md](specialists/sub-agents/graphrag-architect.md) | GraphRAG |
-| Sage | [specialists/sub-agents/safety-architect.md](specialists/sub-agents/safety-architect.md) | Safety & Guardrails |
+| RAG Architect | [specialists/sub-agents/rag-architect.md](specialists/sub-agents/rag-architect.md) | RAG Pipelines |
+| Memory Architect | [specialists/sub-agents/memory-architect.md](specialists/sub-agents/memory-architect.md) | Memory Systems |
+| Orchestration Architect | [specialists/sub-agents/orchestration-architect.md](specialists/sub-agents/orchestration-architect.md) | Multi-Agent |
+| Observability Architect | [specialists/sub-agents/observability-architect.md](specialists/sub-agents/observability-architect.md) | Observability |
+| GraphRAG Architect | [specialists/sub-agents/graphrag-architect.md](specialists/sub-agents/graphrag-architect.md) | GraphRAG |
+| Safety Architect | [specialists/sub-agents/safety-architect.md](specialists/sub-agents/safety-architect.md) | Safety & Guardrails |
 
 ---
 

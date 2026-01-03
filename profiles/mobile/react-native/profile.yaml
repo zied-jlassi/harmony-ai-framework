@@ -1,0 +1,79 @@
+# React Native Profile
+# Purpose: React Native bare workflow patterns and knowledge
+# Version: 1.0.0
+
+profile:
+  id: react-native
+  name: "React Native (Bare)"
+  version: "1.0.0"
+  description: "React Native bare workflow with native modules"
+
+detection:
+  package_has:
+    - "react-native"
+  package_not_has:
+    - "expo"
+  file_exists:
+    - "metro.config.js"
+
+# Context set when this profile is active
+sets:
+  is_mobile: true
+  mobile_framework: "react-native"
+  workflow: "bare"
+
+# Stack information
+stack:
+  framework: "React Native 0.82+"
+  language: "TypeScript"
+  architecture: "New Architecture (Fabric + TurboModules)"
+
+  core:
+    - react-native: "0.82+"
+    - typescript: "5.9+"
+    - react-navigation: "Navigation"
+
+  state:
+    - zustand: "State management"
+    - tanstack-query: "Server state"
+    - mmkv: "Fast local storage"
+
+  ui:
+    - react-native-reanimated: "60fps animations"
+    - react-native-gesture-handler: "Touch gestures"
+    - react-native-svg: "Vector graphics"
+
+  native:
+    - swift: "iOS native modules"
+    - kotlin: "Android native modules"
+
+  testing:
+    - jest: "Unit tests"
+    - detox: "E2E tests"
+    - appium: "Cross-platform E2E"
+
+# Commands available
+commands:
+  dev:
+    - "npx react-native start"
+    - "npx react-native run-ios"
+    - "npx react-native run-android"
+  build:
+    - "cd ios && xcodebuild"
+    - "cd android && ./gradlew assembleRelease"
+  test:
+    - "npm test"
+    - "detox test --configuration ios.sim.debug"
+
+# Patterns to apply
+patterns:
+  - native-modules
+  - platform-specific-files
+  - new-architecture
+
+# Knowledge sources
+knowledge:
+  - url: "https://reactnative.dev/docs/"
+    priority: 1
+  - url: "https://reactnative.dev/architecture/overview"
+    priority: 2

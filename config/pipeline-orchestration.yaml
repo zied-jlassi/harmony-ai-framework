@@ -21,6 +21,16 @@ description: "Full feature development pipeline with conditional agent activatio
 # CONTEXT FLAGS (detected from story/task)
 # =============================================================================
 context_flags:
+  needs_prd:
+    description: "PRD creation or product requirements needed"
+    detect_patterns:
+      - "(?i)prd|product.requirements|requirements.document"
+      - "(?i)vision.produit|roadmap|stakeholder"
+      - "(?i)créer.prd|nouveau.produit|définir.requirements"
+      - "(?i)epic.nouveau|nouvelle.feature|product.spec"
+      - "(?i)jtbd|job.to.be.done|user.need"
+    triggers: [product-manager]
+
   has_ui:
     description: "Story involves user interface"
     detect_patterns:
@@ -112,6 +122,15 @@ phases:
   analyse_design:
     name: "Analyse & Design"
     steps:
+      # Step 0.5: Product Manager - PRD creation (conditional)
+      - step: 0.5
+        agent: product-manager
+        type: conditional
+        trigger: needs_prd
+        gate:
+          name: "prd_complete"
+          criteria: [prd_documented, requirements_defined, stakeholder_approved]
+
       - step: 1
         agent: analyst
         type: core
@@ -312,6 +331,9 @@ agent_inventory:
   quality_hqvf:
     - ucv-writer
     - ucv-validator
+
+  product:
+    - product-manager
 
   auto:
     - lint

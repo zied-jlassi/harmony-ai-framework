@@ -334,6 +334,18 @@ create_directory_structure() {
         ".harmony/specialties"
         ".harmony/specialties/ai"
         ".harmony/specialties/ai/knowledge"
+        # TODO: en attente de la nouvelle architecture de profiles
+        ".harmony/specialties/ai/agents"
+        ".harmony/specialties/accessibility/knowledge"
+        ".harmony/specialties/mobile/knowledge"
+        ".harmony/specialties/compliance/knowledge"
+        ".harmony/specialties/i18n/knowledge"
+        ".harmony/profiles/mobile/flutter"
+        ".harmony/profiles/backend/nestjs/knowledge/templates"
+        ".harmony/profiles/backend/nestjs/knowledge/cheatsheets"
+        ".harmony/profiles/backend/nestjs/knowledge/integrations"
+        ".harmony/profiles/backend/nestjs/knowledge/pitfalls"
+        # Local directories (project-specific)
         ".harmony/local/tmp/qa"
         ".harmony/local/reports/qa"
         ".harmony/local/metrics"
@@ -406,8 +418,15 @@ copy_framework_files() {
         for file in README.md LICENSE harmony.manifest.json; do
             if [[ -f "$SCRIPT_DIR/$file" ]]; then
                 cp "$SCRIPT_DIR/$file" "$PROJECT_DIR/.harmony/"
+            else
+                print_warning "Essential file not found in source: $file"
             fi
         done
+
+        # Verify essential files were copied
+        if [[ ! -f "$PROJECT_DIR/.harmony/harmony.manifest.json" ]]; then
+            print_warning "harmony.manifest.json was not copied - check source directory"
+        fi
 
         # Verify installation - minimum expected files
         local MIN_FILES=100
@@ -444,6 +463,7 @@ copy_framework_files() {
                 "agents/developer.md"
                 "agents/guardian.md"
                 "agents/sentinel.md"
+                "harmony.manifest.json"
             )
             local missing=0
 

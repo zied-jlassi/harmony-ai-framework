@@ -1,6 +1,8 @@
-# EPIC-{epic_id}: {title}
+# EP-{epic_id}: {title}
 
 > **{summary}**
+>
+> **Status**: 🔴 TODO | 🟡 IN_PROGRESS | 🟢 DONE | ⚫ BLOCKED
 
 ---
 
@@ -8,12 +10,27 @@
 
 | Field | Value |
 |-------|-------|
-| **Epic ID** | EPIC-{epic_id} |
-| **Status** | {status} |
-| **Priority** | {priority} |
+| **Epic ID** | EP-{epic_id} |
+| **Status** | 🔴 TODO |
+| **Priority** | HIGH \| MEDIUM \| LOW |
+| **Theme** | TH-{theme_id} (optionnel) |
 | **Owner** | {owner} |
-| **Created** | {created_date} |
+| **Created** | {YYYY-MM-DD} |
 | **Target Release** | {target_release} |
+| **Stories** | 0/{expected_stories} |
+| **UCV Coverage** | 0% |
+
+---
+
+## Related Documentation (REQUIRED)
+
+| Type | File | Status |
+|------|------|--------|
+| **Brief** | [brief.md](../docs/briefs/{brief_file}.md) | ✅ Required |
+| PRD | [prd.md](../docs/prd/{prd_file}.md) | Optional |
+| Research | [research.md](../docs/research/{research_file}.md) | Optional |
+| Analysis | [analysis.md](../docs/analysis/{analysis_file}.md) | Optional |
+| Architecture | [ADR-XXX.md](../docs/architecture/ADR-{XXX}.md) | Optional |
 
 ---
 
@@ -31,8 +48,8 @@
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| {metric_1_name} | {metric_1_target} | {metric_1_current} |
-| {metric_2_name} | {metric_2_target} | {metric_2_current} |
+| {metric_1_name} | {metric_1_target} | - |
+| {metric_2_name} | {metric_2_target} | - |
 
 ---
 
@@ -51,20 +68,121 @@
 
 ---
 
+## SPIDR Decomposition
+
+> Epic decomposed using SPIDR framework (Spikes, Paths, Interfaces, Data, Rules)
+
+### S - Spikes (Technical Unknowns)
+
+| Spike ID | Question | Timebox | Output |
+|----------|----------|---------|--------|
+| SP-001 | {spike_question} | 4h | Decision Record |
+
+### P - Paths (User Journeys)
+
+| Path | Description | Priority | Story |
+|------|-------------|----------|-------|
+| Happy Path | {happy_path_desc} | P0 | US-001 |
+| Alternative | {alt_path_desc} | P1 | US-002 |
+| Edge Case | {edge_path_desc} | P2 | US-003 |
+
+### I - Interfaces (Platforms)
+
+| Interface | Specifics | Dedicated Story? |
+|-----------|-----------|------------------|
+| Web Desktop | Standard | No |
+| Mobile (responsive) | Touch, viewport | No (same story) |
+| API | External consumers | Yes → US-XXX |
+
+### D - Data (Variations)
+
+| Data Type | Complexity | Dedicated Story? |
+|-----------|------------|------------------|
+| Simple text | Low | No |
+| Images/Media | Medium | Yes → US-XXX |
+| Complex JSON | High | Yes → US-XXX |
+
+### R - Rules (Business Logic)
+
+| Rule | Complexity | Sprint |
+|------|------------|--------|
+| Basic validation | Low | Sprint 1 |
+| Advanced logic | Medium | Sprint 1 |
+| Edge cases | High | Sprint 2 |
+
+---
+
+## VOICES (Story Splitting)
+
+> Si une story est trop grande (> 8 points), utiliser VOICES pour la découper
+
+### V - Variations
+| Variation | Complexité | Story séparée? |
+|-----------|------------|----------------|
+| Cas standard | Faible | Non (story principale) |
+| {variation_1} | Moyenne | Oui → US-{epic_id}-{n} |
+
+### O - Operations (CRUD)
+| Opération | Incluse dans story? |
+|-----------|---------------------|
+| Create | ✅ |
+| Read | ✅ |
+| Update | Story séparée |
+| Delete | Story séparée |
+
+### I - Inputs
+| Type input | Complexité | Story séparée? |
+|------------|------------|----------------|
+| Texte simple | Faible | Non |
+| Upload fichier | Haute | Oui → US-{epic_id}-{n} |
+
+### C - Complexity
+| Règle métier | Complexité | Story séparée? |
+|--------------|------------|----------------|
+| Validation basique | Faible | Non |
+| Règles complexes | Haute | Oui |
+
+### E - Exceptions
+| Exception | Critique? | Story séparée? |
+|-----------|-----------|----------------|
+| Erreur validation | Non | Non |
+| Cas limite | Oui | Oui → US-{epic_id}-{n} |
+
+### S - Scenarios
+| Scénario | Couvert par | Priority |
+|----------|-------------|----------|
+| Happy path | US-{epic_id}-001 | P0 |
+| Error path | US-{epic_id}-002 | P1 |
+| Edge cases | US-{epic_id}-003 | P2 |
+
+---
+
 ## Stories
 
-| Story ID | Title | Status | Priority |
-|----------|-------|--------|----------|
-| STORY-{story_1_id} | {story_1_title} | {story_1_status} | {story_1_priority} |
-| STORY-{story_2_id} | {story_2_title} | {story_2_status} | {story_2_priority} |
-| STORY-{story_3_id} | {story_3_title} | {story_3_status} | {story_3_priority} |
+| Story ID | Title | Points | Status | Priority | Sprint |
+|----------|-------|--------|--------|----------|--------|
+| US-001 | {story_1_title} | {pts} | TODO | HIGH | Sprint 1 |
+| US-002 | {story_2_title} | {pts} | TODO | HIGH | Sprint 1 |
+| US-003 | {story_3_title} | {pts} | TODO | MEDIUM | Sprint 2 |
 
-### Story Dependencies
+**Total Points**: {total_points}
+
+### Story-Task Summary
+
+| Story | Tasks | Estimated | Files |
+|-------|-------|-----------|-------|
+| US-001 | 3 tasks | 8h | 5 files |
+| US-002 | 4 tasks | 12h | 8 files |
+| US-003 | 2 tasks | 4h | 3 files |
+
+### Critical Path (Dependencies)
 
 ```
-STORY-{story_1_id}
-    └── STORY-{story_2_id}
-            └── STORY-{story_3_id}
+US-001 (Backend API) ──────────────────┐
+    │                                  │
+    └── US-002 (Frontend UI) ──────────┼── US-004 (Integration Tests)
+            │                          │
+            └── US-003 (Validation) ───┘
 ```
 
 ---
@@ -74,16 +192,16 @@ STORY-{story_1_id}
 ### Overall Status
 
 ```
-Progress: {progress_percentage}%
-[{progress_bar}] {completed_stories}/{total_stories} stories
+Progress: {X}%
+[████████░░░░░░░░] {completed}/{total} stories
 ```
 
 ### Sprint Breakdown
 
-| Sprint | Stories | Completed | Status |
-|--------|---------|-----------|--------|
-| Sprint {sprint_1} | {sprint_1_stories} | {sprint_1_completed} | {sprint_1_status} |
-| Sprint {sprint_2} | {sprint_2_stories} | {sprint_2_completed} | {sprint_2_status} |
+| Sprint | Stories | Points | Completed | Status |
+|--------|---------|--------|-----------|--------|
+| Sprint 1 | US-001, US-002 | 13 | 0/2 | IN_PROGRESS |
+| Sprint 2 | US-003, US-004 | 8 | 0/2 | TODO |
 
 ---
 
@@ -97,33 +215,24 @@ Progress: {progress_percentage}%
 
 | Dependency | Type | Status |
 |------------|------|--------|
-| {dep_1_name} | {dep_1_type} | {dep_1_status} |
-| {dep_2_name} | {dep_2_type} | {dep_2_status} |
+| {dep_name} | External API | Ready |
+| {dep_name} | Internal Service | Pending |
 
 ### Risks
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| {risk_1} | {risk_1_prob} | {risk_1_impact} | {risk_1_mitigation} |
-| {risk_2} | {risk_2_prob} | {risk_2_impact} | {risk_2_mitigation} |
-
----
-
-## Stakeholders
-
-| Role | Name | Interest |
-|------|------|----------|
-| Product Owner | {po_name} | {po_interest} |
-| Tech Lead | {tech_lead_name} | {tech_lead_interest} |
-| User Representative | {user_rep_name} | {user_rep_interest} |
+| {risk_1} | Medium | High | {mitigation} |
 
 ---
 
 ## Acceptance Criteria (Epic Level)
 
-1. [ ] {epic_criterion_1}
-2. [ ] {epic_criterion_2}
-3. [ ] {epic_criterion_3}
+1. [ ] All stories completed and verified
+2. [ ] E2E tests passing
+3. [ ] Performance targets met
+4. [ ] Security review passed
+5. [ ] Documentation updated
 
 ---
 
@@ -131,13 +240,30 @@ Progress: {progress_percentage}%
 
 | Date | Action | By |
 |------|--------|-----|
-| {created_date} | Created | {created_by} |
-| {updated_date} | {last_action} | {updated_by} |
+| {YYYY-MM-DD} | Created | SM Agent |
+| {YYYY-MM-DD} | Stories decomposed | SM Agent |
 
 ---
 
 ## Related
 
+- Brief: [hotel-reservation-brief.md](../briefs/hotel-reservation-brief.md)
 - PRD: [{prd_reference}](../prd/{prd_file})
 - Architecture: [{arch_reference}](../architecture/{arch_file})
 
+---
+
+## File Structure
+
+```
+.harmony/local/backlog/
+├── epics/
+│   └── EP-{XXX}.md          ← This file
+└── stories/
+    ├── US-001.md            ← Story files
+    ├── US-001-UCV.md        ← UCV for story
+    ├── US-002.md
+    └── tasks/
+        ├── TS-001.md        ← Task files (optional, can be inline)
+        └── TS-002.md
+```

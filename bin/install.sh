@@ -334,6 +334,14 @@ create_directory_structure() {
         ".harmony/specialties"
         ".harmony/specialties/ai"
         ".harmony/specialties/ai/knowledge"
+        ".harmony/local/tmp/qa"
+        ".harmony/local/reports/qa"
+        ".harmony/local/metrics"
+        ".harmony/local/backlog/epics"
+        ".harmony/local/backlog/themes"
+        ".harmony/local/docs/briefs"
+        ".harmony/local/docs/prd"
+        ".harmony/local/docs/architecture"
     )
 
     for dir in "${dirs[@]}"; do

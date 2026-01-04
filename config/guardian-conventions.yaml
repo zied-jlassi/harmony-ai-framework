@@ -1,0 +1,429 @@
+# =============================================================================
+# GUARDIAN CONVENTIONS - Naming & Documentation Rules
+# =============================================================================
+# Harmony Framework v2.0
+#
+# ENFORCED BY: Guardian Protocol
+# PURPOSE: Consistent naming, mandatory documentation references, layer tagging
+# =============================================================================
+
+version: "1.0"
+description: "Guardian rules for backlog naming conventions and documentation"
+
+# =============================================================================
+# NAMING CONVENTIONS & FOLDER STRUCTURE
+# =============================================================================
+# Structure SIMPLIFIÉE avec Tasks et UCVs INLINE dans les Stories
+#
+# .harmony/local/backlog/
+# ├── epics/
+# │   ├── INDEX.md                     (Index user-friendly pour navigation)
+# │   ├── EP-001/
+# │   │   ├── EP-001.md                (Epic document avec SPIDR)
+# │   │   └── stories/
+# │   │       ├── US-001-001.md        (Story avec Tasks T1,T2 et UCVs V1,V2 INLINE)
+# │   │       └── US-001-002.md        (Story avec Tasks et UCVs inline)
+# │   └── EP-002/
+# │       └── ...
+# └── themes/                          (OPTIONNEL - suggéré si > 10 epics)
+#     ├── TH-001.md
+#     └── TH-002.md
+#
+# INLINE FORMAT:
+# - Tasks: T1, T2, T3... (table + détails dans la story)
+# - UCVs: V1, V2, V3... (template complet dans la story, marqueurs HTML)
+#   - <!-- UCV_SECTION_START --> / <!-- UCV_SECTION_END -->
+#   - <!-- UCV_V1_START --> / <!-- UCV_V1_END -->
+#
+# STATUS UNIFIÉ:
+# - 🔴 TODO      - Non commencé
+# - 🟡 IN_PROGRESS - En cours
+# - 🟢 DONE      - Terminé
+# - ⚫ BLOCKED   - Bloqué
+#
+# VALIDATION UCV:
+# - ☐ Non validé
+# - ☑ Validé
+# - DEV ☑ (33%) → TEST ☑ (66%) → QA ☑ (100%)
+#
+# LIMITS (éviter piège 1000 epics):
+# - Max 7 themes actifs
+# - Max 15 epics par theme
+# - Max 20 stories par epic
+# =============================================================================
+
+naming:
+  # Epic naming
+  epic:
+    prefix: "EP"
+    format: "EP-{epic_id}"
+    pattern: "^EP-[0-9]{3}$"
+    file: "EP-{epic_id}.md"
+    folder: "EP-{epic_id}/"
+    location: ".harmony/local/backlog/epics/"
+    examples:
+      - "EP-001"
+      - "EP-002"
+
+  # User Story naming (includes epic ID for traceability)
+  story:
+    prefix: "US"
+    format: "US-{epic_id}-{story_id}"
+    pattern: "^US-[0-9]{3}-[0-9]{3}$"
+    file: "US-{epic_id}-{story_id}.md"
+    location: ".harmony/local/backlog/epics/EP-{epic_id}/stories/"
+    examples:
+      - "US-001-001"  # Epic 001, Story 001
+      - "US-001-002"  # Epic 001, Story 002
+      - "US-002-001"  # Epic 002, Story 001
+
+  # Task naming (INLINE in story file)
+  task:
+    prefix: "T"
+    format: "T{task_num}"  # T1, T2, T3...
+    pattern: "^T[0-9]+$"
+    location: "INLINE dans US-{epic_id}-{story_id}.md"
+    section: "## Tasks (Inline)"
+    examples:
+      - "T1"   # Task 1 in story
+      - "T2"   # Task 2 in story
+      - "T3"   # Task 3 in story
+    notes: |
+      Tasks are now inline in the story file.
+      Section starts with "## Tasks (Inline)"
+      Table format: | Task | Description | Layer | Status | Files |
+
+  # UCV naming (INLINE in story file with HTML markers)
+  ucv:
+    prefix: "V"
+    format: "V{ucv_num}"  # V1, V2, V3...
+    pattern: "^V[0-9]+$"
+    location: "INLINE dans US-{epic_id}-{story_id}.md"
+    section: "## UCVs (Use Case Verifiables)"
+    markers:
+      section_start: "<!-- UCV_SECTION_START -->"
+      section_end: "<!-- UCV_SECTION_END -->"
+      ucv_start: "<!-- UCV_V{n}_START -->"
+      ucv_end: "<!-- UCV_V{n}_END -->"
+    examples:
+      - "V1"   # UCV 1 in story
+      - "V2"   # UCV 2 in story
+      - "V3"   # UCV 3 in story
+    validation_table: |
+      | Niveau | Validateur | Date | Status | Commentaire |
+      |--------|------------|------|:------:|-------------|
+      | DEV | - | - | ☐ | - |
+      | TEST | - | - | ☐ | - |
+      | QA | - | - | ☐ | - |
+
+  # Theme naming (OPTIONAL - suggested when > 10 epics)
+  theme:
+    prefix: "TH"
+    format: "TH-{theme_id}"
+    pattern: "^TH-[0-9]{3}$"
+    file: "TH-{theme_id}.md"
+    location: ".harmony/local/backlog/themes/"
+    optional: true
+    auto_suggest:
+      trigger: "epic_count > 10"
+      message: "SUGGESTION: Regrouper epics en Themes pour meilleure organisation"
+    examples:
+      - "TH-001"  # Theme: MVP Booking
+      - "TH-002"  # Theme: Security & Compliance
+
+# =============================================================================
+# TRACEABILITY CHAIN
+# =============================================================================
+traceability:
+  # Full chain: UCV → Task → Story → Epic
+  chain:
+    - level: epic
+      format: "EP-{epic_id}"
+      contains: [stories, tasks, ucv]
+    - level: story
+      format: "US-{epic_id}-{story_id}"
+      parent: epic
+      contains: [tasks, ucv]
+    - level: task
+      format: "TS-{story_id}-{task_id}"
+      parent: story
+    - level: ucv
+      format: "UCV-{story_id}-{ucv_id}"
+      parent: story
+      validates: [task, story]
+
+  # ID extraction rules
+  id_parsing:
+    epic_from_story: "US-{epic_id}-XXX"
+    story_from_task: "TS-{story_id}-XXX"
+    story_from_ucv: "UCV-{story_id}-XXX"
+
+# =============================================================================
+# LAYER TAGGING (Frontend/Backend/Database/DevOps)
+# =============================================================================
+layers:
+  enabled: true
+  required_on:
+    - story
+    - task
+
+  types:
+    frontend:
+      tag: "[FE]"
+      keywords: ["react", "component", "ui", "hook", "page", "layout", "css", "tailwind"]
+      file_patterns:
+        - "src/components/**"
+        - "src/pages/**"
+        - "src/hooks/**"
+        - "src/styles/**"
+        - "*.tsx"
+        - "*.css"
+
+    backend:
+      tag: "[BE]"
+      keywords: ["api", "controller", "service", "module", "guard", "pipe", "interceptor"]
+      file_patterns:
+        - "src/modules/**"
+        - "src/common/**"
+        - "*.controller.ts"
+        - "*.service.ts"
+        - "*.module.ts"
+
+    database:
+      tag: "[DB]"
+      keywords: ["schema", "migration", "entity", "repository", "prisma", "sql"]
+      file_patterns:
+        - "prisma/**"
+        - "src/database/**"
+        - "*.entity.ts"
+        - "*.repository.ts"
+
+    fullstack:
+      tag: "[FS]"
+      keywords: ["end-to-end", "vertical slice", "full feature"]
+      description: "Story/Task touching both frontend and backend"
+
+    devops:
+      tag: "[DO]"
+      keywords: ["docker", "ci", "cd", "deploy", "kubernetes", "pipeline"]
+      file_patterns:
+        - "Dockerfile"
+        - "docker-compose*.yml"
+        - ".github/workflows/**"
+
+    tests:
+      tag: "[TEST]"
+      keywords: ["test", "spec", "e2e", "unit", "integration"]
+      file_patterns:
+        - "**/*.spec.ts"
+        - "**/*.test.ts"
+        - "tests/**"
+
+# =============================================================================
+# DOCUMENTATION REFERENCES (MANDATORY)
+# =============================================================================
+documentation:
+  required: true
+
+  # Epic MUST reference these if they exist
+  epic_references:
+    required:
+      - brief       # .harmony/local/docs/briefs/
+      - prd         # .harmony/local/docs/prd/ (if exists)
+    optional:
+      - research    # .harmony/local/docs/research/
+      - analysis    # .harmony/local/docs/analysis/
+      - architecture  # .harmony/local/docs/architecture/
+
+  # Story MUST reference
+  story_references:
+    required:
+      - epic        # Parent epic
+      - ucv         # UCV file
+    optional:
+      - adr         # Architecture Decision Record
+      - figma       # Design mockups
+      - api_spec    # OpenAPI/Swagger spec
+
+  # Task MUST reference
+  task_references:
+    required:
+      - story       # Parent story
+    optional:
+      - ucv_mapping  # Which UCVs this task validates
+
+  # Paths for documentation
+  doc_paths:
+    briefs: ".harmony/local/docs/briefs/"
+    prd: ".harmony/local/docs/prd/"
+    research: ".harmony/local/docs/research/"
+    analysis: ".harmony/local/docs/analysis/"
+    architecture: ".harmony/local/docs/architecture/"
+    ucv: ".harmony/local/backlog/stories/"
+
+# =============================================================================
+# VALIDATION RULES
+# =============================================================================
+validation:
+  on_create:
+    epic:
+      - check_naming_convention
+      - check_doc_references
+      - check_spidr_section
+      - warn_if_no_brief
+
+    story:
+      - check_naming_convention
+      - check_epic_exists
+      - check_layer_tag
+      - check_tasks_section
+      - warn_if_no_ucv
+
+    task:
+      - check_naming_convention
+      - check_story_exists
+      - check_layer_tag
+      - check_files_section
+
+  # Validation automatique quand story → DONE
+  on_story_done:
+    ucv_validation:
+      required: true
+      agents:
+        - ucv-qa        # Valide niveau QA (☐→☑)
+        - ucv-validator # Vérifie coverage = 100%
+      chain:
+        - agent: ucv-qa
+          action: "Parse UCVs inline (V1, V2, V3...)"
+          markers: ["<!-- UCV_SECTION_START -->", "<!-- UCV_SECTION_END -->"]
+          validate: "QA ☑ for all UCVs"
+        - agent: ucv-validator
+          action: "Final validation"
+          require: "DEV ☑ + TEST ☑ + QA ☑ = 100%"
+          fail_message: "Story cannot be DONE until all UCVs are 100% validated"
+
+  errors:
+    invalid_naming: "Invalid naming convention. Expected: {expected}, Got: {actual}"
+    missing_epic: "Story must reference an existing epic (EP-XXX)"
+    missing_layer: "Story/Task must have a layer tag [FE], [BE], [DB], [FS], [DO], or [TEST]"
+    missing_doc_ref: "Epic must reference documentation: {missing}"
+    missing_tasks: "Story must have at least one task defined"
+
+# =============================================================================
+# AUTO-INDEXING METADATA
+# =============================================================================
+# This section helps AI index and navigate the backlog faster
+
+indexing:
+  enabled: true
+
+  # Generate index file for quick navigation
+  generate_index: true
+  index_file: ".harmony/local/backlog/INDEX.md"
+
+  # Index structure
+  index_content:
+    - epics_summary
+    - stories_by_epic
+    - stories_by_layer
+    - stories_by_status
+    - tasks_pending
+    - ucv_coverage
+
+  # Quick search tags
+  search_tags:
+    - layer       # [FE], [BE], [DB], [FS]
+    - status      # TODO, READY, IN_PROGRESS, DONE
+    - priority    # HIGH, MEDIUM, LOW
+    - sprint      # Sprint N
+    - points      # Story points
+    - assignee    # Agent name
+
+# =============================================================================
+# TEMPLATES VALIDATION
+# =============================================================================
+templates:
+  epic: ".harmony/templates/epic.md"
+  story: ".harmony/templates/story.md"
+  task: ".harmony/templates/task.md"
+  ucv: ".harmony/templates/ucv.md"
+
+  required_sections:
+    epic:
+      - "## Metadata"
+      - "## SPIDR Decomposition"
+      - "## Stories"
+      - "## Related"
+
+    story:
+      - "## Metadata"
+      - "## User Story"
+      - "## Acceptance Criteria"
+      - "## Tasks Breakdown"
+      - "## UCV Reference"
+      - "## Related"
+
+    task:
+      - "## Metadata"
+      - "## Description"
+      - "## Files to Modify"
+      - "## Related"
+
+# =============================================================================
+# GUARDIAN ENFORCEMENT
+# =============================================================================
+enforcement:
+  mode: "warn"  # warn | block | auto-fix
+
+  on_violation:
+    warn:
+      message: "Convention violation detected: {violation}"
+      continue: true
+
+    block:
+      message: "BLOCKED: {violation}. Fix before continuing."
+      continue: false
+
+    auto_fix:
+      message: "Auto-fixing: {violation}"
+      actions:
+        - rename_file
+        - add_missing_section
+        - update_references
+
+# =============================================================================
+# EXAMPLES
+# =============================================================================
+#
+# Epic with proper references:
+# ```markdown
+# # EP-001: Hotel Reservation System
+#
+# ## Related Documentation
+# | Type | File | Status |
+# |------|------|--------|
+# | Brief | [hotel-reservation-brief.md](../docs/briefs/hotel-reservation-brief.md) | ✅ |
+# | PRD | [hotel-prd.md](../docs/prd/hotel-prd.md) | ✅ |
+# | Architecture | [ADR-001.md](../docs/architecture/ADR-001.md) | Pending |
+# ```
+#
+# Story with layer tag:
+# ```markdown
+# # US-001: [BE] Create Hotel Search API
+#
+# ## Metadata
+# | Field | Value |
+# |-------|-------|
+# | **Layer** | Backend [BE] |
+# | **Epic** | EP-001 |
+# ```
+#
+# Task with layer tag:
+# ```markdown
+# # TS-001: [BE] Implement search controller
+#
+# | Field | Value |
+# |-------|-------|
+# | **Layer** | Backend |
+# | **Story** | US-001 |
+# ```

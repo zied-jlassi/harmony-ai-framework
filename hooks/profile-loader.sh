@@ -21,6 +21,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FRAMEWORK_DIR="$(dirname "$SCRIPT_DIR")"
 PROFILES_DIR="${FRAMEWORK_DIR}/profiles"
+LOCAL_PROFILES_DIR="${FRAMEWORK_DIR}/local/profiles"
 
 # Project directories (relative to where command is run)
 PROJECT_DIR="${PROJECT_DIR:-$(pwd)}"
@@ -87,6 +88,66 @@ find_profile_path() {
     done
 
     return 1
+}
+
+# Get file with local override priority
+# Usage: get_profile_file <base_profile_path> <relative_file_path>
+# Returns: local file if exists, else base file
+get_profile_file() {
+    local base_path="$1"
+    local rel_file="$2"
+
+    # Extract category/profile from base path (e.g., backend/nestjs)
+    local profile_rel="${base_path#$PROFILES_DIR/}"
+    local local_file="${LOCAL_PROFILES_DIR}/${profile_rel}/${rel_file}"
+    local base_file="${base_path}/${rel_file}"
+
+    # Local prioritaire
+    if [ -f "$local_file" ]; then
+        echo "$local_file"
+    elif [ -f "$base_file" ]; then
+        echo "$base_file"
+    else
+        return 1
+    fi
+}
+
+# List all files from profile (merged: base + local overrides)
+# Returns unique list with local files taking priority
+list_profile_files() {
+    local base_path="$1"
+    local subdir="${2:-.}"  # Optional subdirectory (e.g., "knowledge")
+
+    local profile_rel="${base_path#$PROFILES_DIR/}"
+    local local_path="${LOCAL_PROFILES_DIR}/${profile_rel}/${subdir}"
+    local base_full="${base_path}/${subdir}"
+
+    # Collect all relative file paths
+    local all_files=""
+
+    # First, list base files
+    if [ -d "$base_full" ]; then
+        all_files=$(find "$base_full" -type f -name "*.md" -o -name "*.yaml" 2>/dev/null | \
+            sed "s|^$base_full/||" | sort)
+    fi
+
+    # Then, list local files (will override in final selection)
+    if [ -d "$local_path" ]; then
+        local local_files=$(find "$local_path" -type f -name "*.md" -o -name "*.yaml" 2>/dev/null | \
+            sed "s|^$local_path/||" | sort)
+        all_files=$(echo -e "${all_files}\n${local_files}" | sort -u)
+    fi
+
+    echo "$all_files"
+}
+
+# Check if profile has local overrides
+has_local_overrides() {
+    local base_path="$1"
+    local profile_rel="${base_path#$PROFILES_DIR/}"
+    local local_path="${LOCAL_PROFILES_DIR}/${profile_rel}"
+
+    [ -d "$local_path" ] && [ "$(ls -A "$local_path" 2>/dev/null)" ]
 }
 
 # ─────────────────────────────────────────────────────────────────────────────────

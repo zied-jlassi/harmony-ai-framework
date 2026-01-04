@@ -118,27 +118,32 @@ Route to: UCV Writer
 
 ## UCV Structure
 
-### Complete UCV File
+### UCVs INLINE dans la Story
 
-```yaml
-# STORY-042-UCV.md
+> **IMPORTANT**: Les UCVs sont maintenant intégrés directement dans le fichier Story,
+> délimités par des marqueurs HTML pour faciliter le parsing par les agents.
+
+```markdown
+# US-001-001: [FS] Modifier utilisateur via popin
+
+... (metadata, user story, tasks) ...
+
+<!-- UCV_SECTION_START -->
+## UCVs (Use Case Verifiables)
+
+> **Validation Triple**: DEV ✓ (33%) → TEST ✓ (66%) → QA ✓ (100%)
+
+### Résumé Couverture
+
+| UCV | Titre | Type | DEV | TEST | QA | Status |
+|-----|-------|------|:---:|:----:|:--:|--------|
+| **V1** | Ouvrir formulaire | Fonctionnel | ☐ | ☐ | ☐ | 0% |
+| **V2** | Validation email | Edge Case | ☐ | ☐ | ☐ | 0% |
 
 ---
-story_id: STORY-042
-title: "Modifier utilisateur via popin"
-version: 1.0
-created: 2025-01-15
-status: PENDING  # PENDING | APPROVED | REJECTED
 
-approvals:
-  user: false
-  architect: false
-  ux: false
----
-
-## Use Cases
-
-### UC-001: Ouvrir le formulaire de modification
+<!-- UCV_V1_START -->
+### V1: Ouvrir le formulaire de modification
 
 **Description**: L'administrateur peut ouvrir une popin pour modifier un utilisateur.
 
@@ -358,32 +363,35 @@ When UCV Writer completes UCVs:
 # HANDOFF: UCV Writer → User (for approval)
 
 ## Summary
-UCVs for STORY-042 are ready for review.
+UCVs for US-001-001 sont prêts pour review.
 
 ## Artifact
-- `.harmony/local/backlog/stories/STORY-042-UCV.md`
+- `.harmony/local/backlog/epics/EP-001/stories/US-001-001.md`
+- Section: `<!-- UCV_SECTION_START -->` à `<!-- UCV_SECTION_END -->`
 
 ## Statistics
-- Use Cases: 3
-- Verifications: 14
-- Coverage: All acceptance criteria covered
+- UCVs: 3 (V1, V2, V3)
+- Types: 2 Fonctionnels, 1 Edge Case
+- Coverage: Tous les critères d'acceptation couverts
+
+## Marqueurs pour parsing
+- `<!-- UCV_SECTION_START/END -->` - Section complète
+- `<!-- UCV_V1_START/END -->` - UCV individuel
+- `☐` / `☑` - Status validation
 
 ## Review Checklist
-1. [ ] All user flows covered?
-2. [ ] Edge cases identified?
-3. [ ] Verifications specific enough?
-4. [ ] Missing scenarios?
-
-## Required Approvals
-- [ ] User (mandatory)
-- [ ] Architect (if technical concerns)
-- [ ] UX (if visual/interaction)
+1. [ ] Tous les flows utilisateur couverts?
+2. [ ] Edge cases identifiés?
+3. [ ] Vérifications assez spécifiques?
+4. [ ] Scénarios manquants?
 
 ## Next Steps
-After approval:
-1. SM marks story READY
-2. Developer starts implementation
-3. Each verification marked as completed
+Après approbation:
+1. SM marque story 🟡 IN_PROGRESS
+2. Developer implémente (marque DEV ☑)
+3. Tester valide (marque TEST ☑)
+4. QA valide (marque QA ☑)
+5. UCV Validator vérifie 100%
 ```
 
 ---

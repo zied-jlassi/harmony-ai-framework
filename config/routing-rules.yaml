@@ -5,9 +5,23 @@
 version: "2.0"
 description: "Agent routing with keywords AND automatic context analysis via Haiku"
 
+# =============================================================================
+# INCLUDED CONFIGURATIONS
+# =============================================================================
+includes:
+  - config/guardian-conventions.yaml   # Naming conventions (EP, US, TS)
+  - config/model-tiers.yaml            # LLM model configuration
+  - config/paths.yaml                  # Path configuration
+
 routing:
   orchestrator: "scrum-master"
   enabled: true
+
+  # Guardian conventions enforcement
+  conventions:
+    enabled: true
+    config: "config/guardian-conventions.yaml"
+    mode: "warn"  # warn | block | auto-fix
 
 # =============================================================================
 # AUTO-DETECTION SYSTEM (RouteLLM Pattern)
@@ -32,15 +46,26 @@ auto_detection:
     - user_request_explicit
 
   classification_prompt: |
-    Analyze this user request and determine:
-    1. PRIMARY_INTENT: One of [ANALYZE, DESIGN, PRODUCT, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE]
-    2. CONTEXT_FLAGS: Which apply? [has_ui, has_db_schema, personal_data, security_critical, is_game, needs_docs, needs_prd]
-    3. SUGGESTED_AGENT: Which agent should handle this?
-    4. CONFIDENCE: 0.0 to 1.0
+    MULTILINGUAL INTENT CLASSIFIER - Analyze in ANY language (you understand all languages).
+
+    Determine:
+    1. PRIMARY_INTENT: [ANALYZE, DESIGN, PRODUCT, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE]
+    2. CONTEXT_FLAGS: [has_ui, has_db_schema, personal_data, security_critical, is_game, needs_docs, needs_prd, has_minors, has_media, has_auth, has_social, legal_compliance]
+    3. SUGGESTED_AGENT: Primary agent for this request
+    4. TRIGGERED_AGENTS: ALL agents needed based on detected context
+    5. CONFIDENCE: 0.0 to 1.0
+
+    CRITICAL FLAGS (auto-trigger regardless of language):
+    - Minors/children/age < 18 → [has_minors, personal_data, security_critical, legal_compliance]
+    - Photos/images/media → [has_media, personal_data]
+    - PII (name, email, phone, address, age) → [personal_data]
+    - Social features → [has_social, personal_data]
+    - Auth/login/account → [has_auth, has_db_schema]
+    - Technical: jwt/oauth/xss/csrf → [security_critical]
 
     User request: "{user_input}"
 
-    Respond in JSON: {"primary_intent":"...","context_flags":[...],"suggested_agent":"...","confidence":0.X}
+    JSON: {"primary_intent":"...","context_flags":[...],"suggested_agent":"...","triggered_agents":[...],"confidence":0.X}
 
   thresholds:
     high_confidence: 0.85
@@ -66,6 +91,53 @@ auto_detection:
     FIX: "developer"
     DEPLOY: "devops"
     EXPLORE_QA: "exploratory-qa"
+
+  # Context flags → Auto-triggered agents (parallel validation)
+  context_flag_triggers:
+    has_minors:
+      agents: [rgpd, security, legal]
+      priority: 0  # CRITICAL - blocks until validated
+      message: "🚨 MINEURS DÉTECTÉS - Validation obligatoire RGPD/Sécurité/Légal"
+
+    personal_data:
+      agents: [rgpd, security]
+      priority: 1
+      message: "⚠️ Données personnelles - Validation RGPD requise"
+
+    has_media:
+      agents: [rgpd]
+      priority: 1
+      message: "📷 Médias détectés - Vérification droits/consentement"
+
+    security_critical:
+      agents: [security, pentest]
+      priority: 0
+      message: "🔒 Sécurité critique - Audit obligatoire"
+
+    legal_compliance:
+      agents: [legal, rgpd]
+      priority: 0
+      message: "⚖️ Conformité légale requise"
+
+    has_auth:
+      agents: [security, database]
+      priority: 2
+      message: "🔐 Authentification - Sécurité DB requise"
+
+    has_social:
+      agents: [rgpd, security, legal]
+      priority: 1
+      message: "👥 Fonctionnalités sociales - Triple validation"
+
+    has_ui:
+      agents: [ux-designer, accessibility]
+      priority: 3
+      message: "🎨 Interface utilisateur - Validation UX/A11y"
+
+    has_db_schema:
+      agents: [database, architect]
+      priority: 2
+      message: "🗃️ Schéma DB - Validation architecture"
 
 # =============================================================================
 # AGENT DETECTION PATTERNS
@@ -133,18 +205,48 @@ detection_patterns:
     tier: 2
 
   rgpd:
-    keywords: [rgpd, gdpr, donnees-personnelles, personal-data, consent, retention]
-    patterns: ["(?i)rgpd.*compliance", "(?i)personal.*data"]
-    priority: 1
+    keywords: [rgpd, gdpr, donnees-personnelles, personal-data, consent, retention, photo, image, enfant, mineur, child, email, mail, nom, prenom, age]
+    patterns:
+      - "(?i)rgpd.*compliance"
+      - "(?i)personal.*data"
+      - "(?i)(photo|image)s?"
+      - "(?i)(enfant|mineur|child|children)"
+      - "(?i)\\d+\\s*(ans|years?)"
+      - "(?i)(email|mail|courriel)"
+      - "(?i)(nom|prenom|name)"
+      - "(?i)(profil|compte|account)"
+    priority: 0  # CRITICAL for GDPR
     trigger: personal_data
     tier: 3
+    compliance_checks:
+      has_minors:
+        - "parental_consent_required"
+        - "age_verification"
+        - "data_minimization"
+        - "right_to_deletion"
+        - "no_profiling_under_16"
+      personal_data:
+        - "consent_mechanism"
+        - "privacy_policy"
+        - "data_retention_policy"
+        - "right_to_access"
+        - "right_to_rectification"
 
   security:
-    keywords: [security, securite, auth, authentication, owasp, vulnerability]
-    patterns: ["(?i)security.*review", "(?i)audit.*securite"]
+    keywords: [security, securite, auth, authentication, owasp, vulnerability, encryption, cryptage, hash, password, token, jwt]
+    patterns:
+      - "(?i)security.*review"
+      - "(?i)audit.*securite"
+      - "(?i)(encrypt|crypt|hash)"
+      - "(?i)(password|mot.*passe)"
+      - "(?i)(token|jwt|session)"
     priority: 0
     trigger: security_critical
     tier: 1
+    auto_requirements:
+      has_minors: ["encryption_at_rest", "encryption_in_transit", "parental_consent", "data_minimization"]
+      personal_data: ["encryption_at_rest", "secure_storage", "access_control"]
+      has_auth: ["password_hashing", "secure_session", "rate_limiting"]
 
   database:
     keywords: [database, schema, migration, prisma, sql, entity]
@@ -192,7 +294,11 @@ detection_patterns:
     keywords: [ux, ui, wireframe, mockup, user-experience, accessibility]
     patterns: ["(?i)design.*ux", "(?i)create.*wireframe"]
     priority: 3
+    trigger: has_ui
     tier: 2
+    skip_conditions:
+      layers: ["[BE]", "[DB]", "[DO]"]  # Skip for backend-only, database, devops
+      message: "SKIP UX: Layer {layer} doesn't require UI design"
 
   i18n:
     keywords: [i18n, internationalization, translation, localization]
@@ -222,10 +328,16 @@ detection_patterns:
     tier: 4
 
   atlas:
-    keywords: [architecture, clean, mvc, structure, validation]
-    patterns: ["(?i)validate.*architecture", "(?i)clean.*architecture"]
+    keywords: [architecture, clean, mvc, structure, validation, layers, dependencies]
+    patterns: ["(?i)validate.*architecture", "(?i)clean.*architecture", "(?i)check.*structure"]
     priority: 2
     tier: 4
+    role: "post-implementation"  # Validates architecture AFTER developer implements
+    validates:
+      - clean_architecture_layers
+      - dependency_direction
+      - module_boundaries
+      - naming_conventions
 
   harmony:
     keywords: [coherence, harmony, orphan, broken, duplicate, manifest]
@@ -339,12 +451,15 @@ composite_intents:
       name: "Workflow Complet"
       description: "Quality guaranteed, 100% coverage"
       chain:
-        # Order: dev[dev]✓ → tester[test]✓ → ucv-qa[qa]✓ → exploratory-qa(UX) → ucv-validator(100%)
-        ANALYZE_IMPLEMENT: [analyst, scrum-master, ucv-writer, developer, tester, ucv-qa, exploratory-qa, ucv-validator]
-        DESIGN_IMPLEMENT: [architect, scrum-master, ucv-writer, developer, tester, ucv-qa, exploratory-qa, ucv-validator]
-        PLAN_IMPLEMENT: [scrum-master, ucv-writer, developer, tester, ucv-qa, ucv-validator]
-        PRODUCT_IMPLEMENT: [product-manager, analyst, scrum-master, ucv-writer, developer, tester, ucv-qa, ucv-validator]
+        # Order: analyst → ux-designer → architect → sm → ucv-writer → dev → atlas → tester → ucv-qa → exploratory-qa → ucv-validator
+        # Note: ux-designer can SKIP for backend-only, atlas validates architecture post-implementation
+        ANALYZE_IMPLEMENT: [analyst, ux-designer, scrum-master, ucv-writer, developer, atlas, tester, ucv-qa, exploratory-qa, ucv-validator]
+        DESIGN_IMPLEMENT: [architect, ux-designer, scrum-master, ucv-writer, developer, atlas, tester, ucv-qa, exploratory-qa, ucv-validator]
+        PLAN_IMPLEMENT: [ux-designer, scrum-master, ucv-writer, developer, atlas, tester, ucv-qa, ucv-validator]
+        PRODUCT_IMPLEMENT: [product-manager, analyst, ux-designer, scrum-master, ucv-writer, developer, atlas, tester, ucv-qa, ucv-validator]
         TEST_VALIDATE: [tester, ucv-qa, exploratory-qa, ucv-validator]
+        # Backend-only shortcut (ux-designer auto-skips)
+        BACKEND_IMPLEMENT: [analyst, scrum-master, ucv-writer, developer, atlas, tester, ucv-qa, ucv-validator]
 
     quick:
       name: "Quick-Flow"
@@ -363,26 +478,68 @@ composite_intents:
 # PARALLEL EXECUTION GROUPS
 # =============================================================================
 parallel_groups:
+  # Step 2.5: Early compliance checks (before implementation)
   compliance_checks:
     agents: [rgpd, security, database, legal]
     parallel: true
     step: "2.5"
+    when: "before_implementation"
 
+  # Step 3.5: UX validation (can skip for backend-only)
+  ux_validation:
+    agents: [ux-designer, accessibility]
+    parallel: true
+    step: "3.5"
+    skip_if_layer: ["[BE]", "[DB]", "[DO]"]
+
+  # Step 4.5: Code quality checks (during/after implementation)
   code_quality_checks:
-    agents: [security, i18n, lint, atlas, dependency]
+    agents: [security, i18n, lint, dependency]
     parallel: true
     step: "4.5"
+    when: "during_implementation"
 
+  # Step 5.5: Architecture validation (after implementation)
+  architecture_validation:
+    agents: [atlas, architect]
+    parallel: true
+    step: "5.5"
+    when: "post_implementation"
+    validates: ["clean_architecture", "layer_boundaries", "dependencies"]
+
+  # Step 6.5: Security validation
   security_validation:
     agents: [pentest, accessibility, devops]
     parallel: true
     step: "6.5"
 
+  # Step 6.8: Final quality gate
   quality_validation:
     agents: [ucv-validator]
     parallel: false
     step: "6.8"
 
+  # Step 7: Story validation (triggered when story → DONE)
+  story_validation:
+    agents: [ucv-qa, ucv-validator]
+    parallel: false  # Sequential: ucv-qa THEN ucv-validator
+    step: "7"
+    when: "story_status_done"
+    description: "Triple validation (DEV→TEST→QA) for inline UCVs"
+    triggers:
+      - story_status_change_to_done
+      - manual_validation_request
+    validation_chain:
+      - agent: ucv-qa
+        action: "Validate QA level for all V1, V2, V3... inline"
+        markers: ["<!-- UCV_SECTION_START -->", "<!-- UCV_SECTION_END -->"]
+        updates: "☐ → ☑ for QA column"
+      - agent: ucv-validator
+        action: "Final coverage validation"
+        threshold: 100
+        fail_on_incomplete: true
+
+  # Anytime: Framework coherence
   meta_validation:
     agents: [harmony]
     parallel: true
@@ -425,12 +582,201 @@ fallback:
   message: "Could not determine agent. Please clarify your request."
 
 # =============================================================================
+# STATE TRACKING & AI INDEX
+# =============================================================================
+# Fichiers d'état à mettre à jour automatiquement
+# Ces fichiers servent d'INDEX pour l'IA afin de comprendre l'état du projet
+# =============================================================================
+
+state_tracking:
+  enabled: true
+
+  # Fichier principal d'état du workflow
+  workflow_state:
+    file: ".claude/memory/workflow-state.json"
+    update_on:
+      - story_status_change    # 🔴→🟡→🟢
+      - task_status_change     # T1,T2,T3 status
+      - ucv_validation_change  # ☐→☑
+      - sprint_status_change   # Sprint start/end
+      - epic_status_change     # Epic progress
+
+    structure:
+      phase: { current: 1, name: "Discovery" }
+      active_context:
+        current_epic: "EP-001"
+        current_story: "US-001-001"
+        current_sprint: "Sprint 1"
+      progress:
+        epics: { total: 1, done: 0, in_progress: 1 }
+        stories: { total: 5, done: 0, in_progress: 1, todo: 4 }
+        ucvs: { total: 15, validated: 0, pending: 15 }
+      last_agent: "scrum-master"
+      last_action: "Created story US-001-001"
+      timestamp: "2026-01-04T12:00:00Z"
+
+  # Index du backlog pour navigation rapide
+  backlog_index:
+    file: ".harmony/local/backlog/epics/INDEX.md"
+    update_on:
+      - epic_created
+      - story_created
+      - ucv_coverage_change
+
+    content:
+      - epic_list_with_status    # EP-001 🟡 | Description
+      - story_count_per_epic     # Stories: 3/5 done
+      - ucv_coverage_per_epic    # Coverage: 60%
+      - global_metrics           # Total epics, stories, UCVs
+
+  # Circuit breaker status
+  circuit_breaker:
+    file: ".claude/memory/circuit-breaker.json"
+    update_on:
+      - test_failure
+      - validation_failure
+      - error_pattern_detected
+
+    structure:
+      state: "CLOSED"           # CLOSED | HALF_OPEN | OPEN
+      consecutive_failures: 0
+      last_failure: null
+      failure_threshold: 3
+      recovery_timeout: 300
+
+  # UCV coverage tracking
+  ucv_coverage:
+    file: ".harmony/local/metrics/coverage-history.json"
+    update_on:
+      - ucv_validation_change
+
+    structure:
+      history:
+        - { date: "2026-01-04", coverage: 0, validated: 0, total: 15 }
+
+# =============================================================================
+# STATE UPDATE TRIGGERS
+# =============================================================================
+# Quand un agent termine une action, il doit mettre à jour l'état
+# =============================================================================
+
+state_update_triggers:
+
+  scrum_master:
+    on_epic_created:
+      - update: workflow_state.active_context.current_epic
+      - update: backlog_index
+      - log: "Epic {epic_id} created"
+
+    on_story_created:
+      - update: workflow_state.active_context.current_story
+      - update: workflow_state.progress.stories
+      - update: backlog_index
+      - log: "Story {story_id} created"
+
+    on_story_status_change:
+      - update: workflow_state.progress.stories
+      - log: "Story {story_id} → {status}"
+
+    # Auto-trigger validation when story → DONE
+    on_story_done:
+      - trigger: story_validation_workflow
+      - agents: [ucv-qa, ucv-validator]
+      - log: "Story {story_id} DONE → Triggering UCV validation"
+      - workflow:
+          step_1:
+            agent: ucv-qa
+            action: "Validate QA for inline UCVs (V1, V2, V3...)"
+            parse: "<!-- UCV_SECTION_START --> to <!-- UCV_SECTION_END -->"
+          step_2:
+            agent: ucv-validator
+            action: "Check coverage = 100%"
+            fail_if: "coverage < 100%"
+
+  ucv_writer:
+    on_ucv_generated:
+      - update: workflow_state.progress.ucvs
+      - update: backlog_index
+      - log: "UCVs generated for {story_id}"
+
+  developer:
+    on_task_completed:
+      - update: workflow_state.last_action
+      - log: "Task {task_id} completed"
+
+    on_dev_validation:
+      - update: ucv_coverage
+      - log: "DEV ☑ for {ucv_id}"
+
+  tester:
+    on_test_validation:
+      - update: ucv_coverage
+      - log: "TEST ☑ for {ucv_id}"
+
+    on_test_failure:
+      - update: circuit_breaker.consecutive_failures
+      - log: "TEST FAILURE: {reason}"
+
+  ucv_qa:
+    on_qa_validation:
+      - update: ucv_coverage
+      - log: "QA ☑ for {ucv_id}"
+
+  ucv_validator:
+    on_story_validated:
+      - update: workflow_state.progress.stories
+      - update: backlog_index
+      - log: "Story {story_id} validated 100%"
+
+  sentinel:
+    on_failure_detected:
+      - update: circuit_breaker
+      - update: workflow_state
+      - log: "SENTINEL: Failure detected - {pattern}"
+
+    on_circuit_open:
+      - update: circuit_breaker.state = "OPEN"
+      - alert: "CIRCUIT BREAKER OPEN - 3 failures"
+
+# =============================================================================
+# AI INDEX QUERIES
+# =============================================================================
+# Requêtes rapides pour l'IA pour comprendre l'état
+# =============================================================================
+
+ai_index_queries:
+
+  current_context: |
+    READ: .claude/memory/workflow-state.json
+    RETURN: active_context, progress, last_action
+
+  epic_status: |
+    READ: .harmony/local/backlog/epics/INDEX.md
+    RETURN: epic_list with status emojis
+
+  story_status: |
+    PATTERN: .harmony/local/backlog/epics/EP-{id}/stories/US-*.md
+    EXTRACT: Status from metadata table
+    RETURN: story_id, status, ucv_coverage
+
+  ucv_coverage: |
+    PATTERN: .harmony/local/backlog/epics/EP-*/stories/US-*.md
+    EXTRACT: <!-- UCV_SECTION_START --> to <!-- UCV_SECTION_END -->
+    COUNT: ☑ vs ☐ for DEV, TEST, QA
+    RETURN: coverage percentage
+
+  circuit_breaker_status: |
+    READ: .claude/memory/circuit-breaker.json
+    RETURN: state, consecutive_failures
+
+# =============================================================================
 # METRICS
 # =============================================================================
 metrics:
   track_routing: true
   track_auto_detection_usage: true
   track_parallel_savings: true
+  track_state_updates: true
   log_file: ".harmony/memory/routing-metrics.log"
 
   targets:

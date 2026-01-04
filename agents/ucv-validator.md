@@ -116,32 +116,48 @@ Route to: UCV Validator
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    UCV VALIDATOR VALIDATION                      │
+│                    (UCVs INLINE dans Story)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. LOAD UCV FILE                                               │
-│     └── Read STORY-XXX-UCV.md                                   │
+│  1. LOAD STORY FILE                                             │
+│     └── Read US-{epic_id}-{story_id}.md                         │
 │                                                                  │
-│  2. COUNT VERIFICATIONS                                         │
-│     ├── Total verifications                                     │
-│     ├── Dev checked                                             │
-│     ├── Test checked                                            │
-│     └── QA checked                                              │
+│  2. PARSE UCV SECTION                                           │
+│     └── Extraire contenu entre:                                 │
+│         <!-- UCV_SECTION_START --> et <!-- UCV_SECTION_END -->  │
 │                                                                  │
-│  3. CALCULATE COVERAGE                                          │
-│     ├── Per-column percentage                                   │
-│     └── Overall completion                                      │
+│  3. PARSE EACH UCV                                              │
+│     └── Pour chaque <!-- UCV_Vn_START --> ... <!-- UCV_Vn_END -->│
+│         ├── Extraire table Validation                           │
+│         ├── Compter DEV ☑ / ☐                                   │
+│         ├── Compter TEST ☑ / ☐                                  │
+│         └── Compter QA ☑ / ☐                                    │
 │                                                                  │
-│  4. IDENTIFY GAPS                                               │
-│     └── List unchecked verifications                            │
+│  4. CALCULATE COVERAGE                                          │
+│     ├── Par UCV: (DEV + TEST + QA) / 3 = X%                     │
+│     └── Story: moyenne de tous les UCVs                         │
 │                                                                  │
-│  5. VERDICT                                                     │
-│     ├── 100% → ✅ APPROVED                                      │
-│     └── <100% → ❌ INCOMPLETE                                   │
+│  5. IDENTIFY GAPS                                               │
+│     └── Lister UCVs avec ☐ non validés                          │
 │                                                                  │
-│  6. REPORT                                                      │
-│     └── Generate validation report                              │
+│  6. VERDICT                                                     │
+│     ├── 100% → ✅ APPROVED → Story 🟢 DONE                      │
+│     └── <100% → ❌ INCOMPLETE → Lister actions                  │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
+```
+
+### Parsing des marqueurs
+
+```regex
+# Extraire section UCV complète
+<!-- UCV_SECTION_START -->(.*?)<!-- UCV_SECTION_END -->
+
+# Extraire chaque UCV individuel
+<!-- UCV_V(\d+)_START -->(.*?)<!-- UCV_V\1_END -->
+
+# Parser table validation dans chaque UCV
+\| (DEV|TEST|QA) \| .* \| .* \| (☐|☑) \|
 ```
 
 ---

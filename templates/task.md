@@ -1,6 +1,8 @@
-# TASK-{task_id}: {title}
+# TS-{XXX}: [{LAYER}] {title}
 
 > **{summary}**
+>
+> **Layer**: `[FE]` Frontend | `[BE]` Backend | `[DB]` Database | `[DO]` DevOps | `[TEST]` Tests
 
 ---
 
@@ -8,18 +10,20 @@
 
 | Field | Value |
 |-------|-------|
-| **Task ID** | TASK-{task_id} |
-| **Story** | STORY-{story_id} |
-| **Status** | {status} |
-| **Assignee** | {assignee} |
-| **Created** | {created_date} |
-| **Estimated** | {estimated_hours}h |
+| **Task ID** | TS-{XXX} |
+| **Layer** | {LAYER} - [FE] \| [BE] \| [DB] \| [DO] \| [TEST] |
+| **Story** | [US-{story_id}](../stories/US-{story_id}.md) |
+| **Epic** | [EP-{epic_id}](../epics/EP-{epic_id}.md) |
+| **Status** | TODO \| IN_PROGRESS \| BLOCKED \| DONE |
+| **Assignee** | {agent_name} |
+| **Estimated** | {hours}h |
+| **Actual** | -h |
 
 ---
 
 ## Description
 
-{description}
+{detailed_description}
 
 ---
 
@@ -31,24 +35,34 @@
 
 ---
 
-## Technical Details
-
-### Files to Modify
+## Files to Modify
 
 | File | Action | Description |
 |------|--------|-------------|
-| `{file_1}` | {action_1} | {file_1_desc} |
-| `{file_2}` | {action_2} | {file_2_desc} |
-| `{file_3}` | {action_3} | {file_3_desc} |
+| `{path/to/file1}` | CREATE | {description} |
+| `{path/to/file2}` | MODIFY | {description} |
+| `{path/to/file3}` | DELETE | {description} |
 
-### Implementation Notes
+---
 
-{implementation_notes}
+## Implementation
 
-### Code Examples
+### Approach
+
+{implementation_approach}
+
+### Code Structure
 
 ```{language}
+// Example implementation
 {code_example}
+```
+
+### Database Changes (if applicable)
+
+```sql
+-- Migration example
+{sql_changes}
 ```
 
 ---
@@ -57,15 +71,15 @@
 
 ### Blocked By
 
-| Task | Status | Description |
-|------|--------|-------------|
-| TASK-{blocking_task} | {blocking_status} | {blocking_desc} |
+| Task | Status | ETA |
+|------|--------|-----|
+| TS-{blocking_id} | {status} | {eta} |
 
 ### Blocks
 
 | Task | Description |
 |------|-------------|
-| TASK-{blocked_task} | {blocked_desc} |
+| TS-{blocked_id} | {description} |
 
 ---
 
@@ -73,12 +87,14 @@
 
 ### Unit Tests
 
-- [ ] {unit_test_1}
-- [ ] {unit_test_2}
+- [ ] `{test_file_1}.spec.ts` - {test_description}
+- [ ] `{test_file_2}.spec.ts` - {test_description}
 
-### Integration Tests
+### Manual Testing Steps
 
-- [ ] {integration_test_1}
+1. {step_1}
+2. {step_2}
+3. {step_3}
 
 ---
 
@@ -86,33 +102,32 @@
 
 | UCV ID | Description | Status |
 |--------|-------------|--------|
-| V-{ucv_1} | {ucv_1_desc} | {ucv_1_status} |
-| V-{ucv_2} | {ucv_2_desc} | {ucv_2_status} |
-
----
-
-## Progress Log
-
-| Date | Progress | Notes |
-|------|----------|-------|
-| {log_date_1} | {log_progress_1} | {log_notes_1} |
-| {log_date_2} | {log_progress_2} | {log_notes_2} |
+| V-{ucv_1} | {ucv_desc} | TODO |
+| V-{ucv_2} | {ucv_desc} | TODO |
 
 ---
 
 ## Completion Checklist
 
 - [ ] Code implemented
-- [ ] Tests written
-- [ ] Tests passing
-- [ ] UCV marked
+- [ ] Build passing
+- [ ] Tests written and passing
+- [ ] UCV criteria marked
 - [ ] Code reviewed
 - [ ] Documentation updated
 
 ---
 
+## Notes & Decisions
+
+| Date | Note |
+|------|------|
+| {YYYY-MM-DD} | {note} |
+
+---
+
 ## Related
 
-- Story: [STORY-{story_id}](../stories/STORY-{story_id}.md)
-- UCV: [STORY-{story_id}-UCV](../stories/STORY-{story_id}-UCV.md)
-
+- Story: [US-{story_id}](../stories/US-{story_id}.md)
+- Epic: [EP-{epic_id}](../epics/EP-{epic_id}.md)
+- UCV: [US-{story_id}-UCV](../stories/US-{story_id}-UCV.md)

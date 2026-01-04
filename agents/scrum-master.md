@@ -977,53 +977,131 @@ Then [resultat attendu]
 
 ---
 
+## Naming Conventions (OBLIGATOIRE)
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    NAMING CONVENTIONS                                          ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   EPICS:     EP-XXX.md      (ex: EP-001.md, EP-002.md)                       ║
+║   STORIES:   US-XXX.md      (ex: US-001.md, US-002.md)                       ║
+║   TASKS:     TS-XXX.md      (ex: TS-001.md) - inline in story preferred      ║
+║   UCVs:      US-XXX-UCV.md  (ex: US-001-UCV.md)                              ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Workflow: Epic → Stories → Tasks (OBLIGATOIRE)
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    DECOMPOSITION WORKFLOW                                      ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   1. CREATE EPIC (EP-XXX.md)                                                 ║
+║      ├── From brief/PRD                                                      ║
+║      ├── Define scope, success metrics                                       ║
+║      └── Use template: .harmony/templates/epic.md                            ║
+║                                                                               ║
+║   2. SPIDR DECOMPOSITION                                                     ║
+║      ├── S: Identify Spikes (technical unknowns)                            ║
+║      ├── P: Map user Paths (journeys)                                        ║
+║      ├── I: List Interfaces (platforms)                                      ║
+║      ├── D: Analyze Data variations                                          ║
+║      └── R: Document Rules (business logic)                                  ║
+║                                                                               ║
+║   3. CREATE STORIES (US-XXX.md)                                              ║
+║      ├── One story per vertical slice                                        ║
+║      ├── INVEST validation required                                          ║
+║      ├── Estimate in Fibonacci points (1,2,3,5,8,13)                        ║
+║      └── Use template: .harmony/templates/story.md                           ║
+║                                                                               ║
+║   4. DECOMPOSE INTO TASKS (TS-XXX inline or separate)                        ║
+║      ├── Backend tasks (API, Services)                                       ║
+║      ├── Frontend tasks (Components, Hooks)                                  ║
+║      ├── Database tasks (Schema, Migrations)                                 ║
+║      ├── Test tasks (Unit, E2E)                                              ║
+║      └── Review tasks (Code review, Security)                                ║
+║                                                                               ║
+║   5. GENERATE UCVs                                                           ║
+║      ├── Invoke UCV Writer: /harmony ucv US-XXX                             ║
+║      └── Creates: US-XXX-UCV.md                                              ║
+║                                                                               ║
+║   6. MARK STORY READY                                                        ║
+║      └── Only after UCVs approved by user                                    ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## File Structure
+
+```
+.harmony/local/backlog/
+├── epics/
+│   ├── EP-001.md           ← Epic file (Hotel Reservation)
+│   └── EP-002.md           ← Epic file (User Management)
+└── stories/
+    ├── US-001.md           ← Story with inline tasks
+    ├── US-001-UCV.md       ← UCVs for story
+    ├── US-002.md
+    ├── US-002-UCV.md
+    └── tasks/              ← Optional: separate task files
+        ├── TS-001.md       ← Only for complex tasks
+        └── TS-002.md
+```
+
+---
+
 ## Story Template (Reference)
 
+> Use template: `.harmony/templates/story.md`
+
 ```markdown
-# STORY-[NUMBER]: [Title]
+# US-XXX: [Title]
 
 ## Metadata
-- **Epic**: EPIC-[NUMBER]
-- **Status**: TODO | IN_PROGRESS | DONE
-- **Priority**: HIGH | MEDIUM | LOW
-- **Points**: [Estimation]
-- **Sprint**: Sprint [NUMBER]
-- **Assigned**: [Agent Name]
+| Field | Value |
+|-------|-------|
+| **Story ID** | US-XXX |
+| **Epic** | EP-XXX |
+| **Status** | TODO | READY | IN_PROGRESS | DONE |
+| **Points** | X (Fibonacci) |
+| **Sprint** | Sprint N |
 
-## Description
-[User story format]
+## User Story
+As a [role], I want to [action], So that [benefit].
 
-As a [role],
-I want to [action],
-So that [benefit].
+## Acceptance Criteria (Gherkin)
+### AC-1: [Title]
+Given [precondition]
+When [action]
+Then [expected_result]
 
-## Acceptance Criteria
-1. [Criterion 1]
-2. [Criterion 2]
-3. [Criterion 3]
+## Tasks Breakdown
+| Task ID | Description | Type | Hours | Status |
+|---------|-------------|------|-------|--------|
+| TS-001 | [Backend API] | Backend | 2h | TODO |
+| TS-002 | [Frontend Component] | Frontend | 3h | TODO |
+| TS-003 | [Tests] | Tests | 2h | TODO |
 
-## Technical Notes
-- [Technical consideration 1]
-- [Technical consideration 2]
+### TS-001: [Task Title]
+**Files to modify**:
+- `src/modules/xxx/controllers/xxx.controller.ts`
+- `src/modules/xxx/services/xxx.service.ts`
 
-## Dependencies
-- [STORY-XXX] must be complete
-- [External dependency]
-
-## Tasks
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
+**Implementation Notes**:
+[code example]
 
 ## UCV Reference
-- UCV File: `STORY-[NUMBER]-UCV.md`
-- Status: PENDING | APPROVED
-- Verifications: [X] total
-
-## Links
-- Architecture: [ADR-XXX]
-- PRD Section: [Link]
-- Figma: [Link]
+| Field | Value |
+|-------|-------|
+| UCV File | US-XXX-UCV.md |
+| Status | PENDING | APPROVED |
 ```
 
 ---
@@ -1041,11 +1119,11 @@ So that [benefit].
 |                                                                   |
 |  AFTER STORY CREATION:                                           |
 |                                                                   |
-|  1. Story file created (STORY-XXX.md)                            |
+|  1. Story file created (US-XXX.md)                               |
 |                                                                   |
 |  2. INVOKE UCV Writer (MANDATORY)                                |
-|     +-- Command: /harmony ucv STORY-XXX (option 26)              |
-|     +-- Or: "UCV Writer, create UCVs for STORY-XXX"              |
+|     +-- Command: /harmony ucv US-XXX (option 26)                 |
+|     +-- Or: "UCV Writer, create UCVs for US-XXX"                 |
 |                                                                   |
 |  3. WAIT FOR USER APPROVAL                                       |
 |     +-- UCVs must be APPROVED before dev can start               |
@@ -1062,13 +1140,13 @@ So that [benefit].
 
 ```bash
 # Option 1: Via Harmony skill
-/harmony ucv STORY-XXX   # Option 26 - Creer UCVs
+/harmony ucv US-XXX   # Option 26 - Creer UCVs
 
 # Option 2: Direct invocation
-"UCV Writer, creer les UCVs pour STORY-XXX"
+"UCV Writer, creer les UCVs pour US-XXX"
 
 # Option 3: Natural language
-"Generer les use cases verifiables pour STORY-XXX"
+"Generer les use cases verifiables pour US-XXX"
 ```
 
 ---
@@ -1081,10 +1159,12 @@ When no epic exists in the project, the SM creates a default epic:
 # EP-HANDOFF: Default Workflow Epic
 
 ## Metadata
-- **ID**: EP-HANDOFF
-- **Status**: ACTIVE
-- **Created**: [auto-generated]
-- **Purpose**: Default epic for workflow testing or when no context exists
+| Field | Value |
+|-------|-------|
+| **Epic ID** | EP-HANDOFF |
+| **Status** | ACTIVE |
+| **Created** | [auto-generated] |
+| **Purpose** | Default epic for workflow testing |
 
 ## Description
 This epic is automatically created when:
@@ -1093,7 +1173,9 @@ This epic is automatically created when:
 3. Testing the workflow pipeline
 
 ## Stories
-[Stories will be linked here]
+| Story ID | Title | Status |
+|----------|-------|--------|
+| US-001 | [First story] | TODO |
 
 ## Notes
 - Consider creating a proper epic with business context
@@ -1109,7 +1191,7 @@ When creating/using an epic, update `working.json`:
 {
   "active_context": {
     "current_epic": "EP-HANDOFF",
-    "current_story": "STORY-001"
+    "current_story": "US-001"
   }
 }
 ```

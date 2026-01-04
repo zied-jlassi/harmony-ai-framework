@@ -56,10 +56,10 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 
 | Agent | What they do | Output |
 |-------|--------------|--------|
-| **UCV Writer** | Creates UCVs from story | STORY-XXX-UCV.md |
+| **UCV Writer** | Creates UCVs inline in story | UCVs V1, V2, V3... dans US-{epic}-{story}.md |
 | **Tester** | Writes automated tests | .spec.ts files |
 | **Exploratory QA** | Free exploration, finds unexpected bugs | Bug reports |
-| **UCV QA** (this) | Tests each UCV manually | [qa] ✓ checkmarks |
+| **UCV QA** (this) | Tests each UCV manually | QA ☑ dans table validation |
 | **UCV Validator** | Checks 100% completion | Go/No-Go |
 
 ---
@@ -69,46 +69,63 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    UCV QA VALIDATION WORKFLOW                    │
+│                    (UCVs INLINE dans Story)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  INPUT: STORY-XXX with [dev] ✓ and [test] ✓ completed          │
+│  INPUT: US-{epic}-{story}.md avec DEV ☑ et TEST ☑ complétés    │
 │                                                                  │
-│  STEP 1: LOAD UCV FILE                                          │
-│  ────────────────────                                           │
-│  Read .harmony/local/backlog/stories/STORY-XXX-UCV.md                     │
-│  Parse all verifications                                         │
-│                                                                  │
-│  STEP 2: FOR EACH USE CASE                                      │
-│  ─────────────────────────                                      │
-│  For UC-001, UC-002, etc:                                       │
-│                                                                  │
-│    2.1 Read Gherkin scenario                                    │
-│        Given: Setup preconditions                               │
-│        When: Execute action                                     │
-│        Then: Verify expected result                             │
-│                                                                  │
-│    2.2 For each verification (V-001-1, V-001-2, etc):          │
-│        - Navigate to the page                                   │
-│        - Perform the action                                     │
-│        - Verify the expected behavior                           │
-│        - Take screenshot as evidence                            │
-│        - Mark [qa] ✓ if PASS                                   │
-│        - Report issue if FAIL                                   │
-│                                                                  │
-│  STEP 3: UPDATE UCV FILE                                        │
+│  STEP 1: LOAD STORY FILE                                        │
 │  ───────────────────────                                        │
-│  Edit STORY-XXX-UCV.md                                          │
-│  Set qa: true for each passed verification                      │
+│  Read .harmony/local/backlog/epics/EP-XXX/stories/US-XXX-XXX.md │
+│  Parse section <!-- UCV_SECTION_START --> à <!-- ..._END -->    │
+│                                                                  │
+│  STEP 2: FOR EACH UCV (V1, V2, V3...)                          │
+│  ────────────────────────────────────                          │
+│  Pour chaque <!-- UCV_Vn_START --> ... <!-- UCV_Vn_END -->:    │
+│                                                                  │
+│    2.1 Lire scénario Gherkin                                   │
+│        Given: Setup préconditions                               │
+│        When: Exécuter action                                    │
+│        Then: Vérifier résultat attendu                         │
+│                                                                  │
+│    2.2 Validation manuelle:                                     │
+│        - Naviguer vers la page                                  │
+│        - Effectuer l'action                                     │
+│        - Vérifier le comportement                               │
+│        - Prendre screenshot comme preuve                        │
+│        - Si PASS → Marquer QA ☑                                │
+│        - Si FAIL → Reporter issue                               │
+│                                                                  │
+│  STEP 3: UPDATE STORY FILE                                      │
+│  ─────────────────────────                                      │
+│  Éditer US-XXX-XXX.md directement                              │
+│  Changer ☐ → ☑ pour QA dans table validation                   │
 │                                                                  │
 │  STEP 4: GENERATE REPORT                                        │
 │  ───────────────────────                                        │
-│  Summary: X/Y verifications passed                              │
-│  Screenshots: stored in docs/qa/STORY-XXX/                      │
-│  Issues: listed if any failed                                   │
+│  Summary: X/Y UCVs validés                                      │
+│  Screenshots: docs/qa/US-XXX-XXX/                               │
+│  Issues: listés si échecs                                       │
 │                                                                  │
-│  OUTPUT: UCV file with [qa] ✓ marked                            │
+│  OUTPUT: Story avec QA ☑ marqués inline                        │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
+```
+
+### Parsing des UCVs inline
+
+```regex
+# Localiser section UCV dans la story
+<!-- UCV_SECTION_START -->(.*?)<!-- UCV_SECTION_END -->
+
+# Extraire chaque UCV
+<!-- UCV_V(\d+)_START -->(.*?)<!-- UCV_V\1_END -->
+
+# Trouver ligne QA à mettre à jour
+\| QA \| ([^|]*) \| ([^|]*) \| (☐|☑) \|
+
+# Remplacer ☐ par ☑ après validation
+s/\| QA \| - \| - \| ☐ \|/| QA | {validator} | {date} | ☑ |/
 ```
 
 ---
@@ -146,66 +163,64 @@ Before UCV QA can run:
 
 | Prerequisite | Check |
 |--------------|-------|
-| Story exists | `.harmony/local/backlog/stories/STORY-XXX.md` |
-| UCV file exists | `.harmony/local/backlog/stories/STORY-XXX-UCV.md` |
-| UCVs approved | `status: APPROVED` in UCV file |
-| Dev completed | All `[dev]` checkboxes marked |
-| Tests completed | All `[test]` checkboxes marked |
+| Story exists | `.harmony/local/backlog/epics/EP-{epic}/stories/US-{epic}-{story}.md` |
+| UCVs inline | Section `<!-- UCV_SECTION_START -->` présente dans la story |
+| UCVs approved | Story status: 🟡 IN_PROGRESS ou supérieur |
+| Dev completed | Tous les UCVs ont DEV ☑ (V1, V2, V3...) |
+| Tests completed | Tous les UCVs ont TEST ☑ (V1, V2, V3...) |
 | App running | Application accessible in browser |
 
 ---
 
-## UCV File Format
+## UCV Format (Inline dans Story)
 
 ### Input (before UCV QA)
 
-```yaml
-story_id: STORY-042
-title: "Modifier utilisateur via popin"
-status: APPROVED
+UCVs are now **inline in story files** with HTML markers:
 
-use_cases:
-  - id: UC-001
-    title: "Ouvrir formulaire modification"
-    gherkin: |
-      Given je suis connecte en tant qu'admin
-      And je suis sur la page liste utilisateurs
-      When je clique sur l'icone crayon de "john@test.com"
-      Then une popin modale s'affiche au centre
-      And le champ email contient "john@test.com"
+```markdown
+<!-- UCV_V1_START -->
+### V1: Popin visible centrée
 
-    verifications:
-      - id: V-001-1
-        description: "Popin visible centree"
-        dev: true    # ✓ DEV a implemente
-        test: true   # ✓ TESTER a couvert
-        qa: false    # ☐ UCV-QA doit valider
+**Scénario Gherkin**:
+```gherkin
+Given je suis connecté en tant qu'admin
+And je suis sur la page liste utilisateurs
+When je clique sur l'icône crayon de "john@test.com"
+Then une popin modale s'affiche au centre
+```
 
-      - id: V-001-2
-        description: "Email pre-rempli"
-        dev: true
-        test: true
-        qa: false    # ☐ UCV-QA doit valider
+**Validation**:
+| Niveau | Validateur | Date | Status | Commentaire |
+|--------|------------|------|:------:|-------------|
+| DEV | developer | 2026-01-02 | ☑ | Implémenté |
+| TEST | tester | 2026-01-03 | ☑ | Tests passent |
+| QA | - | - | ☐ | En attente |
+
+<!-- UCV_V1_END -->
 ```
 
 ### Output (after UCV QA)
 
-```yaml
-    verifications:
-      - id: V-001-1
-        description: "Popin visible centree"
-        dev: true
-        test: true
-        qa: true     # ✓ UCV-QA a valide
-        qa_evidence: "docs/qa/STORY-042/V-001-1.png"
-
-      - id: V-001-2
-        description: "Email pre-rempli"
-        dev: true
-        test: true
-        qa: true     # ✓ UCV-QA a valide
-        qa_evidence: "docs/qa/STORY-042/V-001-2.png"
+```markdown
+**Validation**:
+| Niveau | Validateur | Date | Status | Commentaire |
+|--------|------------|------|:------:|-------------|
+| DEV | developer | 2026-01-02 | ☑ | Implémenté |
+| TEST | tester | 2026-01-03 | ☑ | Tests passent |
+| QA | ucv-qa | 2026-01-04 | ☑ | Validé - screenshot: V1.png |
 ```
+
+**Stockage Screenshots** (temporaire):
+```
+.harmony/local/tmp/qa/US-{epic}-{story}/    ← Screenshots (gitignored)
+.harmony/local/reports/qa/US-{epic}-{story}/ ← REPORT.md final uniquement
+```
+
+**Politique de nettoyage**:
+- Screenshots supprimés immédiatement après validation 100% réussie
+- Auto-cleanup après 1 jour si non validé
+- Seul REPORT.md conservé comme trace d'audit
 
 ---
 
@@ -259,11 +274,11 @@ const snapshot = await mcp_playwright_snapshot();
 
 // 4. Take screenshot as evidence
 await mcp_playwright_screenshot({
-  path: "docs/qa/STORY-042/V-001-1.png"
+  path: ".harmony/local/tmp/qa/US-001-042/V1.png"
 });
 
 // 5. Mark as validated
-// Edit STORY-042-UCV.md → set qa: true for V-001-1
+// Edit US-001-042.md → set QA ☑ for V1 in inline validation table
 ```
 
 ---
@@ -315,17 +330,19 @@ When a verification fails:
 4. **Continue testing** - Test remaining verifications
 5. **Report to Developer** - List all failures at the end
 
-```yaml
-# In UCV file, failed verification:
-- id: V-002-2
-  description: "Message erreur visible"
-  dev: true
-  test: true
-  qa: false        # Not marked - failed
-  qa_issue: |
-    Expected: Error message visible below field
-    Actual: Error only in console
-    Screenshot: docs/qa/STORY-042/V-002-2.png
+```markdown
+<!-- UCV_V2_END après échec -->
+**Validation**:
+| Niveau | Validateur | Date | Status | Commentaire |
+|--------|------------|------|:------:|-------------|
+| DEV | developer | 2026-01-02 | ☑ | Implémenté |
+| TEST | tester | 2026-01-03 | ☑ | Tests passent |
+| QA | ucv-qa | 2026-01-04 | ☐ | ❌ FAIL - erreur visible uniquement console |
+
+**QA Issue**:
+- Expected: Error message visible below field
+- Actual: Error only in console
+- Screenshot: `.harmony/local/tmp/qa/US-001-002/V2-fail.png`
 ```
 
 ---
@@ -384,13 +401,16 @@ When `is_responsive: true` (default for UI projects) or `is_mobile: true`, UCV-Q
 ### Screenshot Naming Convention
 
 ```
-docs/qa/STORY-XXX/
-├── V-001-1.png                    # Default (Desktop)
-├── V-001-1_mobile-s.png           # Mobile S viewport
-├── V-001-1_mobile-m.png           # Mobile M viewport
-├── V-001-1_tablet.png             # Tablet viewport
-├── V-001-1_iphone-14-pro.png      # iPhone 14 Pro (mobile app)
-└── REPORT.md
+.harmony/local/tmp/qa/US-{epic}-{story}/   ← Temporaire (1 jour)
+├── V1.png                          # Default (Desktop)
+├── V1_mobile-s.png                 # Mobile S viewport
+├── V1_mobile-m.png                 # Mobile M viewport
+├── V1_tablet.png                   # Tablet viewport
+├── V1_iphone-14-pro.png            # iPhone 14 Pro (mobile app)
+└── ...
+
+.harmony/local/reports/qa/US-{epic}-{story}/ ← Permanent
+└── REPORT.md                       # Rapport final uniquement
 ```
 
 ### Example: Multi-Viewport Session
@@ -514,7 +534,8 @@ User: /ucv-qa STORY-042
    ❌ V-002-2 (needs fix)
 
 📝 UCV file updated with [qa] marks
-📁 Report saved: docs/qa/STORY-042/REPORT.md
+📁 Report saved: .harmony/local/reports/qa/US-001-042/REPORT.md
+🧹 Screenshots cleaned up (validation 100% or 1 day auto-cleanup)
 
 ⚠️ Story not ready for UCV Validator - 1 issue needs fix.
 ```

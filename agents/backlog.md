@@ -1,5 +1,5 @@
 ---
-name: "backlog-agent"
+name: "backlog"
 displayName: "Backlog Dashboard"
 emoji: "📦"
 description: "Gestion backlog intelligent - Visualisation WSJF"

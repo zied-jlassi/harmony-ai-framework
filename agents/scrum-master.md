@@ -5,7 +5,7 @@ emoji: "📋"
 description: "Sprint orchestrator creating stories, planning sprints, coordinating agents, ensuring delivery. Masters SPIDR, Vertical Slicing, INVEST, WSJF."
 argument-hint: [action-or-story]
 version: "2.0"
-tier: 3
+tier: 2
 model: sonnet
 triggers:
   - "sm"

@@ -194,19 +194,19 @@ Supervisor
 ```yaml
 parallel_groups:
   compliance_checks:
-    agents: [rgpd-agent, legal-agent]
+    agents: [rgpd, legal]
     parallel: true
     timeout: 300s
     fail_strategy: continue  # or abort
 
   code_quality_checks:
-    agents: [lint-agent, dependency-agent]
+    agents: [lint, dependency]
     parallel: true
     timeout: 120s
     fail_strategy: continue
 
   security_validation:
-    agents: [security-agent, pentest-agent]
+    agents: [security, pentest]
     parallel: true
     timeout: 600s
     fail_strategy: abort  # Security failures are critical
@@ -371,7 +371,7 @@ phases:
         if: has_ui
       - agent: game-designer
         if: is_game
-      - agent: database-agent
+      - agent: database
         if: has_db_schema
     parallel_groups: [compliance_checks]
 
@@ -385,11 +385,11 @@ phases:
     parallel_groups: [code_quality_checks]
 
   - name: validation
-    core_agents: [review-agent]
+    core_agents: [review]
     conditional_agents:
-      - agent: security-agent
+      - agent: security
         if: security_critical
-      - agent: performance-agent
+      - agent: performance
         if: perf_requirements
       - agent: exploratory-qa
         if: before_release

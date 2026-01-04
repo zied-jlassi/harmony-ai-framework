@@ -1,5 +1,5 @@
 ---
-name: "game-architect-agent"
+name: "game-architect"
 displayName: "Game Architect"
 description: "🏛️ Harmony Game Architect (Cloud) - Game Systems Architecture - Phase 3"
 argument-hint: [tâche-arch-game] [scope-optionnel]

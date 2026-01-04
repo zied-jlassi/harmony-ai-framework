@@ -1,5 +1,5 @@
 ---
-name: "quick-flow-agent"
+name: "quick-flow"
 displayName: "Quick-Flow Prototyper"
 emoji: "⚡"
 description: "Quick-Flow Agent - Développement rapide - Prototypage MVP"

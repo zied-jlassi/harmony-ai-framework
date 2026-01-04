@@ -26,64 +26,64 @@ context_flags:
     detect_patterns:
       - "(?i)ui|interface|screen|page|component|button|form"
       - "(?i)frontend|front-end|vue|react|angular"
-    triggers: [ux-designer, accessibility-agent]
+    triggers: [ux-designer, accessibility]
 
   has_i18n:
     description: "Multi-language support needed"
     detect_patterns:
       - "(?i)i18n|translation|multilingual|language"
-    triggers: [i18n-agent]
+    triggers: [i18n]
 
   has_db_schema:
     description: "Database schema changes"
     detect_patterns:
       - "(?i)database|schema|migration|table|column"
       - "(?i)prisma|sql|postgresql|entity"
-    triggers: [database-agent]
+    triggers: [database]
 
   personal_data:
     description: "Handles personal/sensitive data"
     detect_patterns:
       - "(?i)personal|user.*data|email|password|profile"
       - "(?i)rgpd|gdpr|consent|privacy"
-    triggers: [rgpd-agent]
+    triggers: [rgpd]
 
   legal_compliance:
     description: "Legal/compliance requirements"
     detect_patterns:
       - "(?i)legal|compliance|regulation|minors|children"
-    triggers: [legal-agent]
+    triggers: [legal]
 
   security_critical:
     description: "Security-sensitive feature"
     detect_patterns:
       - "(?i)security|auth|password|token|jwt|oauth"
       - "(?i)encryption|vulnerability|owasp"
-    triggers: [security-agent, pentest-agent]
+    triggers: [security, pentest]
 
   new_dependencies:
     description: "New external dependencies added"
     detect_patterns:
       - "(?i)install|package|dependency|npm|library"
-    triggers: [dependency-agent]
+    triggers: [dependency]
 
   performance_critical:
     description: "Performance-sensitive feature"
     detect_patterns:
       - "(?i)performance|optimization|speed|latency"
-    triggers: [performance-agent]
+    triggers: [performance]
 
   needs_infra:
     description: "Infrastructure changes needed"
     detect_patterns:
       - "(?i)deploy|docker|kubernetes|ci|cd|pipeline"
-    triggers: [devops-agent]
+    triggers: [devops]
 
   is_mobile:
     description: "Mobile/React Native development"
     detect_patterns:
       - "(?i)mobile|react.native|expo|ios|android"
-    triggers: [mobile-agent]
+    triggers: [mobile]
     replaces: developer
 
   needs_docs:
@@ -139,25 +139,25 @@ phases:
           criteria: [adr_created, system_design_documented]
 
       - step: 2.5a
-        agent: rgpd-agent
+        agent: rgpd
         type: conditional
         trigger: personal_data
         parallel_group: compliance_checks
 
       - step: 2.5b
-        agent: security-agent
+        agent: security
         type: conditional
         trigger: security_critical
         parallel_group: compliance_checks
 
       - step: 2.5c
-        agent: database-agent
+        agent: database
         type: conditional
         trigger: has_db_schema
         parallel_group: compliance_checks
 
       - step: 2.5d
-        agent: legal-agent
+        agent: legal
         type: conditional
         trigger: legal_compliance
         parallel_group: compliance_checks
@@ -193,7 +193,7 @@ phases:
         type: core
         always: true
         replaced_by:
-          - agent: mobile-agent
+          - agent: mobile
             trigger: is_mobile
           - agent: game-developer
             trigger: is_game
@@ -202,19 +202,19 @@ phases:
           criteria: [code_written, unit_tests_passing, ucv_dev_checked]
 
       - step: 4.5a
-        agent: security-agent
+        agent: security
         type: conditional
         trigger: security_critical
         parallel_group: code_quality_checks
 
       - step: 4.5b
-        agent: i18n-agent
+        agent: i18n
         type: conditional
         trigger: has_i18n
         parallel_group: code_quality_checks
 
       - step: 4.5c
-        agent: lint-agent
+        agent: lint
         type: auto
         always: true
 
@@ -224,7 +224,7 @@ phases:
         always: true
 
       - step: 4.5e
-        agent: dependency-agent
+        agent: dependency
         type: conditional
         trigger: new_dependencies
 
@@ -237,7 +237,7 @@ phases:
           criteria: [e2e_tests_passing, coverage_80_percent, ucv_test_checked]
 
       - step: 5.5
-        agent: performance-agent
+        agent: performance
         type: conditional
         trigger: performance_critical
 
@@ -257,19 +257,19 @@ phases:
           criteria: [exploratory_session_complete, no_critical_bugs, ucv_qa_checked]
 
       - step: 6.5a
-        agent: pentest-agent
+        agent: pentest
         type: conditional
         trigger: security_critical
         parallel_group: security_validation
 
       - step: 6.5b
-        agent: accessibility-agent
+        agent: accessibility
         type: conditional
         trigger: has_ui
         parallel_group: security_validation
 
       - step: 6.5c
-        agent: devops-agent
+        agent: devops
         type: conditional
         trigger: needs_infra
         parallel_group: security_validation
@@ -284,7 +284,7 @@ phases:
           criteria: [all_dev_checked, all_test_checked, all_qa_checked, coverage_100_percent]
 
       - step: 7
-        agent: review-agent
+        agent: review
         type: core
         always: true
         gate:
@@ -307,29 +307,29 @@ agent_inventory:
     - developer
     - tester
     - exploratory-qa
-    - review-agent
+    - review
 
   quality_hqvf:
     - ucv-writer
     - ucv-validator
 
   auto:
-    - lint-agent
+    - lint
     - atlas
 
   conditional:
     - ux-designer
-    - i18n-agent
-    - accessibility-agent
-    - database-agent
-    - rgpd-agent
-    - legal-agent
-    - security-agent
-    - pentest-agent
-    - dependency-agent
-    - performance-agent
-    - devops-agent
-    - mobile-agent
+    - i18n
+    - accessibility
+    - database
+    - rgpd
+    - legal
+    - security
+    - pentest
+    - dependency
+    - performance
+    - devops
+    - mobile
     - tech-writer
 
   gaming:
@@ -339,11 +339,11 @@ agent_inventory:
     - game-developer
 
   meta:
-    - party-agent
-    - quick-flow-agent
+    - party
+    - quick-flow
     - quick-flow-solo-dev
-    - supervisor-agent
-    - backlog-agent
+    - supervisor
+    - backlog
 
   ai_specialists:
     - ai-architect
@@ -354,15 +354,15 @@ agent_inventory:
 parallel_groups:
   compliance_checks:
     description: "Steps 2.5a-d can run in parallel"
-    agents: [rgpd-agent, security-agent, database-agent, legal-agent]
+    agents: [rgpd, security, database, legal]
 
   code_quality_checks:
     description: "Steps 4.5a-e can run in parallel"
-    agents: [security-agent, i18n-agent, lint-agent, atlas, dependency-agent]
+    agents: [security, i18n, lint, atlas, dependency]
 
   security_validation:
     description: "Steps 6.5a-c can run in parallel"
-    agents: [pentest-agent, accessibility-agent, devops-agent]
+    agents: [pentest, accessibility, devops]
 
 # =============================================================================
 # HQVF - Harmony Quality Verification Framework

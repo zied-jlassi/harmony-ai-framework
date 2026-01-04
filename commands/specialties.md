@@ -78,9 +78,9 @@ specialties/
 ├── security/
 │   ├── manifest.yaml
 │   ├── agents/
-│   │   ├── security-agent.md
-│   │   ├── pentest-agent.md
-│   │   └── rgpd-agent.md
+│   │   ├── security.md
+│   │   ├── pentest.md
+│   │   └── rgpd.md
 │   ├── modules/
 │   │   ├── pentest-web.md
 │   │   ├── pentest-network.md

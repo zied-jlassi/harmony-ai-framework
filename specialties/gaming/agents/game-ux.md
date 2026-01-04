@@ -1,5 +1,5 @@
 ---
-name: "game-ux-agent"
+name: "game-ux"
 displayName: "Game UX Designer"
 description: "Game UX/UI Designer - HUD design, feedback loops, player onboarding - Phase 2"
 argument-hint: [tache-ux] [type-jeu-optionnel]

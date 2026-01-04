@@ -60,10 +60,10 @@ auto_detection:
     PLAN: "scrum-master"
     IMPLEMENT: "developer"
     TEST: "tester"
-    REVIEW: "review-agent"
+    REVIEW: "review"
     DOCUMENT: "tech-writer"
     FIX: "developer"
-    DEPLOY: "devops-agent"
+    DEPLOY: "devops"
     EXPLORE_QA: "exploratory-qa"
 
 # =============================================================================
@@ -106,7 +106,7 @@ detection_patterns:
     priority: 3
     tier: 2
 
-  review-agent:
+  review:
     keywords: [review, code-review, pr, pull-request, merge]
     patterns: ["(?i)review.*code", "(?i)check.*pr"]
     priority: 2
@@ -124,56 +124,56 @@ detection_patterns:
     priority: 2
     tier: 2
 
-  rgpd-agent:
+  rgpd:
     keywords: [rgpd, gdpr, donnees-personnelles, personal-data, consent, retention]
     patterns: ["(?i)rgpd.*compliance", "(?i)personal.*data"]
     priority: 1
     trigger: personal_data
     tier: 3
 
-  security-agent:
+  security:
     keywords: [security, securite, auth, authentication, owasp, vulnerability]
     patterns: ["(?i)security.*review", "(?i)audit.*securite"]
     priority: 0
     trigger: security_critical
     tier: 1
 
-  database-agent:
+  database:
     keywords: [database, schema, migration, prisma, sql, entity]
     patterns: ["(?i)design.*schema", "(?i)create.*migration"]
     priority: 2
     trigger: has_db_schema
     tier: 2
 
-  legal-agent:
+  legal:
     keywords: [legal, compliance, mineurs, privacy, terms]
     patterns: ["(?i)check.*compliance"]
     priority: 0
     trigger: legal_compliance
     tier: 3
 
-  pentest-agent:
+  pentest:
     keywords: [pentest, penetration, vulnerability, exploit, injection, xss]
     patterns: ["(?i)pentest.*app", "(?i)find.*vulnerability"]
     priority: 1
     trigger: security_critical
     tier: 1
 
-  dependency-agent:
+  dependency:
     keywords: [dependency, package, npm, vulnerabilities, license, audit]
     patterns: ["(?i)check.*dependencies", "(?i)audit.*packages"]
     priority: 4
     trigger: new_dependencies
     tier: 3
 
-  performance-agent:
+  performance:
     keywords: [performance, optimization, benchmark, latency, throughput]
     patterns: ["(?i)optimize.*performance", "(?i)improve.*speed"]
     priority: 3
     trigger: performance_critical
     tier: 2
 
-  devops-agent:
+  devops:
     keywords: [devops, deploy, docker, kubernetes, ci, cd, pipeline]
     patterns: ["(?i)deploy.*production", "(?i)configure.*ci"]
     priority: 4
@@ -186,14 +186,14 @@ detection_patterns:
     priority: 3
     tier: 2
 
-  i18n-agent:
+  i18n:
     keywords: [i18n, internationalization, translation, localization]
     patterns: ["(?i)translate.*string", "(?i)add.*language"]
     priority: 4
     trigger: has_i18n
     tier: 3
 
-  accessibility-agent:
+  accessibility:
     keywords: [accessibility, a11y, wcag, screen-reader, keyboard, aria]
     patterns: ["(?i)accessibility.*audit", "(?i)wcag.*compliance"]
     priority: 3
@@ -206,7 +206,7 @@ detection_patterns:
     priority: 5
     tier: 3
 
-  lint-agent:
+  lint:
     keywords: [lint, eslint, prettier, format, code-style]
     patterns: ["(?i)run.*lint"]
     priority: 5
@@ -225,21 +225,21 @@ detection_patterns:
     priority: 1
     tier: 4
 
-  backlog-agent:
+  backlog:
     keywords: [backlog, dashboard, visualize, kanban, board]
     patterns: ["(?i)backlog.*dashboard"]
     priority: 4
     category: meta
     tier: 4
 
-  party-agent:
+  party:
     keywords: [party, discussion, multi-agent, brainstorm, debate]
     patterns: ["(?i)party.*mode", "(?i)multi.*agent"]
     priority: 3
     category: meta
     tier: 4
 
-  quick-flow-agent:
+  quick-flow:
     keywords: [quick, fast, rapid, shortcut, express]
     patterns: ["(?i)quick.*flow", "(?i)fast.*track"]
     priority: 4
@@ -253,7 +253,7 @@ detection_patterns:
     category: meta
     tier: 4
 
-  supervisor-agent:
+  supervisor:
     keywords: [supervisor, orchestrate, coordinate, manage, oversee]
     patterns: ["(?i)supervise.*agents"]
     priority: 2
@@ -302,17 +302,17 @@ detection_patterns:
 # =============================================================================
 parallel_groups:
   compliance_checks:
-    agents: [rgpd-agent, security-agent, database-agent, legal-agent]
+    agents: [rgpd, security, database, legal]
     parallel: true
     step: "2.5"
 
   code_quality_checks:
-    agents: [security-agent, i18n-agent, lint-agent, atlas, dependency-agent]
+    agents: [security, i18n, lint, atlas, dependency]
     parallel: true
     step: "4.5"
 
   security_validation:
-    agents: [pentest-agent, accessibility-agent, devops-agent]
+    agents: [pentest, accessibility, devops]
     parallel: true
     step: "6.5"
 

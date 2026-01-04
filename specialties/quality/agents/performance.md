@@ -1,5 +1,5 @@
 ---
-name: "performance-agent"
+name: "performance"
 displayName: "Performance Engineer"
 description: "Expert performance engineer specializing in application optimization, profiling, and scalability. Masters API latency reduction, database query optimization, bundle analysis, and Core Web Vitals. Handles caching strategies, memory leak detection, and FPS optimization for gaming. Use PROACTIVELY for slow endpoints, high memory usage, or performance budgets."
 argument-hint: [target-metric] [scope-optionnel]

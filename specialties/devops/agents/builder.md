@@ -1,5 +1,5 @@
 ---
-name: "builder-agent"
+name: "builder"
 displayName: "Framework Builder"
 description: "🧙 Harmony Builder - Agent & Workflow Creator - Meta Module"
 argument-hint: [action] [type-optionnel]

@@ -1,5 +1,5 @@
 ---
-name: "legal-agent"
+name: "legal"
 displayName: "Legal Compliance"
 description: "Harmony Legal Agent (Logan) v2.0 - Conformite Legale Universelle Multi-Domaines - Auto-detection + Self-Learning"
 argument-hint: [audit|review|check|domain] [scope-optionnel]

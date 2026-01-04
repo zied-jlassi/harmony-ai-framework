@@ -1,5 +1,5 @@
 ---
-name: "lint-agent"
+name: "lint"
 displayName: "Lint Agent"
 description: "🔍 Harmony Lint (Lenny) - ESLint/Prettier/TypeScript Strict - Code Quality"
 argument-hint: [tâche-lint] [fichier-optionnel]

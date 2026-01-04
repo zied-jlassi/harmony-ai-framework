@@ -11,16 +11,16 @@ specialty:
 
 # Agents included in this specialty
 agents:
-  - id: pentest-agent
-    file: agents/pentest-agent.md
+  - id: pentest
+    file: agents/pentest.md
     description: "Penetration testing expert - OWASP, network, web, social engineering"
 
-  - id: security-agent
-    file: agents/security-agent.md
+  - id: security
+    file: agents/security.md
     description: "General security architect - security patterns, threat modeling"
 
-  - id: rgpd-agent
-    file: agents/rgpd-agent.md
+  - id: rgpd
+    file: agents/rgpd.md
     description: "RGPD/GDPR compliance expert - data protection, privacy"
 
 # Modules (specialized knowledge packs for pentest)

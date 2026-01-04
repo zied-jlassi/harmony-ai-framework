@@ -1,5 +1,5 @@
 ---
-name: "party-agent"
+name: "party"
 displayName: "Party Host"
 emoji: "🎉"
 description: "Collaboration multi-agents - Brainstorming"

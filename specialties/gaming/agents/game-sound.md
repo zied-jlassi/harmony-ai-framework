@@ -1,5 +1,5 @@
 ---
-name: "game-sound-agent"
+name: "game-sound"
 displayName: "Game Sound Designer"
 description: "Sound design, adaptive music, audio feedback, SFX - Phase 3-4"
 argument-hint: [tache-audio] [type-son-optionnel]

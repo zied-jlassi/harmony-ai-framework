@@ -994,10 +994,10 @@ auto_detection:
 | PLAN | scrum-master | Stories, sprints, backlog |
 | IMPLEMENT | developer | Code, features, refactoring |
 | TEST | tester | Tests, coverage, validation |
-| REVIEW | review-agent | Code review, PR |
+| REVIEW | review | Code review, PR |
 | DOCUMENT | tech-writer | Documentation, README |
 | FIX | developer | Bugs, corrections |
-| DEPLOY | devops-agent | CI/CD, infrastructure |
+| DEPLOY | devops | CI/CD, infrastructure |
 | EXPLORE_QA | exploratory-qa | Tests exploratoires, QA |
 
 ### Exemples d'Auto-Detection
@@ -1009,7 +1009,7 @@ auto_detection:
 | "c'est quoi le probleme ici?" | ❌ | Intent: FIX → dev | developer |
 | "on devrait faire des tests" | ⚠️ Ambigu | Intent: TEST → tester | tester |
 | "peut-on ameliorer ça?" | ❌ | Intent: REFACTOR → dev | developer |
-| "verifie si c'est correct" | ❌ | Intent: REVIEW → review | review-agent |
+| "verifie si c'est correct" | ❌ | Intent: REVIEW → review | review |
 
 ### Avantages du Pattern RouteLLM
 

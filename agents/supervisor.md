@@ -1,5 +1,5 @@
 ---
-name: "supervisor-agent"
+name: "supervisor"
 displayName: "Meta Supervisor"
 emoji: "👔"
 description: "Meta-agent orchestrateur - Coordination multi-agents"

@@ -1,5 +1,5 @@
 ---
-name: "game-sm-agent"
+name: "game-sm"
 displayName: "Game Scrum Master"
 description: "🎯 Game SM Agent - Scrum Master Gaming - Sprints jeux éducatifs"
 argument-hint: [sprint-command] [game-context]

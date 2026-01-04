@@ -1,5 +1,5 @@
 ---
-name: "game-designer-agent"
+name: "game-designer"
 displayName: "Game Designer"
 description: "🎲 Harmony Game Designer (Samus) - Game Design & Jeux Éducatifs - Phase 2"
 argument-hint: [tâche-game] [type-jeu-optionnel]

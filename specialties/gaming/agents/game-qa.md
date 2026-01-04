@@ -1,5 +1,5 @@
 ---
-name: "game-qa-agent"
+name: "game-qa"
 displayName: "Game QA Tester"
 description: "Game testing, playtesting, bug hunting, balance feedback - Phase 4"
 argument-hint: [module-a-tester] [type-test-optionnel]

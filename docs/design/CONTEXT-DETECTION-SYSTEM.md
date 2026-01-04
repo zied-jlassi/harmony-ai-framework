@@ -963,7 +963,7 @@ auto_detection:
 
   classification_prompt: |
     Analyze this user request and determine:
-    1. PRIMARY_INTENT: One of [ANALYZE, DESIGN, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE]
+    1. PRIMARY_INTENT: One of [ANALYZE, DESIGN, PLAN, IMPLEMENT, TEST, REVIEW, DOCUMENT, FIX, DEPLOY, EXPLORE_QA]
     2. CONTEXT_FLAGS: Which flags apply? [has_ui, has_db_schema, personal_data, security_critical, is_game, needs_docs]
     3. SUGGESTED_AGENT: Which agent should handle this?
     4. CONFIDENCE: 0.0 to 1.0
@@ -998,7 +998,7 @@ auto_detection:
 | DOCUMENT | tech-writer | Documentation, README |
 | FIX | developer | Bugs, corrections |
 | DEPLOY | devops-agent | CI/CD, infrastructure |
-| EXPLORE | exploratory-qa | Tests exploratoires, QA |
+| EXPLORE_QA | exploratory-qa | Tests exploratoires, QA |
 
 ### Exemples d'Auto-Detection
 

@@ -74,7 +74,7 @@ User: "développe le scoring"
 | FIX | corriger, bug, erreur, problème | Developer | Story ou BUGFIX |
 | PLAN | story, sprint, planifier, backlog | SM (Scrum Master) | Architecture existe |
 | TEST | tester, test, coverage, TDD | TEA (Tester) | - |
-| EXPLORE | Exploratory QA, QA exploratoire | Exploratory QA | - |
+| EXPLORE_QA | Exploratory QA, QA exploratoire | Exploratory QA | - |
 | ANALYZE | analyser, besoin, comprendre | Analyst (Analyst) | - |
 | DESIGN | architecture, ADR, structurer | Architect | PRD existe |
 | UCV | UCV, use case, vérifications | UCV Writer | Story existe |

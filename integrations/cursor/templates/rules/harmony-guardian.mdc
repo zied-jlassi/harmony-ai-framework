@@ -37,7 +37,7 @@ Before any implementation:
 
 - **IMPLEMENT/FIX** → Developer
 - **TEST** → Tester
-- **EXPLORE** → Exploratory QA
+- **EXPLORE_QA** → Exploratory QA
 - **ANALYZE** → Analyst
 - **DESIGN** → Architect
 

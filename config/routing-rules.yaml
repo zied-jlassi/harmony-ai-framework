@@ -64,7 +64,7 @@ auto_detection:
     DOCUMENT: "tech-writer"
     FIX: "developer"
     DEPLOY: "devops-agent"
-    EXPLORE: "exploratory-qa"
+    EXPLORE_QA: "exploratory-qa"
 
 # =============================================================================
 # AGENT DETECTION PATTERNS

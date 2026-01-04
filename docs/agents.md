@@ -88,7 +88,7 @@ User: "develop the scoring system"
 | FIX | fix, bug, error | Developer |
 | PLAN | story, sprint, plan | Scrum Master |
 | TEST | test, coverage, TDD | Tester |
-| EXPLORE | QA, verify, check | Luna |
+| EXPLORE_QA | QA, verify, check | Exploratory QA |
 | ANALYZE | analyze, requirements | Analyst |
 | DESIGN | architecture, ADR | Architect |
 

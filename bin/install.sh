@@ -548,28 +548,67 @@ initialize_memory() {
     local memory_dir="$MEMORY_DIR"
     mkdir -p "$memory_dir"
 
-    # Initialize workflow state
+    # Initialize workflow state (unified schema v1.0)
     cat > "$memory_dir/workflow-state.json" << 'EOF'
 {
-  "version": "1.0.0",
-  "current_phase": 1,
-  "phase_name": "Discovery",
-  "active_story": null,
-  "active_epic": null,
+  "version": "1.0",
+  "last_updated": null,
+  "harmony": {
+    "version": "1.0.0",
+    "initialized": true,
+    "project_name": null,
+    "language": "en"
+  },
+  "phase": {
+    "current": 1,
+    "name": "Discovery",
+    "started": null,
+    "gates_passed": []
+  },
   "guardian": {
+    "enabled": true,
     "mode": "warn",
     "require_story": true,
-    "require_ucv": true
+    "require_ucv": true,
+    "allowed_directories": [
+      ".harmony/",
+      ".claude/",
+      "docs/",
+      "*.md",
+      "*.json",
+      "*.yaml"
+    ]
   },
-  "session": {
+  "sentinel": {
+    "enabled": true,
+    "error_memory": true,
+    "pattern_learning": true
+  },
+  "hqvf": {
+    "enabled": true,
+    "require_approval": true,
+    "coverage_target": 100
+  },
+  "active_context": {
+    "current_story": null,
+    "current_sprint": null,
+    "current_epic": null,
+    "active_agent": null,
+    "last_handoff": null
+  },
+  "sprint": {
     "id": null,
-    "started_at": null,
-    "last_activity": null
+    "name": null,
+    "start_date": null,
+    "end_date": null,
+    "stories": [],
+    "velocity": 0
   },
-  "context": {
-    "active_files": [],
-    "recent_operations": [],
-    "pending_tasks": []
+  "statistics": {
+    "stories_completed": 0,
+    "ucvs_created": 0,
+    "errors_recorded": 0,
+    "patterns_learned": 0
   }
 }
 EOF

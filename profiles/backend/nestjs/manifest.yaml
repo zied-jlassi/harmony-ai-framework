@@ -1,158 +1,134 @@
-# NestJS Profile
-# Level 2 - Framework (requires TypeScript + Node.js)
-# Knowledge populated via: /harmony learn
-# Conditional loading via: profile-loader.sh
+# NestJS Profile - Modèle Hybride 3 Niveaux
+# ═══════════════════════════════════════════════════════════════
+#
+# NIVEAU 1: Industry Standards   → Sources professionnelles (web)
+# NIVEAU 2: Project Conventions  → Spécificités équipe (à remplir)
+# NIVEAU 3: Experience           → Erreurs passées (auto-Sentinel)
+#
+# DOCS OFFICIELLES → Context7 on-demand (pas stockées)
+#
+# ═══════════════════════════════════════════════════════════════
 
 profile:
   id: nestjs
   name: "NestJS"
   category: backend
   level: 2
-  description: "NestJS framework - modules, controllers, providers, guards"
+  model: hybrid-3-levels
+  description: "NestJS - Modèle hybride: Industry + Conventions + Experience"
   last_updated: "2026-01-04"
 
 # ═══════════════════════════════════════════════════════════════
-# VERSION MANAGEMENT - Critical for compatibility!
+# VERSIONING - Pour Context7 Queries
 # ═══════════════════════════════════════════════════════════════
 versioning:
-  latest: "11.x"
-  lts: "10.x"
-
-  versions:
-    "11.x":
-      released: "2024-12"
-      node_min: "20.x"
-      typescript_min: "5.3"
-    "10.x":
-      released: "2023-06"
-      node_min: "18.x"
-      typescript_min: "5.0"
-    "9.x":
-      deprecated: true
-      node_min: "16.x"
-
-  # Auto-detection from project files
   detection:
     file: "package.json"
     path: "dependencies.@nestjs/core"
-    fallback: "latest"
 
-dependencies:
-  required:
-    - typescript
-    - nodejs
-  optional:
-    - prisma
-    - graphql
-  conflicts:
-    - express
+  context7:
+    library_id: "/nestjs/docs.nestjs.com"
+    version_hint: true
+
+  fallback_urls:
+    latest: "https://docs.nestjs.com/"
+    "10.x": "https://docs.nestjs.com/v10/"
 
 # ═══════════════════════════════════════════════════════════════
-# KNOWLEDGE - Conditional Loading Sections
+# KNOWLEDGE 3 NIVEAUX
 # ═══════════════════════════════════════════════════════════════
-
 knowledge:
-  sources:
-    - url: "https://docs.nestjs.com/"
-      version: "latest"
-    - url: "https://docs.nestjs.com/v10/"
-      version: "10.x"
 
   # ─────────────────────────────────────────────────────────────
-  # CONDITIONAL SECTIONS
+  # NIVEAU 1: Industry Standards (sources professionnelles)
   # ─────────────────────────────────────────────────────────────
-  sections:
+  industry_standards:
+    description: "Best practices universelles (FreeCodeCamp, NestJS docs, etc.)"
+    load: on_intent
+    enriched_via: "/harmony learn --search"
+    files:
+      - knowledge/industry-standards/architecture.md
+      - knowledge/industry-standards/security.md
+      - knowledge/industry-standards/testing.md
+      - knowledge/industry-standards/performance.md
 
-    # CORE - Always loaded when NestJS profile is active
-    core:
-      load: always
-      files:
-        - knowledge/core/modules.md
-        - knowledge/core/controllers.md
-        - knowledge/core/providers.md
-      max_tokens: 2000
-      description: "Essential NestJS concepts for any task"
+  # ─────────────────────────────────────────────────────────────
+  # NIVEAU 2: Project Conventions (spécifique équipe)
+  # ─────────────────────────────────────────────────────────────
+  project_conventions:
+    description: "Règles spécifiques au projet (à personnaliser)"
+    load: always
+    user_maintained: true
+    files:
+      - knowledge/project-conventions/README.md
+      - knowledge/project-conventions/api-patterns.md
+      - knowledge/project-conventions/naming.md
+      - knowledge/project-conventions/security.md
 
-    # ADVANCED - Loaded when specific keywords detected
-    advanced:
-      load: on_keyword
-      keywords:
-        - guard
-        - interceptor
-        - pipe
-        - filter
-        - middleware
-        - exception
-        - validation
-        - custom decorator
-      files:
-        - knowledge/advanced/guards.md
-        - knowledge/advanced/interceptors.md
-        - knowledge/advanced/pipes.md
-        - knowledge/advanced/filters.md
-        - knowledge/advanced/middleware.md
-      max_tokens: 3000
-      max_files: 2
-      description: "Advanced patterns loaded on-demand"
-
-    # TESTING - Loaded for test-related intents
-    testing:
-      load: on_intent
-      intents:
-        - TEST
-        - TDD
-        - COVERAGE
-        - SPEC
-      keywords:
-        - test
-        - spec
-        - mock
-        - jest
-        - e2e
-        - supertest
-      files:
-        - knowledge/testing/unit-testing.md
-        - knowledge/testing/e2e-testing.md
-        - knowledge/testing/mocking.md
-      max_tokens: 2000
-      description: "Testing patterns and best practices"
-
-    # SECURITY - Loaded for security-related work
-    security:
-      load: on_intent
-      intents:
-        - SECURITY
-        - AUTH
-        - AUDIT
-        - PENTEST
-      keywords:
-        - auth
-        - jwt
-        - passport
-        - guard
-        - role
-        - permission
-        - rbac
-        - session
-        - oauth
-      files:
-        - knowledge/security/authentication.md
-        - knowledge/security/authorization.md
-        - knowledge/security/best-practices.md
-      max_tokens: 1500
-      description: "Authentication and authorization patterns"
+  # ─────────────────────────────────────────────────────────────
+  # NIVEAU 3: Experience (auto-enrichi par Sentinel)
+  # ─────────────────────────────────────────────────────────────
+  experience:
+    description: "Erreurs passées et leçons apprises (auto-généré)"
+    load: always
+    auto_enriched: true
+    source: ".claude/memory/error-journal.json"
+    filter_tags: ["nestjs", "typescript", "api"]
+    files:
+      - knowledge/experience/README.md
+      - knowledge/experience/pitfalls.md
+      - knowledge/experience/solutions.md
 
 # ═══════════════════════════════════════════════════════════════
-# LOADING CONFIGURATION
+# CONTEXT7 INTEGRATION (Docs Officielles On-Demand)
 # ═══════════════════════════════════════════════════════════════
+context7:
+  enabled: true
+  library_id: "/nestjs/docs.nestjs.com"
 
-loading:
-  strategy: conditional     # jit → conditional
-  fallback: core            # If no match, load core only
-  max_sections: 2           # Max sections per request (core + 1)
-  max_total_tokens: 5000    # Hard limit
+  # Queries suggérées par intent
+  suggested_queries:
+    SECURITY:
+      - "authentication JWT passport"
+      - "authorization guards RBAC"
+    IMPLEMENT:
+      - "modules controllers providers"
+      - "dependency injection"
+    TEST:
+      - "testing jest mocking"
+      - "e2e supertest"
+    DATABASE:
+      - "TypeORM Prisma integration"
+      - "repositories patterns"
 
-cross_references:
-  - "[[typescript/decorators]]"
-  - "[[nodejs/modules]]"
-  - "[[prisma/integration]]"
+# ═══════════════════════════════════════════════════════════════
+# SENTINEL INTEGRATION
+# ═══════════════════════════════════════════════════════════════
+sentinel:
+  watch_tags:
+    - nestjs
+    - typescript
+    - api
+    - auth
+    - validation
+    - prisma
+
+  auto_sync:
+    enabled: true
+    target: knowledge/experience/
+    on_new_error: true
+
+# ═══════════════════════════════════════════════════════════════
+# SOURCES PROFESSIONNELLES (pour /harmony learn)
+# ═══════════════════════════════════════════════════════════════
+learn_sources:
+  recommended:
+    - url: "https://www.freecodecamp.org/news/the-nestjs-handbook-learn-to-use-nest-with-code-examples/"
+      topics: ["architecture", "patterns"]
+    - url: "https://docs.nestjs.com/fundamentals/custom-providers"
+      topics: ["di", "providers"]
+
+  search_queries:
+    - "NestJS best practices enterprise 2025"
+    - "NestJS security authentication patterns"
+    - "NestJS microservices architecture"

@@ -1,49 +1,164 @@
-# Angular Profile
-# Level 2 - Framework (requires TypeScript)
-# Knowledge populated via: /harmony learn
+# Angular Profile - Modèle Hybride 3 Niveaux
+# ═══════════════════════════════════════════════════════════════
+#
+# NIVEAU 1: Industry Standards   → Sources pro (angular.dev, etc.)
+# NIVEAU 2: Project Conventions  → Spécificités équipe (à remplir)
+# NIVEAU 3: Experience           → Erreurs passées (auto-Sentinel)
+#
+# DOCS OFFICIELLES → Context7 on-demand (pas stockées)
+#
+# ═══════════════════════════════════════════════════════════════
 
 profile:
   id: angular
   name: "Angular"
-  version: "17.x / 18.x / 19.x"
   category: frontend
   level: 2
-  description: "Angular framework - components, signals, services, routing"
-  last_updated: null
+  model: hybrid-3-levels
+  description: "Angular - Modèle hybride: Industry + Conventions + Experience"
+  last_updated: "2026-01-04"
+
+# ═══════════════════════════════════════════════════════════════
+# VERSIONING - CRITIQUE pour Angular
+# ═══════════════════════════════════════════════════════════════
+versioning:
+  # Versions supportées
+  latest: "19.x"
+  lts: "18.x"
+
+  versions:
+    "19.x":
+      released: "2024-11"
+      node_min: "20.x"
+      typescript_min: "5.4"
+      features: ["signals stable", "standalone default", "zoneless preview"]
+    "18.x":
+      released: "2024-05"
+      node_min: "18.x"
+      typescript_min: "5.2"
+      features: ["signals", "standalone", "control flow @if/@for"]
+    "17.x":
+      released: "2023-11"
+      node_min: "18.x"
+      typescript_min: "5.0"
+      features: ["signals preview", "new control flow"]
+    "16.x":
+      deprecated: true
+      node_min: "16.x"
+      features: ["standalone components"]
+
+  # Auto-détection depuis package.json
+  detection:
+    file: "package.json"
+    path: "dependencies.@angular/core"
+    fallback: "latest"
+
+  # Context7 library par version
+  context7:
+    default: "/websites/angular_dev"
+    "18.x": "/websites/v18_angular_dev"
+    version_hint: true  # Ajoute "Angular {version}" au query
+
+  # Fallback URLs si Context7 indisponible
+  fallback_urls:
+    latest: "https://angular.dev/"
+    "18.x": "https://v18.angular.dev/"
+    "17.x": "https://v17.angular.dev/"
 
 dependencies:
   required:
-    - typescript    # Angular is TypeScript-first
+    - typescript
   optional:
-    - rxjs          # Reactive patterns (still used)
-  conflicts: []
+    - rxjs
 
+# ═══════════════════════════════════════════════════════════════
+# KNOWLEDGE 3 NIVEAUX
+# ═══════════════════════════════════════════════════════════════
 knowledge:
-  sources:
-    - url: "https://angular.dev/"
-      priority: 1
-    - url: "https://angular.io/docs"
-      priority: 2
 
-  topics:
-    - components      # @Component, templates, styles
-    - signals         # signal(), computed(), effect()
-    - services        # @Injectable, DI
-    - routing         # Routes, guards, resolvers
-    - forms           # reactive, template-driven
-    - http            # HttpClient, interceptors
-    - directives      # structural, attribute
-    - pipes           # transform display
-    - testing         # TestBed, component testing
+  # ─────────────────────────────────────────────────────────────
+  # NIVEAU 1: Industry Standards (sources professionnelles)
+  # ─────────────────────────────────────────────────────────────
+  industry_standards:
+    description: "Best practices Angular officielles (angular.dev, style guide)"
+    load: on_intent
+    enriched_via: "/harmony learn --search"
+    files:
+      - knowledge/industry-standards/architecture.md
+      - knowledge/industry-standards/components.md
+      - knowledge/industry-standards/signals.md
+      - knowledge/industry-standards/performance.md
 
-loading:
-  strategy: jit
-  max_files_per_request: 3
-  priority:
-    - components
+  # ─────────────────────────────────────────────────────────────
+  # NIVEAU 2: Project Conventions (spécifique équipe)
+  # ─────────────────────────────────────────────────────────────
+  project_conventions:
+    description: "Règles spécifiques au projet (à personnaliser)"
+    load: always
+    user_maintained: true
+    files:
+      - knowledge/project-conventions/README.md
+
+  # ─────────────────────────────────────────────────────────────
+  # NIVEAU 3: Experience (auto-enrichi par Sentinel)
+  # ─────────────────────────────────────────────────────────────
+  experience:
+    description: "Erreurs passées et leçons apprises (auto-généré)"
+    load: always
+    auto_enriched: true
+    source: ".claude/memory/error-journal.json"
+    filter_tags: ["angular", "typescript", "frontend", "rxjs"]
+    files:
+      - knowledge/experience/README.md
+
+# ═══════════════════════════════════════════════════════════════
+# CONTEXT7 INTEGRATION (Docs Officielles On-Demand)
+# ═══════════════════════════════════════════════════════════════
+context7:
+  enabled: true
+  library_id: "/websites/angular_dev"
+
+  suggested_queries:
+    IMPLEMENT:
+      - "components standalone signals"
+      - "dependency injection inject"
+    STATE:
+      - "signals computed state management"
+      - "rxjs observables async pipe"
+    ROUTING:
+      - "router lazy loading guards"
+    FORMS:
+      - "reactive forms validation"
+    TEST:
+      - "testing components jest"
+
+# ═══════════════════════════════════════════════════════════════
+# SENTINEL INTEGRATION
+# ═══════════════════════════════════════════════════════════════
+sentinel:
+  watch_tags:
+    - angular
+    - typescript
+    - frontend
+    - rxjs
     - signals
-    - services
 
-cross_references:
-  - "[[typescript/decorators]]"
-  - "[[typescript/interfaces]]"
+  auto_sync:
+    enabled: true
+    target: knowledge/experience/
+    on_new_error: true
+
+# ═══════════════════════════════════════════════════════════════
+# SOURCES PROFESSIONNELLES (pour /harmony learn)
+# ═══════════════════════════════════════════════════════════════
+learn_sources:
+  recommended:
+    - url: "https://angular.dev/style-guide"
+      topics: ["naming", "structure", "conventions"]
+    - url: "https://angular.dev/guide/signals"
+      topics: ["signals", "state", "reactivity"]
+
+  search_queries:
+    - "Angular best practices enterprise 2025"
+    - "Angular signals state management patterns"
+    - "Angular standalone components architecture"

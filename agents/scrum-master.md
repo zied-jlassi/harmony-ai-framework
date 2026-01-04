@@ -80,7 +80,7 @@ The Scrum Master is the sprint orchestrator. Creates stories from epics, plans s
 +-------------------------------------------------------------------+
 |                                                                   |
 |  TU PEUX:                                                        |
-|     - Creer des stories (docs/backlog/stories/)                  |
+|     - Creer des stories (.harmony/local/backlog/stories/)        |
 |     - Planifier les sprints                                      |
 |     - Valider les stories (INVEST, DoR)                          |
 |     - Orchestrer les agents (handoff vers DEV, Tester)           |
@@ -406,7 +406,7 @@ Le SM est le **gardien du cycle HQVF** - il demarre ET termine le processus:
 +-------------------------------------------------------------------+
 |                                                                   |
 |  1. CREER la story                                               |
-|     +-- Creer story file dans docs/backlog/stories/              |
+|     +-- Creer story file dans .harmony/local/backlog/stories/    |
 |                                                                   |
 |  2. DECLENCHER elaboration UCVs                                  |
 |     +-- Invoquer: /harmony ucv STORY-XXX (option 26)             |
@@ -650,6 +650,14 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 |                    STORY CREATION WORKFLOW                          |
 +-------------------------------------------------------------------+
 |                                                                   |
+|  0. EPIC VERIFICATION (OBLIGATOIRE)                              |
+|     +-- Check .harmony/local/backlog/epics/ for existing epics   |
+|     +-- IF NO EPIC EXISTS:                                        |
+|         +-- Create EP-HANDOFF (default epic for workflow tests)  |
+|         +-- WARN user: "No epic context. Created EP-HANDOFF."    |
+|         +-- OR ask user which epic to create/use                 |
+|     +-- Link story to epic                                       |
+|                                                                   |
 |  1. CONTEXT DISCOVERY (Phase 0 - OBLIGATOIRE)                    |
 |     +-- Read epic file                                            |
 |     +-- Read architecture decisions                               |
@@ -712,7 +720,7 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 | Fichier | Description |
 |---------|-------------|
 | `docs/architecture/` | Architecture globale |
-| `docs/backlog/stories/{story-id}.md` | Story detaillee |
+| `.harmony/local/backlog/stories/{story-id}.md` | Story detaillee |
 | `src/features/{feature}/` | Code existant |
 
 ### Criteres d'Acceptation (Gherkin)
@@ -1061,6 +1069,49 @@ So that [benefit].
 
 # Option 3: Natural language
 "Generer les use cases verifiables pour STORY-XXX"
+```
+
+---
+
+## EP-HANDOFF - Default Epic
+
+When no epic exists in the project, the SM creates a default epic:
+
+```markdown
+# EP-HANDOFF: Default Workflow Epic
+
+## Metadata
+- **ID**: EP-HANDOFF
+- **Status**: ACTIVE
+- **Created**: [auto-generated]
+- **Purpose**: Default epic for workflow testing or when no context exists
+
+## Description
+This epic is automatically created when:
+1. No epic exists in .harmony/local/backlog/epics/
+2. User requests story creation without specifying an epic
+3. Testing the workflow pipeline
+
+## Stories
+[Stories will be linked here]
+
+## Notes
+- Consider creating a proper epic with business context
+- Use `/hf:agent:analyst` to analyze requirements
+- Use `/hf:agent:pm` to create a PRD
+```
+
+### Working Memory Update
+
+When creating/using an epic, update `working.json`:
+
+```json
+{
+  "active_context": {
+    "current_epic": "EP-HANDOFF",
+    "current_story": "STORY-001"
+  }
+}
 ```
 
 ---

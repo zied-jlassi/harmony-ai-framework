@@ -258,8 +258,8 @@ Analyser l'intention et router automatiquement.
 
 ## 🔴 CONFORMITÉ LÉGALE - VÉRIFICATION QUICK FLOW
 
-> **Document**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### EPICs avec Contraintes Légales
 
@@ -314,7 +314,7 @@ Analyser l'intention et router automatiquement.
 │                                                                              │
 │  0. LEGAL CHECK (NOUVEAU - OBLIGATOIRE)                                      │
 │     - Vérifier si EPIC a des contraintes légales (voir tableau)             │
-│     - Si OUI: lire docs/backlog/LEGAL-COMPLIANCE.md                         │
+│     - Si OUI: lire .harmony/local/backlog/LEGAL-COMPLIANCE.md                         │
 │     - Inclure les contraintes dans l'implémentation                         │
 │                                                                              │
 │  1. LOAD TECH SPEC                                                           │

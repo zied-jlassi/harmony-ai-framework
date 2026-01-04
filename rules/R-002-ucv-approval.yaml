@@ -65,7 +65,7 @@ actions:
       1. Generate UCVs: "create UCV for {story_id}"
 
       If UCV exists but not approved:
-      2. Review the UCV file: docs/backlog/stories/{story_id}-UCV.md
+      2. Review the UCV file: .harmony/local/backlog/stories/{story_id}-UCV.md
       3. Request user approval
       4. Update status to APPROVED
 

@@ -47,13 +47,13 @@ transitions:
       {story_summary}
 
       ### Deliverables
-      - Story file: `docs/backlog/stories/{story_id}.md`
+      - Story file: `.harmony/local/backlog/stories/{story_id}.md`
 
       ### Next Action
       Create Use Case Verifications (UCVs) for this story.
 
       ### References
-      - Epic: `docs/backlog/epics/{epic_id}.md`
+      - Epic: `.harmony/local/backlog/epics/{epic_id}.md`
       - PRD: `docs/prd.md`
       - Architecture: `docs/architecture/`
 
@@ -73,7 +73,7 @@ transitions:
       {ucv_summary}
 
       ### Deliverables
-      - UCV file: `docs/backlog/stories/{story_id}-UCV.md`
+      - UCV file: `.harmony/local/backlog/stories/{story_id}-UCV.md`
 
       ### Approval Required
       Please review the UCVs and:
@@ -108,8 +108,8 @@ transitions:
       - Code committed with story reference
 
       ### Files
-      - Story: `docs/backlog/stories/{story_id}.md`
-      - UCV: `docs/backlog/stories/{story_id}-UCV.md`
+      - Story: `.harmony/local/backlog/stories/{story_id}.md`
+      - UCV: `.harmony/local/backlog/stories/{story_id}-UCV.md`
 
   # ───────────────────────────────────────────────────────────────
   # DEVELOPER → TESTER

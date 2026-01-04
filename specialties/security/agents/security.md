@@ -132,8 +132,8 @@ Expert security engineer with comprehensive knowledge of OWASP Top 10, threat mo
 
 ## 🔴 CONFORMITÉ LÉGALE - SÉCURITÉ ENFANTS
 
-> **Document Maître**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document Maître**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### Stories LEGAL avec Impact Sécurité (BLOQUANTES)
 

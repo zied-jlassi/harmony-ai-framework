@@ -311,7 +311,7 @@ feature:
 | Output | Location | Status |
 |--------|----------|--------|
 | PRD | `docs/prd/[name]-prd.md` | Required |
-| Epic files | `docs/backlog/epics/EPIC-XXX.md` | Required |
+| Epic files | `.harmony/local/backlog/epics/EPIC-XXX.md` | Required |
 | Roadmap | `docs/roadmap.md` | Optional |
 
 ---

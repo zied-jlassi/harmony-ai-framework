@@ -209,8 +209,8 @@ Actions requises:
 
 ## 🔴 STORIES LEGAL - CONFORMITÉ RGPD/COPPA
 
-> **Document Maître**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/gaming/LEGAL-XXX-*.md`
+> **Document Maître**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/gaming/LEGAL-XXX-*.md`
 
 ### Stories LEGAL BLOQUANTES pour Conformité
 

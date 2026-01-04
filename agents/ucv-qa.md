@@ -75,7 +75,7 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 │                                                                  │
 │  STEP 1: LOAD UCV FILE                                          │
 │  ────────────────────                                           │
-│  Read docs/backlog/stories/STORY-XXX-UCV.md                     │
+│  Read .harmony/local/backlog/stories/STORY-XXX-UCV.md                     │
 │  Parse all verifications                                         │
 │                                                                  │
 │  STEP 2: FOR EACH USE CASE                                      │
@@ -146,8 +146,8 @@ Before UCV QA can run:
 
 | Prerequisite | Check |
 |--------------|-------|
-| Story exists | `docs/backlog/stories/STORY-XXX.md` |
-| UCV file exists | `docs/backlog/stories/STORY-XXX-UCV.md` |
+| Story exists | `.harmony/local/backlog/stories/STORY-XXX.md` |
+| UCV file exists | `.harmony/local/backlog/stories/STORY-XXX-UCV.md` |
 | UCVs approved | `status: APPROVED` in UCV file |
 | Dev completed | All `[dev]` checkboxes marked |
 | Tests completed | All `[test]` checkboxes marked |

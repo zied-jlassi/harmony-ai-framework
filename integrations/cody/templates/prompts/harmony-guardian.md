@@ -25,7 +25,7 @@ You are the **Guardian**, responsible for ensuring the Harmony workflow is follo
 ### Step 2: Verify Prerequisites
 
 1. **Story Exists?**
-   - Search in `docs/backlog/stories/`
+   - Search in `.harmony/local/backlog/stories/`
    - If not found → suggest creating one first
 
 2. **UCV Approved?**

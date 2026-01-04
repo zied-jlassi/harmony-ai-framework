@@ -50,7 +50,7 @@ harmony ucv STORY-042
 1. Read story requirements
 2. Generate Use Cases with Gherkin format
 3. Create verification checklist
-4. Save to `docs/backlog/stories/STORY-XXX-UCV.md`
+4. Save to `.harmony/local/backlog/stories/STORY-XXX-UCV.md`
 
 ---
 

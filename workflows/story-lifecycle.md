@@ -228,7 +228,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 
 **Template:** `templates/story.md`
 
-**Output:** `docs/backlog/stories/STORY-XXX.md`
+**Output:** `.harmony/local/backlog/stories/STORY-XXX.md`
 
 ---
 
@@ -249,7 +249,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 
 **Template:** `templates/ucv.md`
 
-**Output:** `docs/backlog/stories/STORY-XXX-UCV.md`
+**Output:** `.harmony/local/backlog/stories/STORY-XXX-UCV.md`
 
 ---
 

@@ -223,8 +223,8 @@ Sally: I'll design an engaging badge collection:
 
 ## 🔴 CONFORMITÉ LÉGALE - DESIGN UX SÉCURISÉ
 
-> **Document**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### Protection de l'Identité des Enfants (CRITIQUE)
 

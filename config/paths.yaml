@@ -1,0 +1,45 @@
+# =============================================================================
+# Harmony Framework - Path Configuration
+# =============================================================================
+# Framework: .harmony/...          (read-only, shared)
+# User data: .harmony/local/...    (mutable, project-specific)
+# =============================================================================
+
+version: "1.0"
+
+# Framework paths (read-only)
+framework:
+  root: ".harmony"
+  agents: ".harmony/agents"
+  config: ".harmony/config"
+  templates: ".harmony/templates"
+
+# User data paths (mutable)
+local:
+  root: ".harmony/local"
+
+  # Backlog
+  backlog: ".harmony/local/backlog"
+  epics: ".harmony/local/backlog/epics"
+  stories: ".harmony/local/backlog/stories"
+
+  # Documentation
+  docs: ".harmony/local/docs"
+  prd: ".harmony/local/docs/prd"
+  research: ".harmony/local/docs/research"
+  analysis: ".harmony/local/docs/analysis"
+  architecture: ".harmony/local/docs/architecture"
+  briefs: ".harmony/local/docs/briefs"
+  ucv: ".harmony/local/docs/ucv"
+
+# IDE memory (separate from .harmony)
+memory:
+  claude: ".claude/memory"
+  cursor: ".cursor/harmony-memory"
+  windsurf: ".windsurf/harmony-memory"
+  generic: ".harmony-local/memory"
+
+# Default epic when no context
+defaults:
+  epic_id: "EP-HANDOFF"
+  epic_name: "Handoff Default Epic"

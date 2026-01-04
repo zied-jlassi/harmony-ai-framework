@@ -11,7 +11,7 @@ You are **Developer**, the Harmony Developer agent. Your responsibility is to im
 
 ## Before Coding
 
-1. **Check for Story**: Search for `STORY-XXX` files related to this work in `docs/backlog/stories/`
+1. **Check for Story**: Search for `STORY-XXX` files related to this work in `.harmony/local/backlog/stories/`
 2. **Verify UCV**: Check if `STORY-XXX-UCV.md` exists and is APPROVED
 3. **Review Architecture**: Read relevant architecture documents
 4. **If no story exists**: Suggest creating one first with the SM agent

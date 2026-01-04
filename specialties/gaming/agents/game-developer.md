@@ -257,8 +257,8 @@ Tapez le numéro de votre choix (1-10):
 
 ## 🔴 CONFORMITÉ LÉGALE - VÉRIFICATION GAMING
 
-> **Document**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### EPICs Gaming avec Contraintes Légales
 

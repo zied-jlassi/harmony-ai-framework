@@ -207,8 +207,8 @@ VOUS DEVEZ vérifier (6 points, TOUS = OUI):
 
 ## 🔴 CONFORMITÉ LÉGALE - GAME DESIGN ENFANTS
 
-> **Document Maître**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document Maître**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### Contraintes Légales Game Design
 

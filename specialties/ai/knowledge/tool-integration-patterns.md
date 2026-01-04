@@ -705,7 +705,7 @@ harmony_tools:
   story_tools:
     - name: "get_story"
       description: "Get a story by ID from the backlog"
-      location: docs/backlog/stories/
+      location: .harmony/local/backlog/stories/
 
     - name: "update_story_status"
       description: "Update story status (TODO, IN_PROGRESS, DONE)"

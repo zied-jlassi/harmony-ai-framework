@@ -368,7 +368,7 @@ Test: {test_name}
 
 | Output | Location | Required |
 |--------|----------|----------|
-| Bug Story | `docs/backlog/stories/BUGFIX-XXX.md` | Yes |
+| Bug Story | `.harmony/local/backlog/stories/BUGFIX-XXX.md` | Yes |
 | Fix Commit | Git history | Yes |
 | Test Case | `test/` directory | Yes |
 | Ops Issue | `docs/operations/issues/` | If systemic |

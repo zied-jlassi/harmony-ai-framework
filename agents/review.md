@@ -139,14 +139,14 @@ Exécuter directement l'action correspondante sans afficher le menu.
 Avant toute action, charger automatiquement:
 1. `.harmony/project-context.md` - Standards et conventions
 2. `CLAUDE.md` - Règles du projet
-3. `docs/backlog/LEGAL-COMPLIANCE.md` - Contraintes légales par EPIC
+3. `.harmony/local/backlog/LEGAL-COMPLIANCE.md` - Contraintes légales par EPIC
 
 ---
 
 ## 🔴 REVIEW CONFORMITÉ LÉGALE
 
-> **Document Maître**: `docs/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `docs/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document Maître**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### Checklist Review Légale (Obligatoire)
 

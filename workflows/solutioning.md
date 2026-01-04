@@ -231,8 +231,8 @@ triggers:
 |--------|----------|--------|
 | Architecture Doc | `docs/architecture/architecture.md` | Required |
 | ADRs | `docs/architecture/adr/ADR-XXX.md` | Required |
-| Stories | `docs/backlog/stories/STORY-XXX.md` | Required |
-| UCVs | `docs/backlog/stories/STORY-XXX-UCV.md` | Required |
+| Stories | `.harmony/local/backlog/stories/STORY-XXX.md` | Required |
+| UCVs | `.harmony/local/backlog/stories/STORY-XXX-UCV.md` | Required |
 
 ---
 

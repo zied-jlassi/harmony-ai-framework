@@ -361,7 +361,7 @@ When UCV Writer completes UCVs:
 UCVs for STORY-042 are ready for review.
 
 ## Artifact
-- `docs/backlog/stories/STORY-042-UCV.md`
+- `.harmony/local/backlog/stories/STORY-042-UCV.md`
 
 ## Statistics
 - Use Cases: 3

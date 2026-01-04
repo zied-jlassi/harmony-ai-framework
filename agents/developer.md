@@ -121,7 +121,7 @@ The Developer transforms stories into working code. Implements features accordin
 |  AVANT TOUTE IMPLEMENTATION, TU DOIS:                            |
 |                                                                   |
 |  1. VÉRIFIER qu'une STORY existe pour la tâche demandée          |
-|     → Chercher dans docs/backlog/stories/                        |
+|     → Chercher dans .harmony/local/backlog/stories/                        |
 |                                                                   |
 |  2. SI STORY N'EXISTE PAS:                                       |
 |     → REFUSER de coder                                           |

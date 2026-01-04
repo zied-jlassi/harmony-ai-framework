@@ -1,6 +1,7 @@
 # NestJS Profile
 # Level 2 - Framework (requires TypeScript + Node.js)
 # Knowledge populated via: /harmony learn
+# Conditional loading via: profile-loader.sh
 
 profile:
   id: nestjs
@@ -8,7 +9,7 @@ profile:
   category: backend
   level: 2
   description: "NestJS framework - modules, controllers, providers, guards"
-  last_updated: null
+  last_updated: "2026-01-04"
 
 # ═══════════════════════════════════════════════════════════════
 # VERSION MANAGEMENT - Critical for compatibility!
@@ -46,6 +47,10 @@ dependencies:
   conflicts:
     - express
 
+# ═══════════════════════════════════════════════════════════════
+# KNOWLEDGE - Conditional Loading Sections
+# ═══════════════════════════════════════════════════════════════
+
 knowledge:
   sources:
     - url: "https://docs.nestjs.com/"
@@ -53,22 +58,101 @@ knowledge:
     - url: "https://docs.nestjs.com/v10/"
       version: "10.x"
 
-  # Structure: knowledge/{common,v10,v11}/
-  topics:
-    - modules
-    - controllers
-    - providers
-    - guards
-    - interceptors
-    - pipes
-    - filters
-    - middleware
-    - testing
+  # ─────────────────────────────────────────────────────────────
+  # CONDITIONAL SECTIONS
+  # ─────────────────────────────────────────────────────────────
+  sections:
+
+    # CORE - Always loaded when NestJS profile is active
+    core:
+      load: always
+      files:
+        - knowledge/core/modules.md
+        - knowledge/core/controllers.md
+        - knowledge/core/providers.md
+      max_tokens: 2000
+      description: "Essential NestJS concepts for any task"
+
+    # ADVANCED - Loaded when specific keywords detected
+    advanced:
+      load: on_keyword
+      keywords:
+        - guard
+        - interceptor
+        - pipe
+        - filter
+        - middleware
+        - exception
+        - validation
+        - custom decorator
+      files:
+        - knowledge/advanced/guards.md
+        - knowledge/advanced/interceptors.md
+        - knowledge/advanced/pipes.md
+        - knowledge/advanced/filters.md
+        - knowledge/advanced/middleware.md
+      max_tokens: 3000
+      max_files: 2
+      description: "Advanced patterns loaded on-demand"
+
+    # TESTING - Loaded for test-related intents
+    testing:
+      load: on_intent
+      intents:
+        - TEST
+        - TDD
+        - COVERAGE
+        - SPEC
+      keywords:
+        - test
+        - spec
+        - mock
+        - jest
+        - e2e
+        - supertest
+      files:
+        - knowledge/testing/unit-testing.md
+        - knowledge/testing/e2e-testing.md
+        - knowledge/testing/mocking.md
+      max_tokens: 2000
+      description: "Testing patterns and best practices"
+
+    # SECURITY - Loaded for security-related work
+    security:
+      load: on_intent
+      intents:
+        - SECURITY
+        - AUTH
+        - AUDIT
+        - PENTEST
+      keywords:
+        - auth
+        - jwt
+        - passport
+        - guard
+        - role
+        - permission
+        - rbac
+        - session
+        - oauth
+      files:
+        - knowledge/security/authentication.md
+        - knowledge/security/authorization.md
+        - knowledge/security/best-practices.md
+      max_tokens: 1500
+      description: "Authentication and authorization patterns"
+
+# ═══════════════════════════════════════════════════════════════
+# LOADING CONFIGURATION
+# ═══════════════════════════════════════════════════════════════
 
 loading:
-  strategy: jit
-  max_files_per_request: 3
+  strategy: conditional     # jit → conditional
+  fallback: core            # If no match, load core only
+  max_sections: 2           # Max sections per request (core + 1)
+  max_total_tokens: 5000    # Hard limit
 
 cross_references:
   - "[[typescript/decorators]]"
   - "[[nodejs/modules]]"
+  - "[[prisma/integration]]"

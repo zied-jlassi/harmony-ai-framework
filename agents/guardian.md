@@ -312,12 +312,111 @@ function routeToAgent(intent: string): RoutingResult;
 
 ---
 
+## Composite Intent Detection (OBLIGATOIRE)
+
+Quand l'utilisateur demande plusieurs actions combinées, Guardian DOIT demander clarification.
+
+### Patterns de Détection
+
+```yaml
+composite_triggers:
+  fr:
+    - "analyser et implémenter"
+    - "analyser et développer"
+    - "designer et coder"
+    - "créer et implémenter"
+    - "planifier et développer"
+  en:
+    - "analyze and implement"
+    - "design and code"
+    - "plan and develop"
+    - "create and implement"
+```
+
+### Workflow de Clarification
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 COMPOSITE INTENT DETECTION                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  INPUT: "analyser et implémenter le système de réservation"    │
+│                                                                  │
+│  STEP 1: Detect Multiple Intents                                │
+│          → Intent 1: ANALYZE (analyser)                         │
+│          → Intent 2: IMPLEMENT (implémenter)                    │
+│          → Composite: TRUE                                       │
+│                                                                  │
+│  STEP 2: Afficher Clarification (OBLIGATOIRE)                   │
+│          → Proposer les deux options                            │
+│          → Attendre réponse utilisateur                         │
+│                                                                  │
+│  STEP 3: Router selon choix                                     │
+│          → Option 1: Workflow complet                           │
+│          → Option 2: Quick-Flow                                 │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Message de Clarification (OBLIGATOIRE)
+
+**TOUJOURS afficher ce message quand un intent composé est détecté:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 🛡️ Guardian - Clarification Workflow                           │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│ Vous avez demandé: "[requête utilisateur]"                      │
+│                                                                  │
+│ ⚠️  Cette demande combine plusieurs actions.                    │
+│                                                                  │
+│ Deux options disponibles:                                       │
+│                                                                  │
+│ 1️⃣  WORKFLOW COMPLET (Recommandé)                               │
+│     Analyst → SM → UCV Writer → Developer → Tester → QA        │
+│     ✅ Stories tracées                                          │
+│     ✅ UCVs validés                                             │
+│     ✅ Tests garantis                                           │
+│     ✅ Couverture 100%                                          │
+│     ✅ Qualité production                                       │
+│                                                                  │
+│ 2️⃣  QUICK-FLOW (Rapide mais risqué)                            │
+│     Analyst → Developer (direct)                                │
+│     ⚠️ Pas de story formelle                                    │
+│     ⚠️ Tests minimaux                                           │
+│     ⚠️ Dette technique à rembourser                             │
+│     ⚠️ Gaps possibles                                           │
+│                                                                  │
+│ Quel mode choisissez-vous? [1/2]                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Routing selon Choix
+
+| Choix | Action | Workflow |
+|-------|--------|----------|
+| **1** (Complet) | Démarrer avec Analyst, enchainer tout le workflow | Analyst → SM → UCV → Dev → Test → QA |
+| **2** (Quick) | Activer Quick-Flow agent | Analyst → Quick-Flow-Solo |
+
+### Intents Composés Supportés
+
+| Requête | Workflow Complet | Quick-Flow |
+|---------|------------------|------------|
+| "analyser et implémenter" | Analyst → SM → ... → Dev | Analyst → Quick-Flow |
+| "designer et créer stories" | Architect → SM | Architect → Quick-Flow |
+| "tester et valider" | Tester → Exploratory QA → UCV Validator | Tester → UCV Validator |
+| "créer PRD et implémenter" | PM → Analyst → SM → ... → Dev | PM → Quick-Flow |
+
+---
+
 ## Best Practices
 
 1. **Don't bypass the Guardian** - It exists to protect your workflow
 2. **Use natural language** - The Guardian understands context
 3. **Set appropriate mode** - Use BLOCK for strict enforcement
 4. **Configure directories** - Protect source code, allow docs
+5. **Respect composite detection** - Toujours demander clarification sur intents multiples
 
 ---
 

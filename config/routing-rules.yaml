@@ -306,6 +306,59 @@ detection_patterns:
     tier: 1
 
 # =============================================================================
+# COMPOSITE INTENT DETECTION
+# =============================================================================
+# When user requests multiple actions, ask for clarification
+composite_intents:
+  enabled: true
+
+  triggers:
+    fr:
+      - pattern: "analyser et (implémenter|développer|coder)"
+        intents: [ANALYZE, IMPLEMENT]
+      - pattern: "designer et (coder|implémenter|créer)"
+        intents: [DESIGN, IMPLEMENT]
+      - pattern: "planifier et (développer|implémenter)"
+        intents: [PLAN, IMPLEMENT]
+      - pattern: "créer (prd|brief) et (implémenter|développer)"
+        intents: [PRODUCT, IMPLEMENT]
+      - pattern: "tester et valider"
+        intents: [TEST, VALIDATE_UCV]
+    en:
+      - pattern: "analyze and (implement|develop|code)"
+        intents: [ANALYZE, IMPLEMENT]
+      - pattern: "design and (code|implement|create)"
+        intents: [DESIGN, IMPLEMENT]
+      - pattern: "plan and (develop|implement)"
+        intents: [PLAN, IMPLEMENT]
+      - pattern: "test and validate"
+        intents: [TEST, VALIDATE_UCV]
+
+  workflows:
+    full:
+      name: "Workflow Complet"
+      description: "Quality guaranteed, 100% coverage"
+      chain:
+        ANALYZE_IMPLEMENT: [analyst, scrum-master, ucv-writer, developer, tester, exploratory-qa, ucv-validator]
+        DESIGN_IMPLEMENT: [architect, scrum-master, ucv-writer, developer, tester, exploratory-qa]
+        PLAN_IMPLEMENT: [scrum-master, ucv-writer, developer, tester]
+        PRODUCT_IMPLEMENT: [product-manager, analyst, scrum-master, ucv-writer, developer, tester]
+        TEST_VALIDATE: [tester, exploratory-qa, ucv-validator]
+
+    quick:
+      name: "Quick-Flow"
+      description: "Fast but risky, tech debt"
+      chain:
+        ANALYZE_IMPLEMENT: [analyst, quick-flow-solo]
+        DESIGN_IMPLEMENT: [architect, quick-flow-solo]
+        PLAN_IMPLEMENT: [quick-flow-solo]
+        PRODUCT_IMPLEMENT: [product-manager, quick-flow-solo]
+        TEST_VALIDATE: [tester, ucv-validator]
+
+  clarification_required: true
+  default_choice: "full"
+
+# =============================================================================
 # PARALLEL EXECUTION GROUPS
 # =============================================================================
 parallel_groups:

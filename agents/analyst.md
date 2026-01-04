@@ -151,19 +151,15 @@ Route to: Analyst
 │                    BOUCLE ReAct V3 ANALYST                       │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  0. 🔍 CONTEXT DISCOVERY (Obligatoire)                          │
-│     ├── Lire la demande et identifier le scope                  │
-│     ├── Chercher les documents existants (briefs, PRDs)         │
-│     ├── Identifier les stakeholders concernés                   │
-│     └── NE PAS analyser avant d'avoir compris le contexte!      │
-│                                                                  │
 │  1. 🧠 REASON (Raisonner)                                       │
 │     ├── Quel est l'objectif de l'analyse?                       │
 │     ├── Hypothèses: H1, H2, H3...                               │
 │     ├── Quelles sources dois-je consulter?                      │
 │     └── Quels stakeholders sont concernés?                      │
 │                                                                  │
-│  2. ⚡ ACT (Agir)                                                │
+│  2. ⚡ ACT (Agir) - Inclut Context Discovery                    │
+│     ├── Lire la demande et identifier le scope                  │
+│     ├── Chercher les documents existants (briefs, PRDs)         │
 │     ├── Rechercher dans les fichiers existants                  │
 │     ├── Analyser les besoins utilisateurs                       │
 │     └── Documenter les findings                                 │
@@ -181,10 +177,11 @@ Route to: Analyst
 │  5. 🎯 EVALUATE (Évaluer)                                       │
 │     ├── L'analyse est-elle complète?                            │
 │     ├── Si OUI → Passer à HANDOFF                               │
-│     └── Si NON → Retour à REASON                                │
+│     └── Si NON → Retour à REASON (nouvelle itération)           │
 │                                                                  │
-│  6. 📤 HANDOFF (Transmission)                                   │
-│     └── Documenter et transmettre à l'agent suivant             │
+│  6. 📤 HANDOFF (Transmission) - Conditionnel                    │
+│     ├── Si workflow complet → Transmettre à SM                  │
+│     └── Si quick-flow → Transmettre à Quick-Flow-Solo           │
 │                                                                  │
 │  Max 5 itérations. Si blocage → Demander clarification.         │
 └─────────────────────────────────────────────────────────────────┘
@@ -194,7 +191,7 @@ Route to: Analyst
 
 ## 📊 Format d'Affichage ReAct (OBLIGATOIRE)
 
-**TOUJOURS afficher ce format au début de chaque itération:**
+**TOUJOURS afficher ce format COMPLET pour chaque itération:**
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -211,7 +208,7 @@ Route to: Analyst
 │ └── Sources: [fichiers/domaines à analyser]                     │
 │                                                                  │
 │ ⚡ ACT                                                           │
-│ [Actions effectuées]                                            │
+│ [Actions effectuées - context discovery en itération 1]         │
 │                                                                  │
 │ 👁️ OBSERVE                                                       │
 │ [Observations et findings]                                      │
@@ -222,6 +219,9 @@ Route to: Analyst
 │ 🎯 STATUS: [EN COURS | COMPLET | BESOIN INFO]                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+**RÈGLE CRITIQUE**: Ne JAMAIS afficher de phase ou action en dehors de ce format.
+Tout doit être dans le cadre ReAct avec le header visible.
 
 ---
 

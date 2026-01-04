@@ -1,0 +1,3 @@
+# Local Agent Overrides
+# Place custom agents here to override or extend framework agents.
+# Example: developer.md will override .harmony/agents/developer.md

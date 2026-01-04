@@ -1,0 +1,3 @@
+# Local Hook Overrides
+# Place custom hooks here to override or extend framework hooks.
+# Example: sentinel-pre.sh will override .harmony/hooks/sentinel-pre.sh

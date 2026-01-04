@@ -373,6 +373,7 @@ copy_framework_files() {
             "docs"
             "hooks"
             "lib"
+            "local"
             "memory"
             "patterns"
             "profiles"
@@ -847,7 +848,9 @@ CMD_EOF
 # Create or update CLAUDE.md with Harmony Framework
 create_claude_md() {
     local claude_md="$PROJECT_DIR/CLAUDE.md"
-    local project_name=$(basename "$PROJECT_DIR")
+    # Resolve to absolute path to get proper project name (basename "." returns ".")
+    local abs_project_dir=$(cd "$PROJECT_DIR" && pwd)
+    local project_name=$(basename "$abs_project_dir")
     local harmony_version="$VERSION"
     local template_file="$SCRIPT_DIR/integrations/claude-code/templates/CLAUDE.md.template"
 
@@ -928,7 +931,9 @@ HARMONY_HEADER
 # Legacy template below (kept for backward compatibility)
 _create_claude_md_legacy() {
     local claude_md="$PROJECT_DIR/CLAUDE.md"
-    local project_name=$(basename "$PROJECT_DIR")
+    # Resolve to absolute path to get proper project name (basename "." returns ".")
+    local abs_project_dir=$(cd "$PROJECT_DIR" && pwd)
+    local project_name=$(basename "$abs_project_dir")
 
     cat > "$claude_md" << CLAUDE_MD_EOF
 # CLAUDE.md

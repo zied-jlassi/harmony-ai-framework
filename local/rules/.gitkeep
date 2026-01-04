@@ -1,0 +1,4 @@
+# Local Project Rules
+# Add project-specific rules here.
+# These rules extend the framework rules (R-001 to R-008).
+# Naming convention: R-1xx-description.yaml for local rules.

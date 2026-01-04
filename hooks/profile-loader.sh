@@ -3,14 +3,22 @@
 # HARMONY PROFILE LOADER
 # ═══════════════════════════════════════════════════════════════════════════════
 # Loads profile sections conditionally based on detected intent
-# Version: 1.0.0
-# Date: 2026-01-04
+# Supports 2-level override system: local (team) > framework
+#
+# Version: 2.0.0
+# Date: 2026-01-05
 #
 # Usage:
 #   bash profile-loader.sh load <profile>           # Load sections based on intent
 #   bash profile-loader.sh preview <profile>        # Dry-run, show what would load
 #   bash profile-loader.sh sections <profile>       # List available sections
+#   bash profile-loader.sh overrides [profile]      # Show override status
+#   bash profile-loader.sh resolve <profile> <file> # Show file resolution
 #   bash profile-loader.sh help                     # Show help
+#
+# Override System (ADR-PROFILE-OVERRIDES):
+#   1. .harmony/local/profiles/...  → Team overrides (committed)
+#   2. .harmony/profiles/...        → Framework defaults (read-only)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -20,11 +28,32 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FRAMEWORK_DIR="$(dirname "$SCRIPT_DIR")"
-PROFILES_DIR="${FRAMEWORK_DIR}/profiles"
-LOCAL_PROFILES_DIR="${FRAMEWORK_DIR}/local/profiles"
 
 # Project directories (relative to where command is run)
 PROJECT_DIR="${PROJECT_DIR:-$(pwd)}"
+
+# Harmony directory in project (installed framework)
+HARMONY_DIR="${PROJECT_DIR}/.harmony"
+
+# Profile directories - 2 level override system
+FRAMEWORK_PROFILES="${HARMONY_DIR}/profiles"
+LOCAL_OVERRIDES="${HARMONY_DIR}/local/profiles"
+
+# Legacy support (will warn if used)
+LEGACY_LOCAL="${FRAMEWORK_DIR}/local/profiles"
+
+# For development/testing: use framework directly if .harmony doesn't exist
+if [[ ! -d "$HARMONY_DIR" ]]; then
+    HARMONY_DIR="$FRAMEWORK_DIR"
+    FRAMEWORK_PROFILES="${FRAMEWORK_DIR}/profiles"
+    LOCAL_OVERRIDES="${FRAMEWORK_DIR}/local/profiles"
+fi
+
+# Backward compatibility aliases
+PROFILES_DIR="$FRAMEWORK_PROFILES"
+LOCAL_PROFILES_DIR="$LOCAL_OVERRIDES"
+
+# Memory directories
 CLAUDE_MEMORY_DIR="${PROJECT_DIR}/.claude/memory"
 WORKFLOW_STATE="${CLAUDE_MEMORY_DIR}/workflow-state.json"
 
@@ -75,13 +104,16 @@ contains_keyword() {
 # PROFILE DISCOVERY
 # ─────────────────────────────────────────────────────────────────────────────────
 
+# Find profile path by ID (searches in category directories)
+# Usage: find_profile_path <profile_id>
+# Returns: full path to profile directory
 find_profile_path() {
     local profile_id="$1"
 
     # Search in category directories
-    for category in backend frontend languages runtimes databases styling tools; do
-        local path="${PROFILES_DIR}/${category}/${profile_id}"
-        if [ -d "$path" ]; then
+    for category in backend frontend languages runtimes databases styling tools mobile; do
+        local path="${FRAMEWORK_PROFILES}/${category}/${profile_id}"
+        if [[ -d "$path" ]]; then
             echo "$path"
             return 0
         fi
@@ -90,64 +122,183 @@ find_profile_path() {
     return 1
 }
 
-# Get file with local override priority
-# Usage: get_profile_file <base_profile_path> <relative_file_path>
-# Returns: local file if exists, else base file
-get_profile_file() {
-    local base_path="$1"
-    local rel_file="$2"
+# Get profile relative path (category/profile_id)
+# Usage: get_profile_rel <profile_id>
+# Returns: e.g., "backend/nestjs"
+get_profile_rel() {
+    local profile_id="$1"
+    local full_path=$(find_profile_path "$profile_id")
 
-    # Extract category/profile from base path (e.g., backend/nestjs)
-    local profile_rel="${base_path#$PROFILES_DIR/}"
-    local local_file="${LOCAL_PROFILES_DIR}/${profile_rel}/${rel_file}"
-    local base_file="${base_path}/${rel_file}"
-
-    # Local prioritaire
-    if [ -f "$local_file" ]; then
-        echo "$local_file"
-    elif [ -f "$base_file" ]; then
-        echo "$base_file"
+    if [[ -n "$full_path" ]]; then
+        echo "${full_path#$FRAMEWORK_PROFILES/}"
     else
         return 1
     fi
 }
 
-# List all files from profile (merged: base + local overrides)
-# Returns unique list with local files taking priority
+# ─────────────────────────────────────────────────────────────────────────────────
+# OVERRIDE SYSTEM (2 levels: local > framework)
+# ─────────────────────────────────────────────────────────────────────────────────
+
+# Check if file is disabled via .disabled marker
+# Usage: is_file_disabled <profile_rel> <rel_file>
+is_file_disabled() {
+    local profile_rel="$1"
+    local rel_file="$2"
+
+    local disabled_marker="${LOCAL_OVERRIDES}/${profile_rel}/${rel_file}.disabled"
+    [[ -f "$disabled_marker" ]]
+}
+
+# Resolve a file with override priority
+# Usage: resolve_profile_file <profile_rel> <rel_file>
+# Returns: path to file (local if exists, else framework)
+resolve_profile_file() {
+    local profile_rel="$1"  # e.g., "backend/nestjs"
+    local rel_file="$2"     # e.g., "knowledge/core/architecture.md"
+
+    local local_file="${LOCAL_OVERRIDES}/${profile_rel}/${rel_file}"
+    local framework_file="${FRAMEWORK_PROFILES}/${profile_rel}/${rel_file}"
+
+    # Check disabled marker
+    if is_file_disabled "$profile_rel" "$rel_file"; then
+        return 1  # File disabled
+    fi
+
+    # Priority resolution: local > framework
+    if [[ -f "$local_file" ]]; then
+        echo "$local_file"
+    elif [[ -f "$framework_file" ]]; then
+        echo "$framework_file"
+    else
+        return 1  # Not found
+    fi
+}
+
+# List all files in a section (merged: framework + local overrides)
+# Usage: list_section_files <profile_rel> <section>
+# Returns: list of resolved file paths
+list_section_files() {
+    local profile_rel="$1"
+    local section="$2"
+    local section_path="knowledge/${section}"
+
+    declare -A files  # Associative array: filename -> source_path
+
+    # 1. Framework files (lower priority)
+    local fw_dir="${FRAMEWORK_PROFILES}/${profile_rel}/${section_path}"
+    if [[ -d "$fw_dir" ]]; then
+        for f in "$fw_dir"/*.md; do
+            [[ -f "$f" ]] && files[$(basename "$f")]="$f"
+        done
+    fi
+
+    # 2. Local overrides (higher priority - overwrites framework)
+    local local_dir="${LOCAL_OVERRIDES}/${profile_rel}/${section_path}"
+    if [[ -d "$local_dir" ]]; then
+        for f in "$local_dir"/*.md; do
+            [[ -f "$f" ]] && files[$(basename "$f")]="$f"
+        done
+    fi
+
+    # Remove disabled files
+    for name in "${!files[@]}"; do
+        if is_file_disabled "$profile_rel" "${section_path}/${name}"; then
+            unset "files[$name]"
+        fi
+    done
+
+    # Output file paths
+    for path in "${files[@]}"; do
+        echo "$path"
+    done
+}
+
+# Check if profile has local overrides
+# Usage: has_local_overrides <profile_rel>
+has_local_overrides() {
+    local profile_rel="$1"
+    local local_path="${LOCAL_OVERRIDES}/${profile_rel}"
+
+    [[ -d "$local_path" ]] && [[ -n "$(ls -A "$local_path" 2>/dev/null)" ]]
+}
+
+# Get override status as JSON
+# Usage: get_override_status <profile_rel>
+get_override_status() {
+    local profile_rel="$1"
+
+    local has_overrides=false
+    local override_count=0
+    local disabled_count=0
+
+    if has_local_overrides "$profile_rel"; then
+        has_overrides=true
+        override_count=$(find "${LOCAL_OVERRIDES}/${profile_rel}" -name "*.md" 2>/dev/null | wc -l)
+        disabled_count=$(find "${LOCAL_OVERRIDES}/${profile_rel}" -name "*.disabled" 2>/dev/null | wc -l)
+    fi
+
+    cat <<EOF
+{
+  "profile": "${profile_rel}",
+  "has_overrides": ${has_overrides},
+  "override_files": ${override_count},
+  "disabled_files": ${disabled_count},
+  "local_path": "${LOCAL_OVERRIDES}/${profile_rel}",
+  "framework_path": "${FRAMEWORK_PROFILES}/${profile_rel}"
+}
+EOF
+}
+
+# ─────────────────────────────────────────────────────────────────────────────────
+# LEGACY COMPATIBILITY
+# ─────────────────────────────────────────────────────────────────────────────────
+
+# Legacy function - wraps new resolve_profile_file
+# Usage: get_profile_file <base_profile_path> <relative_file_path>
+get_profile_file() {
+    local base_path="$1"
+    local rel_file="$2"
+
+    # Extract profile_rel from base path
+    local profile_rel="${base_path#$FRAMEWORK_PROFILES/}"
+
+    resolve_profile_file "$profile_rel" "$rel_file"
+}
+
+# Legacy function - wraps new list functions
+# Usage: list_profile_files <base_path> [subdir]
 list_profile_files() {
     local base_path="$1"
-    local subdir="${2:-.}"  # Optional subdirectory (e.g., "knowledge")
+    local subdir="${2:-.}"
 
-    local profile_rel="${base_path#$PROFILES_DIR/}"
-    local local_path="${LOCAL_PROFILES_DIR}/${profile_rel}/${subdir}"
-    local base_full="${base_path}/${subdir}"
+    local profile_rel="${base_path#$FRAMEWORK_PROFILES/}"
+    local section_path="${subdir}"
 
     # Collect all relative file paths
     local all_files=""
 
-    # First, list base files
-    if [ -d "$base_full" ]; then
-        all_files=$(find "$base_full" -type f -name "*.md" -o -name "*.yaml" 2>/dev/null | \
-            sed "s|^$base_full/||" | sort)
+    # Framework files
+    local fw_dir="${FRAMEWORK_PROFILES}/${profile_rel}/${section_path}"
+    if [[ -d "$fw_dir" ]]; then
+        all_files=$(find "$fw_dir" -type f \( -name "*.md" -o -name "*.yaml" \) 2>/dev/null | \
+            sed "s|^$fw_dir/||" | sort)
     fi
 
-    # Then, list local files (will override in final selection)
-    if [ -d "$local_path" ]; then
-        local local_files=$(find "$local_path" -type f -name "*.md" -o -name "*.yaml" 2>/dev/null | \
-            sed "s|^$local_path/||" | sort)
+    # Local override files (merge)
+    local local_dir="${LOCAL_OVERRIDES}/${profile_rel}/${section_path}"
+    if [[ -d "$local_dir" ]]; then
+        local local_files=$(find "$local_dir" -type f \( -name "*.md" -o -name "*.yaml" \) 2>/dev/null | \
+            sed "s|^$local_dir/||" | sort)
         all_files=$(echo -e "${all_files}\n${local_files}" | sort -u)
     fi
 
-    echo "$all_files"
-}
-
-# Check if profile has local overrides
-has_local_overrides() {
-    local base_path="$1"
-    local profile_rel="${base_path#$PROFILES_DIR/}"
-    local local_path="${LOCAL_PROFILES_DIR}/${profile_rel}"
-
-    [ -d "$local_path" ] && [ "$(ls -A "$local_path" 2>/dev/null)" ]
+    # Filter out disabled
+    while IFS= read -r file; do
+        if [[ -n "$file" ]] && ! is_file_disabled "$profile_rel" "${section_path}/${file}"; then
+            echo "$file"
+        fi
+    done <<< "$all_files"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────────
@@ -479,13 +630,163 @@ cmd_sections() {
     echo ""
 }
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# OVERRIDE COMMANDS
+# ─────────────────────────────────────────────────────────────────────────────────
+
+cmd_overrides() {
+    local profile_id="$1"
+
+    echo ""
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║               PROFILE OVERRIDES STATUS                        ║"
+    echo "╠═══════════════════════════════════════════════════════════════╣"
+    echo "║                                                               ║"
+    echo "║  Override Path: .harmony/local/profiles/                      ║"
+    echo "║                                                               ║"
+
+    if [[ -n "$profile_id" ]]; then
+        # Show specific profile
+        local profile_rel=$(get_profile_rel "$profile_id")
+        if [[ -z "$profile_rel" ]]; then
+            echo "║  ERROR: Profile not found: $profile_id"
+            echo "╚═══════════════════════════════════════════════════════════════╝"
+            return 1
+        fi
+
+        echo "║  Profile: $profile_id ($profile_rel)"
+        echo "║"
+
+        if has_local_overrides "$profile_rel"; then
+            echo "║  ✅ Has local overrides"
+            echo "║"
+            echo "║  Override files:"
+
+            local local_dir="${LOCAL_OVERRIDES}/${profile_rel}"
+            find "$local_dir" -type f \( -name "*.md" -o -name "*.disabled" \) 2>/dev/null | while read -r file; do
+                local rel="${file#$local_dir/}"
+                if [[ "$file" == *.disabled ]]; then
+                    echo "║    🚫 $rel"
+                else
+                    echo "║    📄 $rel"
+                fi
+            done
+        else
+            echo "║  ❌ No local overrides"
+            echo "║"
+            echo "║  To create overrides:"
+            echo "║    mkdir -p .harmony/local/profiles/${profile_rel}/knowledge/core/"
+            echo "║    # Add your .md files there"
+        fi
+    else
+        # Show all profiles with overrides
+        echo "║  Profiles with overrides:"
+        echo "║"
+
+        local found=false
+        if [[ -d "$LOCAL_OVERRIDES" ]]; then
+            for category_dir in "$LOCAL_OVERRIDES"/*/; do
+                [[ -d "$category_dir" ]] || continue
+                local category=$(basename "$category_dir")
+
+                for profile_dir in "$category_dir"*/; do
+                    [[ -d "$profile_dir" ]] || continue
+                    local profile=$(basename "$profile_dir")
+                    local count=$(find "$profile_dir" -name "*.md" 2>/dev/null | wc -l)
+                    local disabled=$(find "$profile_dir" -name "*.disabled" 2>/dev/null | wc -l)
+
+                    if [[ $count -gt 0 ]] || [[ $disabled -gt 0 ]]; then
+                        found=true
+                        echo "║    📁 ${category}/${profile}: $count files, $disabled disabled"
+                    fi
+                done
+            done
+        fi
+
+        if [[ "$found" == "false" ]]; then
+            echo "║    (none)"
+            echo "║"
+            echo "║  To create overrides:"
+            echo "║    mkdir -p .harmony/local/profiles/backend/nestjs/knowledge/core/"
+        fi
+    fi
+
+    echo "║                                                               ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo ""
+}
+
+cmd_resolve() {
+    local profile_id="$1"
+    local rel_file="$2"
+
+    if [[ -z "$profile_id" ]] || [[ -z "$rel_file" ]]; then
+        log_error "Usage: resolve <profile> <relative_file_path>"
+        log_error "Example: resolve nestjs knowledge/core/architecture.md"
+        return 1
+    fi
+
+    local profile_rel=$(get_profile_rel "$profile_id")
+    if [[ -z "$profile_rel" ]]; then
+        log_error "Profile not found: $profile_id"
+        return 1
+    fi
+
+    local local_file="${LOCAL_OVERRIDES}/${profile_rel}/${rel_file}"
+    local framework_file="${FRAMEWORK_PROFILES}/${profile_rel}/${rel_file}"
+    local disabled_marker="${local_file}.disabled"
+
+    echo ""
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║               FILE RESOLUTION                                 ║"
+    echo "╠═══════════════════════════════════════════════════════════════╣"
+    echo "║                                                               ║"
+    echo "║  Profile: $profile_id ($profile_rel)"
+    echo "║  File:    $rel_file"
+    echo "║                                                               ║"
+    echo "║  Resolution:"
+
+    # Check disabled
+    if [[ -f "$disabled_marker" ]]; then
+        echo "║    🚫 DISABLED (${disabled_marker})"
+        echo "║"
+        echo "║  Result: File will NOT be loaded"
+    # Check local
+    elif [[ -f "$local_file" ]]; then
+        echo "║    ├── Local:     ✅ ${local_file}"
+        echo "║    └── Framework: ⏭️  (skipped)"
+        echo "║"
+        echo "║  Result: ${local_file}"
+    # Check framework
+    elif [[ -f "$framework_file" ]]; then
+        echo "║    ├── Local:     ❌ (not found)"
+        echo "║    └── Framework: ✅ ${framework_file}"
+        echo "║"
+        echo "║  Result: ${framework_file}"
+    else
+        echo "║    ├── Local:     ❌ (not found)"
+        echo "║    └── Framework: ❌ (not found)"
+        echo "║"
+        echo "║  Result: FILE NOT FOUND"
+    fi
+
+    echo "║                                                               ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo ""
+}
+
 cmd_help() {
     echo ""
     echo "╔═══════════════════════════════════════════════════════════════╗"
-    echo "║               HARMONY PROFILE LOADER                          ║"
+    echo "║               HARMONY PROFILE LOADER v2.0                     ║"
     echo "╠═══════════════════════════════════════════════════════════════╣"
     echo "║                                                               ║"
-    echo "║  Loads profile knowledge sections based on detected intent    ║"
+    echo "║  Loads profile knowledge with 2-level override system         ║"
+    echo "║                                                               ║"
+    echo "║  OVERRIDE PRIORITY:                                           ║"
+    echo "║  ─────────────────                                            ║"
+    echo "║    1. .harmony/local/profiles/...  (team - committed)         ║"
+    echo "║    2. .harmony/profiles/...        (framework - read-only)    ║"
     echo "║                                                               ║"
     echo "║  COMMANDS:                                                    ║"
     echo "║  ─────────                                                    ║"
@@ -493,26 +794,22 @@ cmd_help() {
     echo "║    load <profile> --sections   Force specific sections        ║"
     echo "║    preview <profile>           Show what would be loaded      ║"
     echo "║    sections <profile>          List available sections        ║"
+    echo "║    overrides [profile]         Show override status           ║"
+    echo "║    resolve <profile> <file>    Show file resolution           ║"
     echo "║    help                        Show this help                 ║"
     echo "║                                                               ║"
     echo "║  EXAMPLES:                                                    ║"
     echo "║  ──────────                                                   ║"
-    echo "║    bash profile-loader.sh load nestjs                         ║"
-    echo "║    bash profile-loader.sh load nestjs --sections core,testing ║"
-    echo "║    bash profile-loader.sh preview react                       ║"
-    echo "║    bash profile-loader.sh sections django                     ║"
+    echo "║    profile-loader.sh load nestjs                              ║"
+    echo "║    profile-loader.sh overrides                                ║"
+    echo "║    profile-loader.sh overrides nestjs                         ║"
+    echo "║    profile-loader.sh resolve nestjs knowledge/core/arch.md    ║"
     echo "║                                                               ║"
-    echo "║  ENVIRONMENT:                                                 ║"
-    echo "║  ─────────────                                                ║"
-    echo "║    USER_MESSAGE    Override detected message                  ║"
-    echo "║    PROJECT_DIR     Override project directory                 ║"
-    echo "║                                                               ║"
-    echo "║  SECTION TYPES:                                               ║"
+    echo "║  OVERRIDE TYPES:                                              ║"
     echo "║  ───────────────                                              ║"
-    echo "║    core      Always loaded                                    ║"
-    echo "║    advanced  Loaded for patterns (guard, pipe, etc.)          ║"
-    echo "║    testing   Loaded for TEST/TDD intents                      ║"
-    echo "║    security  Loaded for SECURITY/AUTH intents                 ║"
+    echo "║    Same filename  → Replaces framework file                   ║"
+    echo "║    New filename   → Added to section                          ║"
+    echo "║    .disabled      → Prevents loading (e.g., file.md.disabled) ║"
     echo "║                                                               ║"
     echo "╚═══════════════════════════════════════════════════════════════╝"
     echo ""
@@ -526,11 +823,12 @@ main() {
     local command="${1:-help}"
     local arg1="$2"
     local arg2="$3"
+    local arg3="$4"
 
     # Parse --sections flag
     local force_sections=""
-    if [ "$arg2" = "--sections" ] && [ -n "$4" ]; then
-        force_sections="$4"
+    if [[ "$arg2" == "--sections" ]] && [[ -n "$arg3" ]]; then
+        force_sections="$arg3"
     fi
 
     case "$command" in
@@ -542,6 +840,12 @@ main() {
             ;;
         sections)
             cmd_sections "$arg1"
+            ;;
+        overrides)
+            cmd_overrides "$arg1"
+            ;;
+        resolve)
+            cmd_resolve "$arg1" "$arg2"
             ;;
         help|--help|-h)
             cmd_help

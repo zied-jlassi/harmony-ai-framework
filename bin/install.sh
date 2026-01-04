@@ -354,6 +354,9 @@ create_directory_structure() {
         ".harmony/local/docs/briefs"
         ".harmony/local/docs/prd"
         ".harmony/local/docs/architecture"
+        # Override directories (team customizations - committed)
+        ".harmony/local/profiles"
+        ".harmony/local/specialties"
     )
 
     for dir in "${dirs[@]}"; do

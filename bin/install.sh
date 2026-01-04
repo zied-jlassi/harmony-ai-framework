@@ -854,8 +854,9 @@ create_claude_md() {
     print_step "5.6/6" "Configuring CLAUDE.md..."
 
     # Harmony header block (must be at TOP for Claude to see it first)
+    # Note: read -r -d '' returns 1 at EOF, so we use || true to prevent set -e exit
     local harmony_header
-    read -r -d '' harmony_header << 'HARMONY_HEADER'
+    read -r -d '' harmony_header << 'HARMONY_HEADER' || true
 ## 🛡️ HARMONY FRAMEWORK (ACTIVE)
 
 > **IMPORTANT**: This project uses the Harmony AI Framework. Read `.harmony/docs/` for full documentation.
@@ -1140,10 +1141,11 @@ show_tip() {
         printf "${YELLOW}[ ] J'ai lu ce tip (Espace puis Entrée pour continuer)${NC}"
 
         while true; do
-            read -rsn1 key </dev/tty 2>/dev/null
+            # Use || true to prevent set -e exit on read failure
+            read -rsn1 key </dev/tty 2>/dev/null || true
             if [[ "$key" == " " ]]; then
                 printf "\r${GREEN}[✓] J'ai lu ce tip                                  ${NC}\n"
-                read -r </dev/tty 2>/dev/null
+                read -r </dev/tty 2>/dev/null || true
                 break
             elif [[ -z "$key" ]]; then
                 # EOF or error - break out
@@ -1154,7 +1156,7 @@ show_tip() {
     else
         # Non-interactive: auto-advance with delay
         printf "${CYAN}[⏳ Lecture auto dans 3s...]${NC}"
-        sleep 3
+        sleep 3 || true
         printf "\r${GREEN}[✓] Tip lu                                          ${NC}\n"
     fi
 }
@@ -1182,10 +1184,10 @@ show_onboarding_tips() {
 
     # Check if TTY is available for interactive input
     if (exec </dev/tty) 2>/dev/null; then
-        read -rp "Appuyez sur Entrée pour commencer..." </dev/tty
+        read -rp "Appuyez sur Entrée pour commencer..." </dev/tty || true
     else
         echo "Mode non-interactif détecté. Affichage automatique des tips (3s par tip)..."
-        sleep 2
+        sleep 2 || true
     fi
 
     # Tip 1: Welcome

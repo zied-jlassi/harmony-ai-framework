@@ -1,6 +1,6 @@
 {
   "name": "harmony-ai-framework",
-  "version": "1.0.10",
+  "version": "1.0.13",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
@@ -38,19 +38,25 @@
     "bin/",
     "commands/",
     "config/",
+    "core/",
     "docs/",
     "hooks/",
+    "integrations/",
     "lib/",
-    "memory/templates/",
+    "local/",
+    "memory/",
     "patterns/",
     "profiles/",
+    "routing/",
     "rules/",
+    "shared/",
     "specialties/",
     "templates/",
     "tips/",
     "workflows/",
     "checksums.sha256",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=18.0.0"

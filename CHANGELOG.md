@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.20] - 2026-01-05
+
+### Fixed
+- **Install script SCRIPT_DIR resolution**: Added robust validation with fallback methods
+  - Validates `harmony.manifest.json` exists at resolved path
+  - Tries alternative resolution methods (`dirname $0`, `BASH_SOURCE`)
+  - Fails explicitly with clear error message if source directory cannot be found
+- **Install script diagnostics**: Added source/target/IDE display after prerequisites check
+- **Essential files copy**: Changed from warnings to fatal errors when essential files missing
+  - Shows exact expected path for missing files
+  - Aborts installation immediately instead of continuing with incomplete setup
+  - Double-checks `harmony.manifest.json` was copied successfully
+
 ## [1.0.19] - 2026-01-05
 
 ### Changed

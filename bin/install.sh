@@ -74,6 +74,21 @@ while [ -L "$SCRIPT_SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SCRIPT_SOURCE")/.." && pwd)"
 
+# Validate SCRIPT_DIR points to the framework root
+if [[ ! -f "$SCRIPT_DIR/harmony.manifest.json" ]]; then
+    # Try alternative resolution methods
+    if [[ -f "$(dirname "$0")/../harmony.manifest.json" ]]; then
+        SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+    elif [[ -f "${BASH_SOURCE[0]%/*}/../harmony.manifest.json" ]]; then
+        SCRIPT_DIR="$(cd "${BASH_SOURCE[0]%/*}/.." && pwd)"
+    else
+        echo -e "${RED}ERROR: Cannot locate framework source directory${NC}" >&2
+        echo -e "${RED}SCRIPT_DIR resolved to: $SCRIPT_DIR${NC}" >&2
+        echo -e "${RED}Expected harmony.manifest.json not found${NC}" >&2
+        exit 1
+    fi
+fi
+
 # Get version from package.json
 VERSION=$(grep '"version"' "$SCRIPT_DIR/package.json" 2>/dev/null | head -1 | sed 's/.*"version": *"\([^"]*\)".*/\1/' || echo "unknown")
 
@@ -313,6 +328,10 @@ check_prerequisites() {
     fi
 
     print_success "Prerequisites check passed"
+    # Show source directory for debugging
+    print_message "$CYAN" "  IDE detected: $IDE_TARGET"
+    print_message "$CYAN" "  Source: $SCRIPT_DIR"
+    print_message "$CYAN" "  Target: $PROJECT_DIR"
 }
 
 # Create directory structure
@@ -419,17 +438,31 @@ copy_framework_files() {
         done
 
         # Copy essential files (exclude npm artifacts like package.json, bin/, .npmrc)
+        local essential_missing=0
         for file in README.md LICENSE harmony.manifest.json; do
             if [[ -f "$SCRIPT_DIR/$file" ]]; then
                 cp "$SCRIPT_DIR/$file" "$PROJECT_DIR/.harmony/"
             else
-                print_warning "Essential file not found in source: $file"
+                print_error "Essential file not found in source: $file"
+                print_error "  Expected at: $SCRIPT_DIR/$file"
+                essential_missing=$((essential_missing + 1))
             fi
         done
 
-        # Verify essential files were copied
+        # Fail immediately if essential files are missing from source
+        if [[ $essential_missing -gt 0 ]]; then
+            print_error "Installation aborted: $essential_missing essential file(s) missing from source"
+            print_error "Source directory: $SCRIPT_DIR"
+            print_error "Please verify framework integrity or re-download."
+            exit 1
+        fi
+
+        # Double-check harmony.manifest.json was copied successfully
         if [[ ! -f "$PROJECT_DIR/.harmony/harmony.manifest.json" ]]; then
-            print_warning "harmony.manifest.json was not copied - check source directory"
+            print_error "harmony.manifest.json copy failed unexpectedly"
+            print_error "  Source: $SCRIPT_DIR/harmony.manifest.json"
+            print_error "  Target: $PROJECT_DIR/.harmony/harmony.manifest.json"
+            exit 1
         fi
 
         # Verify installation - minimum expected files

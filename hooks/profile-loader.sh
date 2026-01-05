@@ -251,6 +251,91 @@ EOF
 }
 
 # ─────────────────────────────────────────────────────────────────────────────────
+# AUTO-SCAN LOCAL KNOWLEDGE
+# ─────────────────────────────────────────────────────────────────────────────────
+
+# Auto-scan all knowledge files from local overrides (Option B)
+# Returns all .md files from .harmony/local/profiles/<profile>/knowledge/
+# Usage: get_local_knowledge <profile_rel>
+# Example: get_local_knowledge "backend/nestjs"
+get_local_knowledge() {
+    local profile_rel="$1"
+    local knowledge_dir="${LOCAL_OVERRIDES}/${profile_rel}/knowledge"
+
+    if [[ ! -d "$knowledge_dir" ]]; then
+        return 0
+    fi
+
+    # Find all .md files recursively, excluding .disabled
+    find "$knowledge_dir" -type f -name "*.md" 2>/dev/null | while read -r file; do
+        # Check if disabled
+        if [[ ! -f "${file}.disabled" ]]; then
+            echo "$file"
+        fi
+    done
+}
+
+# Get all knowledge for a profile (framework + local auto-scan)
+# Usage: get_all_profile_knowledge <profile_rel>
+# Example: get_all_profile_knowledge "backend/nestjs"
+get_all_profile_knowledge() {
+    local profile_rel="$1"
+    local manifest="${FRAMEWORK_PROFILES}/${profile_rel}/manifest.yaml"
+
+    # 1. Parse manifest for declared knowledge (core, shared, on_intent)
+    if [[ -f "$manifest" ]]; then
+        # Extract base_path
+        local base_path=$(grep "base_path:" "$manifest" 2>/dev/null | awk '{print $2}' | tr -d '"')
+        base_path="${base_path:-knowledge/}"
+
+        # Extract core files
+        local in_core=false
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^[[:space:]]*core: ]]; then
+                in_core=true
+                continue
+            fi
+            if [[ "$in_core" == true ]]; then
+                if [[ "$line" =~ ^[[:space:]]*-[[:space:]]+(.*) ]]; then
+                    local file="${BASH_REMATCH[1]}"
+                    local full_path="${HARMONY_DIR}/${base_path}${file}"
+                    if [[ -f "$full_path" ]]; then
+                        echo "$full_path"
+                    fi
+                elif [[ "$line" =~ ^[[:space:]]*[a-z_]+: ]]; then
+                    in_core=false
+                fi
+            fi
+        done < "$manifest"
+    fi
+
+    # 2. Auto-scan local overrides (always loaded)
+    get_local_knowledge "$profile_rel"
+}
+
+# Load knowledge content for a profile
+# Usage: load_profile_knowledge <profile_rel> [intent]
+# Returns: Concatenated content of all knowledge files
+load_profile_knowledge() {
+    local profile_rel="$1"
+    local intent="${2:-}"
+
+    echo "# Knowledge for profile: ${profile_rel}"
+    echo ""
+
+    # Get all knowledge files
+    get_all_profile_knowledge "$profile_rel" | while read -r file; do
+        if [[ -f "$file" ]]; then
+            echo "<!-- Source: $file -->"
+            cat "$file"
+            echo ""
+            echo "---"
+            echo ""
+        fi
+    done
+}
+
+# ─────────────────────────────────────────────────────────────────────────────────
 # LEGACY COMPATIBILITY
 # ─────────────────────────────────────────────────────────────────────────────────
 

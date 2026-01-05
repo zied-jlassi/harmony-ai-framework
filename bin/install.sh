@@ -781,138 +781,49 @@ create_slash_commands() {
     local commands_dir="$PROJECT_DIR/.claude/commands"
     mkdir -p "$commands_dir"
 
-    # Create harmony.md slash command
-    cat > "$commands_dir/harmony.md" << 'HARMONY_CMD_EOF'
----
-description: "Harmony Framework - 30 commands: validation, sentinel, profiles, ucv, install..."
----
-
-# Harmony - Framework Orchestrator
-
-Active l'agent Harmony pour orchestrer le framework.
-
-## Comportement
-
-**Si aucun argument fourni:**
-1. Lire les fichiers memoire pour obtenir le statut actuel
-2. Afficher le menu interactif complet depuis `.harmony/commands/index.md`
-3. Attendre la selection de l'utilisateur
-
-**Si argument fourni:**
-Charger et executer le fichier de commande correspondant depuis `.harmony/commands/`.
-
-## Menu Interactif (30 commandes)
-
-```
-╔════════════════════════════════════════════════════════════════════════════════╗
-║                         HARMONY - Framework Orchestrator                        ║
-║                           INTERACTIVE COMMAND CENTER                            ║
-╠════════════════════════════════════════════════════════════════════════════════╣
-║  Project: {project_name}                                                        ║
-║  Phase: {phase} - {phase_name}               Status: {phase_status}             ║
-║  Circuit Breaker: {cb_state}                 Failures: {failures}/3             ║
-╚════════════════════════════════════════════════════════════════════════════════╝
-
-   🔍 VALIDATION FRAMEWORK
-    1  Audit complet       2  Check rapide        3  Duplications
-    4  Proposer fixes      5  Watch mode
-
-   📊 RAPPORTS
-    6  Matrice coherence   7  Tokens Report
-
-   🎯 VALIDATION SPECIFIQUE
-    8  Pipeline            9  Hooks              10  Patterns
-
-   🔄 SYNCHRONISATION
-   11  Memory Sync        12  Claude Compliance  12u Claude Update
-
-   📏 REGLES APPLICATION
-   13  Rules Audit        14  Rules Usage        15  Rules Report
-
-   🛡️ HARMONY SENTINEL (Auto-Learning)
-   16  Sentinel Status    17  Sentinel Learn     18  Sentinel Reset
-   19  Sentinel Check     20  Sentinel Report
-
-   📚 KNOWLEDGE & PROFILES
-   21  Learn              22  Profiles           23  Specialties
-
-   🔌 INTEGRATIONS (LLM/IDE)
-   24  Install            25  Install Status
-
-   ✅ QUALITE (HQVF)
-   26  UCV Create         27  UCV Validate
-
-   🆕 FRAMEWORK
-   28  Init               29  Upgrade            30  Export
-
-╚════════════════════════════════════════════════════════════════════════════════╝
-```
-
-## Commandes Directes
-
-```bash
-harmony                         # Menu interactif complet
-harmony full                    # Audit complet
-harmony quick                   # Check rapide
-harmony sentinel                # Dashboard Sentinel
-harmony sentinel --learn        # Documenter une erreur
-harmony sentinel --reset        # Reset circuit breaker
-harmony learn <url>             # Apprendre depuis URL
-harmony profiles                # Lister profiles
-harmony ucv STORY-XXX           # Creer UCVs
-```
-
-## Sources
-
-| Categorie | Fichiers Reference |
-|-----------|--------------------|
-| Menu complet | `.harmony/commands/index.md` |
-| Validation | `.harmony/commands/full.md`, `quick.md`, etc. |
-| Sentinel | `.harmony/commands/sentinel.md` |
-| Profiles | `.harmony/profiles/` |
-| Specialties | `.harmony/specialties/` |
-| UCV | `.harmony/agents/ucv-*.md` |
-
-## Execution
-
-Charger le menu depuis `.harmony/commands/index.md` et executer selon la selection.
-
-Arguments: $ARGUMENTS
-HARMONY_CMD_EOF
-
-    # Copy additional slash commands from .harmony/commands/
-    local additional_commands=("go" "sentinel" "atlas")
-    for cmd in "${additional_commands[@]}"; do
-        if [[ -f "$PROJECT_DIR/.harmony/commands/${cmd}.md" ]]; then
-            # Extract description and create simplified slash command
-            local desc=$(grep -m1 "^description:" "$PROJECT_DIR/.harmony/commands/${cmd}.md" 2>/dev/null | sed 's/description: *"//' | sed 's/"$//')
-            if [[ -n "$desc" ]]; then
-                cat > "$commands_dir/${cmd}.md" << CMD_EOF
----
-description: "${desc}"
----
-
-Load and execute the ${cmd} command from \`.harmony/commands/${cmd}.md\`.
-
-Arguments: \$ARGUMENTS
-CMD_EOF
-            else
-                cp "$PROJECT_DIR/.harmony/commands/${cmd}.md" "$commands_dir/${cmd}.md"
-            fi
-        fi
-    done
-
-    local cmd_count=$(ls -1 "$commands_dir"/*.md 2>/dev/null | wc -l)
-    print_success "Created $cmd_count slash commands in .claude/commands/"
-
-    # Generate /hf:* commands from YAML registries
-    print_message "$CYAN" "  Generating /hf:* commands..."
+    # Generate ALL commands using generate-commands.sh
+    # Creates compact format with name + description:
+    #   - Core: /go, /harmony, /sentinel
+    #   - Agents: /hf:agent:* (18 agents)
+    #   - Workflows: /hf:workflow:* (8 workflows)
+    #   - TestArch: /hf:testarch:* (4 commands)
+    #   - Diagrams: /hf:diagram:* (4 commands)
     if [[ -x "$SCRIPT_DIR/bin/generate-commands.sh" ]]; then
         "$SCRIPT_DIR/bin/generate-commands.sh" "$commands_dir" > /dev/null 2>&1
-        local hf_count=$(ls -1 "$commands_dir"/hf-*.md 2>/dev/null | wc -l)
-        print_success "Generated $hf_count /hf:* commands (agents, workflows, testarch, diagrams)"
+        local total_count=$(ls -1 "$commands_dir"/*.md 2>/dev/null | wc -l)
+        print_success "Generated $total_count slash commands in .claude/commands/"
     else
-        print_warning "generate-commands.sh not found. /hf:* commands not generated."
+        print_warning "generate-commands.sh not found. Creating minimal commands..."
+
+        # Fallback: create minimal core commands manually
+        cat > "$commands_dir/go.md" << 'EOF'
+---
+name: "/go"
+description: "GO - Session Kickoff - Initialize session with project context"
+---
+Load and execute the go command from `${HARMONY_DIR}/commands/go.md`.
+
+Arguments: $ARGUMENTS
+EOF
+
+        cat > "$commands_dir/harmony.md" << 'EOF'
+---
+name: "/harmony"
+description: "Harmony Framework - 30 commands: validation, sentinel, profiles, ucv..."
+---
+If no arg: Read `${HARMONY_DIR}/commands/index.md`
+If arg: Read `${HARMONY_DIR}/commands/$ARGUMENTS.md`
+EOF
+
+        cat > "$commands_dir/sentinel.md" << 'EOF'
+---
+name: "/sentinel"
+description: "Harmony Sentinel - Auto-Learning Error Memory"
+---
+Read `${HARMONY_DIR}/commands/sentinel.md`
+Args: $ARGUMENTS
+EOF
+        print_success "Created 3 core slash commands (fallback mode)"
     fi
 }
 

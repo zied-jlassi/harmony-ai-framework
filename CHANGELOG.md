@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.19] - 2026-01-05
+
+### Changed
+- **Command Format Optimization**: Compact YAML frontmatter for all slash commands
+  - Format: `name` + `description` fields mandatory
+  - All paths use `${HARMONY_DIR}` variable instead of `.harmony`
+  - Reduced ~100 lines in install.sh by removing inline command definitions
+- `generate-commands.sh`: Generates 37 commands in compact format
+  - Core: `/go`, `/harmony`, `/sentinel`
+  - Agents: `/hf:agent:*` (18 agents)
+  - Workflows: `/hf:workflow:*` (8 workflows)
+  - TestArch: `/hf:testarch:*` (4 commands)
+  - Diagrams: `/hf:diagram:*` (4 commands)
+- `install.sh`: Simplified `create_slash_commands()` to use `generate-commands.sh` with fallback
+
+### Fixed
+- TestArch commands now have proper descriptions from workflow.yaml files
+- All command files now have mandatory `name` field
+
 ## [1.0.18] - 2026-01-05
 
 ### Changed

@@ -160,7 +160,6 @@ Sally: I'll design an engaging badge collection:
 |----------|-------------|----------|
 | `docs/architecture/design-system/GAMING-KIDS-DESIGN-SYSTEM.md` | **CRITIQUE** - Design System enfants | 🔴 P0 |
 | `docs/architecture/SECURITY-RGPD-A11Y.md` | **CRITIQUE** - Accessibilite enfants | 🔴 P0 |
-| `docs/architecture/research/AGENT-ENRICHMENT-2025.md` | Outils AI Design | 🟡 P1 |
 
 ## Persona Enhancement (Harmony v6)
 

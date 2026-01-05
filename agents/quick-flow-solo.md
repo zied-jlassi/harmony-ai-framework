@@ -519,8 +519,6 @@ Charger automatiquement si existant:
 ## Références
 
 - [Harmony-METHOD Official](https://github.com/harmony-code-org/Harmony-METHOD)
-- [Quick Flow Documentation](./docs/quick-flow-guide.md)
-- [TDD Best Practices](./docs/tdd-patterns.md)
 
 ---
 

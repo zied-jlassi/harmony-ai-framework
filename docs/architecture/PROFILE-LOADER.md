@@ -331,4 +331,3 @@ loading:
 - [Guardian Routing](../routing/README.md)
 - [Profiles Registry](../../profiles/profiles-registry.yaml)
 - [Token Monitor](./TOKEN-MONITOR.md)
-- [Research: Conditional Loading](../research/PROFILE-CONDITIONAL-LOADING.md)

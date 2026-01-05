@@ -81,75 +81,382 @@ The SM can invoke autopilot with these commands:
 #### 1. Start Autopilot for Current Sprint
 
 ```bash
-/scrum-master autopilot
-# or
-/scrum-master autopilot --sprint SPRINT-001
-# or natural language:
-"Run autopilot for the current sprint"
+source framework/lib/autopilot-commands.sh
+
+# Start autopilot for current sprint
+autopilot_start_command
+
+# Start for specific sprint
+autopilot_start_command --sprint SPRINT-005
+
+# Start with limit on max stories
+autopilot_start_command --sprint SPRINT-005 --max-stories 10
 ```
 
-**Effect:**
-- Launches all stories in current sprint through pipeline sequentially
-- Guardian auto-routes each agent via intent keywords
-- Sentinel tracks completion and manages circuit breaker
-- Working memory updated at each phase
+**Purpose:** Launch fully automated sprint execution where Developer → Tester → UCV Validator phases run sequentially without manual intervention.
+
+**What Happens:**
+1. Reads all stories from specified sprint
+2. For EACH story:
+   - Phase 1: Developer implementation (writes code + tests)
+   - Phase 2: Tester validation (runs tests, checks coverage)
+   - Phase 3: UCV Validator final check (verifies 100% coverage)
+3. Updates `working.json` with story status at each phase
+4. Logs phase execution with timestamps to `phase_execution_log`
+5. Tracks circuit breaker state per story in `circuit-breaker.json`
+6. Monitors API budget usage
+7. Saves checkpoint on Ctrl+C for resume
+
+**Options:**
+- `--sprint SPRINT-ID`: Target specific sprint (default: current sprint)
+- `--max-stories N`: Limit number of stories to process (useful for testing)
+
+**Flow Diagram:**
+```
+autopilot_start_command
+        ↓
+[For each story in sprint]
+        ├─ Update: current_story.status = "IN_PROGRESS"
+        ├─ Phase 1: Developer
+        │    ├─ Guardian routes "develop" intent
+        │    ├─ Sentinel tracks completion
+        │    └─ detect_story_completion() checks for "Implementation complete"
+        ├─ Phase 2: Tester
+        │    ├─ Guardian routes "test" intent
+        │    ├─ Sentinel tracks completion
+        │    └─ detect_story_completion() checks for "Coverage: 100%"
+        ├─ Phase 3: UCV Validator
+        │    ├─ Guardian routes "validate" intent
+        │    ├─ Sentinel tracks completion
+        │    └─ detect_story_completion() checks for "All verified"
+        └─ Update: current_story.status = "DONE" (or "FAILED")
+[End for each]
+        ↓
+Sprint Complete → Generate report
+
+**Safety Mechanisms:**
+- Circuit breaker opens if story fails 10+ times (skips remaining phases)
+- Circuit breaker opens if phase fails 5+ times (moves to next phase)
+- API budget enforcement (stops at 10,000 calls or configured limit)
+- Warning at 80% budget usage
+- Auto-checkpoint on Ctrl+C for safe interruption
+
+**Exit Conditions:**
+✅ All stories processed → Sprint marked DONE
+❌ Circuit breaker OPEN → Story marked FAILED, continue next story
+💰 Budget exhausted → Autopilot stops, checkpoint saved
+⏸️ User Ctrl+C → Graceful shutdown, checkpoint saved
+
+**Example Output:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🤖 SPRINT AUTOPILOT - STARTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sprint:      SPRINT-005
+Start time:  2026-01-05 14:30:00
+
+📖 Story 1: STORY-001
+   Phases: Developer → Tester → UCV Validator
+   ✅ DONE
+
+📖 Story 2: STORY-002
+   Phases: Developer → Tester → UCV Validator
+   ✅ DONE
+
+[...]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ AUTOPILOT COMPLETE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Completed:   20/20
+Failed:      0/20
+End time:    2026-01-05 16:45:00
+```
 
 #### 2. Check Autopilot Status
 
 ```bash
-/scrum-master autopilot-status
-# or
-/scrum-master autopilot-status --sprint SPRINT-001
+source framework/lib/autopilot-commands.sh
+
+# Check status once
+autopilot_status_command
+
+# Check status for specific sprint
+autopilot_status_command --sprint SPRINT-005
+
+# Watch status continuously (refreshes every 5 seconds)
+autopilot_status_command --watch
 ```
 
-**Returns:**
+**Purpose:** Display real-time progress of running autopilot. Useful for monitoring sprint execution in parallel terminal.
+
+**What It Shows:**
+1. **Sprint Name**: Which sprint is running
+2. **Current Story**: Story ID and its current status (IN_PROGRESS, IN_TESTING, IN_REVIEW, etc.)
+3. **Progress Percentage**: Visual progress bar with completed/failed counts
+4. **API Budget Usage**: Current API calls used vs. limit, with percentage
+5. **Circuit Breaker State**: CLOSED (normal) or OPEN (story failed, moving to next)
+
+**Options:**
+- `--sprint SPRINT-ID`: Check specific sprint (default: current sprint)
+- `--watch`: Continuous monitoring mode - refreshes every 5 seconds
+
+**Dashboard Display:**
 ```
-Sprint: SPRINT-001
-Autopilot: RUNNING
-Progress: 5/20 stories complete
-Current story: STORY-042 (IN_REVIEW with UCV Validator)
-Last 3 stories: STORY-039 ✅ DONE | STORY-040 ✅ DONE | STORY-041 ✅ DONE
-Velocity: 15/50 points
+┌─────────────────────────────────────────────────────────┐
+│           SPRINT AUTOPILOT - STATUS                     │
+├─────────────────────────────────────────────────────────┤
+│ Sprint:   SPRINT-005
+│ Current:  STORY-042 (IN_TESTING)
+│ Progress: 65% (13/20) ✅ 13 | ❌ 2
+│ Budget:   6,850 / 10,000 calls (68.5%)
+│ Circuit:  CLOSED
+└─────────────────────────────────────────────────────────┘
 ```
+
+**Use Cases:**
+- Monitor long-running sprint in separate terminal: `watch -n 5 'autopilot_status_command'`
+- Check progress before deciding to stop: `autopilot_status_command`
+- Validate API budget not exceeded: Check Budget line regularly
+- Identify problematic stories: If many ❌ marks, circuit breaker likely opening
 
 #### 3. Stop Autopilot (Graceful Shutdown)
 
 ```bash
-/scrum-master autopilot-stop
-# or with checkpoint:
-/scrum-master autopilot-stop --checkpoint
+source framework/lib/autopilot-commands.sh
+
+# Stop autopilot immediately (WITHOUT saving checkpoint)
+autopilot_stop_command
+
+# Stop autopilot and save checkpoint for resume
+autopilot_stop_command --checkpoint
 ```
 
-**Effect:**
-- Completes current story phase
-- Saves checkpoint for resume
-- Gracefully stops pipeline
-- Can resume later with `autopilot-resume`
+**Purpose:** Safely interrupt autopilot execution. Allows pausing and resuming without losing progress.
+
+**What It Does:**
+1. Stops accepting new stories
+2. Completes current phase if in progress
+3. Marks incomplete stories as PAUSED (not FAILED)
+4. If `--checkpoint` flag: Saves execution state for resume
+5. Updates timestamps in state files
+
+**Options:**
+- `--checkpoint`: Save checkpoint for resume (recommended)
+
+**Without Checkpoint:**
+```
+⏸️ Stopping autopilot...
+✅ Stopped (checkpoint NOT saved)
+   To save checkpoint: autopilot_stop_command --checkpoint
+
+State Impact: Current story marked PAUSED, cannot resume easily
+Use Case: Final stop, not planning to continue
+```
+
+**With Checkpoint:**
+```
+⏸️ Stopping autopilot...
+✅ Checkpoint saved
+   Resume with: autopilot_resume_command
+
+State Impact: Checkpoint recorded, can resume from this exact point
+Use Case: Planned interruption, will continue later
+```
+
+**Why Checkpoint Matters:**
+- Without: Stories marked PAUSED but context lost
+- With: Exact execution state saved to working.json
+- Enables seamless resume without re-processing
+
+**Common Workflow:**
+```
+1. autopilot_start_command --sprint SPRINT-005  # Start
+2. [Running... check status in another terminal]
+3. autopilot_status_command --watch             # Monitor
+4. [Ctrl+C or need to stop]
+5. autopilot_stop_command --checkpoint          # Stop safely
+6. [Come back later]
+7. autopilot_resume_command                     # Continue exactly where stopped
+```
 
 #### 4. Resume From Checkpoint
 
 ```bash
-/scrum-master autopilot-resume
-# or explicit:
-/scrum-master autopilot-resume --from STORY-042
+source framework/lib/autopilot-commands.sh
+
+# Resume from last checkpoint
+autopilot_resume_command
+
+# Resume from specific story
+autopilot_resume_command --from STORY-042
+
+# Resume specific sprint
+autopilot_resume_command --sprint SPRINT-005 --from STORY-042
 ```
 
-**Effect:**
-- Resumes from last checkpoint
-- Continues with next stories in sprint
-- Maintains velocity tracking
+**Purpose:** Continue autopilot execution from exactly where it was paused. No data loss, no re-processing.
+
+**What It Does:**
+1. Reads checkpoint from working.json
+2. Identifies next incomplete story
+3. Validates circuit breaker state
+4. Updates resume timestamps
+5. Continues with remaining stories
+6. Maintains velocity and budget tracking
+
+**Options:**
+- `--from STORY-ID`: Resume from specific story (useful if checkpoint corrupted or you want to skip)
+- `--sprint SPRINT-ID`: Target specific sprint (default: current sprint)
+
+**Automatic Resume (Recommended):**
+```bash
+autopilot_resume_command
+```
+- Reads checkpoint automatically
+- Resumes from exact point where stopped
+- No manual specification needed if checkpoint exists
+
+**Manual Resume (Advanced):**
+```bash
+autopilot_resume_command --from STORY-042 --sprint SPRINT-005
+```
+- Override checkpoint
+- Useful if checkpoint invalid or debugging
+- Skips all stories before STORY-042
+
+**State After Resume:**
+```
+✅ Ready to continue
+   From: STORY-042
+   Sprint: SPRINT-005
+   Time: 2026-01-05 16:50:00
+
+Remaining stories will be processed automatically
+```
+
+**Important Notes:**
+- ⚠️ Resuming restarts the phase for the current story
+- ⚠️ Circuit breaker state preserved from before pause
+- ✅ API budget tracking continues from previous point
+- ✅ Velocity calculations include pre-pause stories
+
+**Example Timeline:**
+```
+Monday 14:00  → Start: autopilot_start_command --sprint SPRINT-005
+Monday 15:00  → Progress: 8/20 stories done
+Monday 15:15  → Pause: autopilot_stop_command --checkpoint
+Monday 15:16  → Stop: automilot working, on STORY-009
+
+[Restart application/server/day]
+
+Wednesday 09:00 → Resume: autopilot_resume_command
+Wednesday 09:01 → Continues from STORY-009 (already processed)
+Wednesday 11:30 → Complete: 20/20 stories done, sprint DONE
+```
 
 #### 5. Run Specific Story Through Pipeline
 
 ```bash
-/scrum-master autopilot-story STORY-001
-# or:
-/scrum-master run-story-pipeline STORY-001
+source framework/lib/autopilot-commands.sh
+
+# Test single story through all 3 phases
+autopilot_story_command STORY-001
+
+# Test with verbose output (shows state files)
+autopilot_story_command STORY-001 --verbose
+
+# Test multiple stories individually
+autopilot_story_command STORY-001
+autopilot_story_command STORY-002
+autopilot_story_command STORY-003
 ```
 
-**Effect:**
-- Executes single story through full pipeline
-- Useful for testing or manual story execution
+**Purpose:** Execute single story through complete pipeline (Developer → Tester → UCV Validator). Perfect for testing, debugging, or processing individual stories outside of sprint autopilot.
+
+**What It Does:**
+1. Validates story ID exists
+2. Initializes story circuit breaker
+3. Runs Phase 1: Developer implementation
+4. Runs Phase 2: Tester validation
+5. Runs Phase 3: UCV Validator verification
+6. Updates working.json with final status
+7. Logs all phase executions with timestamps
+
+**Options:**
+- `--verbose`: Show detailed output including state file snapshots (for debugging)
+
+**Basic Output:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 TESTING SINGLE STORY: STORY-001
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Story completed successfully
+```
+
+**Verbose Output (--verbose flag):**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 TESTING SINGLE STORY: STORY-001
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Story completed successfully
+
+Final state:
+{
+  "id": "STORY-001",
+  "title": "Add hello endpoint",
+  "points": 3,
+  "status": "DONE",
+  "started_at": "2026-01-05T14:30:00Z",
+  "completed_at": "2026-01-05T14:35:00Z"
+}
+```
+
+**When to Use:**
+1. **Testing Pipeline**: Before running full sprint autopilot
+2. **Debugging Stories**: Investigate specific story failures
+3. **Manual Processing**: Handle single story without sprint context
+4. **Performance Testing**: Measure time/cost per story
+5. **Validation**: Verify agents work correctly
+
+**Common Workflow - Testing Before Autopilot:**
+```bash
+# Test 1-2 stories first
+autopilot_story_command STORY-001 --verbose
+autopilot_story_command STORY-002 --verbose
+
+# Check results
+cat .harmony/memory/working.json | jq '.current_story'
+
+# If successful, launch full sprint
+autopilot_start_command --sprint SPRINT-005
+```
+
+**Failure Handling:**
+```
+❌ Story processing failed
+
+Circuit breaker state:
+{
+  "state": "OPEN",
+  "failures": 10,
+  "phase_failures": {
+    "developer": 5,
+    "tester": 3,
+    "ucv-validator": 2
+  }
+}
+```
+- Check error-journal.json for detailed error messages
+- Review phase_failures to identify which phase is problematic
+- May need to investigate agent implementation or story requirements
+
+**Performance Baseline (Single Story):**
+- With Agents: 15-20 minutes per story (5-7 min per phase)
+- State Management: < 1 second
+- Total: Depends on agent complexity and implementation time
 
 ### Autopilot Workflow
 

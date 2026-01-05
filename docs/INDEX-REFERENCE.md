@@ -251,8 +251,6 @@ framework/profiles/
 | Document | Chemin | Description |
 |----------|--------|-------------|
 | Architecture | `docs/ARCHITECTURE-REFERENCE.md` | Reference complete architecture |
-| Specialties vs Specialists | `research/STUDY-SPECIALTIES-VS-SPECIALISTS.md` | Pourquoi cette structure |
-| Architecture Modulaire | `research/STUDY-ARCHITECTURE-MODULAIRE.md` | JIT loading, CV analogy |
 
 ---
 

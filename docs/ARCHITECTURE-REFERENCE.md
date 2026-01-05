@@ -420,11 +420,8 @@ AVANT de créer un nouvel agent:
 | Fichier | Description |
 |---------|-------------|
 | `framework/docs/ARCHITECTURE-REFERENCE.md` | Ce document |
-| `research/HARMONY-FRAMEWORK-ARCHITECT-BRIEF.md` | Brief architecte complet |
-| `research/EXPORT-PLAN-bmadV2-to-harmony.md` | Plan migration BMAD → Harmony |
-| `research/ARCH-001-framework-protection-structure.md` | Pattern P-012 détaillé |
 | `patterns/P-012-framework-guardian.md` | Pattern protection framework |
-| `patterns/P-013-test-environment-isolation.md` | Pattern isolation tests |
+| `patterns/P-013-test-environment.md` | Pattern isolation tests |
 
 ---
 

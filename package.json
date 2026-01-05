@@ -55,7 +55,7 @@
     "templates/",
     "tips/",
     "workflows/",
-    "checksums.sha256",
+    "harmony.manifest.json",
     "README.md",
     "LICENSE"
   ],

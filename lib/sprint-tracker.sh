@@ -1160,6 +1160,55 @@ record_story_success() {
     return 0
 }
 
+# Reset circuit breaker (manual recovery after analysis)
+# Usage: reset_circuit_breaker [story_id] [reason]
+# If story_id is empty, resets global circuit breaker
+reset_circuit_breaker() {
+    local story_id="${1:-}"
+    local reason="${2:-Manual reset}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        echo -e "${C_YELLOW}⚠️ Circuit breaker file not found${C_NC}" >&2
+        return 1
+    fi
+
+    local ts
+    ts=$(date -Iseconds 2>/dev/null || date +%Y-%m-%dT%H:%M:%S)
+    local tmp_file
+    tmp_file=$(mktemp)
+
+    if [[ -z "$story_id" ]]; then
+        # Reset global circuit breaker
+        jq --arg ts "$ts" --arg reason "$reason" '
+            .state = "CLOSED" |
+            .consecutive_failures = 0 |
+            .last_reset = $ts |
+            .reset_reason = $reason |
+            .reset_history += [{
+                timestamp: $ts,
+                reason: $reason,
+                previous_state: .state
+            }]' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+        echo -e "${C_GREEN}✅ Global circuit breaker reset${C_NC}"
+    else
+        # Reset specific story circuit breaker
+        jq --arg story_id "$story_id" --arg ts "$ts" --arg reason "$reason" '
+            .stories[$story_id].state = "CLOSED" |
+            .stories[$story_id].failures = 0 |
+            .stories[$story_id].phase_failures = {} |
+            .stories[$story_id].last_reset = $ts |
+            .stories[$story_id].history += [{
+                timestamp: $ts,
+                event: "reset",
+                reason: $reason
+            }]' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+        echo -e "${C_GREEN}✅ Circuit breaker reset for story $story_id${C_NC}"
+    fi
+
+    return 0
+}
+
 # Detect if a story is complete based on output signals
 # Returns 0 if complete, 1 if in progress/gaps, 2 if blocked
 # Phase signals format: "phase:signal" (e.g., "developer:COMPLETE", "ucv-validator:GAPS")

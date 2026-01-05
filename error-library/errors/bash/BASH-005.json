@@ -1,0 +1,16 @@
+{
+  "id": "BASH-005",
+  "title": "Function returns exit code, not string output",
+  "category": "bash",
+  "severity": "medium",
+  "version": "1.0.0",
+  "error": "Capturing output returns empty, expected string like 'OK'",
+  "cause": "Function returns via exit code (0=success, 1=failure), not stdout. Using $() captures nothing.",
+  "solution": "Use if statement or capture exit code pattern",
+  "example_bad": "status=$(check_api_budget)\nif [[ \"$status\" == \"OK\" ]]; then  # Always fails, $status is empty",
+  "example_good": "if check_api_budget; then\n  echo \"Budget OK\"\nelse\n  echo \"Budget exceeded\"\nfi",
+  "tags": ["exit-code", "return-value", "stdout", "api-design"],
+  "discovered": "2026-01-05",
+  "source": "harmony-framework unit tests",
+  "references": []
+}

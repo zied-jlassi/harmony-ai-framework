@@ -1,12 +1,5 @@
 # Bash Pitfalls - Quick Reference
 
-## CRITICAL: set -e Traps
-
-| Bad | Good | Why |
-|-----|------|-----|
-| `((count++))` | `count=$((count + 1))` | Exit 1 if count=0 |
-| `grep pattern file` | `grep pattern file \|\| true` | Exit 1 if no match |
-
 ## macOS Compatibility
 
 | Linux | macOS | Fix |
@@ -25,6 +18,16 @@ sha256_cmd() { command -v sha256sum &>/dev/null && sha256sum "$@" || shasum -a 2
 # Safe TTY check
 has_tty() { (exec </dev/tty) 2>/dev/null; }
 
-# Safe increment
-count=$((count + 1))  # NOT ((count++))
+# Cross-platform readlink -f
+realpath_portable() {
+    local path="$1"
+    while [ -L "$path" ]; do
+        dir=$(dirname "$path")
+        path=$(readlink "$path")
+        [[ $path != /* ]] && path="$dir/$path"
+    done
+    echo "$path"
+}
 ```
+
+> **Erreurs bash courantes**: voir `error-library/errors/bash/`

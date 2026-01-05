@@ -1,0 +1,16 @@
+{
+  "id": "BASH-004",
+  "title": "Function expects file path, receives string content",
+  "category": "bash",
+  "severity": "medium",
+  "version": "1.0.0",
+  "error": "Function returns 0 or empty when passed string instead of file path",
+  "cause": "Function uses file operations (grep, cat, wc) on the argument, assuming it's a path. Passing content directly fails silently.",
+  "solution": "Create a temporary file, write content to it, pass the path",
+  "example_bad": "count=$(count_real_errors \"Error: something failed\")\n# Returns 0 - function tried to open file named 'Error: something failed'",
+  "example_good": "tmp_file=$(mktemp)\necho \"Error: something failed\" > \"$tmp_file\"\ncount=$(count_real_errors \"$tmp_file\")\nrm -f \"$tmp_file\"",
+  "tags": ["file-path", "string", "argument", "api-design"],
+  "discovered": "2026-01-05",
+  "source": "harmony-framework unit tests",
+  "references": []
+}

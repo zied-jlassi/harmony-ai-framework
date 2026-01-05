@@ -416,6 +416,7 @@ copy_framework_files() {
             "commands"
             "config"
             "docs"
+            "error-library"
             "hooks"
             "knowledge"
             "lib"

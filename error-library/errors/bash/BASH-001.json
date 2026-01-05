@@ -1,0 +1,18 @@
+{
+  "id": "BASH-001",
+  "title": "Arithmetic increment crash with set -e",
+  "category": "bash",
+  "severity": "critical",
+  "version": "1.0.0",
+  "error": "((VAR++)) causes script exit when VAR=0",
+  "cause": "((0++)) evaluates to 0 which is falsy, returning exit code 1. With set -e, this terminates the script.",
+  "solution": "Use arithmetic expansion: VAR=$((VAR + 1))",
+  "example_bad": "#!/bin/bash\nset -e\nCOUNTER=0\n((COUNTER++))  # CRASH! Script exits here",
+  "example_good": "#!/bin/bash\nset -e\nCOUNTER=0\nCOUNTER=$((COUNTER + 1))  # OK",
+  "tags": ["set-e", "arithmetic", "increment", "counter", "pipefail"],
+  "discovered": "2026-01-05",
+  "source": "harmony-framework unit tests",
+  "references": [
+    "https://www.gnu.org/software/bash/manual/html_node/Shell-Arithmetic.html"
+  ]
+}

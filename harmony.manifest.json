@@ -92,6 +92,20 @@
     "R-007": "Circuit breaker after 3 failures"
   },
 
+  "error_library": {
+    "name": "Global Error Library",
+    "purpose": "AutoLearning collective knowledge base - errors and solutions",
+    "path": "error-library/",
+    "loader": "lib/error-library-loader.sh",
+    "sync": {
+      "mcp_memory": true,
+      "entity_prefix": "Error_",
+      "procedure": "error-library/SYNC-PROCEDURE.md"
+    },
+    "categories": ["bash", "javascript", "typescript", "python"],
+    "contribute": "Create JSON following schema/error.schema.json"
+  },
+
   "compatibility": {
     "ai_assistants": ["Claude Code", "Cursor", "Windsurf", "Continue", "Cody"],
     "llm_providers": ["Anthropic Claude", "OpenAI GPT", "Google Gemini", "Local LLMs"],

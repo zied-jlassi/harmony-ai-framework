@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Error Definition",
+  "description": "Schema for error-library entries",
+  "type": "object",
+  "required": ["id", "title", "category", "severity", "version", "error", "solution"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[0-9]{3}$",
+      "description": "Unique identifier (e.g., BASH-001)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["bash", "javascript", "typescript", "python", "rust", "go", "api", "framework"],
+      "description": "Error category/language"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Impact severity"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Solution version (semver)"
+    },
+    "error": {
+      "type": "string",
+      "description": "What goes wrong"
+    },
+    "cause": {
+      "type": "string",
+      "description": "Why it happens"
+    },
+    "solution": {
+      "type": "string",
+      "description": "How to fix it"
+    },
+    "example_bad": {
+      "type": "string",
+      "description": "Code that causes the error"
+    },
+    "example_good": {
+      "type": "string",
+      "description": "Correct code"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Searchable tags"
+    },
+    "discovered": {
+      "type": "string",
+      "format": "date",
+      "description": "When discovered (YYYY-MM-DD)"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where discovered"
+    },
+    "references": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Links to docs, issues, etc."
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "category": "bash",
+  "description": "Bash/Shell scripting errors and solutions",
+  "count": 5,
+  "errors": [
+    {
+      "id": "BASH-001",
+      "title": "Arithmetic increment crash with set -e",
+      "severity": "critical"
+    },
+    {
+      "id": "BASH-002",
+      "title": "Regex quantifiers not supported in bash",
+      "severity": "critical"
+    },
+    {
+      "id": "BASH-003",
+      "title": "Exit code lost with set -e",
+      "severity": "critical"
+    },
+    {
+      "id": "BASH-004",
+      "title": "Function expects file path, receives string",
+      "severity": "medium"
+    },
+    {
+      "id": "BASH-005",
+      "title": "Function returns exit code, not string",
+      "severity": "medium"
+    }
+  ]
+}

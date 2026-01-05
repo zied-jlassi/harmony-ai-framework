@@ -1,0 +1,59 @@
+{
+  "name": "error-library",
+  "version": "1.0.0",
+  "description": "Global Error Library - AutoLearning collective knowledge base",
+  "repository": "harmony-framework/error-library",
+  "license": "MIT",
+
+  "stats": {
+    "total_errors": 5,
+    "categories": 1,
+    "last_updated": "2026-01-05"
+  },
+
+  "categories": [
+    {
+      "name": "bash",
+      "path": "errors/bash/",
+      "count": 5,
+      "description": "Bash/Shell scripting errors"
+    },
+    {
+      "name": "javascript",
+      "path": "errors/javascript/",
+      "count": 0,
+      "description": "JavaScript/Node.js errors"
+    },
+    {
+      "name": "typescript",
+      "path": "errors/typescript/",
+      "count": 0,
+      "description": "TypeScript errors"
+    },
+    {
+      "name": "python",
+      "path": "errors/python/",
+      "count": 0,
+      "description": "Python errors"
+    }
+  ],
+
+  "usage": {
+    "load_all": "Read index.json, iterate categories, load each error file",
+    "search": "Use tools/search.sh or grep by tags/title",
+    "sync_mcp": "Run tools/sync-mcp.sh to populate MCP memory",
+    "contribute": "Create JSON file following schema/error.schema.json"
+  },
+
+  "integration": {
+    "harmony": {
+      "path": "framework/error-library/",
+      "loader": "lib/error-library-loader.sh",
+      "auto_sync": true
+    },
+    "mcp_memory": {
+      "entity_prefix": "Error_",
+      "sync_tool": "tools/sync-mcp.sh"
+    }
+  }
+}

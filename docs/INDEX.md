@@ -40,6 +40,17 @@
 
 ## Bibliotheques
 
+### Error Library
+
+> Bibliotheque mondiale d'erreurs/solutions - AutoLearning collectif. Chargement JIT par agents.
+
+**[Acceder a l'Error Library →](../error-library/README.md)**
+
+Inclut:
+- Erreurs versionnees (BASH-001, JS-001, etc.)
+- Sync MCP Memory automatique
+- Loader bash pour agents JIT
+
 ### Patterns
 
 > Bibliotheque de patterns pour la detection automatique et resolution rapide des problemes.
@@ -102,6 +113,11 @@ harmony-framework/
 │   ├── concepts.md
 │   ├── architecture.md
 │   └── ...
+├── error-library/         ← AutoLearning erreurs/solutions
+│   ├── README.md          ← Documentation + workflow
+│   ├── errors/bash/       ← BASH-001 a BASH-00X
+│   ├── schema/            ← JSON schema validation
+│   └── tools/sync-mcp.sh  ← Sync vers MCP Memory
 ├── patterns/
 │   ├── INDEX.md           ← Bibliotheque de patterns
 │   ├── case-studies/      ← Exemples concrets

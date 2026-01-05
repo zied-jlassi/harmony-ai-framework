@@ -1,0 +1,16 @@
+{
+  "id": "BASH-003",
+  "title": "Exit code lost with set -e",
+  "category": "bash",
+  "severity": "critical",
+  "version": "1.0.0",
+  "error": "Cannot capture exit code - script terminates before $?",
+  "cause": "With set -e, any non-zero exit code terminates the script immediately. The line after the command is never reached.",
+  "solution": "Use inline capture pattern: cmd && code=0 || code=$?",
+  "example_bad": "set -e\nsome_command_that_may_fail\nexit_code=$?  # Never reached if command fails!",
+  "example_good": "set -e\nsome_command_that_may_fail && exit_code=0 || exit_code=$?\necho \"Exit code: $exit_code\"  # Always reached",
+  "tags": ["set-e", "exit-code", "error-handling", "pipefail"],
+  "discovered": "2026-01-05",
+  "source": "harmony-framework unit tests",
+  "references": []
+}

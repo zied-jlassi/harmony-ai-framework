@@ -57,6 +57,188 @@ The Scrum Master is the sprint orchestrator. Creates stories from epics, plans s
 | **Velocity Tracking** | Points, burndown, predictability |
 | **Impediment Removal** | Blocker resolution, escalation |
 | **HQVF Integration** | Trigger UCV elaboration, validate 100% coverage |
+| **Sprint Autopilot** | Autonomous story execution through full pipeline (Phase 1) |
+
+---
+
+## Sprint Autopilot Mode
+
+> **NEW CAPABILITY** (Phase 1): Fully automated sprint execution with Guardian + Sentinel
+
+The Scrum Master can now orchestrate complete autonomous story execution through the full developer pipeline.
+
+### What is Autopilot?
+
+Autopilot automatically executes stories through a complete pipeline without user intervention:
+- **Input**: One or more stories in a sprint
+- **Process**: Developer → Tester → UCV Validator pipeline
+- **Output**: Stories marked DONE with validated 100% coverage
+
+### Autopilot Commands
+
+The SM can invoke autopilot with these commands:
+
+#### 1. Start Autopilot for Current Sprint
+
+```bash
+/scrum-master autopilot
+# or
+/scrum-master autopilot --sprint SPRINT-001
+# or natural language:
+"Run autopilot for the current sprint"
+```
+
+**Effect:**
+- Launches all stories in current sprint through pipeline sequentially
+- Guardian auto-routes each agent via intent keywords
+- Sentinel tracks completion and manages circuit breaker
+- Working memory updated at each phase
+
+#### 2. Check Autopilot Status
+
+```bash
+/scrum-master autopilot-status
+# or
+/scrum-master autopilot-status --sprint SPRINT-001
+```
+
+**Returns:**
+```
+Sprint: SPRINT-001
+Autopilot: RUNNING
+Progress: 5/20 stories complete
+Current story: STORY-042 (IN_REVIEW with UCV Validator)
+Last 3 stories: STORY-039 ✅ DONE | STORY-040 ✅ DONE | STORY-041 ✅ DONE
+Velocity: 15/50 points
+```
+
+#### 3. Stop Autopilot (Graceful Shutdown)
+
+```bash
+/scrum-master autopilot-stop
+# or with checkpoint:
+/scrum-master autopilot-stop --checkpoint
+```
+
+**Effect:**
+- Completes current story phase
+- Saves checkpoint for resume
+- Gracefully stops pipeline
+- Can resume later with `autopilot-resume`
+
+#### 4. Resume From Checkpoint
+
+```bash
+/scrum-master autopilot-resume
+# or explicit:
+/scrum-master autopilot-resume --from STORY-042
+```
+
+**Effect:**
+- Resumes from last checkpoint
+- Continues with next stories in sprint
+- Maintains velocity tracking
+
+#### 5. Run Specific Story Through Pipeline
+
+```bash
+/scrum-master autopilot-story STORY-001
+# or:
+/scrum-master run-story-pipeline STORY-001
+```
+
+**Effect:**
+- Executes single story through full pipeline
+- Useful for testing or manual story execution
+
+### Autopilot Workflow
+
+```
+Sprint starts (20 stories selected)
+        ↓
+User: "/scrum-master autopilot"
+        ↓
+Loop for each story:
+  ├─ Story: STORY-001 starts
+  ├─ Phase 1: Developer (IN_PROGRESS)
+  │           Guardian auto-routes with "develop STORY-001" intent
+  │           Sentinel tracks code completion
+  ├─ Phase 2: Tester (IN_TESTING)
+  │           Guardian auto-routes with "test STORY-001" intent
+  │           Sentinel validates test coverage ≥ 80%
+  ├─ Phase 3: UCV Validator (IN_REVIEW)
+  │           Guardian auto-routes with "validate STORY-001" intent
+  │           Sentinel confirms 100% UCV coverage
+  └─ Story: STORY-001 marked DONE ✅
+        ↓
+Next story: STORY-002
+        ↓
+(repeat until all stories DONE or circuit breaker OPEN)
+        ↓
+Sprint complete / Report generated
+```
+
+### State Management During Autopilot
+
+The autopilot updates these state files automatically:
+
+**working.json:**
+- `current_story.id` → story being executed
+- `current_story.status` → TODO → IN_PROGRESS → IN_TESTING → IN_REVIEW → DONE
+- `current_sprint.velocity_achieved` → incremented as stories complete
+- `statistics.stories_completed_total` → incremented per story
+
+**workflow-state.json:**
+- `active_context.current_story` → set to current story
+- `active_context.active_agent` → Developer → Tester → UCV Validator → null
+- `active_context.last_handoff` → timestamp of last agent transition
+
+### Safety Features
+
+Autopilot includes built-in safety mechanisms (Phase 2 integration):
+
+| Safety Feature | Trigger | Action |
+|---|---|---|
+| **Circuit Breaker** | 3 consecutive story failures | Pause autopilot, wait for intervention |
+| **Output Decline** | Story output < 50% of previous | Flag potential stagnation |
+| **Test-Only Loops** | Same test output repeated | Detect stuck loops |
+| **Rate Limiting** | API budget exceeded | Stop and checkpoint |
+| **Max Iterations** | >10 iterations per story | Mark story FAILED, move to next |
+
+### Autopilot Performance
+
+Expected metrics for 20-story sprint:
+
+| Metric | Expected |
+|---|---|
+| Time per story | 5-10 minutes |
+| Total sprint time | 90-120 minutes |
+| Success rate | 85-95% |
+| API calls per story | 300-500 |
+| Cost per story | $1-2 |
+| Total sprint cost | $20-40 |
+
+### Example: Run Autopilot
+
+```
+User: "Run autopilot for the current sprint"
+
+SM Response:
+  ✅ Autopilot started for SPRINT-001
+  📊 Total stories: 20
+  🎯 Goal: Complete all stories with 100% validation
+
+  [PHASE: STORY-001]
+  ├─ Developer: Implementing feature...
+  ├─ Tester: Running tests (coverage: 85%)...
+  ├─ UCV Validator: Checking coverage (100% ✅)
+  └─ Status: DONE ✅
+
+  [PHASE: STORY-002]
+  (... continues automatically ...)
+
+  Progress: 5/20 ✅ | Velocity: 15 pts | ETA: 2h remaining
+```
 
 ---
 

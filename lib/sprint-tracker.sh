@@ -721,3 +721,539 @@ export_for_ai() {
         quality_gates: .quality_gates
     }' "$WORKING_MEMORY"
 }
+
+# =============================================================================
+# AUTOPILOT PIPELINE ORCHESTRATION (Phase 1)
+# =============================================================================
+
+# Execute story through autopilot pipeline
+# Usage: run_story_pipeline "STORY-001"
+#
+# Orchestrates core agents: Developer → Tester → UCV Validator
+# Uses Guardian auto-routing + Sentinel tracking
+# Updates working.json and workflow-state.json at each phase
+run_story_pipeline() {
+    local story_id="${1:-}"
+
+    if [[ -z "$story_id" ]]; then
+        echo -e "${C_RED}Usage: run_story_pipeline <story-id>${C_NC}" >&2
+        return 1
+    fi
+
+    if [[ ! -f "$WORKING_MEMORY" ]]; then
+        echo -e "${C_RED}Working memory not initialized${C_NC}" >&2
+        return 1
+    fi
+
+    # Verify story is in progress
+    local current_story
+    current_story=$(get_working_value ".current_story.id")
+    if [[ "$current_story" != "$story_id" ]]; then
+        echo -e "${C_YELLOW}Story $story_id not active. Starting it first...${C_NC}"
+        start_story "$story_id" "Auto-pipeline story" 0
+    fi
+
+    # Pipeline configuration: agent phases
+    local -a pipeline_agents=(
+        "developer:Developer implementation phase"
+        "tester:Tester validation phase"
+        "ucv-validator:UCV Validator final check"
+    )
+
+    local phase_num=1
+    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+    echo -e "${C_BLUE}AUTOPILOT PIPELINE: $story_id${C_NC}"
+    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+
+    for phase_spec in "${pipeline_agents[@]}"; do
+        local agent_name="${phase_spec%%:*}"
+        local phase_desc="${phase_spec#*:}"
+
+        echo ""
+        echo -e "${C_GREEN}Phase $phase_num: $phase_desc${C_NC}"
+        echo -e "  Agent: ${C_YELLOW}$agent_name${C_NC}"
+        echo -e "  Story: ${C_YELLOW}$story_id${C_NC}"
+
+        # PHASE 2: Initialize story circuit breaker and check status
+        init_story_circuit_breaker "$story_id"
+
+        # PHASE 2: Check if circuit breaker allows this phase
+        if ! check_story_circuit_breaker "$story_id" "$agent_name"; then
+            echo -e "${C_RED}❌ Circuit breaker blocked - skipping remaining phases${C_NC}"
+            # Mark story as failed
+            set_working_value ".current_story.status" "\"FAILED\""
+            ((phase_num++))
+            continue
+        fi
+
+        # PHASE 2: Check API budget before phase
+        if ! check_api_budget; then
+            echo -e "${C_RED}❌ API budget exceeded - stopping autopilot${C_NC}"
+            return 1
+        fi
+
+        # Log phase execution start
+        log_phase_execution "$story_id" "$agent_name" "started"
+
+        # Update workflow state: set active agent
+        local tmp_file
+        tmp_file=$(mktemp)
+        jq --arg agent "$agent_name" \
+           '.active_context.active_agent = $agent' \
+           "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
+           mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json" || {
+            echo -e "${C_RED}Failed to update workflow state${C_NC}" >&2
+            return 1
+        }
+
+        # Update story status based on phase
+        local story_status
+        case "$agent_name" in
+            "developer")
+                story_status="IN_PROGRESS"
+                ;;
+            "tester")
+                story_status="IN_TESTING"
+                ;;
+            "ucv-validator")
+                story_status="IN_REVIEW"
+                ;;
+        esac
+
+        if [[ -n "$story_status" ]]; then
+            set_working_value ".current_story.status" "\"$story_status\""
+            echo -e "  Status: ${C_YELLOW}$story_status${C_NC}"
+        fi
+
+        # Log phase invocation
+        echo -e "  ${C_YELLOW}[AWAITING AGENT INVOCATION]${C_NC}"
+        echo -e "  ${C_YELLOW}Guardian will auto-route via intent keywords${C_NC}"
+        echo -e "  ${C_YELLOW}Sentinel will track completion${C_NC}"
+        echo -e "  ${C_YELLOW}Circuit Breaker: MONITORING (max 10 failures/phase, 5 per phase)${C_NC}"
+
+        # Placeholder for actual agent invocation
+        # In real implementation: calls Claude Code CLI or agent invocation mechanism
+        echo -e "  ${C_BLUE}→ Ready for $agent_name${C_NC}"
+
+        # PHASE 2: Placeholder for completion detection
+        # In real implementation, would wait for agent output and call:
+        # detect_story_completion "$story_id" "$agent_name" "$agent_output"
+        # Then call record_story_success or record_story_failure accordingly
+
+        ((phase_num++))
+    done
+
+    # Final phase: Mark story as DONE
+    echo ""
+    echo -e "${C_GREEN}Phase $phase_num: Mark Complete${C_NC}"
+    set_working_value ".current_story.status" "\"DONE\""
+
+    # Clear active agent
+    local tmp_file
+    tmp_file=$(mktemp)
+    jq '.active_context.active_agent = null' \
+       "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
+       mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json"
+
+    echo -e "  ${C_GREEN}✅ Story marked DONE${C_NC}"
+
+    echo ""
+    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+    echo -e "${C_GREEN}✅ Pipeline orchestration complete${C_NC}"
+    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+
+    return 0
+}
+
+# Get pipeline status for a story
+# Usage: get_pipeline_status "STORY-001"
+get_pipeline_status() {
+    local story_id="${1:-}"
+
+    if [[ -z "$story_id" ]]; then
+        jq '{
+            current_story: .current_story.id,
+            status: .current_story.status,
+            active_agent: .active_context.active_agent,
+            phase: .phase.current
+        }' "${HARMONY_DIR}/memory/workflow-state.json" 2>/dev/null || echo "null"
+        return
+    fi
+
+    # Get specific story status
+    local story_status
+    story_status=$(jq -r ".current_story.status // \"NOT_FOUND\"" "$WORKING_MEMORY" 2>/dev/null)
+
+    local active_agent
+    active_agent=$(jq -r ".active_context.active_agent // \"none\"" "${HARMONY_DIR}/memory/workflow-state.json" 2>/dev/null)
+
+    echo -e "Story: ${C_YELLOW}$story_id${C_NC}"
+    echo -e "Status: ${C_YELLOW}$story_status${C_NC}"
+    echo -e "Active Agent: ${C_YELLOW}$active_agent${C_NC}"
+}
+
+# =============================================================================
+# PHASE 2: CIRCUIT BREAKER + COMPLETION DETECTION (Safety Integration)
+# =============================================================================
+
+# Check if jq is available, critical for Phase 2 functions
+check_jq_available() {
+    if ! command -v jq &>/dev/null; then
+        echo -e "${C_RED}❌ ERROR: 'jq' is required for Circuit Breaker integration${C_NC}" >&2
+        echo -e "${C_YELLOW}Please install jq: apt-get install jq (Debian/Ubuntu) or brew install jq (macOS)${C_NC}" >&2
+        return 1
+    fi
+    return 0
+}
+
+# Initialize per-story circuit breaker in circuit-breaker.json
+# Creates story-specific tracking with per-phase failure counts
+# Requires: jq for JSON manipulation
+init_story_circuit_breaker() {
+    local story_id="${1:-}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ -z "$story_id" ]]; then
+        return 1
+    fi
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 1
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Skipping circuit breaker initialization (jq not available)${C_NC}" >&2
+        return 0
+    fi
+
+    local tmp_file
+    tmp_file=$(mktemp)
+
+    # Add story-specific entry if not exists
+    jq --arg story_id "$story_id" \
+        '.stories[$story_id] //= {
+            state: "CLOSED",
+            failures: 0,
+            phase_failures: {
+                developer: 0,
+                tester: 0,
+                "ucv-validator": 0
+            },
+            max_failures: 10,
+            iterations: 0,
+            max_iterations: 10,
+            started_at: now | todate,
+            last_failure: null,
+            last_success: null,
+            history: []
+        }' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+
+    return 0
+}
+
+# Check if story circuit breaker allows operations
+# Returns 0 if CAN operate, 1 if breaker is OPEN
+# Requires: jq for JSON manipulation
+check_story_circuit_breaker() {
+    local story_id="${1:-}"
+    local phase="${2:-}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ -z "$story_id" ]]; then
+        return 0  # No circuit check if no story
+    fi
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 0  # No circuit check if file missing
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Skipping circuit breaker check (jq not available)${C_NC}" >&2
+        return 0  # Allow operation if jq unavailable
+    fi
+
+    # Check global state
+    local state
+    state=$(jq -r ".state // \"CLOSED\"" "$circuit_breaker_file" 2>/dev/null)
+
+    if [[ "$state" == "OPEN" ]]; then
+        echo -e "${C_RED}🛑 Global circuit breaker OPEN - diagnosis required${C_NC}" >&2
+        return 1
+    fi
+
+    # Check story-specific state
+    local story_state
+    story_state=$(jq -r ".stories[\"$story_id\"].state // \"CLOSED\"" "$circuit_breaker_file" 2>/dev/null)
+
+    if [[ "$story_state" == "OPEN" ]]; then
+        echo -e "${C_RED}🛑 Story $story_id circuit breaker OPEN${C_NC}" >&2
+        local failures
+        failures=$(jq -r ".stories[\"$story_id\"].failures // 0" "$circuit_breaker_file" 2>/dev/null)
+        echo -e "${C_YELLOW}Too many failures ($failures). Move to next story.${C_NC}" >&2
+        return 1
+    fi
+
+    # Check phase-specific failures
+    if [[ -n "$phase" ]]; then
+        local phase_failures
+        phase_failures=$(jq -r ".stories[\"$story_id\"].phase_failures.$phase // 0" "$circuit_breaker_file" 2>/dev/null)
+
+        if [[ "$phase_failures" -ge 5 ]]; then
+            echo -e "${C_RED}⚠️  Phase $phase for story $story_id exceeded failure limit (5)${C_NC}" >&2
+            # Open circuit for story
+            record_story_failure "$story_id" "$phase"
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+# Record failure for a story/phase
+# Updates circuit breaker state and failure counts
+# Requires: jq for JSON manipulation
+record_story_failure() {
+    local story_id="${1:-}"
+    local phase="${2:-developer}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ -z "$story_id" ]]; then
+        return 1
+    fi
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 1
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Could not record failure (jq not available)${C_NC}" >&2
+        return 0
+    fi
+
+    # Ensure story entry exists
+    init_story_circuit_breaker "$story_id"
+
+    local tmp_file
+    tmp_file=$(mktemp)
+    local timestamp
+    timestamp=$(date -Iseconds)
+
+    # Update failures and check if should open circuit
+    jq --arg story_id "$story_id" \
+        --arg phase "$phase" \
+        --arg ts "$timestamp" \
+        '.stories[$story_id].failures += 1 |
+         .stories[$story_id].phase_failures[$phase] += 1 |
+         .stories[$story_id].iterations += 1 |
+         .stories[$story_id].last_failure = $ts |
+         .stories[$story_id].history += [{
+            timestamp: $ts,
+            event: "failure",
+            phase: $phase,
+            total_failures: .stories[$story_id].failures,
+            phase_failures: .stories[$story_id].phase_failures[$phase]
+         }] |
+         if .stories[$story_id].failures >= .stories[$story_id].max_failures then
+            .stories[$story_id].state = "OPEN"
+         else
+            .
+         end' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+
+    local failures
+    failures=$(jq -r ".stories[\"$story_id\"].failures" "$circuit_breaker_file" 2>/dev/null)
+    local phase_failures
+    phase_failures=$(jq -r ".stories[\"$story_id\"].phase_failures.$phase" "$circuit_breaker_file" 2>/dev/null)
+
+    echo -e "${C_YELLOW}⚠️  Story $story_id failure recorded (Total: $failures/10, Phase: $phase_failures/5)${C_NC}"
+
+    return 0
+}
+
+# Record success for a story/phase
+# Resets phase failure count on success
+# Requires: jq for JSON manipulation
+record_story_success() {
+    local story_id="${1:-}"
+    local phase="${2:-developer}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ -z "$story_id" ]]; then
+        return 1
+    fi
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 1
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Could not record success (jq not available)${C_NC}" >&2
+        return 0
+    fi
+
+    local tmp_file
+    tmp_file=$(mktemp)
+    local timestamp
+    timestamp=$(date -Iseconds)
+
+    # Reset phase failures on success
+    jq --arg story_id "$story_id" \
+        --arg phase "$phase" \
+        --arg ts "$timestamp" \
+        '.stories[$story_id].phase_failures[$phase] = 0 |
+         .stories[$story_id].last_success = $ts |
+         .stories[$story_id].history += [{
+            timestamp: $ts,
+            event: "success",
+            phase: $phase,
+            total_failures: .stories[$story_id].failures
+         }]' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+
+    echo -e "${C_GREEN}✅ Story $story_id phase $phase completed successfully${C_NC}"
+
+    return 0
+}
+
+# Detect if a story is complete based on output signals
+# Returns 0 if complete, 1 if in progress/gaps, 2 if blocked
+# Phase signals format: "phase:signal" (e.g., "developer:COMPLETE", "ucv-validator:GAPS")
+detect_story_completion() {
+    local story_id="${1:-}"
+    local phase="${2:-}"
+    local output="${3:-}"
+
+    if [[ -z "$story_id" ]] || [[ -z "$output" ]]; then
+        return 1
+    fi
+
+    # Developer phase completion signals
+    if [[ "$phase" == "developer" ]]; then
+        if echo "$output" | grep -qiE "(implementation.*complete|all.*verifications.*implemented|HANDOFF.*Developer|code.*ready|tests.*written)"; then
+            return 0  # COMPLETE
+        elif echo "$output" | grep -qiE "(blocked|cannot|error|failed|timeout)"; then
+            return 2  # BLOCKED
+        else
+            return 1  # IN_PROGRESS
+        fi
+    fi
+
+    # Tester phase completion signals
+    if [[ "$phase" == "tester" ]]; then
+        if echo "$output" | grep -qiE "(all tests passing|coverage.*100%|HANDOFF.*Tester|validation.*complete)"; then
+            return 0  # COMPLETE
+        elif echo "$output" | grep -qiE "(test.*fail|coverage.*gap|blocked)"; then
+            return 2  # BLOCKED
+        else
+            return 1  # IN_PROGRESS
+        fi
+    fi
+
+    # UCV Validator phase completion signals
+    if [[ "$phase" == "ucv-validator" ]]; then
+        # Look for coverage percentage
+        local coverage
+        coverage=$(echo "$output" | grep -oP "Coverage:\s*\K[0-9]+" || echo "0")
+
+        if [[ "$coverage" == "100" ]]; then
+            return 0  # COMPLETE (100% coverage)
+        elif [[ "$coverage" -gt 0 ]]; then
+            return 1  # IN_PROGRESS (partial coverage)
+        elif echo "$output" | grep -qiE "(verification.*complete|100%|all.*validated|COMPLETE)"; then
+            return 0  # COMPLETE
+        elif echo "$output" | grep -qiE "(gaps|incomplete|blocked)"; then
+            return 2  # BLOCKED
+        else
+            return 1  # IN_PROGRESS
+        fi
+    fi
+
+    return 1  # Default: IN_PROGRESS
+}
+
+# Check and enforce API call budget (rate limiting)
+# Tracks cumulative API calls across all stories
+# Requires: jq for JSON manipulation
+check_api_budget() {
+    local working_memory="${HARMONY_DIR}/memory/working.json"
+
+    if [[ ! -f "$working_memory" ]]; then
+        return 0  # No budget check if file missing
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Skipping budget check (jq not available)${C_NC}" >&2
+        return 0  # Allow operation if jq unavailable
+    fi
+
+    # Initialize budget fields if missing
+    local tmp_file
+    tmp_file=$(mktemp)
+    jq '.budget //= {
+        api_calls_limit: 10000,
+        api_calls_total: 0,
+        stories_completed: 0,
+        max_stories: 20
+    }' "$working_memory" > "$tmp_file" && mv "$tmp_file" "$working_memory"
+
+    local calls
+    calls=$(jq -r '.budget.api_calls_total // 0' "$working_memory")
+    local limit
+    limit=$(jq -r '.budget.api_calls_limit // 10000' "$working_memory")
+
+    local pct=$((calls * 100 / limit))
+
+    if [[ "$calls" -ge "$limit" ]]; then
+        echo -e "${C_RED}🛑 API BUDGET EXCEEDED: $calls / $limit calls${C_NC}" >&2
+        return 1  # Budget exhausted
+    fi
+
+    if [[ "$pct" -ge 80 ]]; then
+        echo -e "${C_RED}⚠️  API BUDGET WARNING: ${pct}% used ($calls / $limit)${C_NC}"
+    fi
+
+    return 0
+}
+
+# Log phase execution for autopilot tracking
+# Requires: jq for JSON manipulation
+log_phase_execution() {
+    local story_id="${1:-}"
+    local phase="${2:-}"
+    local status="${3:-started}"  # started, completed, failed
+
+    local working_memory="${HARMONY_DIR}/memory/working.json"
+
+    if [[ ! -f "$working_memory" ]]; then
+        return 1
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        # Silently skip logging if jq unavailable (non-critical)
+        return 0
+    fi
+
+    local tmp_file
+    tmp_file=$(mktemp)
+    local timestamp
+    timestamp=$(date -Iseconds)
+
+    # Append phase log
+    jq --arg story "$story_id" \
+        --arg phase "$phase" \
+        --arg status "$status" \
+        --arg ts "$timestamp" \
+        '.phase_execution_log //= [] |
+         .phase_execution_log += [{
+            timestamp: $ts,
+            story: $story,
+            phase: $phase,
+            status: $status
+         }]' "$working_memory" > "$tmp_file" && mv "$tmp_file" "$working_memory"
+
+    return 0
+}

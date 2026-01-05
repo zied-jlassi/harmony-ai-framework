@@ -395,6 +395,7 @@ copy_framework_files() {
             "config"
             "docs"
             "hooks"
+            "knowledge"
             "lib"
             "local"
             "memory"

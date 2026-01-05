@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.18] - 2026-01-05
+
+### Changed
+- **Knowledge Centralization**: Reorganized 73 knowledge files from scattered locations to centralized `knowledge/` directory
+  - `knowledge/domains/` - AI, Security, DevOps, Gaming, Quality
+  - `knowledge/frameworks/` - React, NestJS, Angular, Symfony, NextJS, Tailwind
+  - `knowledge/languages/` - JavaScript, TypeScript, Python, Bash
+  - `knowledge/runtimes/` - NodeJS
+  - `knowledge/shared/` - Shared patterns (API, SQL, Error handling)
+- Updated manifest.yaml format to reference centralized knowledge paths
+- Install script now copies `knowledge/` directory
+
+### Fixed
+- Manifests (NestJS, React, Angular, Symfony) updated to new centralized knowledge format
+
 ## [1.0.17] - 2026-01-05
 
 ### Fixed

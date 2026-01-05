@@ -805,6 +805,47 @@ EOF
     print_success "Memory files initialized"
 }
 
+# Initialize autopilot configuration
+initialize_autopilot_config() {
+    print_step "5.7/6" "Initializing autopilot configuration..."
+
+    local local_dir="$PROJECT_DIR/.harmony/local"
+    mkdir -p "$local_dir"
+
+    # Create autopilot-config.json if it doesn't exist
+    local config_file="$local_dir/autopilot-config.json"
+    if [[ ! -f "$config_file" ]]; then
+        # Copy template from framework/local/autopilot-config.json
+        if [[ -f "$SCRIPT_DIR/local/autopilot-config.json" ]]; then
+            cp "$SCRIPT_DIR/local/autopilot-config.json" "$config_file"
+            print_success "Autopilot configuration created at .harmony/local/autopilot-config.json"
+        else
+            # Fallback: create default config inline
+            cat > "$config_file" << 'EOF'
+{
+  "_comment": "Sprint Autopilot Configuration - Local Override",
+  "circuit_breaker": {
+    "max_failures_per_story": 10,
+    "max_failures_per_phase": 5
+  },
+  "api_budget": {
+    "api_calls_limit": 10000,
+    "warning_threshold_percent": 80
+  },
+  "completion_signals": {
+    "developer": ["Implementation complete", "Code ready", "Tests written"],
+    "tester": ["All tests passing", "Coverage: 100%", "Validation complete"],
+    "ucv_validator": ["Coverage: 100%", "All verified", "Verification complete"]
+  }
+}
+EOF
+            print_success "Autopilot configuration created (default)"
+        fi
+    else
+        print_success "Autopilot configuration already exists"
+    fi
+}
+
 # Create Claude Code slash commands
 create_slash_commands() {
     # Always create slash commands for full install or if hooks requested
@@ -1287,6 +1328,7 @@ main() {
     copy_framework_files
     configure_hooks
     initialize_memory
+    initialize_autopilot_config
     create_slash_commands
     create_claude_md
     show_onboarding_tips

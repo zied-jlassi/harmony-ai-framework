@@ -1,0 +1,48 @@
+{
+  "_comment": "Sprint Autopilot Configuration - Local Override",
+  "_note": "Copy this to .harmony/local/ and customize without touching framework code",
+
+  "circuit_breaker": {
+    "max_failures_per_story": 10,
+    "max_failures_per_phase": 5,
+    "description": "Adjust thresholds here without touching framework code"
+  },
+
+  "api_budget": {
+    "api_calls_limit": 10000,
+    "warning_threshold_percent": 80,
+    "description": "Configure API limits and warning levels"
+  },
+
+  "completion_signals": {
+    "developer": [
+      "Implementation complete",
+      "Code ready",
+      "Tests written"
+    ],
+    "tester": [
+      "All tests passing",
+      "Coverage: 100%",
+      "Validation complete"
+    ],
+    "ucv_validator": [
+      "Coverage: 100%",
+      "All verified",
+      "Verification complete"
+    ]
+  },
+
+  "performance": {
+    "model_tier_routing": {
+      "enabled": false,
+      "architect": "opus",
+      "developer": "sonnet",
+      "tester": "haiku"
+    },
+    "parallel_execution": {
+      "enabled": false,
+      "after_phase": "developer",
+      "parallel_phases": ["tester", "security"]
+    }
+  }
+}

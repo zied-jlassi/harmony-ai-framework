@@ -1,11 +1,8 @@
-# NestJS Profile - Modèle Hybride 3 Niveaux
+# NestJS Profile - Centralized Knowledge Model
 # ═══════════════════════════════════════════════════════════════
 #
-# NIVEAU 1: Industry Standards   → Sources professionnelles (web)
-# NIVEAU 2: Project Conventions  → Spécificités équipe (à remplir)
-# NIVEAU 3: Experience           → Erreurs passées (auto-Sentinel)
-#
-# DOCS OFFICIELLES → Context7 on-demand (pas stockées)
+# Knowledge centralisé dans knowledge/ (nouveau modèle)
+# Override possible via .harmony/local/profiles/backend/nestjs/
 #
 # ═══════════════════════════════════════════════════════════════
 
@@ -14,9 +11,11 @@ profile:
   name: "NestJS"
   category: backend
   level: 2
-  model: hybrid-3-levels
-  description: "NestJS - Modèle hybride: Industry + Conventions + Experience"
-  last_updated: "2026-01-04"
+  description: "NestJS - Progressive Node.js framework"
+  last_updated: "2026-01-05"
+
+  requires: [typescript, nodejs]
+  optional: [prisma, graphql, typeorm]
 
 # ═══════════════════════════════════════════════════════════════
 # VERSIONING - Pour Context7 Queries
@@ -35,49 +34,38 @@ versioning:
     "10.x": "https://docs.nestjs.com/v10/"
 
 # ═══════════════════════════════════════════════════════════════
-# KNOWLEDGE 3 NIVEAUX
+# KNOWLEDGE - Références centralisées
 # ═══════════════════════════════════════════════════════════════
 knowledge:
+  # Chemins relatifs à knowledge/ (centralisé)
+  base_path: knowledge/
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 1: Industry Standards (sources professionnelles)
-  # ─────────────────────────────────────────────────────────────
-  industry_standards:
-    description: "Best practices universelles (FreeCodeCamp, NestJS docs, etc.)"
-    load: on_intent
-    enriched_via: "/harmony learn --search"
-    files:
-      - knowledge/industry-standards/architecture.md
-      - knowledge/industry-standards/security.md
-      - knowledge/industry-standards/testing.md
-      - knowledge/industry-standards/performance.md
+  # Knowledge framework (toujours chargé)
+  core:
+    - frameworks/nestjs/architecture.md
+    - languages/typescript/typescript-advanced-types.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 2: Project Conventions (spécifique équipe)
-  # ─────────────────────────────────────────────────────────────
-  project_conventions:
-    description: "Règles spécifiques au projet (à personnaliser)"
-    load: always
-    user_maintained: true
-    files:
-      - knowledge/project-conventions/README.md
-      - knowledge/project-conventions/api-patterns.md
-      - knowledge/project-conventions/naming.md
-      - knowledge/project-conventions/security.md
+  # Knowledge partagé
+  shared:
+    - shared/patterns/api-design-principles.md
+    - shared/patterns/error-handling-patterns.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 3: Experience (auto-enrichi par Sentinel)
-  # ─────────────────────────────────────────────────────────────
-  experience:
-    description: "Erreurs passées et leçons apprises (auto-généré)"
-    load: always
-    auto_enriched: true
-    source: ".claude/memory/error-journal.json"
-    filter_tags: ["nestjs", "typescript", "api"]
-    files:
-      - knowledge/experience/README.md
-      - knowledge/experience/pitfalls.md
-      - knowledge/experience/solutions.md
+  # Chargement par intent
+  on_intent:
+    SECURITY:
+      - domains/security/owasp-top10.md
+      - domains/security/owasp-checklists.md
+    TEST:
+      - languages/typescript/typescript-advanced-types.md
+    IMPLEMENT:
+      - frameworks/nestjs/architecture.md
+    DATABASE:
+      - shared/patterns/sql-optimization-patterns.md
+
+  # Override local (équipe)
+  override:
+    enabled: true
+    path: .harmony/local/profiles/backend/nestjs/knowledge/
 
 # ═══════════════════════════════════════════════════════════════
 # CONTEXT7 INTEGRATION (Docs Officielles On-Demand)
@@ -86,7 +74,6 @@ context7:
   enabled: true
   library_id: "/nestjs/docs.nestjs.com"
 
-  # Queries suggérées par intent
   suggested_queries:
     SECURITY:
       - "authentication JWT passport"
@@ -115,7 +102,7 @@ sentinel:
 
   auto_sync:
     enabled: true
-    target: knowledge/experience/
+    target: .harmony/local/profiles/backend/nestjs/knowledge/experience/
     on_new_error: true
 
 # ═══════════════════════════════════════════════════════════════
@@ -129,6 +116,6 @@ learn_sources:
       topics: ["di", "providers"]
 
   search_queries:
-    - "NestJS best practices enterprise 2025"
+    - "NestJS best practices enterprise 2026"
     - "NestJS security authentication patterns"
     - "NestJS microservices architecture"

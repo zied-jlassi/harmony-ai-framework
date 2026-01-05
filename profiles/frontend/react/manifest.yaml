@@ -1,11 +1,8 @@
-# React Profile - Modèle Hybride 3 Niveaux
+# React Profile - Centralized Knowledge Model
 # ═══════════════════════════════════════════════════════════════
 #
-# NIVEAU 1: Industry Standards   → Sources professionnelles (web)
-# NIVEAU 2: Project Conventions  → Spécificités équipe (à remplir)
-# NIVEAU 3: Experience           → Erreurs passées (auto-Sentinel)
-#
-# DOCS OFFICIELLES → Context7 on-demand (pas stockées)
+# Knowledge centralisé dans knowledge/ (nouveau modèle)
+# Override possible via .harmony/local/profiles/frontend/react/
 #
 # ═══════════════════════════════════════════════════════════════
 
@@ -14,9 +11,11 @@ profile:
   name: "React"
   category: frontend
   level: 2
-  model: hybrid-3-levels
-  description: "React - Modèle hybride: Industry + Conventions + Experience"
-  last_updated: "2026-01-04"
+  description: "React - A JavaScript library for building user interfaces"
+  last_updated: "2026-01-05"
+
+  requires: [javascript]
+  optional: [typescript, nextjs]
 
 # ═══════════════════════════════════════════════════════════════
 # VERSIONING - CRITIQUE pour React
@@ -63,44 +62,34 @@ dependencies:
     - nextjs
 
 # ═══════════════════════════════════════════════════════════════
-# KNOWLEDGE 3 NIVEAUX
+# KNOWLEDGE - Références centralisées
 # ═══════════════════════════════════════════════════════════════
 knowledge:
+  # Chemins relatifs à knowledge/ (centralisé)
+  base_path: knowledge/
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 1: Industry Standards (sources professionnelles)
-  # ─────────────────────────────────────────────────────────────
-  industry_standards:
-    description: "Best practices React officielles (react.dev)"
-    load: on_intent
-    enriched_via: "/harmony learn --search"
-    files:
-      - knowledge/industry-standards/architecture.md
-      - knowledge/industry-standards/hooks.md
-      - knowledge/industry-standards/state-management.md
-      - knowledge/industry-standards/performance.md
+  # Knowledge framework (toujours chargé)
+  core:
+    - frameworks/react/react-state-management.md
+    - languages/javascript/modern-javascript-patterns.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 2: Project Conventions (spécifique équipe)
-  # ─────────────────────────────────────────────────────────────
-  project_conventions:
-    description: "Règles spécifiques au projet (à personnaliser)"
-    load: always
-    user_maintained: true
-    files:
-      - knowledge/project-conventions/README.md
+  # Knowledge partagé
+  shared:
+    - shared/patterns/error-handling-patterns.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 3: Experience (auto-enrichi par Sentinel)
-  # ─────────────────────────────────────────────────────────────
-  experience:
-    description: "Erreurs passées et leçons apprises (auto-généré)"
-    load: always
-    auto_enriched: true
-    source: ".claude/memory/error-journal.json"
-    filter_tags: ["react", "javascript", "typescript", "frontend", "hooks"]
-    files:
-      - knowledge/experience/README.md
+  # Chargement par intent
+  on_intent:
+    SECURITY:
+      - domains/security/owasp-top10.md
+    TEST:
+      - languages/javascript/javascript-testing-patterns.md
+    IMPLEMENT:
+      - frameworks/react/react-state-management.md
+
+  # Override local (équipe)
+  override:
+    enabled: true
+    path: .harmony/local/profiles/frontend/react/knowledge/
 
 # ═══════════════════════════════════════════════════════════════
 # CONTEXT7 INTEGRATION (Docs Officielles On-Demand)
@@ -140,7 +129,7 @@ sentinel:
 
   auto_sync:
     enabled: true
-    target: knowledge/experience/
+    target: .harmony/local/profiles/frontend/react/knowledge/experience/
     on_new_error: true
 
 # ═══════════════════════════════════════════════════════════════

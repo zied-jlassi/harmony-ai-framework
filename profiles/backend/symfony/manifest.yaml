@@ -1,11 +1,8 @@
-# Symfony Profile - Modèle Hybride 3 Niveaux
+# Symfony Profile - Centralized Knowledge Model
 # ═══════════════════════════════════════════════════════════════
 #
-# NIVEAU 1: Industry Standards   → Sources professionnelles (web)
-# NIVEAU 2: Project Conventions  → Spécificités équipe (à remplir)
-# NIVEAU 3: Experience           → Erreurs passées (auto-Sentinel)
-#
-# DOCS OFFICIELLES → Context7 on-demand (pas stockées)
+# Knowledge centralisé dans knowledge/ (nouveau modèle)
+# Override possible via .harmony/local/profiles/backend/symfony/
 #
 # ═══════════════════════════════════════════════════════════════
 
@@ -14,9 +11,11 @@ profile:
   name: "Symfony"
   category: backend
   level: 2
-  model: hybrid-3-levels
-  description: "Symfony - Modèle hybride: Industry + Conventions + Experience"
-  last_updated: "2026-01-04"
+  description: "Symfony - PHP framework for web applications"
+  last_updated: "2026-01-05"
+
+  requires: [php]
+  optional: [doctrine, twig]
 
 # ═══════════════════════════════════════════════════════════════
 # VERSIONING - Pour Context7 Queries
@@ -65,44 +64,35 @@ dependencies:
     - twig
 
 # ═══════════════════════════════════════════════════════════════
-# KNOWLEDGE 3 NIVEAUX
+# KNOWLEDGE - Références centralisées
 # ═══════════════════════════════════════════════════════════════
 knowledge:
+  # Chemins relatifs à knowledge/ (centralisé)
+  base_path: knowledge/
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 1: Industry Standards (sources professionnelles)
-  # ─────────────────────────────────────────────────────────────
-  industry_standards:
-    description: "Best practices Symfony officielles"
-    load: on_intent
-    enriched_via: "/harmony learn --search"
-    files:
-      - knowledge/industry-standards/architecture.md
-      - knowledge/industry-standards/controllers.md
-      - knowledge/industry-standards/services.md
-      - knowledge/industry-standards/security.md
+  # Knowledge framework (toujours chargé)
+  core:
+    - frameworks/symfony/architecture.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 2: Project Conventions (spécifique équipe)
-  # ─────────────────────────────────────────────────────────────
-  project_conventions:
-    description: "Règles spécifiques au projet (à personnaliser)"
-    load: always
-    user_maintained: true
-    files:
-      - knowledge/project-conventions/README.md
+  # Knowledge partagé
+  shared:
+    - shared/patterns/api-design-principles.md
+    - shared/patterns/error-handling-patterns.md
 
-  # ─────────────────────────────────────────────────────────────
-  # NIVEAU 3: Experience (auto-enrichi par Sentinel)
-  # ─────────────────────────────────────────────────────────────
-  experience:
-    description: "Erreurs passées et leçons apprises (auto-généré)"
-    load: always
-    auto_enriched: true
-    source: ".claude/memory/error-journal.json"
-    filter_tags: ["symfony", "php", "doctrine", "api"]
-    files:
-      - knowledge/experience/README.md
+  # Chargement par intent
+  on_intent:
+    SECURITY:
+      - domains/security/owasp-top10.md
+      - domains/security/owasp-checklists.md
+    TEST:
+      - shared/patterns/error-handling-patterns.md
+    DATABASE:
+      - shared/patterns/sql-optimization-patterns.md
+
+  # Override local (équipe)
+  override:
+    enabled: true
+    path: .harmony/local/profiles/backend/symfony/knowledge/
 
 # ═══════════════════════════════════════════════════════════════
 # CONTEXT7 INTEGRATION (Docs Officielles On-Demand)
@@ -140,7 +130,7 @@ sentinel:
 
   auto_sync:
     enabled: true
-    target: knowledge/experience/
+    target: .harmony/local/profiles/backend/symfony/knowledge/experience/
     on_new_error: true
 
 # ═══════════════════════════════════════════════════════════════

@@ -1,6 +1,6 @@
 # Flow Complet: "Intégrer un module d'authentification"
 
-> Exemple de déroulement avec le modèle hybride 3 niveaux.
+> Exemple de déroulement avec le modèle knowledge centralisé.
 
 ---
 
@@ -25,23 +25,21 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 2: Profile Loader - Chargement Conditionnel
+## Étape 2: Profile Loader - Chargement Knowledge Centralisé
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  📂 PROFILE LOADER: Chargement 3 Niveaux                                    │
-│  ───────────────────────────────────────                                    │
+│  📂 PROFILE LOADER: Chargement Knowledge Centralisé                         │
+│  ──────────────────────────────────────────────────                         │
 │                                                                             │
-│  NIVEAU 1: INDUSTRY STANDARDS (toujours dispo)                              │
-│     └─ knowledge/industry-standards/architecture.md                         │
-│     └─ knowledge/industry-standards/security.md                             │
+│  KNOWLEDGE CENTRALISÉ (framework):                                          │
+│     └─ knowledge/frameworks/nestjs/architecture.md                          │
+│     └─ knowledge/domains/security/owasp-top10.md                            │
+│     └─ knowledge/shared/patterns/api-design-principles.md                   │
 │                                                                             │
-│  NIVEAU 2: PROJECT CONVENTIONS (si existent)                                │
-│     └─ knowledge/project-conventions/api-patterns.md                        │
-│     └─ knowledge/project-conventions/security.md                            │
-│                                                                             │
-│  NIVEAU 3: EXPERIENCE (auto depuis Sentinel)                                │
-│     └─ knowledge/experience/pitfalls.md                                     │
+│  OVERRIDE LOCAL (équipe - .harmony/local/):                                 │
+│     └─ .harmony/local/profiles/backend/nestjs/knowledge/conventions.md     │
+│     └─ .harmony/local/profiles/backend/nestjs/knowledge/experience/        │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -190,4 +188,4 @@ export class AuthController {
 
 ---
 
-*Exemple documenté pour Harmony Framework - Modèle Hybride 3 Niveaux*
+*Exemple documenté pour Harmony Framework - Modèle Knowledge Centralisé*

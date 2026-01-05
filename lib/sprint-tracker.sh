@@ -46,6 +46,12 @@ C_BLUE='\033[0;34m'
 C_RED='\033[0;31m'
 C_NC='\033[0m'
 
+# Source cross-platform date utilities (for macOS/Linux compatibility)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/date_utils.sh" ]]; then
+    source "${SCRIPT_DIR}/date_utils.sh"
+fi
+
 # -----------------------------------------------------------------------------
 # INITIALIZATION
 # -----------------------------------------------------------------------------
@@ -1348,4 +1354,368 @@ log_phase_execution() {
          }]' "$working_memory" > "$tmp_file" && mv "$tmp_file" "$working_memory"
 
     return 0
+}
+
+# =============================================================================
+# PHASE 2 - RALPH INTEGRATION (Medium + Low Priority Features)
+# =============================================================================
+
+# Display circuit breaker status dashboard
+# Shows visual status of circuit breaker state for stories and global
+show_circuit_status() {
+    local story_id="${1:-}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        echo -e "${C_YELLOW}⚠️  Circuit breaker file not found${C_NC}"
+        return 1
+    fi
+
+    # Check jq availability
+    if ! check_jq_available; then
+        echo -e "${C_YELLOW}⚠️  Cannot display status (jq not available)${C_NC}"
+        return 1
+    fi
+
+    local state
+    state=$(jq -r '.state // "CLOSED"' "$circuit_breaker_file")
+    local consecutive_failures
+    consecutive_failures=$(jq -r '.consecutive_failures // 0' "$circuit_breaker_file")
+
+    # Determine color and icon based on state
+    local color icon
+    case "$state" in
+        "CLOSED")
+            color="$C_GREEN"
+            icon="✅"
+            ;;
+        "HALF_OPEN")
+            color="$C_YELLOW"
+            icon="⚠️ "
+            ;;
+        "OPEN")
+            color="$C_RED"
+            icon="🚨"
+            ;;
+        *)
+            color="$C_NC"
+            icon="❓"
+            ;;
+    esac
+
+    echo -e "${color}╔════════════════════════════════════════════════════════════╗${C_NC}"
+    echo -e "${color}║           Circuit Breaker Status                           ║${C_NC}"
+    echo -e "${color}╚════════════════════════════════════════════════════════════╝${C_NC}"
+    echo -e "${color}State:${C_NC}                 $icon $state"
+    echo -e "${color}Consecutive Failures:${C_NC} $consecutive_failures"
+
+    # Show story-specific status if requested
+    if [[ -n "$story_id" ]]; then
+        local story_state
+        story_state=$(jq -r ".stories[\"$story_id\"].state // \"CLOSED\"" "$circuit_breaker_file")
+        local story_failures
+        story_failures=$(jq -r ".stories[\"$story_id\"].failures // 0" "$circuit_breaker_file")
+        local story_iterations
+        story_iterations=$(jq -r ".stories[\"$story_id\"].iterations // 0" "$circuit_breaker_file")
+
+        echo ""
+        echo -e "${C_BLUE}Story: $story_id${C_NC}"
+        echo -e "  State:      $story_state"
+        echo -e "  Failures:   $story_failures/10"
+        echo -e "  Iterations: $story_iterations"
+
+        # Show per-phase failures
+        echo -e "  Phase Failures:"
+        local dev_fails tester_fails ucv_fails
+        dev_fails=$(jq -r ".stories[\"$story_id\"].phase_failures.developer // 0" "$circuit_breaker_file")
+        tester_fails=$(jq -r ".stories[\"$story_id\"].phase_failures.tester // 0" "$circuit_breaker_file")
+        ucv_fails=$(jq -r ".stories[\"$story_id\"].phase_failures[\"ucv-validator\"] // 0" "$circuit_breaker_file")
+        echo -e "    Developer:     $dev_fails/5"
+        echo -e "    Tester:        $tester_fails/5"
+        echo -e "    UCV-Validator: $ucv_fails/5"
+    fi
+
+    echo ""
+    return 0
+}
+
+# Two-stage error filtering to avoid JSON false positives
+# Stage 1: Filter out JSON field patterns like "is_error": false
+# Stage 2: Count actual error messages in specific contexts
+# Returns: Integer count of real errors
+count_real_errors() {
+    local output_file="${1:-}"
+
+    if [[ ! -f "$output_file" ]]; then
+        echo "0"
+        return
+    fi
+
+    # Two-stage filtering:
+    # Stage 1: Remove lines with JSON error fields (avoid false positives)
+    # Stage 2: Count actual error patterns
+    local error_count
+    error_count=$(grep -v '"[^"]*error[^"]*":' "$output_file" 2>/dev/null | \
+                  grep -cE '(^Error:|^ERROR:|^error:|\]: error|Link: error|Error occurred|failed with error|[Ee]xception|Fatal|FATAL)' \
+                  2>/dev/null || echo "0")
+
+    # Ensure integer
+    error_count=$(echo "$error_count" | tr -d '[:space:]')
+    error_count=${error_count:-0}
+    echo "$((error_count + 0))"
+}
+
+# Detect if Claude is stuck (repeating same errors across multiple iterations)
+# Uses two-stage error filtering to avoid JSON false positives
+# Returns: 0 if stuck (same errors in all recent outputs), 1 if not stuck
+detect_stuck_loop() {
+    local current_output="${1:-}"
+    local history_dir="${2:-${HARMONY_DIR}/logs}"
+
+    if [[ ! -f "$current_output" ]]; then
+        return 1  # Cannot detect without current output
+    fi
+
+    if [[ ! -d "$history_dir" ]]; then
+        return 1  # No history directory
+    fi
+
+    # Get last 3 output files
+    local recent_outputs
+    recent_outputs=$(ls -t "$history_dir"/phase_output_*.log 2>/dev/null | head -3)
+
+    if [[ -z "$recent_outputs" ]] || [[ $(echo "$recent_outputs" | wc -l) -lt 2 ]]; then
+        return 1  # Not enough history (need at least 2 previous outputs)
+    fi
+
+    # Extract key errors from current output using two-stage filtering
+    local current_errors
+    current_errors=$(grep -v '"[^"]*error[^"]*":' "$current_output" 2>/dev/null | \
+                    grep -E '(^Error:|^ERROR:|^error:|\]: error|Link: error|Error occurred|failed with error|[Ee]xception|Fatal|FATAL)' 2>/dev/null | \
+                    sort | uniq)
+
+    if [[ -z "$current_errors" ]]; then
+        return 1  # No errors in current output
+    fi
+
+    # Check if same errors appear in all recent outputs
+    local all_files_match=true
+    while IFS= read -r output_file; do
+        local file_matches_all=true
+        while IFS= read -r error_line; do
+            # Use -F for literal fixed-string matching (not regex)
+            if ! grep -qF "$error_line" "$output_file" 2>/dev/null; then
+                file_matches_all=false
+                break
+            fi
+        done <<< "$current_errors"
+
+        if [[ "$file_matches_all" != "true" ]]; then
+            all_files_match=false
+            break
+        fi
+    done <<< "$recent_outputs"
+
+    if [[ "$all_files_match" == "true" ]]; then
+        echo -e "${C_RED}🔄 STUCK LOOP DETECTED: Same errors repeated in $( echo "$recent_outputs" | wc -l) consecutive outputs${C_NC}" >&2
+        return 0  # Stuck on same error(s)
+    else
+        return 1  # Making progress or different errors
+    fi
+}
+
+# Analyze response and return confidence score (0-100)
+# Higher confidence = more likely task is complete
+# Returns: JSON object with analysis results
+analyze_response_confidence() {
+    local output_file="${1:-}"
+    local loop_number="${2:-1}"
+
+    if [[ ! -f "$output_file" ]]; then
+        echo '{"confidence": 0, "exit_signal": false, "reason": "output file not found"}'
+        return
+    fi
+
+    local confidence=0
+    local exit_signal=false
+    local reasons=()
+
+    local output_content
+    output_content=$(cat "$output_file")
+    local output_length=${#output_content}
+
+    # 1. Check for explicit completion signals (+30)
+    if grep -qiE "(implementation.*complete|all.*tasks.*complete|project.*complete|ready.*for.*review)" "$output_file"; then
+        confidence=$((confidence + 30))
+        reasons+=("completion_signal_found")
+    fi
+
+    # 2. Check for "done"/"finished" keywords (+10)
+    if grep -qiE "(done|finished|complete|completed)" "$output_file"; then
+        confidence=$((confidence + 10))
+        reasons+=("done_keyword_found")
+    fi
+
+    # 3. Check for "nothing to do" patterns (+15)
+    if grep -qiE "(nothing.*to.*do|no.*changes|already.*implemented|up.*to.*date)" "$output_file"; then
+        confidence=$((confidence + 15))
+        reasons+=("no_work_remaining")
+    fi
+
+    # 4. Check for git changes (indicates progress) (+20)
+    if command -v git &>/dev/null && git rev-parse --git-dir >/dev/null 2>&1; then
+        local files_modified
+        files_modified=$(git diff --name-only 2>/dev/null | wc -l)
+        if [[ $files_modified -gt 0 ]]; then
+            confidence=$((confidence + 20))
+            reasons+=("git_changes_detected:$files_modified")
+        fi
+    fi
+
+    # 5. Check for test success indicators (+15)
+    if grep -qiE "(all.*tests.*pass|tests.*passing|100%.*coverage|coverage.*100%)" "$output_file"; then
+        confidence=$((confidence + 15))
+        reasons+=("tests_passing")
+    fi
+
+    # 6. Check for errors (reduce confidence)
+    local error_count
+    error_count=$(count_real_errors "$output_file")
+    if [[ $error_count -gt 5 ]]; then
+        confidence=$((confidence - 20))
+        reasons+=("high_error_count:$error_count")
+    elif [[ $error_count -gt 0 ]]; then
+        confidence=$((confidence - 10))
+        reasons+=("errors_present:$error_count")
+    fi
+
+    # 7. Check output length trend
+    local last_length_file="${HARMONY_DIR}/memory/.last_output_length"
+    if [[ -f "$last_length_file" ]]; then
+        local last_length
+        last_length=$(cat "$last_length_file")
+        if [[ $last_length -gt 0 ]]; then
+            local length_ratio=$((output_length * 100 / last_length))
+            if [[ $length_ratio -lt 50 ]]; then
+                # Output significantly shorter - possible completion
+                confidence=$((confidence + 10))
+                reasons+=("output_declining")
+            fi
+        fi
+    fi
+    echo "$output_length" > "$last_length_file"
+
+    # Ensure confidence is 0-100
+    if [[ $confidence -lt 0 ]]; then confidence=0; fi
+    if [[ $confidence -gt 100 ]]; then confidence=100; fi
+
+    # Determine exit signal based on confidence
+    if [[ $confidence -ge 40 ]]; then
+        exit_signal=true
+    fi
+
+    # Build JSON response
+    local reason_str
+    reason_str=$(printf '%s,' "${reasons[@]}" | sed 's/,$//')
+
+    cat << EOF
+{
+    "loop_number": $loop_number,
+    "confidence": $confidence,
+    "exit_signal": $exit_signal,
+    "output_length": $output_length,
+    "reasons": ["${reason_str//,/\", \"}"],
+    "timestamp": "$(get_iso_timestamp 2>/dev/null || date -Iseconds)"
+}
+EOF
+}
+
+# Transition circuit breaker to HALF_OPEN state (monitoring mode)
+# HALF_OPEN allows limited operations while monitoring for recovery
+transition_to_half_open() {
+    local story_id="${1:-}"
+    local reason="${2:-Monitoring for recovery}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 1
+    fi
+
+    if ! check_jq_available; then
+        return 1
+    fi
+
+    local ts
+    ts=$(get_iso_timestamp 2>/dev/null || date -Iseconds)
+    local tmp_file
+    tmp_file=$(mktemp)
+
+    if [[ -z "$story_id" ]]; then
+        # Transition global circuit breaker
+        jq --arg ts "$ts" --arg reason "$reason" '
+            .state = "HALF_OPEN" |
+            .last_change = $ts |
+            .reason = $reason |
+            .history += [{
+                timestamp: $ts,
+                event: "transition",
+                from: .state,
+                to: "HALF_OPEN",
+                reason: $reason
+            }]' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+        echo -e "${C_YELLOW}⚠️  Circuit breaker transitioned to HALF_OPEN (monitoring)${C_NC}"
+    else
+        # Transition story-specific circuit breaker
+        jq --arg story_id "$story_id" --arg ts "$ts" --arg reason "$reason" '
+            .stories[$story_id].state = "HALF_OPEN" |
+            .stories[$story_id].history += [{
+                timestamp: $ts,
+                event: "transition",
+                from: .stories[$story_id].state,
+                to: "HALF_OPEN",
+                reason: $reason
+            }]' "$circuit_breaker_file" > "$tmp_file" && mv "$tmp_file" "$circuit_breaker_file"
+        echo -e "${C_YELLOW}⚠️  Story $story_id circuit breaker transitioned to HALF_OPEN${C_NC}"
+    fi
+
+    return 0
+}
+
+# Check if should halt execution (with visual dashboard)
+# Shows status and returns 0 if should halt, 1 if can continue
+should_halt_execution() {
+    local story_id="${1:-}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+
+    if [[ ! -f "$circuit_breaker_file" ]]; then
+        return 1  # Can continue if no file
+    fi
+
+    if ! check_jq_available; then
+        return 1  # Can continue if jq unavailable
+    fi
+
+    local state
+    state=$(jq -r '.state // "CLOSED"' "$circuit_breaker_file")
+
+    if [[ "$state" == "OPEN" ]]; then
+        show_circuit_status "$story_id"
+        echo ""
+        echo -e "${C_RED}╔════════════════════════════════════════════════════════════╗${C_NC}"
+        echo -e "${C_RED}║  EXECUTION HALTED: Circuit Breaker Opened                  ║${C_NC}"
+        echo -e "${C_RED}╚════════════════════════════════════════════════════════════╝${C_NC}"
+        echo ""
+        echo -e "${C_YELLOW}Possible reasons:${C_NC}"
+        echo "  • Story may be complete (check working.json)"
+        echo "  • Claude may be stuck on an error (check logs)"
+        echo "  • Manual intervention may be required"
+        echo ""
+        echo -e "${C_YELLOW}To continue:${C_NC}"
+        echo "  1. Review recent logs: ls -lt ${HARMONY_DIR}/logs/"
+        echo "  2. Reset circuit breaker: reset_circuit_breaker [story_id]"
+        echo ""
+        return 0  # Signal to halt
+    fi
+
+    return 1  # Can continue
 }

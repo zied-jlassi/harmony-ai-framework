@@ -16,6 +16,105 @@
 
 ---
 
+## Prérequis
+
+### Requis
+
+| Outil | Version Min | Description |
+|-------|-------------|-------------|
+| **Bash** | 4.0+ | Shell requis (natif Linux/macOS, Git Bash Windows) |
+| **npm** | 8.0+ | Pour l'installation du framework |
+
+### Optionnels (Performance)
+
+Ces outils sont détectés automatiquement à l'installation. Leur présence améliore les performances.
+
+| Outil | Gain | Installation |
+|-------|------|--------------|
+| **Node.js** | +30% | Scripts async, JSON natif |
+| **Bun** | +80% | Runtime ultra-rapide (remplace Node) |
+| **jq** | +15% | Traitement JSON streaming |
+
+### Niveaux de Performance
+
+| Niveau | Configuration | Description |
+|--------|---------------|-------------|
+| **TURBO** 🚀 | Bash + Bun + jq | Performance maximale |
+| **ENHANCED** ⚡ | Bash + Node + jq | Très bonnes performances |
+| **STANDARD** | Bash + Node | Performances correctes |
+| **BASIC** | Bash seul | Fonctionnel, performances de base |
+
+### Installation des Optionnels
+
+<details>
+<summary><b>Linux (Debian/Ubuntu)</b></summary>
+
+```bash
+# Node.js
+sudo apt install -y nodejs npm
+
+# jq
+sudo apt install -y jq
+
+# Bun
+curl -fsSL https://bun.sh/install | bash
+```
+</details>
+
+<details>
+<summary><b>Linux (Fedora/RHEL)</b></summary>
+
+```bash
+# Node.js
+sudo dnf install -y nodejs npm
+
+# jq
+sudo dnf install -y jq
+
+# Bun
+curl -fsSL https://bun.sh/install | bash
+```
+</details>
+
+<details>
+<summary><b>Linux (Arch)</b></summary>
+
+```bash
+# Node.js
+sudo pacman -S nodejs npm
+
+# jq
+sudo pacman -S jq
+
+# Bun
+curl -fsSL https://bun.sh/install | bash
+```
+</details>
+
+<details>
+<summary><b>macOS</b></summary>
+
+```bash
+# Homebrew (si pas installé)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Node.js, jq, Bun
+brew install node jq bun
+```
+</details>
+
+<details>
+<summary><b>Windows (WSL2 recommandé)</b></summary>
+
+```bash
+# Dans WSL2 Ubuntu:
+sudo apt install -y nodejs npm jq
+curl -fsSL https://bun.sh/install | bash
+```
+</details>
+
+---
+
 ## Guides
 
 ### Pour Commencer

@@ -50,7 +50,7 @@ verify_checksums() {
     fi
 }
 
-# Colors for output
+# Fallback colors (always define before any output)
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -65,6 +65,8 @@ INSTALL_MODE="full"
 CONFIGURE_HOOKS=false
 FORCE=false
 IDE_TARGET="auto"  # auto, claude-code, cursor, windsurf, continue, cody, generic
+UI_LIBRARY_LOADED=false
+
 # Resolve symlinks to get the real script location
 SCRIPT_SOURCE="${BASH_SOURCE[0]}"
 while [ -L "$SCRIPT_SOURCE" ]; do
@@ -89,6 +91,12 @@ if [[ ! -f "$SCRIPT_DIR/harmony.manifest.json" ]]; then
     fi
 fi
 
+# Source UI Library for professional interface (AFTER SCRIPT_DIR is resolved)
+if [[ -f "$SCRIPT_DIR/lib/ui-library.sh" ]]; then
+    source "$SCRIPT_DIR/lib/ui-library.sh"
+    UI_LIBRARY_LOADED=true
+fi
+
 # Get version from package.json
 VERSION=$(grep '"version"' "$SCRIPT_DIR/package.json" 2>/dev/null | head -1 | sed 's/.*"version": *"\([^"]*\)".*/\1/' || echo "unknown")
 
@@ -99,22 +107,48 @@ print_message() {
     echo -e "${color}${message}${NC}"
 }
 
-# Print header
+# Print header (using UI library if available)
 print_header() {
-    echo ""
-    print_message "$PURPLE" "╔══════════════════════════════════════════════════════════╗"
-    print_message "$PURPLE" "║                  HARMONY FRAMEWORK                        ║"
-    print_message "$PURPLE" "║            Self-Improving AI Development                  ║"
-    printf "${PURPLE}║                    Version: %-29s ║${NC}\n" "$VERSION"
-    print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
-    echo ""
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        ui_init
+        ui_welcome "$VERSION" "Self-Improving AI Development"
+    else
+        echo ""
+        print_message "$PURPLE" "╔══════════════════════════════════════════════════════════╗"
+        print_message "$PURPLE" "║                  HARMONY FRAMEWORK                        ║"
+        print_message "$PURPLE" "║            Self-Improving AI Development                  ║"
+        printf "${PURPLE}║                    Version: %-29s ║${NC}\n" "$VERSION"
+        print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+    fi
 }
 
-# Print step
+# Ask for installation confirmation
+ask_install_confirmation() {
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        if ! ui_confirm "Voulez-vous installer Harmony Framework ?" "yes"; then
+            echo ""
+            print_message "$YELLOW" "Installation annulée."
+            exit 0
+        fi
+    else
+        # Fallback simple prompt
+        echo ""
+        read -rp "Installer Harmony Framework ? [Y/n] " choice
+        case "${choice,,}" in
+            n|no|non) echo "Installation annulée."; exit 0 ;;
+        esac
+    fi
+}
+
+# Print step (hidden when UI library is loaded - we use show_install_progress instead)
 print_step() {
     local step=$1
     local message=$2
-    print_message "$CYAN" "[$step] $message"
+    # Only show old-style steps when UI library is not loaded
+    if [[ "$UI_LIBRARY_LOADED" != true ]]; then
+        print_message "$CYAN" "[$step] $message"
+    fi
 }
 
 # Print success
@@ -1300,39 +1334,266 @@ show_onboarding_tips() {
 
 # Print summary
 print_summary() {
-    print_step "6/6" "Installation complete!"
-    echo ""
-    print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"
-    print_message "$GREEN" "║              INSTALLATION SUCCESSFUL                      ║"
-    print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
-    echo ""
-    print_message "$CYAN" "Version: $VERSION"
-    print_message "$CYAN" "Installed to: $PROJECT_DIR/.harmony"
-    print_message "$CYAN" "Mode: $INSTALL_MODE"
-    print_message "$CYAN" "Hooks: $([ "$CONFIGURE_HOOKS" == true ] && echo "enabled" || echo "disabled")"
-    echo ""
-    print_message "$YELLOW" "Next steps:"
-    echo "  1. Review .harmony/docs/getting-started.md"
-    echo "  2. Run /go to start your session"
-    echo "  3. Memory files are in .claude/memory/ (project-specific data)"
-    echo ""
-    print_message "$PURPLE" "Happy coding with Harmony! 🎵"
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        local hooks_status
+        [[ "$CONFIGURE_HOOKS" == true ]] && hooks_status="activés" || hooks_status="désactivés"
+
+        ui_success "Harmony Framework v$VERSION installé !" \
+"Installation: $PROJECT_DIR/.harmony
+Mode: $INSTALL_MODE | Hooks: $hooks_status
+
+Prochaines étapes:
+  1. Consultez .harmony/docs/getting-started.md
+  2. Exécutez /go pour démarrer votre session
+  3. Données projet dans .claude/memory/
+
+Happy coding with Harmony! 🎵"
+    else
+        print_step "6/6" "Installation complete!"
+        echo ""
+        print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"
+        print_message "$GREEN" "║              INSTALLATION SUCCESSFUL                      ║"
+        print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+        print_message "$CYAN" "Version: $VERSION"
+        print_message "$CYAN" "Installed to: $PROJECT_DIR/.harmony"
+        print_message "$CYAN" "Mode: $INSTALL_MODE"
+        print_message "$CYAN" "Hooks: $([ "$CONFIGURE_HOOKS" == true ] && echo "enabled" || echo "disabled")"
+        echo ""
+        print_message "$YELLOW" "Next steps:"
+        echo "  1. Review .harmony/docs/getting-started.md"
+        echo "  2. Run /go to start your session"
+        echo "  3. Memory files are in .claude/memory/ (project-specific data)"
+        echo ""
+        print_message "$PURPLE" "Happy coding with Harmony! 🎵"
+    fi
 }
 
-# Main function
+# Runtime detection variables (shared between écran 2 and 3)
+_RUNTIME_OS=""
+_RUNTIME_OS_NAME=""
+_RUNTIME_PM=""
+_RUNTIME_BASH=""
+_RUNTIME_NODE=""
+_RUNTIME_BUN=""
+_RUNTIME_JQ=""
+_RUNTIME_PERF=""
+
+# Load runtime info (called once, results cached)
+_load_runtime_info() {
+    local lib_dir="$SCRIPT_DIR/lib"
+    if [[ -f "$lib_dir/runtime-detect.sh" ]] && [[ -z "$_RUNTIME_OS" ]]; then
+        source "$lib_dir/runtime-detect.sh"
+        _RUNTIME_OS=$(detect_os)
+        local distro=$(detect_linux_distro)
+        local version=$(detect_os_version)
+        _RUNTIME_PM=$(detect_package_manager)
+        _RUNTIME_BASH=$(detect_bash_version || echo "")
+        _RUNTIME_NODE=$(detect_node_version || echo "")
+        _RUNTIME_BUN=$(detect_bun_version || echo "")
+        _RUNTIME_JQ=$(detect_jq_version || echo "")
+        _RUNTIME_PERF=$(detect_performance_level || echo "basic")
+
+        # Construire nom OS
+        _RUNTIME_OS_NAME="$_RUNTIME_OS"
+        [[ "$_RUNTIME_OS" == "linux" ]] && _RUNTIME_OS_NAME="Linux ($distro $version)"
+        [[ "$_RUNTIME_OS" == "macos" ]] && _RUNTIME_OS_NAME="macOS $version"
+    fi
+    return 0
+}
+
+# =============================================================================
+# ÉCRAN 2: 🔧 Vérification Système
+# =============================================================================
+show_runtime_status_system_only() {
+    _load_runtime_info
+
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        ui_box_title "🔧 Vérification Système"
+        ui_box_line mid
+        ui_box_text "OS: $_RUNTIME_OS_NAME"
+        ui_box_text "Package Manager: $_RUNTIME_PM"
+        ui_box_line mid
+        ui_box_title "Runtimes Détectés"
+
+        [[ -n "$_RUNTIME_BASH" ]] && ui_box_status ok "Bash" "$_RUNTIME_BASH" || ui_box_status error "Bash" "non trouvé"
+        [[ -n "$_RUNTIME_NODE" ]] && ui_box_status ok "Node" "$_RUNTIME_NODE" || ui_box_status warn "Node" "non installé"
+        [[ -n "$_RUNTIME_BUN" ]] && ui_box_status ok "Bun" "$_RUNTIME_BUN" || ui_box_status warn "Bun" "non installé"
+        [[ -n "$_RUNTIME_JQ" ]] && ui_box_status ok "jq" "$_RUNTIME_JQ" || ui_box_status warn "jq" "non installé"
+
+        ui_box_line mid
+
+        local perf_label=""
+        case "$_RUNTIME_PERF" in
+            turbo) perf_label="TURBO 🚀" ;;
+            enhanced) perf_label="ENHANCED ⚡" ;;
+            standard) perf_label="STANDARD" ;;
+            *) perf_label="BASIC" ;;
+        esac
+        ui_box_text "Performance: $perf_label"
+        ui_box_line bot
+
+        ui_continue
+    else
+        echo ""
+        print_message "$CYAN" "Système: $_RUNTIME_OS_NAME ($_RUNTIME_PM)"
+        [[ -n "$_RUNTIME_BASH" ]] && print_success "Bash: $_RUNTIME_BASH" || print_warning "Bash: non trouvé"
+        [[ -n "$_RUNTIME_NODE" ]] && print_success "Node: $_RUNTIME_NODE" || print_warning "Node: non installé"
+        [[ -n "$_RUNTIME_BUN" ]] && print_success "Bun: $_RUNTIME_BUN" || print_warning "Bun: non installé"
+        [[ -n "$_RUNTIME_JQ" ]] && print_success "jq: $_RUNTIME_JQ" || print_warning "jq: non installé"
+    fi
+}
+
+# =============================================================================
+# ÉCRAN 3: 📦 Recommandations Performance
+# =============================================================================
+show_runtime_status_recommendations() {
+    _load_runtime_info
+
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]]; then
+            ui_box_line top
+            ui_box_title "📦 Recommandations Performance"
+            ui_box_line mid
+            ui_box_text "Pour de meilleures performances, installez:"
+            ui_box_empty
+            [[ -z "$_RUNTIME_NODE" ]] && ui_box_text "  Node.js: $(get_install_cmd node)"
+            [[ -z "$_RUNTIME_BUN" ]] && ui_box_text "  Bun:     $(get_install_cmd bun)"
+            [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
+            ui_box_empty
+            ui_box_line bot
+        else
+            ui_box_line top
+            ui_box_title "✓ Configuration optimale détectée"
+            ui_box_empty
+            ui_box_text "Tous les outils de performance sont installés!"
+            ui_box_empty
+            ui_box_line bot
+        fi
+        ui_continue
+    fi
+}
+
+# =============================================================================
+# UI STEP DISPLAY - Affiche une étape dans un cadre UI
+# =============================================================================
+ui_show_step() {
+    local icon="$1"
+    local title="$2"
+    local status="${3:-}"  # ok, warn, error, info, or empty
+
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        if [[ -n "$status" ]]; then
+            local status_icon status_color
+            case "$status" in
+                ok)    status_icon="✓"; status_color="$UI_GREEN" ;;
+                warn)  status_icon="!"; status_color="$UI_YELLOW" ;;
+                error) status_icon="✗"; status_color="$UI_RED" ;;
+                info)  status_icon="i"; status_color="$UI_CYAN" ;;
+            esac
+            ui_box_title "${icon} ${title}"
+            ui_box_line thin
+            printf "${_UI_PADDING}║                    ${status_color}${status_icon} ${title}${UI_RESET}                        ║\n"
+        else
+            ui_box_title "${icon} ${title}"
+        fi
+        ui_box_line bot
+    else
+        echo ""
+        print_message "$CYAN" "=== ${icon} ${title} ==="
+    fi
+}
+
+# Main function - 13 écrans UI step-by-step
 main() {
-    print_header
     parse_args "$@"
+
+    # =========================================================================
+    # ÉCRAN 1: Accueil + Confirmation
+    # =========================================================================
+    print_header
+    ask_install_confirmation
+
+    # =========================================================================
+    # ÉCRAN 2: 🔧 Vérification Système
+    # =========================================================================
+    show_runtime_status_system_only
+
+    # =========================================================================
+    # ÉCRAN 3: 📦 Recommandations Performance
+    # =========================================================================
+    show_runtime_status_recommendations
+
+    # =========================================================================
+    # ÉCRAN 4: Prerequisites check
+    # =========================================================================
     check_prerequisites
     detect_ide_and_memory_path
+    ui_show_step "✓" "Prerequisites check passed" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 5: Directory structure created
+    # =========================================================================
     create_directory_structure
+    ui_show_step "📁" "Directory structure created" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 6: Framework files copied
+    # =========================================================================
     copy_framework_files
+    ui_show_step "📄" "All framework files copied" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 7: Hooks configured
+    # =========================================================================
     configure_hooks
+    ui_show_step "🔗" "Claude Code hooks configured" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 8: Memory initialized
+    # =========================================================================
     initialize_memory
+    ui_show_step "🧠" "Memory files initialized" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 9: Autopilot config
+    # =========================================================================
     initialize_autopilot_config
+    ui_show_step "🤖" "Autopilot configuration ready" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 10: Slash commands
+    # =========================================================================
     create_slash_commands
+    ui_show_step "⚡" "Slash commands generated" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 11: CLAUDE.md created
+    # =========================================================================
     create_claude_md
+    ui_show_step "📝" "CLAUDE.md created from template" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 12: Onboarding tips
+    # =========================================================================
     show_onboarding_tips
+
+    # =========================================================================
+    # ÉCRAN 13: SUCCESS final
+    # =========================================================================
     print_summary
 }
 

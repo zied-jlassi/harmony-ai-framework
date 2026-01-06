@@ -282,6 +282,9 @@ parse_args() {
     done
 }
 
+# Global variable for detected IDE (used in print_summary)
+_DETECTED_IDE="generic"
+
 # Detect IDE and set memory directory
 detect_ide_and_memory_path() {
     local detected_ide="generic"
@@ -302,6 +305,9 @@ detect_ide_and_memory_path() {
     else
         detected_ide="$IDE_TARGET"
     fi
+
+    # Store globally for print_summary
+    _DETECTED_IDE="$detected_ide"
 
     # Set memory directory based on IDE
     case "$detected_ide" in
@@ -1357,18 +1363,47 @@ show_onboarding_tips() {
 
 # Print summary
 print_summary() {
+    # Determine startup command based on IDE
+    local start_cmd memory_path
+    case "$_DETECTED_IDE" in
+        claude-code)
+            start_cmd="/init puis /go"
+            memory_path=".claude/memory/"
+            ;;
+        cursor)
+            start_cmd="Ouvrir Cursor et utiliser @harmony"
+            memory_path=".cursor/harmony-memory/"
+            ;;
+        windsurf)
+            start_cmd="Ouvrir Windsurf et utiliser /harmony"
+            memory_path=".windsurf/harmony-memory/"
+            ;;
+        continue)
+            start_cmd="Utiliser l'assistant Harmony dans Continue"
+            memory_path=".continue/harmony-memory/"
+            ;;
+        cody)
+            start_cmd="Utiliser le prompt Harmony dans Cody"
+            memory_path=".cody/harmony-memory/"
+            ;;
+        *)
+            start_cmd="Consulter .harmony/docs/getting-started.md"
+            memory_path=".harmony-local/memory/"
+            ;;
+    esac
+
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then
         local hooks_status
         [[ "$CONFIGURE_HOOKS" == true ]] && hooks_status="activés" || hooks_status="désactivés"
 
         ui_success "Harmony Framework v$VERSION installé !" \
-"Installation: $PROJECT_DIR/.harmony
-Mode: $INSTALL_MODE | Hooks: $hooks_status
+"IDE: $_DETECTED_IDE | Hooks: $hooks_status
 
-Prochaines étapes:
-  1. Consultez .harmony/docs/getting-started.md
-  2. Exécutez /go pour démarrer votre session
-  3. Données projet dans .claude/memory/
+Prochaine étape:
+  → $start_cmd
+
+Données: $memory_path
+Docs: .harmony/docs/getting-started.md
 
 Happy coding with Harmony! 🎵"
     else
@@ -1379,15 +1414,13 @@ Happy coding with Harmony! 🎵"
         print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
         echo ""
         print_message "$CYAN" "Version: $VERSION"
-        print_message "$CYAN" "Installed to: $PROJECT_DIR/.harmony"
-        print_message "$CYAN" "Mode: $INSTALL_MODE"
+        print_message "$CYAN" "IDE: $_DETECTED_IDE"
         print_message "$CYAN" "Hooks: $([ "$CONFIGURE_HOOKS" == true ] && echo "enabled" || echo "disabled")"
         echo ""
-        print_message "$YELLOW" "Next steps:"
-        echo "  1. Review .harmony/docs/getting-started.md"
-        echo "  2. Run /go to start your session"
-        echo "  3. Memory files are in .claude/memory/ (project-specific data)"
+        print_message "$YELLOW" "Next step:"
+        echo "  → $start_cmd"
         echo ""
+        print_message "$CYAN" "Data: $memory_path"
         print_message "$PURPLE" "Happy coding with Harmony! 🎵"
     fi
 }

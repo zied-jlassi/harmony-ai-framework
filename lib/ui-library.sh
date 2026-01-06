@@ -194,9 +194,24 @@ ui_welcome() {
 # ============================================================================
 # DIALOGUE DE CONFIRMATION
 # ============================================================================
+
+# Afficher le sélecteur Oui/Non
+_ui_draw_selector() {
+    local sel=$1
+    printf "\r${_UI_PADDING}  "
+    if [[ $sel -eq 0 ]]; then
+        printf "${UI_BG_GREEN}${UI_BLACK} ▶ Oui ${UI_RESET}    "
+        printf "${UI_DIM}   Non ${UI_RESET}"
+    else
+        printf "${UI_DIM}   Oui ${UI_RESET}    "
+        printf "${UI_BG_RED}${UI_WHITE} ▶ Non ${UI_RESET}"
+    fi
+    printf "   ${UI_DIM}(←/→ ou Tab pour changer, Entrée pour valider)${UI_RESET}"
+}
+
 ui_confirm() {
     local question="${1:-Voulez-vous continuer ?}"
-    local default="${2:-yes}"  # yes, no, quit
+    local default="${2:-yes}"  # yes, no
 
     ui_box_line top
     ui_box_empty
@@ -207,55 +222,77 @@ ui_confirm() {
     ui_box_line bot
     echo ""
 
-    if [[ "$_UI_INTERACTIVE" == true ]]; then
-        # Sélecteur interactif avec flèches/tab
-        local selected=0  # 0=Oui, 1=Non
-        [[ "$default" != "yes" ]] && selected=1
-
-        # Fonction pour afficher les options
-        _ui_draw_selector() {
-            local sel=$1
-            printf "\r${_UI_PADDING}  "
-            if [[ $sel -eq 0 ]]; then
-                printf "${UI_BG_GREEN}${UI_BLACK} ▶ Oui ${UI_RESET}    "
-                printf "${UI_DIM}   Non ${UI_RESET}"
-            else
-                printf "${UI_DIM}   Oui ${UI_RESET}    "
-                printf "${UI_BG_RED}${UI_WHITE} ▶ Non ${UI_RESET}"
-            fi
-            printf "   ${UI_DIM}(←/→ ou Tab pour changer, Entrée pour valider)${UI_RESET}"
-        }
-
-        # Affichage initial
-        _ui_draw_selector $selected
-
-        # Lecture des touches
-        while true; do
-            read -rsn1 key </dev/tty 2>/dev/null || break
-
-            case "$key" in
-                $'\x1b')  # Séquence escape (flèches)
-                    read -rsn2 -t 0.1 rest </dev/tty 2>/dev/null || rest=""
-                    case "$rest" in
-                        '[D'|'[C') selected=$(( (selected + 1) % 2 )) ;;  # Gauche/Droite
-                    esac
-                    ;;
-                $'\t')  # Tab
-                    selected=$(( (selected + 1) % 2 ))
-                    ;;
-                '')  # Entrée
-                    echo ""
-                    [[ $selected -eq 0 ]] && return 0 || return 1
-                    ;;
-            esac
-            _ui_draw_selector $selected
-        done
-        echo ""
-        return 1
-    else
-        # Non-interactif: retourner défaut
+    # Vérifier si on peut accéder à /dev/tty (test réel d'ouverture)
+    if ! { exec 3>/dev/tty; } 2>/dev/null; then
+        # Pas d'accès au terminal, utiliser défaut silencieusement
+        printf "${_UI_PADDING}  ${UI_DIM}(Mode non-interactif: défaut = %s)${UI_RESET}\n" "$default"
         [[ "$default" == "yes" ]] && return 0 || return 1
     fi
+    exec 3>&- 2>/dev/null  # Fermer le descripteur de test
+
+    # Sélecteur interactif avec flèches/tab
+    local selected=0  # 0=Oui, 1=Non
+    [[ "$default" != "yes" ]] && selected=1
+
+    # Sauvegarder et configurer le terminal via /dev/tty
+    local old_stty
+    old_stty=$(stty -g </dev/tty 2>/dev/null) || {
+        # stty a échoué, mode non-interactif
+        printf "${_UI_PADDING}  ${UI_DIM}(Mode non-interactif: défaut = %s)${UI_RESET}\n" "$default"
+        [[ "$default" == "yes" ]] && return 0 || return 1
+    }
+
+    stty -echo -icanon min 1 </dev/tty 2>/dev/null || {
+        # Configuration échouée, mode non-interactif
+        [[ -n "$old_stty" ]] && stty "$old_stty" </dev/tty 2>/dev/null
+        printf "${_UI_PADDING}  ${UI_DIM}(Mode non-interactif: défaut = %s)${UI_RESET}\n" "$default"
+        [[ "$default" == "yes" ]] && return 0 || return 1
+    }
+
+    # Affichage initial
+    _ui_draw_selector $selected
+
+    # Lecture des touches depuis /dev/tty
+    local key char
+    while true; do
+        # Lire un caractère depuis /dev/tty
+        IFS= read -rsn1 key </dev/tty 2>/dev/null || {
+            # Lecture échouée, restaurer et retourner défaut
+            [[ -n "$old_stty" ]] && stty "$old_stty" </dev/tty 2>/dev/null
+            echo ""
+            [[ "$default" == "yes" ]] && return 0 || return 1
+        }
+
+        case "$key" in
+            $'\x1b')  # Début séquence escape (flèches)
+                # Lire les 2 caractères suivants
+                IFS= read -rsn1 -t 0.1 char </dev/tty 2>/dev/null || char=""
+                if [[ "$char" == "[" ]]; then
+                    IFS= read -rsn1 -t 0.1 char </dev/tty 2>/dev/null || char=""
+                    case "$char" in
+                        'D'|'C')  # Gauche ou Droite
+                            selected=$(( (selected + 1) % 2 ))
+                            ;;
+                    esac
+                fi
+                ;;
+            $'\t')  # Tab
+                selected=$(( (selected + 1) % 2 ))
+                ;;
+            '')  # Entrée
+                # Restaurer le terminal
+                [[ -n "$old_stty" ]] && stty "$old_stty" </dev/tty 2>/dev/null
+                echo ""
+                [[ $selected -eq 0 ]] && return 0 || return 1
+                ;;
+        esac
+        _ui_draw_selector $selected
+    done
+
+    # Restaurer le terminal en cas de break (ne devrait pas arriver)
+    [[ -n "$old_stty" ]] && stty "$old_stty" </dev/tty 2>/dev/null
+    echo ""
+    [[ "$default" == "yes" ]] && return 0 || return 1
 }
 
 # ============================================================================

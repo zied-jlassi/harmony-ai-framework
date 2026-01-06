@@ -157,9 +157,9 @@ if [[ -f "$COMMANDS_DIR/agents.yaml" ]]; then
     # Specialist Agents
     generate_agent_command "ai-architect" "agents/ai-architect.md" "AI/LLM architect - RAG, multi-agent, memory"
     generate_agent_command "exploratory-qa" "agents/exploratory-qa.md" "Exploratory QA - manual testing, UX validation"
-    generate_agent_command "ucv-writer" "agents/ucv-writer.md" "UCV Writer - creates Use Case Verifiables"
-    generate_agent_command "ucv-validator" "agents/ucv-validator.md" "UCV Validator - validates 100% UCV coverage"
-    generate_agent_command "ucv-qa" "agents/ucv-qa.md" "UCV QA - manual browser validation (HQVF)"
+    generate_agent_command "ucv-writer" "specialties/ucv/branchs/writer.md" "UCV Writer - creates Use Case Verifiables"
+    generate_agent_command "ucv-validator" "specialties/ucv/branchs/validator.md" "UCV Validator - validates 100% UCV coverage"
+    generate_agent_command "ucv-qa" "specialties/ucv/branchs/qa.md" "UCV QA - manual browser validation (HQVF)"
 
     # Compliance Agents
     generate_agent_command "accessibility" "agents/accessibility.md" "Accessibility auditor - WCAG/RGAA/EAA"

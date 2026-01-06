@@ -1077,7 +1077,7 @@ export default defineConfig({
 
 - [Developer](developer.md) - Provides code to test
 - [Exploratory QA 🔍](exploratory-qa.md) - Exploratory QA after testing
-- [UCV Validator ✅](ucv-validator.md) - Validates UCV coverage
+- [UCV Validator ✅](../specialties/ucv/branchs/validator.md) - Validates UCV coverage
 
 ---
 

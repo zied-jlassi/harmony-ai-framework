@@ -185,9 +185,9 @@ Inclut:
 - [Sentinel Agent](../agents/sentinel.md) - Memoire et apprentissage
 
 **Specialists:**
-- [UCV QA](../agents/ucv-qa.md) - Validation UCV en browser
-- [UCV Writer](../agents/ucv-writer.md) - Creation UCVs
-- [UCV Validator](../agents/ucv-validator.md) - Verification 100%
+- [UCV QA](../specialties/ucv/branchs/qa.md) - Validation UCV en browser
+- [UCV Writer](../specialties/ucv/branchs/writer.md) - Creation UCVs
+- [UCV Validator](../specialties/ucv/branchs/validator.md) - Verification 100%
 - [Exploratory QA](../agents/exploratory-qa.md) - QA exploratoire
 
 **Compliance:**
@@ -232,12 +232,12 @@ harmony-framework/
 │   └── tools/sync-mcp.sh  ← Sync vers MCP Memory
 ├── patterns/
 │   ├── INDEX.md           ← Bibliotheque de patterns
+│   ├── P-XXX-*.md         ← Patterns système
 │   ├── case-studies/      ← Exemples concrets
-│   └── P-XXX-*.md         ← Documentation patterns
+│   └── cognitive/         ← Patterns de raisonnement (ReAct, Reflection...)
 ├── agents/
 │   ├── INDEX.md           ← Index des agents
-│   ├── *.md               ← Tous les agents (flat structure)
-│   └── cognitive/         ← Patterns de raisonnement (ReAct, Reflection...)
+│   └── *.md               ← Tous les agents (flat structure)
 ├── specialties/
 │   └── ai/                ← Specialty AI Systems
 │       ├── manifest.yaml  ← Detection et config

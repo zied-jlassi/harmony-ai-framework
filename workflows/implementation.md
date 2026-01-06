@@ -311,6 +311,6 @@ Overall: 100% - READY FOR CLOSURE
 - [Developer Agent](../agents/developer.md)
 - [Tester Agent](../agents/tester.md)
 - [Exploratory QA Agent 🔍](../agents/exploratory-qa.md)
-- [UCV Validator Agent ✅](../agents/ucv-validator.md)
+- [UCV Validator Agent ✅](../specialties/ucv/branchs/validator.md)
 - [P-008: UCV Quality Gate](../patterns/P-008-ucv-gate.md)
 

@@ -1,0 +1,214 @@
+# Developer Specialty Pack
+# Development expertise with context-specific branches
+
+specialty:
+  id: developer
+  name: "Developer"
+  version: "1.0.0"
+  description: "Development expertise with specialized branches for different contexts"
+
+# Base agent (domain)
+base_agent: ../../agents/developer.md
+
+# Branchs (specialized developers)
+branchs:
+  - id: software
+    file: branchs/software.md
+    description: "Software developer - Desktop, CLI, libraries"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/languages/typescript/typescript-advanced-types.md
+      - ../../knowledge/languages/javascript/modern-javascript-patterns.md
+      - ../../knowledge/languages/python/async-python-patterns.md
+      - ../../knowledge/shared/patterns/error-handling-patterns.md
+      - ../../knowledge/shared/patterns/debugging-strategies.md
+      - ../../knowledge/shared/patterns/code-standards-typescript.md
+    profiles:
+      - languages/typescript
+      - languages/python
+      - languages/go
+      - languages/rust
+      - runtimes/nodejs
+    patterns:
+      - P-004-circuit-breaker
+      - P-016-error-journal
+
+  - id: web
+    file: branchs/web.md
+    description: "Web developer - Frontend, backend, fullstack"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      # Frontend
+      - ../../knowledge/frameworks/react/architecture.md
+      - ../../knowledge/frameworks/react/patterns.md
+      - ../../knowledge/frameworks/react/react-state-management.md
+      - ../../knowledge/frameworks/angular/architecture.md
+      - ../../knowledge/frameworks/nextjs/nextjs-app-router-patterns.md
+      - ../../knowledge/frameworks/tailwind/tailwind-design-system.md
+      # Backend
+      - ../../knowledge/frameworks/nestjs/architecture.md
+      - ../../knowledge/runtimes/nodejs/nodejs-backend-patterns.md
+      - ../../knowledge/frameworks/symfony/architecture.md
+      # Languages
+      - ../../knowledge/languages/typescript/typescript-advanced-types.md
+      - ../../knowledge/languages/javascript/modern-javascript-patterns.md
+      - ../../knowledge/languages/javascript/async.md
+      # Quality
+      - ../../knowledge/domains/quality/core-web-vitals.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+    profiles:
+      # Frontend
+      - frontend/react
+      - frontend/angular
+      - frontend/nextjs
+      - frontend/vue
+      - frontend/svelte
+      # Backend
+      - backend/nestjs
+      - backend/express
+      - backend/fastify
+      # Styling
+      - styling/tailwind
+      - styling/sass
+      # Database
+      - databases/postgresql
+      - databases/mongodb
+      - databases/redis
+      # Runtime
+      - runtimes/nodejs
+    patterns:
+      - P-003-jit-context
+      - P-014-react-v3-developer
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile developer - iOS, Android, React Native, Expo, Flutter, cross-platform"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/react-native-architecture.md
+      - ../../knowledge/languages/typescript/typescript-advanced-types.md
+      - ../../knowledge/languages/javascript/async.md
+      - ../../knowledge/shared/patterns/error-handling-patterns.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+      - mobile/flutter
+      - languages/typescript
+      - languages/kotlin
+      - languages/swift
+      - runtimes/nodejs
+    patterns:
+      - P-002-three-tier-memory
+    # Topics from mobile specialty (for detection/routing)
+    topics:
+      - react-native
+      - flutter
+      - ios
+      - android
+      - pwa
+      - responsive
+      - touch-ux
+      - offline
+      - expo
+      - app-store
+      - play-store
+    # External documentation sources
+    sources:
+      - url: "https://reactnative.dev/docs/"
+        priority: 1
+      - url: "https://docs.expo.dev/"
+        priority: 2
+      - url: "https://flutter.dev/docs"
+        priority: 3
+      - url: "https://developer.apple.com/documentation/"
+        priority: 4
+      - url: "https://developer.android.com/docs"
+        priority: 5
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game developer - ECS, state machines, physics, game loops, multiplayer"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+      - ../../knowledge/languages/typescript/typescript-advanced-types.md
+      - ../../knowledge/shared/patterns/debugging-strategies.md
+    profiles:
+      - languages/typescript
+      - languages/csharp
+      - databases/redis
+    patterns:
+      - P-004-circuit-breaker
+      - P-005-closed-loop
+    # Topics from gaming specialty (for detection/routing)
+    topics:
+      # Game Design
+      - mechanics
+      - progression
+      - balancing
+      - monetization
+      # Game UX
+      - hud
+      - onboarding
+      - feedback
+      # Audio
+      - sound-design
+      - music
+      - audio-feedback
+      # Analytics
+      - analytics
+      - playtesting
+      - ab-testing
+      # Technical
+      - multiplayer
+      - leaderboards
+      - achievements
+      - ecs
+      - state-machine
+    # External documentation sources
+    sources:
+      - url: "https://www.gamedeveloper.com/"
+        priority: 1
+      - url: "https://gamedevbeginner.com/"
+        priority: 2
+      - url: "https://www.gameanalytics.com/blog/"
+        priority: 3
+      - url: "https://www.gameuidatabase.com/"
+        priority: 4
+    # Tech stack recommendations
+    tech_stack:
+      backend: [nestjs, socket.io, redis]
+      frontend: [phaser, three.js, pixi.js]
+      audio: [howler.js, tone.js]
+      database: [postgresql, redis]
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: error-handling
+      file: ../../knowledge/shared/patterns/error-handling-patterns.md
+      keywords: [error, exception, handling, recovery]
+    - id: debugging
+      file: ../../knowledge/shared/patterns/debugging-strategies.md
+      keywords: [debug, trace, log, breakpoint]
+    - id: code-standards
+      file: ../../knowledge/shared/patterns/code-standards-typescript.md
+      keywords: [style, lint, format, standards]
+
+  languages:
+    - id: typescript
+      file: ../../knowledge/languages/typescript/typescript-advanced-types.md
+    - id: javascript
+      file: ../../knowledge/languages/javascript/modern-javascript-patterns.md
+    - id: python
+      file: ../../knowledge/languages/python/async-python-patterns.md
+
+# Global patterns
+patterns:
+  - id: tdd
+    file: ../../knowledge/shared/patterns/tdd-workflow.md
+    description: "Test-Driven Development workflow"
+  - id: error-handling
+    file: ../../patterns/P-016-error-journal.md
+    description: "Error handling and journaling"

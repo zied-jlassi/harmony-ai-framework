@@ -1,0 +1,79 @@
+# Designer Specialty Pack
+# Creative design expertise with context-specific branches
+
+specialty:
+  id: designer
+  name: "Designer"
+  version: "1.0.0"
+  description: "Creative design expertise (game, sound, web, mobile)"
+
+# Base agent (domain)
+base_agent: ../../agents/designer.md
+
+# Branchs (specialized designers)
+branchs:
+  - id: web
+    file: branchs/web.md
+    description: "Web Designer - Visual design, layouts, branding"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/frameworks/tailwind/tailwind-design-system.md
+      - ../../knowledge/domains/quality/core-web-vitals.md
+    profiles:
+      - styling/tailwind
+      - styling/sass
+      - styling/bootstrap
+      - frontend/react
+      - frontend/angular
+    patterns:
+      - P-014-react-v3-developer
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile Designer - App design, icons, splash screens"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/react-native-architecture.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+    patterns: []
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game Designer - Mechanics, balancing, progression, GDD"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+    profiles:
+      - languages/csharp
+    patterns: []
+
+  - id: sound
+    file: branchs/sound.md
+    description: "Sound Designer - SFX, adaptive music, audio middleware"
+    condition: "feature_flags.has_audio == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+    profiles: []
+    patterns: []
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: tailwind
+      file: ../../knowledge/frameworks/tailwind/tailwind-design-system.md
+      keywords: [css, design, system, utility, tailwind]
+
+  topics:
+    - game-design
+    - sound-design
+    - visual-design
+    - design-thinking
+    - prototyping
+
+# Global patterns
+patterns:
+  - id: design-system
+    description: "Design system creation and maintenance"

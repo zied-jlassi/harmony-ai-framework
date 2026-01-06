@@ -630,7 +630,7 @@ RECOMMANDE:
 
 - [UX Designer](../ux-designer.md) - Design accessible
 - [Developer](../developer.md) - Implementation
-- [UCV-QA](ucv-qa.md) - Validation visuelle
+- [UCV-QA](../specialties/ucv/branchs/qa.md) - Validation visuelle
 - [Security](security.md) - Securite
 
 ---

@@ -186,7 +186,9 @@ your-project/
 │   │   ├── security.md
 │   │   ├── rgpd.md
 │   │   ├── accessibility.md
-│   │   ├── pentest.md
+│   │   └── pentest.md
+│   ├── patterns/
+│   │   ├── P-XXX-*.md           # System patterns
 │   │   └── cognitive/           # Reasoning patterns
 │   │       ├── react.md
 │   │       └── reflection.md

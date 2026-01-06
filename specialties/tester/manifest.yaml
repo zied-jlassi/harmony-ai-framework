@@ -1,0 +1,110 @@
+# Tester Specialty Pack
+# Testing expertise with context-specific branches
+
+specialty:
+  id: tester
+  name: "Tester"
+  version: "1.0.0"
+  description: "Testing expertise with specialized branches for different contexts"
+
+# Base agent (domain)
+base_agent: ../../agents/tester.md
+
+# Branchs (specialized testers)
+branchs:
+  - id: software
+    file: branchs/software.md
+    description: "Software QA - Unit, integration, system testing"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/shared/patterns/tdd-workflow.md
+      - ../../knowledge/shared/patterns/bash-testing-patterns.md
+      - ../../knowledge/languages/javascript/javascript-testing-patterns.md
+      - ../../knowledge/languages/python/python-testing-patterns.md
+    profiles:
+      - languages/typescript
+      - languages/python
+      - runtimes/nodejs
+    patterns:
+      - P-013-test-environment
+
+  - id: web
+    file: branchs/web.md
+    description: "Web QA - E2E, cross-browser, responsive testing"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/domains/quality/playwright-e2e.md
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/domains/quality/core-web-vitals.md
+      - ../../knowledge/domains/quality/e2e-security-rgpd.md
+      - ../../knowledge/languages/javascript/javascript-testing-patterns.md
+      - ../../knowledge/shared/patterns/tdd-workflow.md
+    profiles:
+      - frontend/react
+      - frontend/angular
+      - backend/nestjs
+      - runtimes/nodejs
+    patterns:
+      - P-013-test-environment
+      - P-008-ucv-gate
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile QA - Device testing, platform-specific, app store compliance"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/languages/javascript/javascript-testing-patterns.md
+      - ../../knowledge/shared/patterns/tdd-workflow.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+      - languages/typescript
+    patterns:
+      - P-013-test-environment
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game QA - Playtesting, balancing, bug hunting, game-specific testing"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/shared/patterns/debugging-strategies.md
+    profiles:
+      - languages/csharp
+      - languages/typescript
+    patterns:
+      - P-004-circuit-breaker
+      - P-013-test-environment
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: e2e-testing
+      file: ../../knowledge/domains/quality/e2e-testing-patterns.md
+      keywords: [e2e, end-to-end, integration, testing]
+    - id: tdd
+      file: ../../knowledge/shared/patterns/tdd-workflow.md
+      keywords: [tdd, test-driven, unit, test]
+    - id: playwright
+      file: ../../knowledge/domains/quality/playwright-e2e.md
+      keywords: [playwright, browser, automation]
+
+  quality-domain:
+    - id: core-web-vitals
+      file: ../../knowledge/domains/quality/core-web-vitals.md
+    - id: harmony-tests
+      file: ../../knowledge/domains/quality/harmony-test-suite.md
+    - id: security-rgpd
+      file: ../../knowledge/domains/quality/e2e-security-rgpd.md
+
+# Global patterns
+patterns:
+  - id: test-environment
+    file: ../../patterns/P-013-test-environment.md
+    description: "Test environment setup and management"
+  - id: ucv-gate
+    file: ../../patterns/P-008-ucv-gate.md
+    description: "UCV quality gates validation"

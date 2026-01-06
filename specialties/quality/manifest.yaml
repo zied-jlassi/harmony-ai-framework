@@ -1,0 +1,68 @@
+# Quality Specialty Pack
+# Testing, performance, and code quality expertise
+
+specialty:
+  id: quality
+  name: "Quality"
+  version: "1.0.0"
+  description: "Testing, performance optimization, linting, dependency management, and code quality"
+
+# Branchs included in this specialty
+branchs:
+  - id: performance
+    file: branchs/performance.md
+    description: "Performance optimization, profiling, latency, Core Web Vitals"
+
+  - id: lint
+    file: branchs/lint.md
+    description: "Code linting, formatting, static analysis"
+
+  - id: dependency
+    file: branchs/dependency.md
+    description: "Dependency management, auditing, updates"
+
+# Knowledge sources
+knowledge:
+  # Local knowledge domain files
+  domain: ../../knowledge/domains/quality
+  domain_files:
+    - id: core-web-vitals
+      file: ../../knowledge/domains/quality/core-web-vitals.md
+      keywords: [cwv, lcp, fid, cls, performance, lighthouse]
+    - id: e2e-testing
+      file: ../../knowledge/domains/quality/e2e-testing-patterns.md
+      keywords: [e2e, testing, integration, cypress, selenium]
+    - id: playwright
+      file: ../../knowledge/domains/quality/playwright-e2e.md
+      keywords: [playwright, browser, automation, testing]
+    - id: harmony-tests
+      file: ../../knowledge/domains/quality/harmony-test-suite.md
+      keywords: [harmony, test, validation, framework]
+    - id: security-rgpd
+      file: ../../knowledge/domains/quality/e2e-security-rgpd.md
+      keywords: [security, rgpd, gdpr, compliance, testing]
+
+  topics:
+    - testing          # Unit, integration, e2e
+    - performance      # Profiling, optimization
+    - linting          # Code style, static analysis
+    - dependencies     # Package management
+    - ci-quality       # Quality gates in CI
+
+  sources:
+    - url: "https://web.dev/vitals/"
+      priority: 1
+    - url: "https://playwright.dev/docs/"
+      priority: 2
+    - url: "https://eslint.org/docs/"
+      priority: 3
+
+# Patterns
+patterns:
+  - id: testing-pyramid
+    description: "Unit > Integration > E2E testing strategy"
+  - id: performance-budget
+    file: ../../knowledge/domains/quality/core-web-vitals.md
+    description: "Performance budget and monitoring"
+  - id: quality-gates
+    description: "CI/CD quality gates and checks"

@@ -9,19 +9,23 @@ specialty:
   description: "Security testing, penetration testing, OWASP compliance, RGPD, infrastructure security"
   last_updated: "2026-01-01"
 
-# Agents included in this specialty
-agents:
-  - id: pentest
-    file: agents/pentest.md
-    description: "Penetration testing expert - OWASP, network, web, social engineering"
+# Branchs (specialized roles within security domain)
+branchs:
+  - id: engineer
+    file: branchs/engineer.md
+    description: "Security Engineer - implementation, defense-in-depth"
 
-  - id: security
-    file: agents/security.md
-    description: "General security architect - security patterns, threat modeling"
+  - id: auditor
+    file: branchs/auditor.md
+    description: "Security Auditor - OWASP audits, vulnerability assessment"
 
-  - id: rgpd
-    file: agents/rgpd.md
-    description: "RGPD/GDPR compliance expert - data protection, privacy"
+  - id: researcher
+    file: branchs/researcher.md
+    description: "Security Researcher - pentest, red team, exploitation"
+
+  - id: dpo
+    file: branchs/dpo.md
+    description: "Data Protection Officer - RGPD/GDPR compliance"
 
 # Modules (specialized knowledge packs for pentest)
 modules:
@@ -80,40 +84,41 @@ modules:
       file: modules/pentest-sources.json
       description: "Research sources for pentest knowledge"
 
-# Knowledge base
+# Knowledge base (references to shared knowledge)
 knowledge:
+  source: ../../knowledge/domains/security
   general:
     - id: owasp-checklists
-      file: knowledge/owasp-checklists.md
+      file: ../../knowledge/domains/security/owasp-checklists.md
       description: "OWASP security checklists"
     - id: cis-benchmarks
-      file: knowledge/cis-benchmarks.md
+      file: ../../knowledge/domains/security/cis-benchmarks.md
       description: "CIS security benchmarks"
     - id: data-protection
-      file: knowledge/data-protection.md
+      file: ../../knowledge/domains/security/data-protection.md
       description: "Data protection patterns"
     - id: infrastructure
-      file: knowledge/infrastructure.md
+      file: ../../knowledge/domains/security/infrastructure.md
       description: "Infrastructure security"
     - id: patterns-detection
-      file: knowledge/patterns-detection.md
+      file: ../../knowledge/domains/security/patterns-detection.md
       description: "Attack pattern detection"
     - id: pentest-patterns
-      file: knowledge/pentest-patterns.md
+      file: ../../knowledge/domains/security/pentest-patterns.md
       description: "Penetration testing patterns"
 
   gaming:
     - id: owasp-gaming-checklist
-      file: knowledge/owasp-gaming-checklist.md
+      file: ../../knowledge/domains/security/owasp-gaming-checklist.md
       description: "OWASP checklist for gaming platforms"
     - id: owasp-gaming-checklists
-      file: knowledge/owasp-gaming-checklists.md
+      file: ../../knowledge/domains/security/owasp-gaming-checklists.md
       description: "Extended OWASP gaming checklists"
     - id: gaming-security-patterns
-      file: knowledge/gaming-security-patterns.md
+      file: ../../knowledge/domains/security/gaming-security-patterns.md
       description: "Security patterns specific to gaming"
     - id: data-protection-gaming
-      file: knowledge/data-protection-gaming.md
+      file: ../../knowledge/domains/security/data-protection-gaming.md
       description: "Data protection for gaming (COPPA, minors)"
 
 # Integration with Harmony
@@ -140,18 +145,19 @@ harmony_integration:
 
 # Statistics
 stats:
-  agents: 3
+  branchs: 4
   modules: 15
   knowledge_files: 10
-  total_files: 29
+  total_files: 30
 
 # Usage
 usage:
   invoke: "/harmony:specialty:security"
-  direct_agents:
-    - "/harmony:agent:pentest"
-    - "/harmony:agent:security"
-    - "/harmony:agent:rgpd"
+  branchs:
+    - "/harmony:security:engineer"
+    - "/harmony:security:auditor"
+    - "/harmony:security:researcher"
+    - "/harmony:security:dpo"
 
   examples:
     - "Perform OWASP Top 10 assessment"

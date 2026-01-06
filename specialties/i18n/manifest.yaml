@@ -8,9 +8,9 @@ specialty:
   description: "Internationalization, localization, multi-language support, RTL layouts"
 
 # Agents included in this specialty
-agents:
+branchs:
   - id: i18n
-    file: agents/i18n.md
+    file: branchs/i18n.md
     description: "Internationalization and localization expert"
 
 # Knowledge sources

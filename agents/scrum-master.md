@@ -1693,8 +1693,8 @@ When creating/using an epic, update `working.json`:
 - [Tester](tester.md) - Tests implementations
 - [Architect](architect.md) - Reviews technical approach
 - [Exploratory QA](exploratory-qa.md) - Exploratory QA before release
-- [UCV Writer](ucv-writer.md) - UCV Writer
-- [UCV Validator](ucv-validator.md) - UCV Validator
+- [UCV Writer](../specialties/ucv/branchs/writer.md) - UCV Writer
+- [UCV Validator](../specialties/ucv/branchs/validator.md) - UCV Validator
 
 ---
 

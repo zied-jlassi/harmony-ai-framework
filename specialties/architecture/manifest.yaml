@@ -1,0 +1,127 @@
+# Architecture Specialty Pack
+# System architecture with specialized branches
+
+specialty:
+  id: architecture
+  name: "Architecture"
+  version: "1.0.0"
+  description: "System architecture expertise with specialized branches"
+
+# Base agent (domain)
+base_agent: ../../agents/architect.md
+
+# Branchs (specialized architects)
+branchs:
+  - id: software
+    file: branchs/software.md
+    description: "Software architecture - Clean Architecture, DDD, microservices"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/architecture-patterns.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+      - ../../knowledge/shared/patterns/error-handling-patterns.md
+    patterns:
+      - P-001-hybrid-orchestration
+      - P-004-circuit-breaker
+      - P-005-closed-loop
+
+  - id: web
+    file: branchs/web.md
+    description: "Web architecture - Frontend, JAMstack, SSR/SSG, API design"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/architecture.md
+      - ../../knowledge/frameworks/angular/architecture.md
+      - ../../knowledge/frameworks/nestjs/architecture.md
+      - ../../knowledge/frameworks/nextjs/nextjs-app-router-patterns.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+      - ../../knowledge/domains/quality/core-web-vitals.md
+    profiles:
+      - frontend/react
+      - frontend/angular
+      - frontend/nextjs
+      - backend/nestjs
+      - backend/express
+    patterns:
+      - P-003-jit-context
+      - P-006-intent-detection
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile architecture - Cross-platform, native patterns, offline-first"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/react-native-architecture.md
+      - ../../knowledge/shared/patterns/architecture-patterns.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+      - runtimes/nodejs
+    patterns:
+      - P-002-three-tier-memory
+
+  - id: ai
+    file: branchs/ai.md
+    description: "AI/LLM architecture - RAG, Multi-Agent, Memory, Guardrails"
+    condition: "feature_flags.is_ai == true"
+    knowledge:
+      - ../../knowledge/domains/ai/rag-patterns.md
+      - ../../knowledge/domains/ai/rag-implementation.md
+      - ../../knowledge/domains/ai/memory-patterns.md
+      - ../../knowledge/domains/ai/orchestration-patterns.md
+      - ../../knowledge/domains/ai/safety-patterns.md
+      - ../../knowledge/domains/ai/observability-patterns.md
+      - ../../knowledge/domains/ai/graphrag-patterns.md
+      - ../../knowledge/domains/ai/agentic-patterns.md
+      - ../../knowledge/domains/ai/langchain-architecture.md
+      - ../../knowledge/domains/ai/cost-optimization-patterns.md
+      - ../../knowledge/domains/ai/streaming-patterns.md
+      - ../../knowledge/domains/ai/tool-integration-patterns.md
+    patterns:
+      - P-001-hybrid-orchestration
+      - P-002-three-tier-memory
+      - P-006-intent-detection
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game architecture - ECS, state machines, multiplayer"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+      - ../../knowledge/domains/security/gaming-security-patterns.md
+    patterns:
+      - P-004-circuit-breaker
+      - P-005-closed-loop
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: architecture-patterns
+      file: ../../knowledge/shared/patterns/architecture-patterns.md
+      keywords: [clean, ddd, hexagonal, cqrs, microservices]
+    - id: api-design
+      file: ../../knowledge/shared/patterns/api-design-principles.md
+      keywords: [rest, graphql, api, design]
+
+  frameworks:
+    - id: nestjs-arch
+      file: ../../knowledge/frameworks/nestjs/architecture.md
+    - id: angular-arch
+      file: ../../knowledge/frameworks/angular/architecture.md
+    - id: react-arch
+      file: ../../knowledge/frameworks/react/architecture.md
+    - id: symfony-arch
+      file: ../../knowledge/frameworks/symfony/architecture.md
+
+# Global patterns
+patterns:
+  - id: clean-architecture
+    file: ../../patterns/P-001-hybrid-orchestration.md
+    description: "Clean Architecture layers and dependencies"
+  - id: ddd-tactical
+    description: "DDD tactical patterns (aggregates, entities, value objects)"
+  - id: c4-model
+    description: "C4 modeling (Context, Container, Component, Code)"
+  - id: adr
+    description: "Architecture Decision Records"

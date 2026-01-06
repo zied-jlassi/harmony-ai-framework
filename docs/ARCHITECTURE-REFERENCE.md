@@ -1,14 +1,602 @@
 # Harmony Framework - Architecture Reference
 
-> **Version**: 1.0.0
-> **Date**: 2026-01-03
+> **Version**: 2.0.0
+> **Date**: 2026-01-06
 > **Status**: AUTHORITATIVE
 > **Purpose**: Document de référence définitif pour l'architecture Harmony
+> **Audience**: Claude dans futures sessions - schémas visuels des relations
 
 ---
 
-## Table des Matières
+## 🎯 Vue d'Ensemble - Flux Principal
 
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         HARMONY FRAMEWORK                                    │
+│                    "Self-Improving AI Development"                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                    │
+│   │  GUARDIAN   │    │  SENTINEL   │    │    HQVF     │                    │
+│   │  Protocol   │    │   System    │    │   Quality   │                    │
+│   │             │    │             │    │             │                    │
+│   │  Detection  │    │   Memory    │    │    UCVs     │                    │
+│   │  Routing    │    │  Learning   │    │ Validation  │                    │
+│   │  Protection │    │  Recovery   │    │   Gates     │                    │
+│   └──────┬──────┘    └──────┬──────┘    └──────┬──────┘                    │
+│          │                  │                  │                            │
+│          └──────────────────┼──────────────────┘                            │
+│                             │                                               │
+│                    ┌────────▼────────┐                                      │
+│                    │   ORCHESTRATOR  │                                      │
+│                    │  sprint-tracker │                                      │
+│                    └────────┬────────┘                                      │
+│                             │                                               │
+│          ┌──────────────────┼──────────────────┐                            │
+│          ▼                  ▼                  ▼                            │
+│   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐                    │
+│   │   AGENTS    │    │  WORKFLOWS  │    │   MEMORY    │                    │
+│   │  Specialized│    │   Phases    │    │  3-Tier     │                    │
+│   └─────────────┘    └─────────────┘    └─────────────┘                    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🏛️ Les Trois Piliers - Schémas Détaillés
+
+### Pilier 1: GUARDIAN Protocol
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     GUARDIAN PROTOCOL                            │
+│              "Intent Detection & Agent Routing"                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   REQUEST ──► DETECTION ──► SCORING ──► ROUTING ──► AGENT      │
+│                                                                 │
+│   ┌─────────────────┐     ┌─────────────────┐                   │
+│   │ detection-      │     │ routing-        │                   │
+│   │ patterns.yaml   │     │ algorithm.yaml  │                   │
+│   │                 │     │                 │                   │
+│   │ • Keywords      │────►│ • Score calc    │                   │
+│   │ • Patterns      │     │ • Thresholds    │                   │
+│   │ • Context       │     │ • Fallbacks     │                   │
+│   └─────────────────┘     └─────────────────┘                   │
+│                                   │                             │
+│                                   ▼                             │
+│                          ┌─────────────────┐                    │
+│                          │  AGENT ROUTER   │                    │
+│                          │                 │                    │
+│                          │ Score ≥ 80 ──► Specialist           │
+│                          │ Score 50-79 ─► General              │
+│                          │ Score < 50 ──► Harmony              │
+│                          └─────────────────┘                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Pilier 2: SENTINEL System
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      SENTINEL SYSTEM                             │
+│               "Memory, Learning & Recovery"                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ERROR ──► CAPTURE ──► ANALYZE ──► LEARN ──► PREVENT          │
+│                                                                 │
+│   ┌─────────────────┐     ┌─────────────────┐                   │
+│   │ error-journal   │     │ circuit-breaker │                   │
+│   │                 │     │                 │                   │
+│   │ • Pattern match │     │ • Failure count │                   │
+│   │ • Root cause    │     │ • State machine │                   │
+│   │ • Solution map  │     │ • Auto-recovery │                   │
+│   └────────┬────────┘     └────────┬────────┘                   │
+│            │                       │                            │
+│            ▼                       ▼                            │
+│   ┌─────────────────────────────────────────┐                   │
+│   │           ERROR LIBRARY                  │                   │
+│   │        (JIT Loading - AutoLearning)      │                   │
+│   │                                          │                   │
+│   │  BASH-001 ─► Solution A                  │                   │
+│   │  JS-001   ─► Solution B                  │                   │
+│   │  PY-001   ─► Solution C                  │                   │
+│   └─────────────────────────────────────────┘                   │
+│                                                                 │
+│   Circuit Breaker States:                                       │
+│   ┌────────┐    ┌───────────┐    ┌────────┐                    │
+│   │ CLOSED │───►│ HALF_OPEN │───►│  OPEN  │                    │
+│   │  (OK)  │◄───│ (Testing) │◄───│(Blocked)│                    │
+│   └────────┘    └───────────┘    └────────┘                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Pilier 3: HQVF Quality
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         HQVF                                     │
+│          "Harmony Quality Verification Framework"                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   STORY ──► UCV ──► VALIDATION ──► GATES ──► COMPLETION        │
+│                                                                 │
+│   ┌─────────────────────────────────────────┐                   │
+│   │              UCV (Use Case Verifiable)   │                   │
+│   │                                          │                   │
+│   │  ┌─────────┐  ┌─────────┐  ┌─────────┐  │                   │
+│   │  │  Given  │─►│  When   │─►│  Then   │  │                   │
+│   │  │ Context │  │ Action  │  │ Result  │  │                   │
+│   │  └─────────┘  └─────────┘  └─────────┘  │                   │
+│   │                                          │                   │
+│   │  Triple Validation:                      │                   │
+│   │  1. Writer creates UCV                   │                   │
+│   │  2. QA executes in browser               │                   │
+│   │  3. Validator confirms 100%              │                   │
+│   └─────────────────────────────────────────┘                   │
+│                                                                 │
+│   Quality Gates:                                                │
+│   ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐              │
+│   │  LINT   │►│  TEST   │►│  BUILD  │►│ DEPLOY  │              │
+│   │  Gate   │ │  Gate   │ │  Gate   │ │  Gate   │              │
+│   └─────────┘ └─────────┘ └─────────┘ └─────────┘              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🤖 Écosystème des Agents
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           AGENTS ECOSYSTEM                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                         ┌─────────────────┐                                 │
+│                         │    HARMONY      │  ← Agent Principal              │
+│                         │   (Orchestrator)│                                 │
+│                         └────────┬────────┘                                 │
+│                                  │                                          │
+│           ┌──────────────────────┼──────────────────────┐                   │
+│           │                      │                      │                   │
+│           ▼                      ▼                      ▼                   │
+│   ┌───────────────┐      ┌───────────────┐      ┌───────────────┐          │
+│   │   GUARDIAN    │      │   SENTINEL    │      │   DEVELOPER   │          │
+│   │   Protocol    │      │    Memory     │      │    Agent      │          │
+│   │               │      │               │      │               │          │
+│   │ • Detection   │      │ • Errors      │      │ • Coding      │          │
+│   │ • Routing     │      │ • Learning    │      │ • Review      │          │
+│   │ • Protection  │      │ • Recovery    │      │ • Debug       │          │
+│   └───────────────┘      └───────────────┘      └───────────────┘          │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │                    SPECIALIST AGENTS                         │          │
+│   │                                                              │          │
+│   │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐           │          │
+│   │  │ UCV-QA  │ │UCV-Write│ │UCV-Valid│ │Explorat.│           │          │
+│   │  │         │ │         │ │         │ │   QA    │           │          │
+│   │  └─────────┘ └─────────┘ └─────────┘ └─────────┘           │          │
+│   │                                                              │          │
+│   │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐           │          │
+│   │  │Accessib.│ │Security │ │  RGPD   │ │Architect│           │          │
+│   │  │ WCAG    │ │ Audit   │ │ GDPR    │ │         │           │          │
+│   │  └─────────┘ └─────────┘ └─────────┘ └─────────┘           │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+│   Agent Location: framework/agents/*.md                                     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📚 Profiles & Specialties - Relation
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     PROFILES & SPECIALTIES                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   PROFILES (Language-specific knowledge) - JIT Loaded                       │
+│   Location: framework/profiles/                                             │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │          │
+│   │  │typescript│  │  python  │  │   rust   │  │    go    │    │          │
+│   │  │• Patterns│  │• Patterns│  │• Patterns│  │• Patterns│    │          │
+│   │  │• Linters │  │• Linters │  │• Linters │  │• Linters │    │          │
+│   │  │• Testing │  │• Testing │  │• Testing │  │• Testing │    │          │
+│   │  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                  │                                          │
+│                                  │ extends                                  │
+│                                  ▼                                          │
+│   SPECIALTIES (Domain-specific expertise) - Loaded at startup              │
+│   Location: framework/specialties/                                          │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  ┌─────────────────────────────────────────────────────┐    │          │
+│   │  │                    AI SPECIALTY                      │    │          │
+│   │  │              framework/specialties/ai/               │    │          │
+│   │  │                                                      │    │          │
+│   │  │  manifest.yaml ─► Detection & Config                 │    │          │
+│   │  │                                                      │    │          │
+│   │  │  knowledge/                                          │    │          │
+│   │  │  ├── rag-patterns.md      (RAG architectures)       │    │          │
+│   │  │  ├── memory-systems.md    (Short/Long term)         │    │          │
+│   │  │  ├── orchestration.md     (Multi-agent)             │    │          │
+│   │  │  └── evaluation.md        (LLM eval methods)        │    │          │
+│   │  └─────────────────────────────────────────────────────┘    │          │
+│   │                                                              │          │
+│   │  Future: web/, mobile/, devops/, data/                      │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+│   Relation: Profile = Language, Specialty = Domain                          │
+│   Un agent peut utiliser: 1 Profile + N Specialties                        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📖 Knowledge & Patterns
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      KNOWLEDGE & PATTERNS                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   KNOWLEDGE (Framework-specific docs) - JIT loaded                          │
+│   Location: framework/knowledge/                                            │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  frameworks/          languages/          tools/             │          │
+│   │  ├── react.md         ├── typescript.md   ├── docker.md     │          │
+│   │  ├── nextjs.md        ├── python.md       ├── kubernetes.md │          │
+│   │  ├── vue.md           ├── rust.md         └── terraform.md  │          │
+│   │  └── angular.md       └── go.md                              │          │
+│   │                                                              │          │
+│   │  Usage: JIT loaded by agents when relevant                   │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                  │                                          │
+│                                  │ applied via                              │
+│                                  ▼                                          │
+│   PATTERNS (Reusable solutions)                                             │
+│   Location: framework/patterns/                                             │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  Format: P-XXX-name.md                                       │          │
+│   │                                                              │          │
+│   │  ┌─────────────────────────────────────────────────────┐    │          │
+│   │  │ P-001 Circuit Breaker    │ P-007 Feature Flags      │    │          │
+│   │  │ P-002 Retry with Backoff │ P-008 Event Sourcing     │    │          │
+│   │  │ P-003 Rate Limiting      │ P-009 CQRS               │    │          │
+│   │  │ P-004 Bulkhead           │ P-010 Saga Pattern       │    │          │
+│   │  │ P-005 Cache Aside        │ P-011 Strangler Fig      │    │          │
+│   │  │ P-006 Sidecar            │ P-012 Ambassador         │    │          │
+│   │  │                          │ P-013 Anti-Corruption    │    │          │
+│   │  └─────────────────────────────────────────────────────┘    │          │
+│   │                                                              │          │
+│   │  7 patterns auto-détectables par Sentinel                   │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚖️ Rules System
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          RULES SYSTEM                                        │
+│                    "Enforcement & Compliance"                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Location: framework/rules/   Format: R-XXX-name.yaml                      │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  ┌──────────────────────────────────────────────────────┐   │          │
+│   │  │                    RULE STRUCTURE                     │   │          │
+│   │  ├──────────────────────────────────────────────────────┤   │          │
+│   │  │  id: R-001                                            │   │          │
+│   │  │  name: "No Direct Commits to Main"                    │   │          │
+│   │  │  enforcement: BLOCK | WARN | LOG                      │   │          │
+│   │  │  phases: [commit, push, pr]                           │   │          │
+│   │  │  conditions:                                          │   │          │
+│   │  │    - branch: main                                     │   │          │
+│   │  │    - action: direct_commit                            │   │          │
+│   │  │  message: "Use feature branches"                      │   │          │
+│   │  └──────────────────────────────────────────────────────┘   │          │
+│   │                                                              │          │
+│   │  Available Rules:                                            │          │
+│   │  ┌────────────────────────────────────────────────────┐     │          │
+│   │  │ R-001 Branch Protection    │ R-005 Code Coverage   │     │          │
+│   │  │ R-002 Commit Message       │ R-006 Security Scan   │     │          │
+│   │  │ R-003 PR Review Required   │ R-007 License Check   │     │          │
+│   │  │ R-004 Test Required        │ R-008 Dependency Audit│     │          │
+│   │  └────────────────────────────────────────────────────┘     │          │
+│   │                                                              │          │
+│   │  Enforcement: BLOCK → Stop | WARN → Log warning | LOG       │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔀 Routing System
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ROUTING SYSTEM                                      │
+│                    "Request → Agent Matching"                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Location: framework/routing/                                              │
+│                                                                             │
+│            USER REQUEST                                                     │
+│                 │                                                           │
+│                 ▼                                                           │
+│   ┌─────────────────────────┐                                              │
+│   │   detection-patterns    │  ← Keywords & Context Analysis               │
+│   │        .yaml            │                                              │
+│   └───────────┬─────────────┘                                              │
+│               │                                                             │
+│               ▼                                                             │
+│   ┌─────────────────────────┐                                              │
+│   │   routing-algorithm     │  ← Score Calculation                         │
+│   │        .yaml            │                                              │
+│   │                         │                                              │
+│   │  score = Σ(keyword_weight × match_count)                               │
+│   │        + context_bonus + specialty_boost                                │
+│   └───────────┬─────────────┘                                              │
+│               │                                                             │
+│               ▼                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │                    AGENT SELECTION                           │          │
+│   │                                                              │          │
+│   │    Score ≥ 80    ───────►  Specialist Agent                 │          │
+│   │    Score 50-79   ───────►  Domain Agent                     │          │
+│   │    Score < 50    ───────►  Harmony (Default)                │          │
+│   │                                                              │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 💾 Memory System (3-Tier)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       MEMORY SYSTEM (3-Tier)                                 │
+│                 "JIT Loading - Load only what's needed"                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   Installed in: .harmony/memory/                                            │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  TIER 1: WORKING MEMORY (Hot - Always Loaded)               │          │
+│   │  Location: .harmony/memory/working.json                      │          │
+│   │  • Current sprint state, Active story                       │          │
+│   │  • Current phase (PLANNING/DEV/TEST/REVIEW)                 │          │
+│   │  • Session context, Recent errors (last 10)                 │          │
+│   └───────────────────────────┬─────────────────────────────────┘          │
+│                               ▼                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  TIER 2: SESSION MEMORY (Warm - Loaded on Demand)           │          │
+│   │  Location: .harmony/memory/                                  │          │
+│   │  • circuit-breaker.json, error-journal.json                 │          │
+│   │  • sprint-history.json, story-cache.json                    │          │
+│   └───────────────────────────┬─────────────────────────────────┘          │
+│                               ▼                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │  TIER 3: PERSISTENT MEMORY (Cold - JIT Loaded)              │          │
+│   │  Location: framework/error-library/                          │          │
+│   │  • Global error solutions (BASH-001, JS-001, etc.)          │          │
+│   │  • Pattern library, Knowledge base                          │          │
+│   │  • Sync: MCP Memory ◄──► error-library                      │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+│   JIT Loading Flow:                                                         │
+│   Error occurs → Check Tier1 → Check Tier2 → Load from Tier3 → Cache       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔄 Workflow Phases
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        WORKFLOW PHASES                                       │
+│                   "Sprint → Story → Phase Flow"                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   SPRINT_START ──► STORIES ──► SPRINT_END ──► RETROSPECTIVE               │
+│                                                                             │
+│   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐               │
+│   │ PLANNING │──►│   DEV    │──►│   TEST   │──►│  REVIEW  │               │
+│   │          │   │          │   │          │   │          │               │
+│   │• Analyze │   │• Code    │   │• Unit    │   │• PR      │               │
+│   │• Design  │   │• Impl    │   │• E2E     │   │• Approve │               │
+│   │• UCVs    │   │• Refactor│   │• UCVs    │   │• Merge   │               │
+│   └──────────┘   └──────────┘   └──────────┘   └──────────┘               │
+│        │              │              │              │                       │
+│   ┌────▼──────────────▼──────────────▼──────────────▼────┐                 │
+│   │                  CIRCUIT BREAKER                      │                 │
+│   │  Per-Story: Max 10 failures | Per-Phase: Max 5        │                 │
+│   │  If exceeded → CB OPEN → Story BLOCKED               │                 │
+│   └──────────────────────────────────────────────────────┘                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📦 Libraries (lib/) - Aider Toolkit
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        CORE LIBRARIES                                        │
+│                   Location: framework/lib/                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │                   SPRINT TRACKER (1400+ lines)               │          │
+│   │  Core orchestrator - Sprint/Story state machine              │          │
+│   │  • init_sprint(), end_sprint()                              │          │
+│   │  • Circuit breaker, Rate limiter, Response analyzer         │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │                   AIDER TOOLKIT (5 modules)                  │          │
+│   │                                                              │          │
+│   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │          │
+│   │  │   model-    │  │    auto-    │  │   repomap   │         │          │
+│   │  │  manager.sh │  │  linter.sh  │  │     .sh     │         │          │
+│   │  │ Model alias │  │ Lang detect │  │ Repo struct │         │          │
+│   │  │ Tier system │  │ Multi-lint  │  │ Key files   │         │          │
+│   │  └─────────────┘  └─────────────┘  └─────────────┘         │          │
+│   │                                                              │          │
+│   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │          │
+│   │  │    file-    │  │  history-   │  │    aider-   │         │          │
+│   │  │  watcher.sh │  │summarizer.sh│  │  toolkit.sh │         │          │
+│   │  │ Change det. │  │ Session log │  │ Orchestrator│         │          │
+│   │  │ Hook system │  │ Compression │  │ Unified API │         │          │
+│   │  └─────────────┘  └─────────────┘  └─────────────┘         │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔗 Component Relationships Summary
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    COMPONENT RELATIONSHIPS                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   PROFILES ──────► Define language patterns, linters, testing              │
+│       └──────────► Used by AUTO-LINTER to detect & lint files              │
+│                                                                             │
+│   SPECIALTIES ───► Domain expertise (AI, Web, DevOps)                      │
+│       └──────────► Loaded by AGENTS when domain matches                    │
+│                                                                             │
+│   KNOWLEDGE ─────► Framework/language specific docs                        │
+│       └──────────► JIT loaded by AGENTS for context                        │
+│                                                                             │
+│   PATTERNS ──────► Reusable architectural solutions                        │
+│       └──────────► Applied by SENTINEL for error recovery                  │
+│       └──────────► Recommended by DEVELOPER for implementation             │
+│                                                                             │
+│   RULES ─────────► Enforcement policies                                    │
+│       └──────────► Checked by GUARDIAN at gates                            │
+│       └──────────► Enforced in WORKFLOW phases                             │
+│                                                                             │
+│   ROUTING ───────► Request → Agent matching                                │
+│       └──────────► Used by GUARDIAN for agent selection                    │
+│                                                                             │
+│   AGENTS ────────► Specialized task handlers                               │
+│       └──────────► Load PROFILES + SPECIALTIES + KNOWLEDGE                 │
+│       └──────────► Follow RULES during execution                           │
+│       └──────────► Report to SENTINEL for learning                         │
+│                                                                             │
+│   MEMORY ────────► State persistence (3-tier)                              │
+│       └──────────► Used by all components                                  │
+│       └──────────► JIT loading for performance                             │
+│                                                                             │
+│   HQVF ──────────► Quality gates with UCVs                                 │
+│       └──────────► Validates at WORKFLOW phase transitions                 │
+│       └──────────► Uses specialist AGENTS (UCV-QA, Validator)              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📋 Quick Reference Tables
+
+### Commands (30 total)
+
+| Category | Commands |
+|----------|----------|
+| Sprint | `/sprint start`, `/sprint end`, `/sprint status` |
+| Story | `/story start`, `/story complete`, `/story status` |
+| Phase | `/phase dev`, `/phase test`, `/phase review` |
+| UCV | `/ucv create`, `/ucv run`, `/ucv validate` |
+| Safety | `/halt`, `/resume`, `/circuit-status` |
+
+### File Locations
+
+| Component | Location |
+|-----------|----------|
+| Agents | `framework/agents/*.md` |
+| Commands | `framework/commands/*.md` |
+| Patterns | `framework/patterns/P-*.md` |
+| Rules | `framework/rules/R-*.yaml` |
+| Knowledge | `framework/knowledge/` |
+| Profiles | `framework/profiles/` |
+| Specialties | `framework/specialties/` |
+| Routing | `framework/routing/` |
+| Libraries | `framework/lib/*.sh` |
+| Error Library | `framework/error-library/` |
+
+### Model Tiers (Aider Toolkit)
+
+| Tier | Purpose | Models |
+|------|---------|--------|
+| Main | Complex reasoning | opus, gpt-4, o1 |
+| Editor | Code editing | sonnet, gpt-4o |
+| Weak | Simple tasks | haiku, deepseek-chat |
+
+---
+
+## 🎯 Résumé Final
+
+```
+HARMONY = GUARDIAN + SENTINEL + HQVF
+
+        ┌─────────────────────────────────────────┐
+        │  Guardian: WHO should handle this?       │
+        │  Sentinel: WHAT did we learn?           │
+        │  HQVF: IS IT done correctly?            │
+        └─────────────────────────────────────────┘
+
+Memory: JIT loaded (CV analogy - only what's needed)
+Agents: Specialized, routed by score
+Rules: Enforced at gates
+Patterns: Applied for solutions
+```
+
+---
+
+## Table des Matières Détaillée
+
+### Schémas Visuels (Nouvelle Section v2.0)
+- [Vue d'Ensemble - Flux Principal](#-vue-densemble---flux-principal)
+- [Les Trois Piliers](#️-les-trois-piliers---schémas-détaillés)
+- [Écosystème des Agents](#-écosystème-des-agents)
+- [Profiles & Specialties](#-profiles--specialties---relation)
+- [Knowledge & Patterns](#-knowledge--patterns)
+- [Rules System](#️-rules-system)
+- [Routing System](#-routing-system)
+- [Memory System (3-Tier)](#-memory-system-3-tier)
+- [Workflow Phases](#-workflow-phases)
+- [Libraries (Aider Toolkit)](#-libraries-lib---aider-toolkit)
+- [Component Relationships](#-component-relationships-summary)
+- [Quick Reference Tables](#-quick-reference-tables)
+
+### Documentation Détaillée
 1. [Philosophie Harmony](#1-philosophie-harmony)
 2. [Règles d'Architecture](#2-règles-darchitecture)
 3. [Hiérarchie des Agents](#3-hiérarchie-des-agents)
@@ -81,9 +669,10 @@ agents/developer.md
 agents/                     # Structure PLATE - tous les agents au même niveau
 ├── [core agents]           # analyst, architect, developer, etc.
 ├── [specialists]           # ai-architect, exploratory-qa, ucv-*, etc.
-├── [compliance]            # security, rgpd, pentest, accessibility
-└── cognitive/              # Exception: patterns de raisonnement
-    └── react.md, reflection.md, lats.md, etc.
+└── [compliance]            # security, rgpd, pentest, accessibility
+
+patterns/cognitive/         # Patterns de raisonnement (séparé des agents)
+└── react.md, reflection.md, lats.md, etc.
 
 specialties/ai/             # Knowledge AI (pas des agents)
 ├── manifest.yaml           # Detection (langchain, openai, etc.)
@@ -163,12 +752,13 @@ framework/agents/
 │   ├── ucv-validator.md     # Victor - UCV Validator v2.0
 │   └── ucv-qa.md            # UCV QA - Browser validation
 │
-├── [COMPLIANCE - au même niveau, pas de sous-dossier]
-│   ├── security.md          # Security Auditor
-│   ├── accessibility.md     # WCAG/RGAA/EAA
-│   ├── rgpd.md              # RGPD/Privacy Expert
-│   └── pentest.md           # Penetration Tester
-│
+└── [COMPLIANCE - au même niveau, pas de sous-dossier]
+    ├── security.md          # Security Auditor
+    ├── accessibility.md     # WCAG/RGAA/EAA
+    ├── rgpd.md              # RGPD/Privacy Expert
+    └── pentest.md           # Penetration Tester
+
+patterns/
 └── cognitive/               # [5 modules cognitifs]
     ├── react.md             # ReAct Pattern
     ├── reflection.md        # Self-Reflection
@@ -187,8 +777,8 @@ framework/agents/
 | Écrire tests automatisés | Tester | `agents/tester.md` |
 | Planifier sprints/stories | Scrum Master | `agents/scrum-master.md` |
 | Tests exploratoires UI | Luna | `agents/exploratory-qa.md` |
-| Créer UCVs | Clara | `agents/ucv-writer.md` |
-| Valider UCVs | Victor | `agents/ucv-validator.md` |
+| Créer UCVs | Clara | `specialties/ucv/branchs/writer.md` |
+| Valider UCVs | Victor | `specialties/ucv/branchs/validator.md` |
 | Concevoir RAG | Riley | `specialties/ai/knowledge/rag-patterns.md` |
 | Concevoir mémoire | Milo | `specialties/ai/knowledge/memory-patterns.md` |
 | Multi-agents | Oscar | `specialties/ai/knowledge/orchestration-patterns.md` |
@@ -408,7 +998,7 @@ Les sous-agents AI ont été renommés en **knowledge files** dans `specialties/
 AVANT de créer un nouvel agent:
 1. Vérifier qu'il n'existe pas déjà dans agents/
 2. Placer DIRECTEMENT dans agents/ (pas de sous-dossier)
-3. Exception: cognitive/ pour les patterns de raisonnement
+3. Patterns de raisonnement → patterns/cognitive/
 4. Suivre R1-R5
 5. Mettre à jour ce document
 ```
@@ -425,4 +1015,4 @@ AVANT de créer un nouvel agent:
 
 ---
 
-*Document généré automatiquement. Dernière mise à jour: 2026-01-03*
+*Document v2.0 - Schémas visuels ajoutés. Dernière mise à jour: 2026-01-06*

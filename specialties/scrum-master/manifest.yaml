@@ -1,0 +1,98 @@
+# Scrum Master Specialty Pack
+# Agile/Scrum expertise with context-specific branches
+
+specialty:
+  id: scrum-master
+  name: "Scrum Master"
+  version: "1.0.0"
+  description: "Scrum Master expertise with specialized branches for different contexts"
+
+# Base agent (domain)
+base_agent: ../../agents/scrum-master.md
+
+# Branchs (specialized scrum masters)
+branchs:
+  - id: software
+    file: branchs/software.md
+    description: "Software SM - Release management, versioning, roadmap"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/invest-criteria.md
+      - ../../knowledge/shared/patterns/dor-dod.md
+      - ../../knowledge/shared/patterns/vertical-slicing.md
+    profiles: []
+    patterns:
+      - P-007-story-based
+      - P-009-task-progress
+
+  - id: web
+    file: branchs/web.md
+    description: "Web SM - Sprints, deployments, feature releases"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/shared/patterns/invest-criteria.md
+      - ../../knowledge/shared/patterns/dor-dod.md
+      - ../../knowledge/shared/patterns/vertical-slicing.md
+      - ../../knowledge/domains/devops/github-actions-templates.md
+    profiles:
+      - runtimes/nodejs
+    patterns:
+      - P-007-story-based
+      - P-009-task-progress
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile SM - App releases, store submissions, beta testing"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/shared/patterns/invest-criteria.md
+      - ../../knowledge/shared/patterns/dor-dod.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+    patterns:
+      - P-007-story-based
+      - P-009-task-progress
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game SM - Milestones, playtests, releases, crunch management"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/shared/patterns/invest-criteria.md
+      - ../../knowledge/shared/patterns/dor-dod.md
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+    profiles: []
+    patterns:
+      - P-007-story-based
+      - P-004-circuit-breaker
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: invest
+      file: ../../knowledge/shared/patterns/invest-criteria.md
+      keywords: [invest, story, user-story, criteria]
+    - id: dor-dod
+      file: ../../knowledge/shared/patterns/dor-dod.md
+      keywords: [dor, dod, definition, ready, done]
+    - id: vertical-slicing
+      file: ../../knowledge/shared/patterns/vertical-slicing.md
+      keywords: [vertical, slice, feature, mvp]
+
+  topics:
+    - scrum
+    - kanban
+    - sprint-planning
+    - retrospectives
+    - velocity
+    - backlog-refinement
+
+# Global patterns
+patterns:
+  - id: story-based
+    file: ../../patterns/P-007-story-based.md
+    description: "Story-based development workflow"
+  - id: task-progress
+    file: ../../patterns/P-009-task-progress.md
+    description: "Task progress tracking"

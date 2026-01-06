@@ -1,0 +1,42 @@
+# Accessibility Specialty Pack
+# WCAG, RGAA, and inclusive design expertise
+
+specialty:
+  id: accessibility
+  name: "Accessibility"
+  version: "1.0.0"
+  description: "WCAG/RGAA compliance, inclusive design, assistive technology support"
+
+# Branchs included in this specialty
+branchs:
+  - id: accessibility
+    file: branchs/accessibility.md
+    description: "Accessibility specialist - WCAG, RGAA, assistive technologies"
+
+# Knowledge sources
+knowledge:
+  topics:
+    - wcag            # WCAG 2.1/2.2 guidelines
+    - rgaa            # French accessibility standard
+    - aria            # ARIA roles and attributes
+    - screen-readers  # Screen reader compatibility
+    - keyboard-nav    # Keyboard navigation
+    - color-contrast  # Color contrast requirements
+    - alt-text        # Image alternatives
+
+  sources:
+    - url: "https://www.w3.org/WAI/WCAG21/quickref/"
+      priority: 1
+    - url: "https://accessibilite.numerique.gouv.fr/"
+      priority: 2
+    - url: "https://developer.mozilla.org/en-US/docs/Web/Accessibility"
+      priority: 3
+
+# Patterns (embedded in branchs/accessibility.md)
+patterns:
+  - id: wcag-audit
+    description: "WCAG compliance audit checklist"
+  - id: aria-patterns
+    description: "Common ARIA patterns for widgets"
+  - id: keyboard-patterns
+    description: "Keyboard navigation patterns"

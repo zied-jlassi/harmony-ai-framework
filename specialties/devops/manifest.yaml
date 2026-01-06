@@ -8,17 +8,42 @@ specialty:
   description: "Infrastructure automation, CI/CD pipelines, container orchestration, deployment strategies"
 
 # Agents included in this specialty
-agents:
+branchs:
   - id: devops
-    file: agents/devops.md
+    file: branchs/devops.md
     description: "DevOps engineer for Docker, CI/CD, and deployment automation"
 
   - id: builder
-    file: agents/builder.md
+    file: branchs/builder.md
     description: "Build automation, packaging, and artifact management"
 
 # Knowledge sources
 knowledge:
+  # Local knowledge domain files
+  domain: ../../knowledge/domains/devops
+  domain_files:
+    - id: kubernetes
+      file: ../../knowledge/domains/devops/kubernetes.md
+      keywords: [k8s, kubernetes, pods, deployment, service]
+    - id: github-actions
+      file: ../../knowledge/domains/devops/github-actions-templates.md
+      keywords: [ci, cd, github, actions, workflow]
+    - id: ansible
+      file: ../../knowledge/domains/devops/ansible.md
+      keywords: [ansible, playbook, configuration]
+    - id: helm
+      file: ../../knowledge/domains/devops/helm-chart-scaffolding.md
+      keywords: [helm, chart, kubernetes]
+    - id: k8s-manifests
+      file: ../../knowledge/domains/devops/k8s-manifest-generator.md
+      keywords: [manifest, yaml, kubernetes]
+    - id: secrets
+      file: ../../knowledge/domains/devops/secrets-management.md
+      keywords: [secrets, vault, env, credentials]
+    - id: git-workflows
+      file: ../../knowledge/domains/devops/git-advanced-workflows.md
+      keywords: [git, branching, rebase, workflow]
+
   topics:
     - docker           # Container orchestration
     - kubernetes       # K8s deployment
@@ -37,11 +62,13 @@ knowledge:
     - url: "https://docs.github.com/en/actions"
       priority: 3
 
-# Patterns
+# Patterns (references to knowledge domain files)
 patterns:
   - id: docker-compose
     description: "Multi-service Docker Compose patterns"
   - id: ci-pipeline
+    file: ../../knowledge/domains/devops/github-actions-templates.md
     description: "CI/CD pipeline best practices"
   - id: gitops
+    file: ../../knowledge/domains/devops/git-advanced-workflows.md
     description: "GitOps deployment workflow"

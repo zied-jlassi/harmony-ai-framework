@@ -1,0 +1,90 @@
+# UX Designer Specialty Pack
+# UX/UI design expertise with context-specific branches
+
+specialty:
+  id: ux-designer
+  name: "UX Designer"
+  version: "1.0.0"
+  description: "UX/UI design expertise with specialized branches for different contexts"
+
+# Base agent (domain)
+base_agent: ../../agents/ux-designer.md
+
+# Branchs (specialized UX designers)
+branchs:
+  - id: software
+    file: branchs/software.md
+    description: "Software UX - Desktop apps, CLI UX, dashboard design"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/api-design-principles.md
+    profiles: []
+    patterns:
+      - P-009-task-progress
+
+  - id: web
+    file: branchs/web.md
+    description: "Web UX - Responsive, accessibility, conversion optimization"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/domains/quality/core-web-vitals.md
+      - ../../knowledge/frameworks/tailwind/tailwind-design-system.md
+      - ../../knowledge/frameworks/react/patterns.md
+      - ../../knowledge/frameworks/angular/architecture.md
+    profiles:
+      - styling/tailwind
+      - styling/sass
+      - frontend/react
+      - frontend/angular
+      - frontend/vue
+    patterns:
+      - P-009-task-progress
+      - P-014-react-v3-developer
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile UX - Touch interactions, gestures, mobile patterns"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/react-native-architecture.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+    patterns:
+      - P-009-task-progress
+
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game UX - HUD, feedback loops, player onboarding, game feel"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+    profiles:
+      - languages/csharp
+    patterns:
+      - P-005-closed-loop
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: core-web-vitals
+      file: ../../knowledge/domains/quality/core-web-vitals.md
+      keywords: [performance, ux, vitals, lcp, fid, cls]
+
+  topics:
+    - user-research
+    - wireframes
+    - prototyping
+    - usability-testing
+    - accessibility
+    - conversion-optimization
+    - responsive-design
+
+# Global patterns
+patterns:
+  - id: task-progress
+    file: ../../patterns/P-009-task-progress.md
+    description: "Task progress tracking and visualization"
+  - id: feedback-loop
+    description: "User feedback loops and validation"

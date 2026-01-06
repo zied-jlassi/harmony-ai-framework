@@ -13,9 +13,9 @@
 |------------|---------|--------|
 | **Creer une story** | Scrum Master | `agents/scrum-master.md` |
 | **Implementer du code** | Developer | `agents/developer.md` |
-| **Creer des UCVs** | UCV Writer | `agents/ucv-writer.md` |
-| **Tester UCVs manuellement** | UCV QA | `agents/ucv-qa.md` |
-| **Valider 100% UCVs** | UCV Validator | `agents/ucv-validator.md` |
+| **Creer des UCVs** | UCV Writer | `specialties/ucv/branchs/writer.md` |
+| **Tester UCVs manuellement** | UCV QA | `specialties/ucv/branchs/qa.md` |
+| **Valider 100% UCVs** | UCV Validator | `specialties/ucv/branchs/validator.md` |
 | **Designer l'architecture** | Architect | `agents/architect.md` |
 | **Analyser les besoins** | Analyst | `agents/analyst.md` |
 | **Tester automatiquement** | Tester | `agents/tester.md` |
@@ -59,17 +59,17 @@ framework/agents/              # Structure plate - TOUS les agents au meme nivea
 |   +-- ucv-validator.md     # UCV Validator v2.0
 |
 +-- COMPLIANCE (dans agents/, pas de sous-dossier)
-|   +-- security.md          # Security Auditor
-|   +-- accessibility.md     # Accessibility (WCAG/RGAA/EAA)
-|   +-- rgpd.md              # RGPD/Privacy
-|   +-- pentest.md           # Penetration Tester
-|
-+-- cognitive/               # Exception: Modules cognitifs (patterns raisonnement)
-    +-- react.md             # ReAct Pattern
-    +-- reflection.md        # Self-Reflection
-    +-- self-consistency.md  # Multi-Path
-    +-- lats.md              # Language Agent Tree Search
-    +-- graph-of-thoughts.md # Graph-based Reasoning
+    +-- security.md          # Security Auditor
+    +-- accessibility.md     # Accessibility (WCAG/RGAA/EAA)
+    +-- rgpd.md              # RGPD/Privacy
+    +-- pentest.md           # Penetration Tester
+
+framework/patterns/cognitive/  # Modules cognitifs (patterns raisonnement)
++-- react.md                   # ReAct Pattern
++-- reflection.md              # Self-Reflection
++-- self-consistency.md        # Multi-Path
++-- lats.md                    # Language Agent Tree Search
++-- graph-of-thoughts.md       # Graph-based Reasoning
 ```
 
 ### AI Knowledge (Specialties)

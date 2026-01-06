@@ -484,8 +484,8 @@ TESTER completes → [test] ✓
 
 ## Related Agents
 
-- [UCV Writer](ucv-writer.md) - Creates UCVs
-- [UCV Validator](ucv-validator.md) - Final validation gate
+- [UCV Writer](writer.md) - Creates UCVs
+- [UCV Validator](validator.md) - Final validation gate
 - [Exploratory QA](exploratory-qa.md) - Free exploration testing
 - [Tester](../tester.md) - Automated tests
 - [Developer](../developer.md) - Implementation

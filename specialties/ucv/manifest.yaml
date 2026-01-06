@@ -1,0 +1,85 @@
+# UCV Specialty Pack
+# Use Case Verifiable expertise with 3 specialized branches
+
+specialty:
+  id: ucv
+  name: "UCV"
+  version: "1.0.0"
+  description: "UCV (Use Case Verifiable) expertise - Creation, testing, and validation of quality contracts"
+
+# Base agent (domain)
+base_agent: ../../agents/ucv.md
+
+# Branchs (specialized UCV roles)
+branchs:
+  - id: writer
+    file: branchs/writer.md
+    description: "UCV Writer - Creates exhaustive UCVs from stories"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/invest-criteria.md
+      - ../../knowledge/shared/patterns/dor-dod.md
+      - ../../knowledge/shared/patterns/vertical-slicing.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+    profiles: []
+    patterns:
+      - P-007-story-based
+      - P-008-ucv-gate
+
+  - id: qa
+    file: branchs/qa.md
+    description: "UCV QA - Manual validation of UCVs in browser"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/domains/quality/playwright-e2e.md
+      - ../../knowledge/domains/quality/core-web-vitals.md
+    profiles:
+      - frontend/react
+      - frontend/angular
+      - runtimes/nodejs
+    patterns:
+      - P-008-ucv-gate
+      - P-013-test-environment
+
+  - id: validator
+    file: branchs/validator.md
+    description: "UCV Validator - Validates 100% coverage before story completion"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/dor-dod.md
+      - ../../knowledge/domains/quality/e2e-testing-patterns.md
+    profiles: []
+    patterns:
+      - P-008-ucv-gate
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: invest
+      file: ../../knowledge/shared/patterns/invest-criteria.md
+      keywords: [invest, story, user-story, criteria]
+    - id: dor-dod
+      file: ../../knowledge/shared/patterns/dor-dod.md
+      keywords: [dor, dod, definition, ready, done]
+    - id: e2e-testing
+      file: ../../knowledge/domains/quality/e2e-testing-patterns.md
+      keywords: [e2e, testing, validation]
+
+  topics:
+    - ucv
+    - use-case
+    - verification
+    - coverage
+    - acceptance-criteria
+    - gherkin
+    - quality-gates
+
+# Global patterns
+patterns:
+  - id: ucv-gate
+    file: ../../patterns/P-008-ucv-gate.md
+    description: "UCV quality gates validation"
+  - id: story-based
+    file: ../../patterns/P-007-story-based.md
+    description: "Story-based development workflow"

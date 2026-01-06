@@ -153,9 +153,9 @@ TOTAL               ~15-20K tokens/session
 **Tier 3 - Compliance (On-Demand):**
 - accessibility.md, security.md, rgpd.md, pentest.md
 
-**Tier 4 - Cognitive (Optional):**
-- cognitive/react.md, reflection.md, self-consistency.md
-- cognitive/lats.md, graph-of-thoughts.md
+**Tier 4 - Cognitive (Optional, in patterns/):**
+- patterns/cognitive/react.md, reflection.md, self-consistency.md
+- patterns/cognitive/lats.md, graph-of-thoughts.md
 
 ### Specialties (79 files, 1.7 MB)
 

@@ -450,7 +450,7 @@ agents:
   # UCV-WRITER - Use Case Verification Writing
   # ═══════════════════════════════════════════════════════════════
   ucv-writer:
-    file: agents/ucv-writer.md
+    file: specialties/ucv/branchs/writer.md
     phase: [3]
     tier: 2
     model: sonnet
@@ -495,7 +495,7 @@ agents:
   # UCV-QA - Manual UCV Testing in Browser
   # ═══════════════════════════════════════════════════════════════
   ucv-qa:
-    file: agents/ucv-qa.md
+    file: specialties/ucv/branchs/qa.md
     phase: [4]
     tier: 2
     model: sonnet
@@ -542,7 +542,7 @@ agents:
   # UCV-VALIDATOR - Use Case Verification Validation
   # ═══════════════════════════════════════════════════════════════
   ucv-validator:
-    file: agents/ucv-validator.md
+    file: specialties/ucv/branchs/validator.md
     phase: [4]
     tier: 2
     model: sonnet

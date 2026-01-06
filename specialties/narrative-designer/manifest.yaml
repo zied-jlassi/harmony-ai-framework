@@ -1,0 +1,93 @@
+# Narrative Designer Specialty Pack
+# Story and narrative expertise with context-specific branches
+
+specialty:
+  id: narrative-designer
+  name: "Narrative Designer"
+  version: "1.0.0"
+  description: "Narrative design expertise - story, dialogue, world-building"
+
+# Base agent (domain)
+base_agent: ../../agents/narrative-designer.md
+
+# Branchs (specialized narrative designers)
+branchs:
+  - id: gaming
+    file: branchs/gaming.md
+    description: "Game Narrative - Quests, lore, dialogue trees, player choices"
+    condition: "feature_flags.is_game == true"
+    knowledge:
+      - ../../knowledge/domains/gaming/godot-gdscript-patterns.md
+      - ../../knowledge/domains/gaming/unity-ecs-patterns.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+    profiles:
+      - languages/csharp
+      - languages/typescript
+    patterns:
+      - P-005-closed-loop
+
+  - id: web
+    file: branchs/web.md
+    description: "Web Narrative - Copywriting, storytelling, content strategy"
+    condition: "feature_flags.is_web == true"
+    knowledge:
+      - ../../knowledge/shared/patterns/api-design-principles.md
+      - ../../knowledge/frameworks/tailwind/tailwind-design-system.md
+      - ../../knowledge/frameworks/react/patterns.md
+    profiles:
+      - frontend/react
+      - frontend/angular
+      - frontend/vue
+      - runtimes/nodejs
+    patterns:
+      - P-009-task-progress
+
+  - id: mobile
+    file: branchs/mobile.md
+    description: "Mobile Narrative - Onboarding stories, notifications, microcopy"
+    condition: "feature_flags.is_mobile == true"
+    knowledge:
+      - ../../knowledge/frameworks/react/react-native-architecture.md
+      - ../../knowledge/shared/patterns/api-design-principles.md
+    profiles:
+      - mobile/react-native
+      - mobile/expo
+      - languages/typescript
+    patterns:
+      - P-009-task-progress
+
+  - id: software
+    file: branchs/software.md
+    description: "Software Narrative - Documentation, tutorials, help content"
+    condition: "default"
+    knowledge:
+      - ../../knowledge/shared/patterns/api-design-principles.md
+      - ../../knowledge/shared/patterns/code-standards-typescript.md
+    profiles:
+      - languages/typescript
+      - languages/python
+      - runtimes/nodejs
+    patterns:
+      - P-009-task-progress
+
+# Global knowledge (all branches)
+knowledge:
+  common:
+    - id: api-design
+      file: ../../knowledge/shared/patterns/api-design-principles.md
+      keywords: [content, structure, api, design]
+
+  topics:
+    - storytelling
+    - dialogue-writing
+    - world-building
+    - quest-design
+    - character-development
+    - copywriting
+    - content-strategy
+
+# Global patterns
+patterns:
+  - id: task-progress
+    file: ../../patterns/P-009-task-progress.md
+    description: "Content creation workflow tracking"

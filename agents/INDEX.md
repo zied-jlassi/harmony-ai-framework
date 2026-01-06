@@ -52,9 +52,9 @@ Les agents Harmony sont organises en 4 categories:
 
 | Agent | Fichier | Description | Invocation |
 |-------|---------|-------------|------------|
-| **UCV Writer** | [ucv-writer.md](ucv-writer.md) | Creation UCVs | `/hf:agent:ucv-writer STORY-XXX` |
-| **UCV QA** | [ucv-qa.md](ucv-qa.md) | Validation UCV en browser | `/hf:agent:ucv-qa STORY-XXX` |
-| **UCV Validator** | [ucv-validator.md](ucv-validator.md) | Verification 100% coverage | `/hf:agent:ucv-validator STORY-XXX` |
+| **UCV Writer** | [writer.md](../specialties/ucv/branchs/writer.md) | Creation UCVs | `/hf:agent:ucv-writer STORY-XXX` |
+| **UCV QA** | [qa.md](../specialties/ucv/branchs/qa.md) | Validation UCV en browser | `/hf:agent:ucv-qa STORY-XXX` |
+| **UCV Validator** | [validator.md](../specialties/ucv/branchs/validator.md) | Verification 100% coverage | `/hf:agent:ucv-validator STORY-XXX` |
 | **Exploratory QA** | [exploratory-qa.md](exploratory-qa.md) | QA Exploratoire | `/hf:agent:exploratory-qa [module]` |
 | **AI Architect** | [ai-architect.md](ai-architect.md) | AI/LLM Systems | `/hf:agent:ai-architect` |
 
@@ -90,15 +90,15 @@ Les agents Harmony sont organises en 4 categories:
 
 ## Cognitive
 
-> Modules cognitifs pour raisonnement avance.
+> Modules cognitifs pour raisonnement avance (dans `patterns/cognitive/`).
 
 | Module | Fichier | Pattern |
 |--------|---------|---------|
-| ReAct | [cognitive/react.md](cognitive/react.md) | Reasoning + Acting |
-| Reflection | [cognitive/reflection.md](cognitive/reflection.md) | Self-Reflection |
-| Self-Consistency | [cognitive/self-consistency.md](cognitive/self-consistency.md) | Multi-Path Voting |
-| LATS | [cognitive/lats.md](cognitive/lats.md) | Language Agent Tree Search |
-| Graph of Thoughts | [cognitive/graph-of-thoughts.md](cognitive/graph-of-thoughts.md) | Graph-based Reasoning |
+| ReAct | [../patterns/cognitive/react.md](../patterns/cognitive/react.md) | Reasoning + Acting |
+| Reflection | [../patterns/cognitive/reflection.md](../patterns/cognitive/reflection.md) | Self-Reflection |
+| Self-Consistency | [../patterns/cognitive/self-consistency.md](../patterns/cognitive/self-consistency.md) | Multi-Path Voting |
+| LATS | [../patterns/cognitive/lats.md](../patterns/cognitive/lats.md) | Language Agent Tree Search |
+| Graph of Thoughts | [../patterns/cognitive/graph-of-thoughts.md](../patterns/cognitive/graph-of-thoughts.md) | Graph-based Reasoning |
 
 ---
 

@@ -172,7 +172,7 @@ workflows/
 ## Related
 
 - [UCV Template](../templates/ucv.md)
-- [UCV Writer Agent](../agents/ucv-writer.md)
-- [UCV Validator Agent](../agents/ucv-validator.md)
+- [UCV Writer Agent](../specialties/ucv/branchs/writer.md)
+- [UCV Validator Agent](../specialties/ucv/branchs/validator.md)
 - [UCV Gate Rule](../rules/R-002-ucv-approval.yaml)
 - [UCV Pattern](../patterns/P-008-ucv-gate.md)

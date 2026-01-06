@@ -383,7 +383,6 @@ create_directory_structure() {
     local dirs=(
         ".harmony"
         ".harmony/agents"
-        ".harmony/agents/cognitive"
         ".harmony/docs"
         ".harmony/hooks"
         ".harmony/memory"

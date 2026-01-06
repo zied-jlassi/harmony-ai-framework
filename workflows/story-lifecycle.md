@@ -382,12 +382,12 @@ Coverage: 3/3 = 100% ✅
 | Agent | File | Role |
 |-------|------|------|
 | Scrum Master | [scrum-master.md](../agents/scrum-master.md) | Story creation |
-| UCV Writer | [ucv-writer.md](../agents/ucv-writer.md) | UCV generation |
+| UCV Writer | [writer.md](../specialties/ucv/branchs/writer.md) | UCV generation |
 | Developer | [developer.md](../agents/developer.md) | Implementation |
 | Tester | [tester.md](../agents/tester.md) | Automated tests |
-| **UCV QA** | [ucv-qa.md](../agents/ucv-qa.md) | Manual UCV validation |
+| **UCV QA** | [qa.md](../specialties/ucv/branchs/qa.md) | Manual UCV validation |
 | Exploratory QA | [exploratory-qa.md](../agents/exploratory-qa.md) | Free exploration |
-| UCV Validator | [ucv-validator.md](../agents/ucv-validator.md) | 100% verification |
+| UCV Validator | [validator.md](../specialties/ucv/branchs/validator.md) | 100% verification |
 
 ### Templates
 

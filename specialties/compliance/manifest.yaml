@@ -1,0 +1,42 @@
+# Compliance Specialty Pack
+# Legal compliance, RGPD/GDPR, and regulatory expertise
+
+specialty:
+  id: compliance
+  name: "Compliance"
+  version: "1.0.0"
+  description: "Legal compliance, RGPD/GDPR, CGV, mentions legales, regulatory requirements"
+
+# Branchs included in this specialty
+branchs:
+  - id: legal
+    file: branchs/legal.md
+    description: "Legal compliance officer - RGPD, CGV, mentions legales, multi-domain"
+
+# Knowledge sources
+knowledge:
+  topics:
+    - rgpd            # RGPD/GDPR compliance
+    - gdpr            # General Data Protection Regulation
+    - cgv             # Conditions Generales de Vente
+    - cgu             # Conditions Generales d'Utilisation
+    - cookies         # Cookie consent requirements
+    - dpo             # Data Protection Officer
+    - privacy         # Privacy by design
+
+  sources:
+    - url: "https://www.cnil.fr/"
+      priority: 1
+    - url: "https://gdpr.eu/"
+      priority: 2
+    - url: "https://www.legifrance.gouv.fr/"
+      priority: 3
+
+# Patterns (embedded in branchs/legal.md)
+patterns:
+  - id: rgpd-audit
+    description: "RGPD compliance audit checklist"
+  - id: consent-flow
+    description: "Cookie and consent management patterns"
+  - id: data-mapping
+    description: "Personal data mapping and registry"

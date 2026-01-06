@@ -65,7 +65,7 @@ agents:
     tier: 2
 
   ucv-writer:
-    path: agents/ucv-writer.md
+    path: specialties/ucv/branchs/writer.md
     description: "UCV Writer - creates Use Case Verifiables for stories"
     arguments: "[story-id]"
     triggers: [ucv, verifiable, use-case]
@@ -73,7 +73,7 @@ agents:
     tier: 2
 
   ucv-validator:
-    path: agents/ucv-validator.md
+    path: specialties/ucv/branchs/validator.md
     description: "UCV Validator - validates 100% UCV coverage"
     arguments: "[story-id]"
     triggers: [validate, coverage, ucv-check]
@@ -81,7 +81,7 @@ agents:
     tier: 2
 
   ucv-qa:
-    path: agents/ucv-qa.md
+    path: specialties/ucv/branchs/qa.md
     description: "UCV QA - manual browser validation of UCVs"
     arguments: "[story-id]"
     triggers: [ucv-qa, browser-test]

@@ -334,14 +334,14 @@ resolve_agent() {
     # Check local override (flat structure)
     local local_agent="${HARMONY_DIR}/local/agents/${agent_name}.md"
     local framework_agent="${HARMONY_DIR}/agents/${agent_name}.md"
-    local cognitive_agent="${HARMONY_DIR}/agents/cognitive/${agent_name}.md"
+    local cognitive_pattern="${HARMONY_DIR}/patterns/cognitive/${agent_name}.md"
 
     if [[ -f "$local_agent" ]]; then
         echo "$local_agent"
     elif [[ -f "$framework_agent" ]]; then
         echo "$framework_agent"
-    elif [[ -f "$cognitive_agent" ]]; then
-        echo "$cognitive_agent"
+    elif [[ -f "$cognitive_pattern" ]]; then
+        echo "$cognitive_pattern"
     else
         echo ""
     fi

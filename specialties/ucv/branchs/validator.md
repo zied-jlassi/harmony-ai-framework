@@ -425,7 +425,7 @@ SM can mark story as DONE.
 
 ## Related Agents
 
-- [UCV Writer 📝](ucv-writer.md) - Creates UCVs that Validator validates
+- [UCV Writer 📝](writer.md) - Creates UCVs that Validator validates
 - [Developer](../developer.md) - Marks dev column
 - [Tester](../tester.md) - Marks test column
 - [Exploratory QA 🔍](exploratory-qa.md) - Marks QA column

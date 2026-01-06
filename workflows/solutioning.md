@@ -250,7 +250,7 @@ triggers:
 - [Architect Agent](../agents/architect.md)
 - [AI Architect Agent 🧠](../agents/ai-architect.md)
 - [Scrum Master](../agents/scrum-master.md)
-- [UCV Writer Agent 📝](../agents/ucv-writer.md)
+- [UCV Writer Agent 📝](../specialties/ucv/branchs/writer.md)
 - [Story Template](../templates/story.md)
 - [UCV Template](../templates/ucv.md)
 - [ADR Template](../templates/adr.md)

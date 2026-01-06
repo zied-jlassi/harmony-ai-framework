@@ -10,29 +10,29 @@ specialty:
   last_updated: "2026-01-01"
 
 # Agents included in this specialty
-agents:
+branchs:
   - id: brainstorm-facilitator
-    file: agents/brainstorm-facilitator.md
+    file: branchs/brainstorm-facilitator.md
     description: "Brainstorming expert - SCAMPER, 6 Hats, Crazy-8, ideation techniques"
 
   - id: visual-documenter
-    file: agents/visual-documenter.md
+    file: branchs/visual-documenter.md
     description: "Visual documentation expert - Mermaid diagrams, ADRs, presentations"
 
   - id: problem-solver
-    file: agents/problem-solver.md
+    file: branchs/problem-solver.md
     description: "Root cause analysis expert - 5-Whys, Fishbone, fault trees, debugging"
 
   - id: design-thinking-lead
-    file: agents/design-thinking-lead.md
+    file: branchs/design-thinking-lead.md
     description: "Design thinking expert - Personas, empathy maps, HMW, usability tests"
 
   - id: ux-storyteller
-    file: agents/ux-storyteller.md
+    file: branchs/ux-storyteller.md
     description: "UX writing expert - Microcopy, journey maps, narrative, story arcs"
 
   - id: innovation-scout
-    file: agents/innovation-scout.md
+    file: branchs/innovation-scout.md
     description: "Innovation expert - Tech trends, competitive analysis, feasibility studies"
 
 # Integration with Harmony

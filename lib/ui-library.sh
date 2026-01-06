@@ -50,7 +50,13 @@ _ui_setup_colors() {
         UI_PURPLE='\033[0;35m'
         UI_CYAN='\033[0;36m'
         UI_WHITE='\033[1;37m'
+        UI_BLACK='\033[0;30m'
         UI_GRAY='\033[0;90m'
+        # Couleurs de fond
+        UI_BG_GREEN='\033[42m'
+        UI_BG_RED='\033[41m'
+        UI_BG_BLUE='\033[44m'
+        UI_BG_YELLOW='\033[43m'
         # Styles
         UI_BOLD='\033[1m'
         UI_DIM='\033[2m'
@@ -59,7 +65,8 @@ _ui_setup_colors() {
     else
         _UI_HAS_COLOR=false
         UI_RED='' UI_GREEN='' UI_YELLOW='' UI_BLUE=''
-        UI_PURPLE='' UI_CYAN='' UI_WHITE='' UI_GRAY=''
+        UI_PURPLE='' UI_CYAN='' UI_WHITE='' UI_BLACK='' UI_GRAY=''
+        UI_BG_GREEN='' UI_BG_RED='' UI_BG_BLUE='' UI_BG_YELLOW=''
         UI_BOLD='' UI_DIM='' UI_UNDERLINE='' UI_RESET=''
     fi
 }
@@ -197,35 +204,54 @@ ui_confirm() {
     ui_box_empty
     ui_box_line thin
 
-    # Options
-    local yes_style no_style quit_style
-    case "$default" in
-        yes)  yes_style="${UI_BOLD}${UI_GREEN}"; no_style="$UI_RESET"; quit_style="$UI_RESET" ;;
-        no)   yes_style="$UI_RESET"; no_style="${UI_BOLD}${UI_YELLOW}"; quit_style="$UI_RESET" ;;
-        quit) yes_style="$UI_RESET"; no_style="$UI_RESET"; quit_style="${UI_BOLD}${UI_RED}" ;;
-    esac
-
-    ui_box_empty
-    printf "${_UI_PADDING}║        ${yes_style}[Y]${UI_RESET} Oui, installer          "
-    printf "${no_style}[N]${UI_RESET} Non, plus tard           ║\n"
-    ui_box_empty
-    printf "${_UI_PADDING}║                        ${quit_style}[Q]${UI_RESET} Quitter                            ║\n"
-    ui_box_empty
     ui_box_line bot
     echo ""
 
     if [[ "$_UI_INTERACTIVE" == true ]]; then
-        printf "${_UI_PADDING}  Votre choix [Y/n/q]: "
-        local choice
-        read -r choice </dev/tty 2>/dev/null || choice="$default"
-        choice="${choice:-$default}"
+        # Sélecteur interactif avec flèches/tab
+        local selected=0  # 0=Oui, 1=Non
+        [[ "$default" != "yes" ]] && selected=1
 
-        case "${choice,,}" in
-            y|yes|oui|o)   return 0 ;;
-            n|no|non)      return 1 ;;
-            q|quit|quitter) exit 0 ;;
-            *)             return 0 ;;  # Défaut = oui
-        esac
+        # Fonction pour afficher les options
+        _ui_draw_selector() {
+            local sel=$1
+            printf "\r${_UI_PADDING}  "
+            if [[ $sel -eq 0 ]]; then
+                printf "${UI_BG_GREEN}${UI_BLACK} ▶ Oui ${UI_RESET}    "
+                printf "${UI_DIM}   Non ${UI_RESET}"
+            else
+                printf "${UI_DIM}   Oui ${UI_RESET}    "
+                printf "${UI_BG_RED}${UI_WHITE} ▶ Non ${UI_RESET}"
+            fi
+            printf "   ${UI_DIM}(←/→ ou Tab pour changer, Entrée pour valider)${UI_RESET}"
+        }
+
+        # Affichage initial
+        _ui_draw_selector $selected
+
+        # Lecture des touches
+        while true; do
+            read -rsn1 key </dev/tty 2>/dev/null || break
+
+            case "$key" in
+                $'\x1b')  # Séquence escape (flèches)
+                    read -rsn2 -t 0.1 rest </dev/tty 2>/dev/null || rest=""
+                    case "$rest" in
+                        '[D'|'[C') selected=$(( (selected + 1) % 2 )) ;;  # Gauche/Droite
+                    esac
+                    ;;
+                $'\t')  # Tab
+                    selected=$(( (selected + 1) % 2 ))
+                    ;;
+                '')  # Entrée
+                    echo ""
+                    [[ $selected -eq 0 ]] && return 0 || return 1
+                    ;;
+            esac
+            _ui_draw_selector $selected
+        done
+        echo ""
+        return 1
     else
         # Non-interactif: retourner défaut
         [[ "$default" == "yes" ]] && return 0 || return 1

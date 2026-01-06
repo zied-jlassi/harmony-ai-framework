@@ -151,8 +151,10 @@ print_step() {
     fi
 }
 
-# Print success
+# Print success (hidden when UI library loaded - UI boxes handle it)
 print_success() {
+    # Skip if UI library handles the display
+    [[ "$UI_LIBRARY_LOADED" == true ]] && return
     print_message "$GREEN" "✓ $1"
 }
 
@@ -329,8 +331,11 @@ detect_ide_and_memory_path() {
             ;;
     esac
 
-    print_message "$CYAN" "  IDE detected: $detected_ide"
-    print_message "$CYAN" "  Memory path: $MEMORY_DIR"
+    # Debug info (hidden in UI mode - UI boxes show this)
+    if [[ "$UI_LIBRARY_LOADED" != true ]]; then
+        print_message "$CYAN" "  IDE detected: $detected_ide"
+        print_message "$CYAN" "  Memory path: $MEMORY_DIR"
+    fi
 
     # Save config for Harmony to know where memory is
     mkdir -p "$PROJECT_DIR/.harmony/config"
@@ -361,11 +366,8 @@ check_prerequisites() {
         exit 1
     fi
 
+    # Note: print_success is hidden when UI is loaded (ui_show_step handles it)
     print_success "Prerequisites check passed"
-    # Show source directory for debugging
-    print_message "$CYAN" "  IDE detected: $IDE_TARGET"
-    print_message "$CYAN" "  Source: $SCRIPT_DIR"
-    print_message "$CYAN" "  Target: $PROJECT_DIR"
 }
 
 # Create directory structure
@@ -452,13 +454,16 @@ copy_framework_files() {
             "docs"
             "error-library"
             "hooks"
+            "integrations"
             "knowledge"
             "lib"
             "local"
             "memory"
             "patterns"
             "profiles"
+            "routing"
             "rules"
+            "shared"
             "specialties"
             "templates"
             "tips"
@@ -1211,52 +1216,54 @@ CLAUDE_MD_EOF
     print_success "Created CLAUDE.md with Harmony instructions"
 }
 
-# Show a single tip with Space+Enter confirmation
+# Show a single tip with centered UI style
 show_tip() {
     local tip_file=$1
     local tip_num=$2
     local tip_total=$3
     local tip_title=$4
 
-    echo ""
-    print_message "$PURPLE" "╔══════════════════════════════════════════════════════════╗"
-    printf "${PURPLE}║  💡 TIP %d/%d: %-43s ║${NC}\n" "$tip_num" "$tip_total" "$tip_title"
-    print_message "$PURPLE" "╠══════════════════════════════════════════════════════════╣"
-    echo ""
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        ui_box_title "💡 TIP $tip_num/$tip_total: $tip_title"
+        ui_box_line mid
 
-    # Display tip content (skip markdown headers)
-    if [[ -f "$tip_file" ]]; then
-        # Use || true to prevent set -e exit if grep finds no matches
-        grep -v "^#" "$tip_file" 2>/dev/null | grep -v "^$" | head -20 || true
-    fi
+        # Display tip content (skip markdown headers)
+        if [[ -f "$tip_file" ]]; then
+            while IFS= read -r line; do
+                # Skip empty lines and headers
+                [[ -z "$line" || "$line" =~ ^# ]] && continue
+                # Truncate long lines
+                [[ ${#line} -gt 60 ]] && line="${line:0:57}..."
+                ui_box_text "$line"
+            done < "$tip_file"
+        fi
 
-    echo ""
-    print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
-    echo ""
-
-    # Check if TTY is available for interactive input (test in subshell)
-    if (exec </dev/tty) 2>/dev/null; then
-        # Interactive mode: wait for Space + Enter
-        printf "${YELLOW}[ ] J'ai lu ce tip (Espace puis Entrée pour continuer)${NC}"
-
-        while true; do
-            # Use || true to prevent set -e exit on read failure
-            read -rsn1 key </dev/tty 2>/dev/null || true
-            if [[ "$key" == " " ]]; then
-                printf "\r${GREEN}[✓] J'ai lu ce tip                                  ${NC}\n"
-                read -r </dev/tty 2>/dev/null || true
-                break
-            elif [[ -z "$key" ]]; then
-                # EOF or error - break out
-                printf "\r${YELLOW}[→] Continué automatiquement                       ${NC}\n"
-                break
-            fi
-        done
+        ui_box_line bot
+        ui_continue
     else
-        # Non-interactive: auto-advance with delay
-        printf "${CYAN}[⏳ Lecture auto dans 3s...]${NC}"
-        sleep 3 || true
-        printf "\r${GREEN}[✓] Tip lu                                          ${NC}\n"
+        echo ""
+        print_message "$PURPLE" "╔══════════════════════════════════════════════════════════╗"
+        printf "${PURPLE}║  💡 TIP %d/%d: %-43s ║${NC}\n" "$tip_num" "$tip_total" "$tip_title"
+        print_message "$PURPLE" "╠══════════════════════════════════════════════════════════╣"
+        echo ""
+
+        # Display tip content (skip markdown headers)
+        if [[ -f "$tip_file" ]]; then
+            grep -v "^#" "$tip_file" 2>/dev/null | grep -v "^$" | head -20 || true
+        fi
+
+        echo ""
+        print_message "$PURPLE" "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+
+        # Check if TTY is available for interactive input
+        if (exec </dev/tty) 2>/dev/null; then
+            read -rp "Appuyez sur Entrée pour continuer..." </dev/tty || true
+        else
+            sleep 2 || true
+        fi
     fi
 }
 
@@ -1272,21 +1279,27 @@ show_onboarding_tips() {
         return
     fi
 
-    echo ""
-    print_message "$CYAN" "╔══════════════════════════════════════════════════════════╗"
-    print_message "$CYAN" "║           📚 ONBOARDING - Découvrez Harmony              ║"
-    print_message "$CYAN" "║                                                          ║"
-    print_message "$CYAN" "║   Ces tips vous aideront à bien démarrer.                ║"
-    print_message "$CYAN" "║   Appuyez sur ESPACE puis ENTRÉE après chaque tip.       ║"
-    print_message "$CYAN" "╚══════════════════════════════════════════════════════════╝"
-    echo ""
-
-    # Check if TTY is available for interactive input
-    if (exec </dev/tty) 2>/dev/null; then
-        read -rp "Appuyez sur Entrée pour commencer..." </dev/tty || true
+    # Intro with centered UI
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        ui_box_title "📚 ONBOARDING - Découvrez Harmony"
+        ui_box_line mid
+        ui_box_text "Ces tips vous aideront à bien démarrer."
+        ui_box_text "Appuyez sur Entrée après chaque tip."
+        ui_box_line bot
+        ui_continue "Appuyez sur Entrée pour commencer..."
     else
-        echo "Mode non-interactif détecté. Affichage automatique des tips (3s par tip)..."
-        sleep 2 || true
+        echo ""
+        print_message "$CYAN" "╔══════════════════════════════════════════════════════════╗"
+        print_message "$CYAN" "║           📚 ONBOARDING - Découvrez Harmony              ║"
+        print_message "$CYAN" "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+        if (exec </dev/tty) 2>/dev/null; then
+            read -rp "Appuyez sur Entrée pour commencer..." </dev/tty || true
+        else
+            sleep 2 || true
+        fi
     fi
 
     # Tip 1: Welcome
@@ -1325,11 +1338,21 @@ show_onboarding_tips() {
     tip_num=$((tip_num + 1))
     show_tip "$tips_dir/08-routellm.md" $tip_num $tip_total "Detection automatique (RouteLLM)"
 
-    echo ""
-    print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"
-    print_message "$GREEN" "║         ✅ ONBOARDING TERMINÉ - Vous êtes prêt !         ║"
-    print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
-    echo ""
+    # Conclusion with centered UI
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        ui_box_title "✅ ONBOARDING TERMINÉ"
+        ui_box_line mid
+        ui_box_text "Vous êtes prêt à utiliser Harmony!"
+        ui_box_line bot
+    else
+        echo ""
+        print_message "$GREEN" "╔══════════════════════════════════════════════════════════╗"
+        print_message "$GREEN" "║         ✅ ONBOARDING TERMINÉ - Vous êtes prêt !         ║"
+        print_message "$GREEN" "╚══════════════════════════════════════════════════════════╝"
+        echo ""
+    fi
 }
 
 # Print summary
@@ -1418,10 +1441,33 @@ show_runtime_status_system_only() {
         ui_box_line mid
         ui_box_title "Runtimes Détectés"
 
-        [[ -n "$_RUNTIME_BASH" ]] && ui_box_status ok "Bash" "$_RUNTIME_BASH" || ui_box_status error "Bash" "non trouvé"
-        [[ -n "$_RUNTIME_NODE" ]] && ui_box_status ok "Node" "$_RUNTIME_NODE" || ui_box_status warn "Node" "non installé"
-        [[ -n "$_RUNTIME_BUN" ]] && ui_box_status ok "Bun" "$_RUNTIME_BUN" || ui_box_status warn "Bun" "non installé"
-        [[ -n "$_RUNTIME_JQ" ]] && ui_box_status ok "jq" "$_RUNTIME_JQ" || ui_box_status warn "jq" "non installé"
+        # Bash - Requis
+        if [[ -n "$_RUNTIME_BASH" ]]; then
+            ui_box_text "[✓] Bash: $_RUNTIME_BASH (requis - scripts core)"
+        else
+            ui_box_text "[✗] Bash: non trouvé (REQUIS)"
+        fi
+
+        # Node - +30% performance
+        if [[ -n "$_RUNTIME_NODE" ]]; then
+            ui_box_text "[✓] Node: $_RUNTIME_NODE (+30% - async, JSON natif)"
+        else
+            ui_box_text "[!] Node: non installé (+30% performance)"
+        fi
+
+        # Bun - +80% performance (turbo)
+        if [[ -n "$_RUNTIME_BUN" ]]; then
+            ui_box_text "[✓] Bun: $_RUNTIME_BUN (+80% - runtime ultra-rapide)"
+        else
+            ui_box_text "[!] Bun: non installé (+80% TURBO mode)"
+        fi
+
+        # jq - +15% JSON streaming
+        if [[ -n "$_RUNTIME_JQ" ]]; then
+            ui_box_text "[✓] jq: $_RUNTIME_JQ (+15% - JSON streaming)"
+        else
+            ui_box_text "[!] jq: non installé (+15% JSON)"
+        fi
 
         ui_box_line mid
 
@@ -1447,29 +1493,56 @@ show_runtime_status_system_only() {
 }
 
 # =============================================================================
-# ÉCRAN 3: 📦 Recommandations Performance
+# ÉCRAN 3: 📦 Recommandations Performance + Sécurité
 # =============================================================================
 show_runtime_status_recommendations() {
     _load_runtime_info
 
+    # Check if sandbox tools are installed (Linux only)
+    local has_bubblewrap=false
+    local has_socat=false
+    command -v bwrap &>/dev/null && has_bubblewrap=true
+    command -v socat &>/dev/null && has_socat=true
+
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then
         echo ""
-        if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]]; then
+        local has_recommendations=false
+
+        # Check if any recommendations needed
+        [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]] && has_recommendations=true
+        if [[ "$_RUNTIME_OS" == "linux" ]]; then
+            [[ "$has_bubblewrap" == false || "$has_socat" == false ]] && has_recommendations=true
+        fi
+
+        if [[ "$has_recommendations" == true ]]; then
             ui_box_line top
-            ui_box_title "📦 Recommandations Performance"
+            ui_box_title "📦 Recommandations"
             ui_box_line mid
-            ui_box_text "Pour de meilleures performances, installez:"
-            ui_box_empty
-            [[ -z "$_RUNTIME_NODE" ]] && ui_box_text "  Node.js: $(get_install_cmd node)"
-            [[ -z "$_RUNTIME_BUN" ]] && ui_box_text "  Bun:     $(get_install_cmd bun)"
-            [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
+
+            # Performance recommendations
+            if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]]; then
+                ui_box_text "Performance:"
+                [[ -z "$_RUNTIME_NODE" ]] && ui_box_text "  Node.js: $(get_install_cmd node)"
+                [[ -z "$_RUNTIME_BUN" ]] && ui_box_text "  Bun:     $(get_install_cmd bun)"
+                [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
+            fi
+
+            # Security recommendations (Linux sandbox)
+            if [[ "$_RUNTIME_OS" == "linux" ]] && [[ "$has_bubblewrap" == false || "$has_socat" == false ]]; then
+                ui_box_empty
+                ui_box_text "Sécurité (Sandbox Claude Code):"
+                [[ "$has_bubblewrap" == false ]] && ui_box_text "  bubblewrap: sudo apt install bubblewrap"
+                [[ "$has_socat" == false ]] && ui_box_text "  socat:      sudo apt install socat"
+                ui_box_text "  → Isole l'exécution des commandes"
+            fi
+
             ui_box_empty
             ui_box_line bot
         else
             ui_box_line top
             ui_box_title "✓ Configuration optimale détectée"
             ui_box_empty
-            ui_box_text "Tous les outils de performance sont installés!"
+            ui_box_text "Tous les outils sont installés!"
             ui_box_empty
             ui_box_line bot
         fi
@@ -1478,7 +1551,7 @@ show_runtime_status_recommendations() {
 }
 
 # =============================================================================
-# UI STEP DISPLAY - Affiche une étape dans un cadre UI
+# UI STEP DISPLAY - Affiche une étape dans un cadre UI simple
 # =============================================================================
 ui_show_step() {
     local icon="$1"
@@ -1487,21 +1560,17 @@ ui_show_step() {
 
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then
         echo ""
+        # Status replaces icon
+        local display_icon="$icon"
+        case "$status" in
+            ok)    display_icon="✓" ;;
+            warn)  display_icon="⚠" ;;
+            error) display_icon="✗" ;;
+            info)  display_icon="ℹ" ;;
+        esac
+
         ui_box_line top
-        if [[ -n "$status" ]]; then
-            local status_icon status_color
-            case "$status" in
-                ok)    status_icon="✓"; status_color="$UI_GREEN" ;;
-                warn)  status_icon="!"; status_color="$UI_YELLOW" ;;
-                error) status_icon="✗"; status_color="$UI_RED" ;;
-                info)  status_icon="i"; status_color="$UI_CYAN" ;;
-            esac
-            ui_box_title "${icon} ${title}"
-            ui_box_line thin
-            printf "${_UI_PADDING}║                    ${status_color}${status_icon} ${title}${UI_RESET}                        ║\n"
-        else
-            ui_box_title "${icon} ${title}"
-        fi
+        ui_box_title "${display_icon} ${title}"
         ui_box_line bot
     else
         echo ""

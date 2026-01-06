@@ -1,21 +1,21 @@
 # Tip: Invoquer les agents
 
-Harmony inclut 42 agents spécialisés. Pour les invoquer :
+Harmony inclut 18+ agents spécialisés via slash commands:
 
 ```bash
-# Référencer directement le fichier agent
-@.harmony/agents/analyst.md "Analyser les besoins"
-@.harmony/agents/developer.md STORY-XXX
-@.harmony/agents/architect.md "Designer l'architecture"
+/hf:agent:dev STORY-XXX       # Developer
+/hf:agent:analyst "besoins"   # Analyst
+/hf:agent:architect "design"  # Architect
+/hf:agent:tester              # QA
 ```
 
-Chaque phase a son agent recommandé :
+| Phase | Commande |
+|-------|----------|
+| 1 - Discovery | `/hf:agent:analyst` |
+| 2 - Planning | `/hf:agent:pm` |
+| 3 - Solutioning | `/hf:agent:architect` |
+| 4 - Implementation | `/hf:agent:dev` |
 
-| Phase | Agent |
-|-------|-------|
-| 1 - Discovery | analyst.md |
-| 2 - Planning | product-manager.md |
-| 3 - Solutioning | architect.md |
-| 4 - Implementation | developer.md |
+Autres: `sm`, `security`, `rgpd`, `a11y`, `ucv-writer`...
 
-> Ce tip ne s'affichera plus après cette session.
+> Voir `/harmony agents` pour la liste complète.

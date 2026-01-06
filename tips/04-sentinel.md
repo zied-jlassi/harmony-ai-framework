@@ -1,15 +1,20 @@
 # Tip: Harmony Sentinel vous protège
 
-Le **Sentinel** surveille les erreurs et active un **circuit breaker** après 3 échecs consécutifs.
+Le **Sentinel** active un **circuit breaker** après N échecs.
 
 ```bash
-/harmony sentinel         # Voir le dashboard
-/harmony sentinel --reset # Réinitialiser si bloqué
+/harmony sentinel         # Dashboard
+/harmony sentinel --reset # Réinitialiser
 ```
 
 | État | Signification |
 |------|---------------|
-| CLOSED | Normal, tout fonctionne |
-| OPEN | Bloqué après 3 erreurs, diagnostic requis |
+| CLOSED | Normal |
+| OPEN | Bloqué, diagnostic requis |
 
-> Ce tip ne s'affichera plus après cette session.
+**Config:** `.harmony/local/autopilot-config.json`
+```json
+"circuit_breaker": {
+  "max_failures_per_story": 10
+}
+```

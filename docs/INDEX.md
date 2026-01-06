@@ -139,6 +139,19 @@ curl -fsSL https://bun.sh/install | bash
 
 ## Bibliotheques
 
+### Aider Toolkit
+
+> Modules inspires de Aider pour le developpement assiste par IA.
+
+**[Acceder au Aider Toolkit →](aider-toolkit.md)**
+
+Inclut:
+- Model Manager (aliases, tiers, estimation de cout)
+- Auto Linter (detection langage, linting automatique)
+- Repomap (cartographie du repository)
+- File Watcher (detection de changements, hooks)
+- History Summarizer (historique, compression de contexte)
+
 ### Error Library
 
 > Bibliotheque mondiale d'erreurs/solutions - AutoLearning collectif. Chargement JIT par agents.

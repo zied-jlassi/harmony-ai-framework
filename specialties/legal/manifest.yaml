@@ -1,17 +1,18 @@
-# Compliance Specialty Pack
-# Legal compliance, RGPD/GDPR, and regulatory expertise
+# Legal Specialty Pack
+# Legal compliance audit orchestrator - triggers security, RGPD, accessibility audits
 
 specialty:
-  id: compliance
-  name: "Compliance"
+  id: legal
+  name: "Legal"
   version: "1.0.0"
-  description: "Legal compliance, RGPD/GDPR, CGV, mentions legales, regulatory requirements"
+  description: "Legal compliance audit orchestrator - RGPD/GDPR, CGV, accessibility, security DPO"
 
 # Branchs included in this specialty
 branchs:
   - id: legal
     file: branchs/legal.md
-    description: "Legal compliance officer - RGPD, CGV, mentions legales, multi-domain"
+    description: "Legal audit orchestrator - detects context, triggers specialized agents"
+    default: true
 
 # Knowledge sources
 knowledge:

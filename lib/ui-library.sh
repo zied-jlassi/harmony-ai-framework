@@ -200,7 +200,7 @@ _ui_draw_selector() {
     local sel=$1
     printf "\r${_UI_PADDING}  "
     if [[ $sel -eq 0 ]]; then
-        printf "${UI_BG_GREEN}${UI_BLACK} ▶ Oui ${UI_RESET}    "
+        printf "${UI_BG_GREEN}${UI_WHITE} ▶ Oui ${UI_RESET}    "
         printf "${UI_DIM}   Non ${UI_RESET}"
     else
         printf "${UI_DIM}   Oui ${UI_RESET}    "

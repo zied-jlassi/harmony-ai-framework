@@ -104,7 +104,79 @@ Routes to the appropriate agent based on intent:
 | COMPLIANCE | RGPD Agent | All |
 | ACCESSIBILITY | Accessibility Agent | 3, 4 |
 
-### 4. Agent Announcement (P-010)
+### 4. Context Pre-Loading (Loop-Safe)
+
+**OBLIGATOIRE**: Après le routing, Guardian charge le contexte pertinent en mémoire de travail.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                 CONTEXT PRE-LOADING (LOOP-SAFE)                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  STEP 1: Classification (One-Shot Haiku)                        │
+│          → Classify request, detect context flags               │
+│          → Result cached (no re-classification)                 │
+│                                                                  │
+│  STEP 2: Resolution (Config Lookup)                             │
+│          → Map flags to profiles/knowledge files                │
+│          → No dependency chains (flat loading)                  │
+│                                                                  │
+│  STEP 3: Loading (Token-Budgeted)                               │
+│          → Load files up to 15K token limit                     │
+│          → Priority: profiles > knowledge > patterns            │
+│                                                                  │
+│  STEP 4: Injection (Immutable)                                  │
+│          → Write to .harmony/memory/working.json                │
+│          → State locked (no re-injection)                       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**State Machine (Forward-Only):**
+```
+IDLE → CLASSIFYING → RESOLVING → LOADING → INJECTING → LOCKED
+ │          │            │           │           │         │
+ │   Haiku call    Config lookup  File read   Write JSON  Done
+ │   (cached)      (no deps)      (budgeted)  (immutable)
+ └──────────────────────────────────────────────────────────┘
+                    NO BACKWARD TRANSITIONS
+```
+
+**Safety Guards:**
+- **Token Budget**: Max 15,000 tokens pre-loaded
+- **Depth Guard**: MAX_DEPTH=1 (no recursive loading)
+- **State Lock**: Forward-only transitions, no re-entry
+- **Cache**: Classification result immutable once set
+
+**Context Flags Detected:**
+| Flag | Triggers | Loaded Profiles |
+|------|----------|-----------------|
+| `has_auth` | auth, login, password | security profiles, OWASP |
+| `is_game` | game, gaming, unity | gaming patterns, ECS |
+| `is_web` | react, vue, frontend | frontend profiles |
+| `is_api` | api, endpoint, rest | backend profiles |
+| `is_mobile` | mobile, ios, android | mobile profiles |
+
+**Usage (lib/context-preloader.sh):**
+```bash
+source "$HARMONY_DIR/lib/context-preloader.sh"
+
+# Pre-load context for request
+preload_context "implement authentication system" "developer"
+
+# Check state
+get_preloader_state    # → LOCKED
+get_preloader_tokens   # → 12500
+
+# Display summary
+display_context_summary
+```
+
+**Référence:** [lib/context-preloader.sh](../lib/context-preloader.sh)
+
+---
+
+### 5. Agent Announcement (P-010)
 
 **OBLIGATOIRE**: Avant de commencer toute action, Guardian DOIT afficher l'annonce de l'agent invoqué.
 

@@ -166,12 +166,48 @@ if [[ -f "$COMMANDS_DIR/agents.yaml" ]]; then
     generate_agent_command "security" "agents/security.md" "Security auditor - OWASP Top 10"
     generate_agent_command "rgpd" "agents/rgpd.md" "RGPD/GDPR compliance auditor"
     generate_agent_command "pentest" "agents/pentest.md" "Penetration testing agent"
+    generate_agent_command "legal" "specialties/legal/branchs/legal.md" "Legal audit orchestrator - RGPD, CGV, accessibility, DPO"
+
+    # DevOps & Quality Agents (specialty branches)
+    generate_agent_command "devops" "specialties/devops/branchs/devops.md" "DevOps engineer - CI/CD, Docker, Kubernetes, infrastructure"
+    generate_agent_command "devops-builder" "specialties/devops/branchs/builder.md" "Build engineer - Docker, CI pipelines, artifacts"
+    generate_agent_command "i18n" "specialties/i18n/branchs/i18n.md" "Internationalization specialist - translations, localization"
+    generate_agent_command "lint" "specialties/quality/branchs/lint.md" "Code quality linter - ESLint, Prettier, code style"
+    generate_agent_command "dependency" "specialties/quality/branchs/dependency.md" "Dependency auditor - npm audit, vulnerabilities, licenses"
+    generate_agent_command "performance" "specialties/quality/branchs/performance.md" "Performance auditor - optimization, benchmarks, profiling"
+
+    # Security Specialty Branches
+    generate_agent_command "security-dpo" "specialties/security/branchs/dpo.md" "Data Protection Officer - RGPD implementation, privacy"
+    generate_agent_command "security-auditor" "specialties/security/branchs/auditor.md" "Security auditor - vulnerability assessment, compliance"
+    generate_agent_command "security-engineer" "specialties/security/branchs/engineer.md" "Security engineer - secure coding, hardening"
+    generate_agent_command "security-researcher" "specialties/security/branchs/researcher.md" "Security researcher - threat analysis, CVE research"
+
+    # Creative Specialty Branches
+    generate_agent_command "brainstorm" "specialties/creative/branchs/brainstorm-facilitator.md" "Brainstorm facilitator - ideation, creative sessions"
+    generate_agent_command "design-thinking" "specialties/creative/branchs/design-thinking-lead.md" "Design thinking lead - user-centered innovation"
+    generate_agent_command "innovation-scout" "specialties/creative/branchs/innovation-scout.md" "Innovation scout - emerging tech, trends analysis"
+    generate_agent_command "problem-solver" "specialties/creative/branchs/problem-solver.md" "Problem solver - root cause analysis, solutions"
+    generate_agent_command "ux-storyteller" "specialties/creative/branchs/ux-storyteller.md" "UX storyteller - user journeys, narratives"
+    generate_agent_command "visual-documenter" "specialties/creative/branchs/visual-documenter.md" "Visual documenter - diagrams, infographics"
 
     # Additional Core Agents
     generate_agent_command "ux" "agents/ux-designer.md" "UX Designer - wireframes, user flows"
     generate_agent_command "pm" "agents/product-manager.md" "Product Manager - roadmap, priorities"
     generate_agent_command "docs" "agents/tech-writer.md" "Tech Writer - documentation, guides"
     generate_agent_command "review" "agents/review.md" "Code Reviewer - code review, best practices"
+    generate_agent_command "database" "agents/database.md" "Database architect - schema design, migrations, optimization"
+    generate_agent_command "atlas" "agents/atlas.md" "Architecture validator - clean architecture, layer boundaries"
+    generate_agent_command "harmony" "agents/harmony.md" "Framework coherence auditor - orphans, duplicates, manifests"
+    generate_agent_command "supervisor" "agents/supervisor.md" "Multi-agent orchestrator - coordination, delegation"
+    generate_agent_command "party" "agents/party.md" "Multi-agent discussion - brainstorm, debate, consensus"
+    generate_agent_command "backlog" "agents/backlog.md" "Backlog dashboard - visualization, kanban, priorities"
+    generate_agent_command "quick-flow" "agents/quick-flow.md" "Quick flow mode - fast development, shortcuts"
+
+    # Gaming Specialty Branches (context-specific)
+    generate_agent_command "game-architect" "specialties/architecture/branchs/gaming.md" "Game architect - ECS, state machines, multiplayer"
+    generate_agent_command "game-designer" "specialties/designer/branchs/gaming.md" "Game designer - GDD, mechanics, core loops"
+    generate_agent_command "game-developer" "specialties/developer/branchs/gaming.md" "Game developer - Unity, Godot, game logic"
+    generate_agent_command "game-sm" "specialties/scrum-master/branchs/gaming.md" "Game scrum master - sprints, playtests, milestones"
 fi
 
 # ============================================================

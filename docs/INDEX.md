@@ -139,11 +139,11 @@ curl -fsSL https://bun.sh/install | bash
 
 ## Bibliotheques
 
-### Aider Toolkit
+### Assistant Toolkit
 
-> Modules inspires de Aider pour le developpement assiste par IA.
+> Modules pour le developpement assiste par IA.
 
-**[Acceder au Aider Toolkit →](aider-toolkit.md)**
+**[Acceder au Assistant Toolkit →](assistant-toolkit.md)**
 
 Inclut:
 - Model Manager (aliases, tiers, estimation de cout)

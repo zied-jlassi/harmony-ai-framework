@@ -398,7 +398,7 @@ create_directory_structure() {
         ".harmony/specialties/ai/agents"
         ".harmony/specialties/accessibility/knowledge"
         ".harmony/specialties/mobile/knowledge"
-        ".harmony/specialties/compliance/knowledge"
+        ".harmony/specialties/legal/knowledge"
         ".harmony/specialties/i18n/knowledge"
         ".harmony/profiles/mobile/flutter"
         ".harmony/profiles/backend/nestjs/knowledge/templates"

@@ -1,6 +1,6 @@
-# Aider Toolkit
+# Assistant Toolkit
 
-The Aider Toolkit provides a collection of modules inspired by [Aider](https://github.com/paul-gauthier/aider), a powerful AI pair programming tool. These modules enhance Harmony Framework with model management, automatic linting, repository mapping, file watching, and session history management.
+The Assistant Toolkit provides a collection of modules for enhanced AI-assisted development. These modules enhance Harmony Framework with model management, automatic linting, repository mapping, file watching, and session history management.
 
 ## Overview
 
@@ -11,22 +11,22 @@ The Aider Toolkit provides a collection of modules inspired by [Aider](https://g
 | Repomap | `repomap.sh` | Repository structure and analysis |
 | File Watcher | `file-watcher.sh` | File change detection and hooks |
 | History Summarizer | `history-summarizer.sh` | Session history and context compression |
-| Toolkit Orchestrator | `aider-toolkit.sh` | Unified interface for all modules |
+| Toolkit Orchestrator | `assistant-toolkit.sh` | Unified interface for all modules |
 
 ## Quick Start
 
 ```bash
 # Source the unified toolkit
-source .harmony/lib/aider-toolkit.sh
+source .harmony/lib/assistant-toolkit.sh
 
 # Initialize all modules
-aider_init .
+assistant_init .
 
 # Show status
-aider_status
+assistant_status
 
 # Run workflow on a file
-aider_workflow src/index.ts --fix
+assistant_workflow src/index.ts --fix
 ```
 
 ## Model Manager
@@ -292,7 +292,7 @@ Unified interface that loads and coordinates all modules.
 
 ```bash
 # Initialize toolkit
-aider_init .
+assistant_init .
 
 # Output:
 # Loading modules:
@@ -307,28 +307,28 @@ aider_init .
 
 ```bash
 # Show toolkit status
-aider_status
+assistant_status
 
 # Run workflow on file
-aider_workflow src/index.ts --fix
+assistant_workflow src/index.ts --fix
 
 # Process changed files
-aider_workflow_changed --fix
+assistant_workflow_changed --fix
 
 # Generate AI context
-aider_context .
+assistant_context .
 
 # Quick lint
-aider_lint --fix
+assistant_lint --fix
 
 # Quick model info
-aider_model sonnet
+assistant_model sonnet
 
 # Quick repomap
-aider_map .
+assistant_map .
 
 # Quick history
-aider_history 20
+assistant_history 20
 ```
 
 ### Module Loading
@@ -378,14 +378,14 @@ All modules can be run directly from command line:
 ./lib/history-summarizer.sh git 20
 
 # Toolkit
-./lib/aider-toolkit.sh init .
-./lib/aider-toolkit.sh status
-./lib/aider-toolkit.sh workflow src/app.ts
+./lib/assistant-toolkit.sh init .
+./lib/assistant-toolkit.sh status
+./lib/assistant-toolkit.sh workflow src/app.ts
 ```
 
 ## Integration with Sprint Tracker
 
-The Aider Toolkit integrates with the Sprint Tracker circuit breaker:
+The Assistant Toolkit integrates with the Sprint Tracker circuit breaker:
 
 ```bash
 # Auto-linter records failures to circuit breaker
@@ -399,7 +399,7 @@ add_history_entry "story_start" "STORY-001" '{"phase":"development"}'
 
 ## Best Practices
 
-1. **Initialize at session start**: Run `aider_init .` when starting a coding session
+1. **Initialize at session start**: Run `assistant_init .` when starting a coding session
 2. **Use appropriate models**: Let `get_model_for_task` select the right model for the job
 3. **Enable auto-lint**: Set `HARMONY_LINT_AUTO_FIX=true` for automatic code formatting
 4. **Compress regularly**: Use `compress_history` to keep history manageable

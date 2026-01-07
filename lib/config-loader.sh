@@ -42,6 +42,11 @@ LOCAL_CONFIG="${HARMONY_DIR}/local/config.yaml"
 # Cached merged config
 MERGED_CONFIG=""
 
+# Branch cache for specialty resolution (built once, O(1) lookup)
+# Maps "specialty-branch" → file path (e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md")
+declare -A BRANCH_CACHE
+BRANCH_CACHE_BUILT=false
+
 # Colors (avoid readonly to prevent conflicts when sourced multiple times)
 C_YELLOW='\033[1;33m'
 C_RED='\033[0;31m'
@@ -157,6 +162,59 @@ load_config() {
 
     # Check version
     check_config_version
+}
+
+# -----------------------------------------------------------------------------
+# BRANCH CACHE (for specialty resolution)
+# -----------------------------------------------------------------------------
+
+# Build the branch cache by scanning all specialties
+# Called once at initialization, provides O(1) lookup for resolve_agent
+# Usage: build_branch_cache
+build_branch_cache() {
+    # Skip if already built
+    if [[ "$BRANCH_CACHE_BUILT" == "true" ]]; then
+        return 0
+    fi
+
+    # Scan all specialty manifests
+    for specialty_dir in "${HARMONY_DIR}"/specialties/*/; do
+        if [[ -d "$specialty_dir" ]]; then
+            local specialty
+            specialty=$(basename "$specialty_dir")
+
+            # Scan all branch files in this specialty
+            for branch_file in "${specialty_dir}"branchs/*.md; do
+                if [[ -f "$branch_file" ]]; then
+                    local branch
+                    branch=$(basename "$branch_file" .md)
+
+                    # Add to cache: "specialty-branch" → full path
+                    BRANCH_CACHE["${specialty}-${branch}"]="$branch_file"
+                fi
+            done
+        fi
+    done
+
+    BRANCH_CACHE_BUILT=true
+}
+
+# Get branch cache entry count (for debugging)
+# Usage: count=$(get_branch_cache_count)
+get_branch_cache_count() {
+    if [[ -v BRANCH_CACHE ]]; then
+        echo "${#BRANCH_CACHE[@]}"
+    else
+        echo "0"
+    fi
+}
+
+# List all cached branches (for debugging)
+# Usage: list_branch_cache
+list_branch_cache() {
+    for key in "${!BRANCH_CACHE[@]}"; do
+        echo "$key → ${BRANCH_CACHE[$key]}"
+    done | sort
 }
 
 # -----------------------------------------------------------------------------
@@ -311,19 +369,39 @@ is_hook_disabled() {
 # AGENT RESOLUTION
 # -----------------------------------------------------------------------------
 
-# Resolve agent with aliases and overrides
+# Resolve agent with aliases, branch cache, and overrides
+# Supports specialty-branch pattern (e.g., "ucv-qa" → specialties/ucv/branchs/qa.md)
 # Usage: agent_path=$(resolve_agent "developer")
+# Usage: agent_path=$(resolve_agent "ucv-qa")  # → specialty branch
 resolve_agent() {
     local agent_name="$1"
 
-    # Check alias first
+    # Ensure branch cache is built
+    if [[ "$BRANCH_CACHE_BUILT" != "true" ]]; then
+        build_branch_cache
+    fi
+
+    # 1. Check branch cache first (O(1) lookup for specialty-branch patterns)
+    #    e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md"
+    if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
+        echo "${BRANCH_CACHE[$agent_name]}"
+        return
+    fi
+
+    # 2. Check alias (e.g., "dev" → "developer")
     local alias_value
     alias_value=$(get_config "agents.aliases.$agent_name" "")
     if [[ -n "$alias_value" ]]; then
         agent_name="$alias_value"
+
+        # Re-check branch cache with aliased name
+        if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
+            echo "${BRANCH_CACHE[$agent_name]}"
+            return
+        fi
     fi
 
-    # Check if disabled
+    # 3. Check if disabled
     while IFS= read -r disabled_agent; do
         if [[ "$disabled_agent" == "$agent_name" ]]; then
             echo ""
@@ -331,20 +409,36 @@ resolve_agent() {
         fi
     done < <(get_config_array "agents.disabled")
 
-    # Check local override (flat structure)
+    # 4. Check local override (flat structure)
     local local_agent="${HARMONY_DIR}/local/agents/${agent_name}.md"
-    local framework_agent="${HARMONY_DIR}/agents/${agent_name}.md"
-    local cognitive_pattern="${HARMONY_DIR}/patterns/cognitive/${agent_name}.md"
-
     if [[ -f "$local_agent" ]]; then
         echo "$local_agent"
-    elif [[ -f "$framework_agent" ]]; then
-        echo "$framework_agent"
-    elif [[ -f "$cognitive_pattern" ]]; then
-        echo "$cognitive_pattern"
-    else
-        echo ""
+        return
     fi
+
+    # 5. Check framework agent
+    local framework_agent="${HARMONY_DIR}/agents/${agent_name}.md"
+    if [[ -f "$framework_agent" ]]; then
+        echo "$framework_agent"
+        return
+    fi
+
+    # 6. Fallback: specialty with same-name branch (e.g., "devops" → "devops/branchs/devops.md")
+    local same_name_branch="${HARMONY_DIR}/specialties/${agent_name}/branchs/${agent_name}.md"
+    if [[ -f "$same_name_branch" ]]; then
+        echo "$same_name_branch"
+        return
+    fi
+
+    # 7. Check cognitive pattern
+    local cognitive_pattern="${HARMONY_DIR}/patterns/cognitive/${agent_name}.md"
+    if [[ -f "$cognitive_pattern" ]]; then
+        echo "$cognitive_pattern"
+        return
+    fi
+
+    # Not found
+    echo ""
 }
 
 # -----------------------------------------------------------------------------

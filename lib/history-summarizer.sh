@@ -63,7 +63,7 @@ EOF
 add_history_entry() {
     local entry_type="$1"
     local content="$2"
-    local metadata="${3:-{}}"
+    local metadata="${3:-"{}"}"
 
     init_history
 

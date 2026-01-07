@@ -109,7 +109,11 @@ agents:
   #   - "accessibility"
 
   # Custom agent aliases
-  aliases: {}
+  # Maps short names to specialty-branch patterns
+  aliases:
+    # Legal & Compliance
+    # legal: auto-resolved via fallback (legal → legal/branchs/legal.md)
+    dpo: "security-dpo"            # Data Protection Officer (mise en place technique)
   # Example:
   # aliases:
   #   "dev": "game-developer"

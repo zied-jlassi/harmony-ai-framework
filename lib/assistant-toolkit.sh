@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # ============================================================================
-# aider-toolkit.sh - Unified Aider-Inspired Toolkit for Harmony Framework
+# assistant-toolkit.sh - Unified Assistant Toolkit for Harmony Framework
 # ============================================================================
-# Orchestrates all Aider-inspired modules:
+# Orchestrates all assistant modules:
 #   - model-manager.sh    : Model aliases, tiers, cost estimation
 #   - auto-linter.sh      : Automatic linting and code quality
 #   - repomap.sh          : Repository structure and analysis
 #   - file-watcher.sh     : File change detection and hooks
 #   - history-summarizer.sh : Session history and context compression
 #
-# Usage: source aider-toolkit.sh
+# Usage: source assistant-toolkit.sh
 #
 # Main Functions:
-#   - aider_init           : Initialize all toolkit modules
-#   - aider_status         : Show status of all modules
-#   - aider_workflow       : Run complete aider-style workflow
+#   - assistant_init           : Initialize all toolkit modules
+#   - assistant_status         : Show status of all modules
+#   - assistant_workflow       : Run complete assistant workflow
 # ============================================================================
 
 set -euo pipefail
@@ -22,14 +22,14 @@ set -euo pipefail
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-AIDER_TOOLKIT_VERSION="1.0.0"
-AIDER_TOOLKIT_DIR="${AIDER_TOOLKIT_DIR:-${HARMONY_DIR:-$HOME/.harmony}/aider-toolkit}"
+ASSISTANT_TOOLKIT_VERSION="1.0.0"
+ASSISTANT_TOOLKIT_DIR="${ASSISTANT_TOOLKIT_DIR:-${HARMONY_DIR:-$HOME/.harmony}/assistant-toolkit}"
 
 # Module paths (relative to this script)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Module files
-declare -A AIDER_MODULES=(
+declare -A ASSISTANT_MODULES=(
     ["model-manager"]="$SCRIPT_DIR/model-manager.sh"
     ["auto-linter"]="$SCRIPT_DIR/auto-linter.sh"
     ["repomap"]="$SCRIPT_DIR/repomap.sh"
@@ -48,7 +48,7 @@ declare -A MODULE_LOADED=()
 # Usage: load_module "model-manager"
 load_module() {
     local module="$1"
-    local module_path="${AIDER_MODULES[$module]:-}"
+    local module_path="${ASSISTANT_MODULES[$module]:-}"
 
     if [[ -z "$module_path" ]]; then
         echo "Unknown module: $module" >&2
@@ -76,7 +76,7 @@ load_module() {
 load_all_modules() {
     local failed=0
 
-    for module in "${!AIDER_MODULES[@]}"; do
+    for module in "${!ASSISTANT_MODULES[@]}"; do
         if load_module "$module" 2>/dev/null; then
             echo "  ✓ $module"
         else
@@ -100,20 +100,20 @@ is_module_loaded() {
 # ============================================================================
 
 # Initialize toolkit
-# Usage: aider_init [directory]
-aider_init() {
+# Usage: assistant_init [directory]
+assistant_init() {
     local dir="${1:-.}"
 
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║           AIDER TOOLKIT INITIALIZATION                         ║"
+    echo "║           ASSISTANT TOOLKIT INITIALIZATION                     ║"
     echo "╠════════════════════════════════════════════════════════════════╣"
-    echo "║ Version: $AIDER_TOOLKIT_VERSION"
+    echo "║ Version: $ASSISTANT_TOOLKIT_VERSION"
     echo "║ Directory: $dir"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
 
     # Create toolkit directory
-    mkdir -p "$AIDER_TOOLKIT_DIR"
+    mkdir -p "$ASSISTANT_TOOLKIT_DIR"
 
     # Load all modules
     echo "Loading modules:"
@@ -149,19 +149,19 @@ aider_init() {
 # ============================================================================
 
 # Show toolkit status
-# Usage: aider_status
-aider_status() {
+# Usage: assistant_status
+assistant_status() {
     echo "╔════════════════════════════════════════════════════════════════╗"
-    echo "║               AIDER TOOLKIT STATUS                             ║"
+    echo "║               ASSISTANT TOOLKIT STATUS                         ║"
     echo "╠════════════════════════════════════════════════════════════════╣"
-    echo "║ Version: $AIDER_TOOLKIT_VERSION"
+    echo "║ Version: $ASSISTANT_TOOLKIT_VERSION"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
 
     echo "=== Module Status ==="
-    for module in "${!AIDER_MODULES[@]}"; do
+    for module in "${!ASSISTANT_MODULES[@]}"; do
         local status="not loaded"
-        local path="${AIDER_MODULES[$module]}"
+        local path="${ASSISTANT_MODULES[$module]}"
 
         if [[ "${MODULE_LOADED[$module]:-}" == "true" ]]; then
             status="loaded"
@@ -211,9 +211,9 @@ aider_status() {
 # INTEGRATED WORKFLOWS
 # ============================================================================
 
-# Run Aider-style workflow on a file
-# Usage: aider_workflow "file.ts" [--fix]
-aider_workflow() {
+# Run assistant workflow on a file
+# Usage: assistant_workflow "file.ts" [--fix]
+assistant_workflow() {
     local file="$1"
     local fix_flag="${2:-}"
 
@@ -222,7 +222,7 @@ aider_workflow() {
         return 1
     fi
 
-    echo "=== Aider Workflow: $file ==="
+    echo "=== Assistant Workflow: $file ==="
     echo ""
 
     # 1. Detect language
@@ -255,7 +255,7 @@ aider_workflow() {
 
     # 5. Log to history
     if is_module_loaded "history-summarizer"; then
-        add_history_entry "workflow" "Aider workflow on $file" "{\"file\":\"$file\",\"language\":\"$language\"}" 2>/dev/null || true
+        add_history_entry "workflow" "Assistant workflow on $file" "{\"file\":\"$file\",\"language\":\"$language\"}" 2>/dev/null || true
     fi
 
     echo ""
@@ -263,8 +263,8 @@ aider_workflow() {
 }
 
 # Run workflow on changed files
-# Usage: aider_workflow_changed [--fix]
-aider_workflow_changed() {
+# Usage: assistant_workflow_changed [--fix]
+assistant_workflow_changed() {
     local fix_flag="${1:-}"
 
     if ! is_module_loaded "file-watcher"; then
@@ -285,15 +285,15 @@ aider_workflow_changed() {
 
     while IFS=: read -r event file; do
         if [[ "$event" != "deleted" && -f "$file" ]]; then
-            aider_workflow "$file" "$fix_flag"
+            assistant_workflow "$file" "$fix_flag"
             echo ""
         fi
     done <<< "$changes"
 }
 
 # Generate project context for AI
-# Usage: aider_context [directory]
-aider_context() {
+# Usage: assistant_context [directory]
+assistant_context() {
     local dir="${1:-.}"
 
     echo "=== AI Context for $dir ==="
@@ -322,8 +322,8 @@ aider_context() {
 # ============================================================================
 
 # Quick lint all changed files
-# Usage: aider_lint [--fix]
-aider_lint() {
+# Usage: assistant_lint [--fix]
+assistant_lint() {
     local fix_flag="${1:-}"
 
     if ! is_module_loaded "auto-linter"; then
@@ -339,8 +339,8 @@ aider_lint() {
 }
 
 # Quick model info
-# Usage: aider_model [alias]
-aider_model() {
+# Usage: assistant_model [alias]
+assistant_model() {
     local alias="${1:-}"
 
     if ! is_module_loaded "model-manager"; then
@@ -360,8 +360,8 @@ aider_model() {
 }
 
 # Quick repomap
-# Usage: aider_map [directory] [format]
-aider_map() {
+# Usage: assistant_map [directory] [format]
+assistant_map() {
     local dir="${1:-.}"
     local format="${2:-text}"
 
@@ -373,8 +373,8 @@ aider_map() {
 }
 
 # Quick history
-# Usage: aider_history [count]
-aider_history() {
+# Usage: assistant_history [count]
+assistant_history() {
     local count="${1:-20}"
 
     if ! is_module_loaded "history-summarizer"; then
@@ -387,8 +387,8 @@ aider_history() {
 # ============================================================================
 # EXPORT FUNCTIONS
 # ============================================================================
-export -f aider_init aider_status aider_workflow aider_workflow_changed aider_context
-export -f aider_lint aider_model aider_map aider_history
+export -f assistant_init assistant_status assistant_workflow assistant_workflow_changed assistant_context
+export -f assistant_lint assistant_model assistant_map assistant_history
 export -f load_module load_all_modules is_module_loaded
 
 # ============================================================================
@@ -396,8 +396,8 @@ export -f load_module load_all_modules is_module_loaded
 # ============================================================================
 
 # Automatically load all modules when sourced
-if [[ "${AIDER_TOOLKIT_AUTOLOAD:-true}" == "true" ]]; then
-    for module in "${!AIDER_MODULES[@]}"; do
+if [[ "${ASSISTANT_TOOLKIT_AUTOLOAD:-true}" == "true" ]]; then
+    for module in "${!ASSISTANT_MODULES[@]}"; do
         load_module "$module" 2>/dev/null || true
     done
 fi
@@ -408,40 +408,40 @@ fi
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     case "${1:-}" in
         init)
-            aider_init "${2:-.}"
+            assistant_init "${2:-.}"
             ;;
         status)
-            aider_status
+            assistant_status
             ;;
         workflow)
-            aider_workflow "${2:-}" "${3:-}"
+            assistant_workflow "${2:-}" "${3:-}"
             ;;
         changed)
-            aider_workflow_changed "${2:-}"
+            assistant_workflow_changed "${2:-}"
             ;;
         context)
-            aider_context "${2:-.}"
+            assistant_context "${2:-.}"
             ;;
         lint)
-            aider_lint "${2:-}"
+            assistant_lint "${2:-}"
             ;;
         model)
-            aider_model "${2:-}"
+            assistant_model "${2:-}"
             ;;
         map)
-            aider_map "${2:-.}" "${3:-text}"
+            assistant_map "${2:-.}" "${3:-text}"
             ;;
         history)
-            aider_history "${2:-20}"
+            assistant_history "${2:-20}"
             ;;
         load)
             load_module "${2:-}"
             echo "Module ${2:-} loaded"
             ;;
         *)
-            echo "Aider Toolkit v$AIDER_TOOLKIT_VERSION"
+            echo "Assistant Toolkit v$ASSISTANT_TOOLKIT_VERSION"
             echo ""
-            echo "Usage: aider-toolkit.sh <command> [args]"
+            echo "Usage: assistant-toolkit.sh <command> [args]"
             echo ""
             echo "Commands:"
             echo "  init [dir]              - Initialize toolkit"

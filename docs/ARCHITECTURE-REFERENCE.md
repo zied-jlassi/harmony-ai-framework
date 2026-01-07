@@ -592,7 +592,7 @@ Patterns: Applied for solutions
 - [Routing System](#-routing-system)
 - [Memory System (3-Tier)](#-memory-system-3-tier)
 - [Workflow Phases](#-workflow-phases)
-- [Libraries (Aider Toolkit)](#-libraries-lib---aider-toolkit)
+- [Libraries (Assistant Toolkit)](#-libraries-lib---assistant-toolkit)
 - [Component Relationships](#-component-relationships-summary)
 - [Quick Reference Tables](#-quick-reference-tables)
 

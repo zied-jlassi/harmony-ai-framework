@@ -145,6 +145,11 @@ Select a mode by entering its number or command (e.g., 2 or harmony quick)
 | 28 | init | `harmony init` | [init.md](init.md) |
 | 29 | upgrade | `harmony upgrade` | [upgrade.md](upgrade.md) |
 | 30 | export | `harmony export` | [export.md](export.md) |
+| 31 | go | `harmony go` | [go.md](go.md) |
+| 32 | config | `harmony config` | [config.md](config.md) |
+| 33 | coverage | `harmony coverage` | [coverage.md](coverage.md) |
+| 34 | matrix | `harmony matrix` | [matrix.md](matrix.md) |
+| 35 | test-book | `harmony test-book` | [test-book.md](test-book.md) |
 
 ---
 

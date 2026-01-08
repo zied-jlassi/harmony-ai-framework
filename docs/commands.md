@@ -1,6 +1,6 @@
 # Harmony Commands Reference
 
-> Complete reference for all 30 Harmony commands.
+> Complete reference for all 35 Harmony commands.
 
 ---
 
@@ -118,6 +118,24 @@
 | `/harmony export` | Exporter configuration |
 | `/harmony export --full` | Export complet avec memory |
 
+### Session & Config (31-35)
+
+| Command | Description |
+|---------|-------------|
+| `/harmony go` | Session kickoff - initialise le contexte |
+| `/harmony config` | **Configuration en langage naturel** |
+| `/harmony config show` | Afficher config actuelle |
+| `/harmony config reset` | Reinitialiser config |
+| `/harmony coverage` | Rapport couverture UCV |
+| `/harmony coverage <epic>` | Couverture pour un Epic |
+| `/harmony matrix` | Generer cahier de charge |
+| `/harmony matrix <epic>` | Cahier de charge pour un Epic |
+| `/harmony test-book` | Generer cahier de test |
+| `/harmony test-book <epic>` | Cahier de test pour un Epic |
+
+> **Nouveau**: `/harmony config` permet de configurer Harmony en **langage naturel**.
+> Voir [Natural Language Config](natural-language-config.md) pour les details.
+
 ---
 
 ## Examples
@@ -157,3 +175,18 @@
 # Validate coverage
 /harmony ucv --validate STORY-042
 ```
+
+### Configuration en Langage Naturel
+
+```bash
+# Ouvrir l'assistant config
+/harmony config
+
+# Exemples de phrases:
+"Bloquer DROP DATABASE sur la production"
+"Docker obligatoire avec prefix myapp"
+"5 echecs max avant circuit breaker"
+"Desactiver l'agent pentest"
+```
+
+> Voir [Natural Language Config](natural-language-config.md) pour plus d'exemples.

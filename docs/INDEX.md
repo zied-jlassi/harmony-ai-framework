@@ -128,6 +128,7 @@ curl -fsSL https://bun.sh/install | bash
 - [Architecture](architecture.md) - Architecture du framework
 - [Working Memory](working-memory.md) - Systeme de memoire
 - [Overrides](overrides.md) - Personnalisation et surcharges
+- [Natural Language Config](natural-language-config.md) - Configuration en langage naturel
 - [Evolution](evolution.md) - Roadmap et evolution
 
 ### Guidelines

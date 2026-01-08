@@ -792,7 +792,7 @@ patterns/
 **Chargement**: Au démarrage projet, basé sur `project_type`
 
 ```yaml
-# .harmony/local/config.yaml
+# .harmony/local/config/overrides.yaml
 project:
   type: gaming  # → Charge specialties/gaming/
 
@@ -814,7 +814,7 @@ project:
 **Chargement**: JIT (Just-In-Time), à la demande
 
 ```yaml
-# .harmony/local/config.yaml
+# .harmony/local/config/overrides.yaml
 profiles:
   - nestjs
   - prisma

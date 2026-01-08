@@ -36,7 +36,8 @@ When you update the Harmony framework, your customizations would be lost if you 
 ├── rules/                       # Additional rules
 ├── patterns/                    # Additional patterns
 ├── templates/                   # Override templates
-└── config.yaml                  # Local-only config
+└── config/
+    └── overrides.yaml           # Local-only config (mirrors team structure)
 ```
 
 ---
@@ -46,9 +47,15 @@ When you update the Harmony framework, your customizations would be lost if you 
 For any component, Harmony checks in this order:
 
 ```
-1. .harmony/local/{component}          → Highest priority (local dev)
-2. .harmony/config/overrides.yaml      → Team config (shared)
-3. .harmony/{component}                → Framework default
+1. .harmony/local/config/overrides.yaml  → Highest priority (personal)
+2. .harmony/config/overrides.yaml        → Team config (shared)
+3. .harmony/{component}                  → Framework default
+```
+
+For component overrides (hooks, agents, etc.):
+```
+1. .harmony/local/{component}          → Personal override
+2. .harmony/{component}                → Framework default
 ```
 
 ---

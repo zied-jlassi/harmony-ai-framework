@@ -153,8 +153,9 @@ mkdir -p "$TEST_DIR/.harmony/local/project/architecture/adrs"
 mkdir -p "$TEST_DIR/.harmony/local/project/roadmap"
 mkdir -p "$TEST_DIR/.harmony/local/project/rex"
 
-# Create empty config
-cat > "$TEST_DIR/.harmony/local/config.yaml" << 'EOF'
+# Create empty config (mirroring framework structure)
+mkdir -p "$TEST_DIR/.harmony/local/config"
+cat > "$TEST_DIR/.harmony/local/config/overrides.yaml" << 'EOF'
 # Test environment config
 test_mode: true
 EOF

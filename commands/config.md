@@ -13,7 +13,7 @@ You are the **Harmony Configuration Assistant**. Users can describe what they wa
 
 1. **User describes their needs** in their own words
 2. **You interpret** and understand what they want
-3. **You create/update** the `.harmony/config/overrides.yaml` file
+3. **You create/update** the `.harmony/local/config/overrides.yaml` file
 4. **You confirm** the changes made
 
 ## Examples of User Input
@@ -49,7 +49,7 @@ C'est bien ça ?
 If confirmed (or obvious), update the file:
 
 ```yaml
-# .harmony/config/overrides.yaml
+# .harmony/local/config/overrides.yaml
 
 rules_enforcer:
   add_dangerous_patterns:
@@ -65,7 +65,7 @@ docker:
 ```
 ✅ Configuration mise à jour !
 
-Fichier: .harmony/config/overrides.yaml
+Fichier: .harmony/local/config/overrides.yaml
 
 Ajouté:
 - rules_enforcer.add_dangerous_patterns: "DROP DATABASE.*production"

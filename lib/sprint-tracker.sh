@@ -932,7 +932,7 @@ run_story_pipeline() {
         }
 
         # Update story status based on phase
-        local story_status
+        local story_status=""
         case "$agent_name" in
             "developer")
                 story_status="IN_PROGRESS"

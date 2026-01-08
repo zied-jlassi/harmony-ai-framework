@@ -248,10 +248,31 @@
 
 ---
 
+## 📋 Prerequisites
+
+Before installing Harmony, ensure you have these **mandatory dependencies**:
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| **Node.js** | Runtime (npx) | [nodejs.org](https://nodejs.org/) |
+| **jq** | JSON processing | `sudo apt install jq` / `brew install jq` |
+| **yq** | YAML processing | `sudo apt install yq` / `brew install yq` |
+
+```bash
+# Verify installation
+node --version    # v18+ recommended
+jq --version      # 1.6+
+yq --version      # any version
+```
+
+> ⚠️ **Why jq and yq?** Harmony uses these tools for high-performance configuration parsing and YAML/JSON manipulation. Without them, installation will fail.
+
+---
+
 ## 🚀 Quick Start
 
 ```bash
-# Install
+# Install (requires jq + yq)
 npx harmony-ai-framework --full
 
 # Start coding

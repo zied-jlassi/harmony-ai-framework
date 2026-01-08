@@ -2,6 +2,57 @@
 
 Complete guide for installing Harmony Framework in your project.
 
+## Prerequisites (Mandatory)
+
+Harmony Framework requires these tools to be installed **before** installation:
+
+| Tool | Version | Purpose | Installation |
+|------|---------|---------|--------------|
+| **Node.js** | 18+ | Runtime for npx | [nodejs.org](https://nodejs.org/) |
+| **jq** | 1.6+ | JSON processing & config parsing | See below |
+| **yq** | any | YAML processing & config loading | See below |
+
+### Why jq and yq?
+
+- **Performance**: Native JSON/YAML parsing is 10-100x faster than shell alternatives
+- **Reliability**: Robust config file handling without regex hacks
+- **Features**: Deep merge, path queries, format conversion
+
+### Installation by OS
+
+**Ubuntu/Debian:**
+```bash
+sudo apt update && sudo apt install -y jq yq
+```
+
+**macOS:**
+```bash
+brew install jq yq
+```
+
+**Fedora/RHEL:**
+```bash
+sudo dnf install -y jq yq
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S jq yq
+```
+
+### Verify Installation
+
+```bash
+# All three must succeed
+node --version   # v18.0.0 or higher
+jq --version     # jq-1.6 or higher
+yq --version     # any version works
+```
+
+> ⚠️ **Installation will fail** if jq or yq are not found in your PATH.
+
+---
+
 ## Installation Methods
 
 ### Method 1: NPM (Recommended)

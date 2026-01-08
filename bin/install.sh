@@ -5,6 +5,18 @@
 # ============================================================
 # This script installs the Harmony Framework into a project.
 #
+# PREREQUISITES (MANDATORY):
+#   - Node.js 18+    : Runtime for npx
+#   - jq             : JSON processing (apt install jq / brew install jq)
+#   - yq             : YAML processing (apt install yq / brew install yq)
+#
+#   Why jq and yq?
+#   - Performance: Native JSON/YAML parsing is 10-100x faster than shell
+#   - Reliability: Robust config handling without regex hacks
+#   - Features: Deep merge, path queries, format conversion
+#
+#   Installation will FAIL if jq or yq are not found.
+#
 # Usage:
 #   ./install.sh [options]
 #
@@ -372,6 +384,42 @@ check_prerequisites() {
         exit 1
     fi
 
+    # Load runtime info for dependency checks
+    _load_runtime_info
+
+    # Check required dependencies: jq and yq
+    local missing_deps=()
+    if [[ -z "$_RUNTIME_JQ" ]]; then
+        missing_deps+=("jq")
+    fi
+    if [[ -z "$_RUNTIME_YQ" ]]; then
+        missing_deps+=("yq")
+    fi
+
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        echo ""
+        print_error "DÉPENDANCES MANQUANTES: ${missing_deps[*]}"
+        echo ""
+        print_message "$YELLOW" "jq et yq sont OBLIGATOIRES pour Harmony Framework."
+        print_message "$YELLOW" "Ils permettent l'analyse performante des fichiers JSON et YAML."
+        echo ""
+        print_message "$CYAN" "Installation:"
+        for dep in "${missing_deps[@]}"; do
+            local install_cmd=$(get_install_cmd "$dep")
+            if [[ -n "$install_cmd" ]]; then
+                print_message "$CYAN" "  $dep: $install_cmd"
+            else
+                case "$dep" in
+                    jq) print_message "$CYAN" "  jq: https://stedolan.github.io/jq/download/" ;;
+                    yq) print_message "$CYAN" "  yq: https://github.com/mikefarah/yq#install" ;;
+                esac
+            fi
+        done
+        echo ""
+        print_message "$YELLOW" "Après installation, relancez: npx harmony-ai-framework --full"
+        exit 1
+    fi
+
     # Note: print_success is hidden when UI is loaded (ui_show_step handles it)
     print_success "Prerequisites check passed"
 }
@@ -406,6 +454,7 @@ create_directory_structure() {
         ".harmony/profiles/backend/nestjs/knowledge/integrations"
         ".harmony/profiles/backend/nestjs/knowledge/pitfalls"
         # Local directories (project-specific)
+        ".harmony/local/config"
         ".harmony/local/tmp/qa"
         ".harmony/local/reports/qa"
         ".harmony/local/metrics"
@@ -897,6 +946,93 @@ EOF
         fi
     else
         print_success "Autopilot configuration already exists"
+    fi
+}
+
+# Initialize user config with examples
+initialize_user_config() {
+    print_step "5.8/6" "Initializing user configuration..."
+
+    local config_dir="$PROJECT_DIR/.harmony/local/config"
+    mkdir -p "$config_dir"
+
+    local config_file="$config_dir/overrides.yaml"
+    if [[ ! -f "$config_file" ]]; then
+        cat > "$config_file" << 'EOF'
+# =============================================================================
+# Harmony Framework - User Configuration (Personal Overrides)
+# =============================================================================
+#
+# This file contains YOUR personal settings that override the team config.
+# It is NOT versioned (in .gitignore) - each developer has their own.
+#
+# Team config is at: .harmony/config/overrides.yaml (shared, versioned)
+# This file mirrors that structure for personal overrides.
+#
+# Tip: Use `/harmony config` command for natural language configuration!
+#      Example: "Bloquer DROP DATABASE sur la production"
+#
+# =============================================================================
+
+# --- Project Settings ---
+# project:
+#   name: "my-project"
+#   language: "fr"              # Response language: en, fr, es, de, it, pt
+
+# --- Docker Settings ---
+# docker:
+#   required: true              # Block local npm/yarn, require Docker
+#   container_prefix: "myapp"   # Prefix for container suggestions
+
+# --- Rules Enforcer (Security) ---
+# rules_enforcer:
+#   add_dangerous_patterns:     # Patterns to BLOCK (regex)
+#     - 'DROP DATABASE.*prod'
+#     - 'rm -rf /data'
+#   add_warning_patterns:       # Patterns for WARNING only
+#     - 'sudo'
+#   add_allowed_patterns:       # Docker exceptions
+#     - 'docker exec myapp npm'
+#   disable_patterns:           # Framework patterns to DISABLE
+#     - 'prisma migrate reset'
+
+# --- Guardian (Story Verification) ---
+# guardian:
+#   enabled: true
+#   mode: "warn"                # "warn" | "block"
+#   add_allowed_directories:    # Skip verification for these dirs
+#     - "scripts/"
+#     - "tools/"
+#   add_allowed_extensions:     # Skip verification for these extensions
+#     - ".sql"
+#     - ".test.ts"
+
+# --- Sentinel (Circuit Breaker) ---
+# sentinel:
+#   enabled: true
+#   circuit_breaker:
+#     enabled: true
+#     max_failures: 5           # Default: 3
+#     cooldown_minutes: 10      # Default: 5
+
+# --- Agents ---
+# agents:
+#   disabled:                   # Agents to disable
+#     - "pentest"
+#   aliases:                    # Custom aliases
+#     dev: "developer"
+#     qa: "exploratory-qa"
+
+# --- Hooks ---
+# hooks:
+#   disabled_hooks:             # Hooks to skip
+#     - "guardian-checkpoint"
+#   additional_pre_hooks:       # Custom hooks to run
+#     - ".harmony/local/hooks/my-check.sh"
+EOF
+        print_success "User configuration template created at .harmony/local/config/overrides.yaml"
+    else
+        print_success "User configuration already exists"
     fi
 }
 
@@ -1443,6 +1579,7 @@ _RUNTIME_BASH=""
 _RUNTIME_NODE=""
 _RUNTIME_BUN=""
 _RUNTIME_JQ=""
+_RUNTIME_YQ=""
 _RUNTIME_PERF=""
 
 # Load runtime info (called once, results cached)
@@ -1458,6 +1595,7 @@ _load_runtime_info() {
         _RUNTIME_NODE=$(detect_node_version || echo "")
         _RUNTIME_BUN=$(detect_bun_version || echo "")
         _RUNTIME_JQ=$(detect_jq_version || echo "")
+        _RUNTIME_YQ=$(detect_yq_version || echo "")
         _RUNTIME_PERF=$(detect_performance_level || echo "basic")
 
         # Construire nom OS
@@ -1505,11 +1643,18 @@ show_runtime_status_system_only() {
             ui_box_text "[!] Bun: non installé (+80% TURBO mode)"
         fi
 
-        # jq - +15% JSON streaming
+        # jq - REQUIS pour JSON streaming
         if [[ -n "$_RUNTIME_JQ" ]]; then
-            ui_box_text "[✓] jq: $_RUNTIME_JQ (+15% - JSON streaming)"
+            ui_box_text "[✓] jq: $_RUNTIME_JQ (requis - JSON streaming)"
         else
-            ui_box_text "[!] jq: non installé (+15% JSON)"
+            ui_box_text "[✗] jq: non installé (REQUIS - analyse JSON)"
+        fi
+
+        # yq - REQUIS pour YAML parsing
+        if [[ -n "$_RUNTIME_YQ" ]]; then
+            ui_box_text "[✓] yq: $_RUNTIME_YQ (requis - YAML parsing)"
+        else
+            ui_box_text "[✗] yq: non installé (REQUIS - analyse YAML)"
         fi
 
         ui_box_line mid
@@ -1531,7 +1676,8 @@ show_runtime_status_system_only() {
         [[ -n "$_RUNTIME_BASH" ]] && print_success "Bash: $_RUNTIME_BASH" || print_warning "Bash: non trouvé"
         [[ -n "$_RUNTIME_NODE" ]] && print_success "Node: $_RUNTIME_NODE" || print_warning "Node: non installé"
         [[ -n "$_RUNTIME_BUN" ]] && print_success "Bun: $_RUNTIME_BUN" || print_warning "Bun: non installé"
-        [[ -n "$_RUNTIME_JQ" ]] && print_success "jq: $_RUNTIME_JQ" || print_warning "jq: non installé"
+        [[ -n "$_RUNTIME_JQ" ]] && print_success "jq: $_RUNTIME_JQ (REQUIS)" || print_error "jq: non installé (REQUIS)"
+        [[ -n "$_RUNTIME_YQ" ]] && print_success "yq: $_RUNTIME_YQ (REQUIS)" || print_error "yq: non installé (REQUIS)"
     fi
 }
 
@@ -1562,12 +1708,22 @@ show_runtime_status_recommendations() {
             ui_box_title "📦 Recommandations"
             ui_box_line mid
 
-            # Performance recommendations
-            if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]]; then
-                ui_box_text "Performance:"
+            # Required dependencies (BLOCKING)
+            if [[ -z "$_RUNTIME_JQ" || -z "$_RUNTIME_YQ" ]]; then
+                ui_box_text "⚠️  DÉPENDANCES REQUISES:"
+                [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
+                [[ -z "$_RUNTIME_YQ" ]] && ui_box_text "  yq:      $(get_install_cmd yq)"
+                ui_box_text ""
+                ui_box_text "→ jq et yq sont OBLIGATOIRES pour l'analyse de fichiers"
+                ui_box_text "→ Installez-les puis relancez l'installation"
+            fi
+
+            # Performance recommendations (optional)
+            if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" ]]; then
+                ui_box_text ""
+                ui_box_text "Optionnel (performance):"
                 [[ -z "$_RUNTIME_NODE" ]] && ui_box_text "  Node.js: $(get_install_cmd node)"
                 [[ -z "$_RUNTIME_BUN" ]] && ui_box_text "  Bun:     $(get_install_cmd bun)"
-                [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
             fi
 
             # Security recommendations (Linux sandbox)
@@ -1682,6 +1838,13 @@ main() {
     # =========================================================================
     initialize_autopilot_config
     ui_show_step "🤖" "Autopilot configuration ready" "ok"
+    [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
+
+    # =========================================================================
+    # ÉCRAN 9.5: User config
+    # =========================================================================
+    initialize_user_config
+    ui_show_step "👤" "User configuration template ready" "ok"
     [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
 
     # =========================================================================

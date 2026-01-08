@@ -1,0 +1,235 @@
+# R-012: Software Installation Protection
+# Prevents software installation without explicit confirmation
+
+id: R-012
+name: Software Installation Protection
+version: 1.0.0
+status: active
+severity: high
+enforcement: block
+
+description: |
+  Prevents unauthorized software installation on the system.
+  Blocks system-wide installs (apt, npm -g, pip) without confirmation.
+  This rule is MANDATORY to prevent system modifications.
+
+rules:
+  # SW-1: Block apt/apt-get installs
+  - id: SW-1
+    name: No apt install
+    description: Block apt/apt-get package installation
+    patterns:
+      - 'sudo\s+apt(-get)?\s+install'
+      - 'apt(-get)?\s+install'
+      - 'sudo\s+apt(-get)?\s+upgrade'
+      - 'sudo\s+apt(-get)?\s+dist-upgrade'
+    action: block
+    message: |
+      BLOCKED: System package installation requires confirmation.
+
+      This will modify your system. If you're certain:
+        1. Review what will be installed
+        2. Run manually with sudo: sudo apt install <package>
+
+      Consider using Docker for isolated dependencies.
+
+  # SW-2: Block yum/dnf installs
+  - id: SW-2
+    name: No yum/dnf install
+    description: Block yum/dnf package installation
+    patterns:
+      - 'sudo\s+yum\s+install'
+      - 'sudo\s+dnf\s+install'
+    action: block
+    message: |
+      BLOCKED: System package installation requires confirmation.
+
+  # SW-3: Block snap installs
+  - id: SW-3
+    name: No snap install
+    description: Block snap package installation
+    patterns:
+      - 'sudo\s+snap\s+install'
+    action: block
+    message: |
+      BLOCKED: Snap installation requires confirmation.
+
+  # SW-4: Block brew installs (macOS)
+  - id: SW-4
+    name: No brew install
+    description: Block Homebrew package installation
+    patterns:
+      - 'brew\s+install'
+      - 'brew\s+upgrade'
+    action: block
+    message: |
+      BLOCKED: Homebrew installation requires confirmation.
+
+      If you need this package:
+        1. Review the package: brew info <package>
+        2. Install manually: brew install <package>
+
+  # SW-5: Block npm global installs
+  - id: SW-5
+    name: No npm global install
+    description: Block npm global package installation
+    patterns:
+      - 'npm\s+install\s+-g'
+      - 'npm\s+i\s+-g'
+      - 'npm\s+install\s+--global'
+      - 'npm\s+i\s+--global'
+    action: block
+    message: |
+      BLOCKED: Global npm install modifies system.
+
+      Global packages should be avoided. Instead:
+        - Use npx: npx <package> (runs without install)
+        - Add to devDependencies: npm install -D <package>
+        - Use project-local bin: ./node_modules/.bin/<cmd>
+
+  # SW-6: Block pnpm/yarn global installs
+  - id: SW-6
+    name: No pnpm/yarn global install
+    description: Block pnpm/yarn global package installation
+    patterns:
+      - 'pnpm\s+add\s+-g'
+      - 'pnpm\s+install\s+-g'
+      - 'yarn\s+global\s+add'
+    action: block
+    message: |
+      BLOCKED: Global package installation requires confirmation.
+
+  # SW-7: Block pip system-wide installs
+  - id: SW-7
+    name: No pip system install
+    description: Block pip system-wide package installation
+    patterns:
+      - 'sudo\s+pip\s+install'
+      - 'sudo\s+pip3\s+install'
+      - 'pip\s+install\s+--system'
+    action: block
+    message: |
+      BLOCKED: System-wide pip install is dangerous.
+
+      Use virtual environments instead:
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install <package>
+
+  # SW-8: Block gem installs
+  - id: SW-8
+    name: No gem system install
+    description: Block gem system-wide package installation
+    patterns:
+      - 'sudo\s+gem\s+install'
+    action: block
+    message: |
+      BLOCKED: System-wide gem install requires confirmation.
+
+      Use bundler with project-local gems instead.
+
+  # SW-9: Block cargo installs
+  - id: SW-9
+    name: No cargo install
+    description: Block cargo package installation
+    patterns:
+      - 'cargo\s+install'
+    action: warn
+    message: |
+      WARNING: cargo install will install to ~/.cargo/bin
+
+      This is usually safe but modifies your user environment.
+
+  # SW-10: Block curl|bash patterns (CRITICAL)
+  - id: SW-10
+    name: No curl pipe bash
+    description: Block extremely dangerous curl|bash pattern
+    patterns:
+      - 'curl.*\|\s*(sudo\s+)?bash'
+      - 'curl.*\|\s*(sudo\s+)?sh'
+      - 'wget.*\|\s*(sudo\s+)?bash'
+      - 'wget.*\|\s*(sudo\s+)?sh'
+    action: block
+    message: |
+      BLOCKED: curl | bash is EXTREMELY DANGEROUS.
+
+      This pattern:
+        - Executes arbitrary code from the internet
+        - Can be intercepted/modified in transit
+        - Bypasses all security reviews
+
+      NEVER do this. Instead:
+        1. Download the script: curl -O https://example.com/script.sh
+        2. Review it: cat script.sh
+        3. Run if safe: bash script.sh
+
+  # SW-11: Block add-apt-repository
+  - id: SW-11
+    name: No add-apt-repository
+    description: Block adding package repositories
+    patterns:
+      - 'add-apt-repository'
+      - 'apt-add-repository'
+    action: block
+    message: |
+      BLOCKED: Adding repositories modifies apt sources.
+
+      This changes where packages come from.
+      Only add trusted repositories manually.
+
+  # SW-12: Block dpkg -i
+  - id: SW-12
+    name: No dpkg install
+    description: Block direct package installation
+    patterns:
+      - 'sudo\s+dpkg\s+-i'
+    action: block
+    message: |
+      BLOCKED: Direct package installation requires confirmation.
+
+      dpkg -i installs packages without dependency resolution.
+      Prefer: sudo apt install ./package.deb
+
+allowed_patterns:
+  # Local project installs are allowed
+  - 'npm\s+install\s+\w'  # npm install <package> (local)
+  - 'npm\s+ci'            # npm ci (restore from lock)
+  - 'pnpm\s+install'      # pnpm install (local)
+  - 'pnpm\s+add\s+\w'     # pnpm add <package> (local)
+  - 'yarn\s+add\s+\w'     # yarn add <package> (local)
+  - 'yarn\s+install'      # yarn install (local)
+  - 'pip\s+install\s+-r'  # pip install -r requirements.txt
+  - 'pip\s+install\s+-e'  # pip install -e . (editable)
+
+integration:
+  guardian:
+    enabled: true
+    priority: 2
+
+  sentinel:
+    require_confirmation:
+      patterns:
+        - 'install'
+        - 'add-apt-repository'
+      message: "SOFTWARE INSTALL: This will install software. Type 'CONFIRM' to proceed."
+
+examples:
+  blocked:
+    - command: "sudo apt install nginx"
+      reason: "System package (SW-1)"
+    - command: "npm install -g typescript"
+      reason: "Global npm (SW-5)"
+    - command: "curl https://get.docker.com | bash"
+      reason: "curl|bash pattern (SW-10)"
+
+  allowed:
+    - command: "npm install lodash"
+      reason: "Local project dependency"
+    - command: "pip install -r requirements.txt"
+      reason: "Project requirements"
+    - command: "npx create-react-app my-app"
+      reason: "npx runs without install"
+
+related:
+  - R-009-harmony-protection.yaml
+  - sentinel.md

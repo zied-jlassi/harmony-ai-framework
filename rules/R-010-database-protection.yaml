@@ -1,0 +1,164 @@
+# R-010: Database Protection
+# Prevents destructive database operations without explicit confirmation
+
+id: R-010
+name: Database Protection
+version: 1.0.0
+status: active
+severity: critical
+enforcement: block
+
+description: |
+  Protects databases from accidental destructive operations.
+  DROP, TRUNCATE, and mass DELETE/UPDATE operations require explicit confirmation.
+  This rule is MANDATORY to prevent catastrophic data loss.
+
+rules:
+  # DB-1: Block DROP DATABASE
+  - id: DB-1
+    name: No DROP DATABASE
+    description: Block DROP DATABASE commands without confirmation
+    patterns:
+      - 'DROP\s+DATABASE'
+      - 'DROP\s+SCHEMA'
+    action: block
+    message: |
+      BLOCKED: DROP DATABASE/SCHEMA is a destructive operation.
+
+      This will permanently delete all data in the database.
+      If you're certain, use explicit SQL with confirmation:
+        -- CONFIRM: DROP DATABASE mydb
+
+      Or use migration tools for controlled schema changes.
+
+  # DB-2: Block DROP TABLE
+  - id: DB-2
+    name: No DROP TABLE Without Review
+    description: Block DROP TABLE commands
+    patterns:
+      - 'DROP\s+TABLE'
+      - 'DROP\s+INDEX.*CASCADE'
+    action: block
+    message: |
+      BLOCKED: DROP TABLE is a destructive operation.
+
+      This will permanently delete the table and all its data.
+      Consider:
+        1. Create a backup first
+        2. Use migration tool (prisma, sequelize, knex)
+        3. Review with DBA before proceeding
+
+  # DB-3: Block TRUNCATE
+  - id: DB-3
+    name: No TRUNCATE
+    description: Block TRUNCATE commands
+    patterns:
+      - 'TRUNCATE\s+TABLE'
+      - 'TRUNCATE\s+.*CASCADE'
+    action: block
+    message: |
+      BLOCKED: TRUNCATE will delete all rows instantly.
+
+      Unlike DELETE, TRUNCATE cannot be rolled back easily.
+      Consider:
+        - DELETE FROM table WHERE condition (for selective deletion)
+        - Create backup before truncating
+
+  # DB-4: Block DELETE without WHERE
+  - id: DB-4
+    name: No DELETE Without WHERE
+    description: Block DELETE statements without WHERE clause
+    patterns:
+      - 'DELETE\s+FROM\s+\w+\s*;'
+      - 'DELETE\s+FROM\s+\w+\s*$'
+    action: block
+    message: |
+      BLOCKED: DELETE without WHERE will remove ALL rows.
+
+      Always specify a WHERE clause:
+        DELETE FROM users WHERE id = 123;
+
+      For full table clear, use TRUNCATE (with confirmation).
+
+  # DB-5: Block UPDATE without WHERE
+  - id: DB-5
+    name: No UPDATE Without WHERE
+    description: Block UPDATE statements without WHERE clause
+    patterns:
+      - 'UPDATE\s+\w+\s+SET\s+.*\s*;$'
+      - 'UPDATE\s+\w+\s+SET\s+[^W]*$'
+    action: block
+    message: |
+      BLOCKED: UPDATE without WHERE will modify ALL rows.
+
+      Always specify a WHERE clause:
+        UPDATE users SET role = 'admin' WHERE id = 123;
+
+  # DB-6: Block dangerous ALTER
+  - id: DB-6
+    name: No Dangerous ALTER
+    description: Block ALTER TABLE with DROP COLUMN/CONSTRAINT
+    patterns:
+      - 'ALTER\s+TABLE.*DROP\s+COLUMN'
+      - 'ALTER\s+TABLE.*DROP\s+CONSTRAINT'
+    action: warn
+    message: |
+      WARNING: ALTER TABLE DROP is a schema change.
+
+      Dropping columns/constraints may break:
+        - Application code
+        - Other tables with foreign keys
+        - Stored procedures
+
+      Use migration tools for safe schema changes.
+
+  # DB-7: Block raw SQL execution
+  - id: DB-7
+    name: Warn on Raw SQL
+    description: Warn when using raw SQL execution methods
+    patterns:
+      - 'prisma\s+db\s+execute'
+      - 'sequelize\.query'
+      - '\.raw\s*\('
+      - '\$queryRaw'
+      - 'knex\.raw'
+    action: warn
+    message: |
+      WARNING: Raw SQL execution detected.
+
+      Raw SQL bypasses ORM protections. Ensure:
+        - Input is sanitized
+        - Query is reviewed
+        - No SQL injection vulnerabilities
+
+integration:
+  guardian:
+    enabled: true
+    priority: 2
+
+  sentinel:
+    require_confirmation:
+      patterns:
+        - 'DROP'
+        - 'TRUNCATE'
+        - 'DELETE.*FROM'
+      message: "DANGEROUS: This operation will modify/delete data. Type 'CONFIRM' to proceed."
+
+examples:
+  blocked:
+    - command: "DROP DATABASE production"
+      reason: "Destructive operation (DB-1)"
+    - command: "TRUNCATE TABLE users"
+      reason: "Mass deletion (DB-3)"
+    - command: "DELETE FROM orders;"
+      reason: "DELETE without WHERE (DB-4)"
+
+  allowed:
+    - command: "DELETE FROM users WHERE id = 123"
+      reason: "Specific deletion with WHERE"
+    - command: "UPDATE users SET name = 'John' WHERE id = 1"
+      reason: "Specific update with WHERE"
+
+related:
+  - R-008-git-safety.yaml
+  - sentinel.md

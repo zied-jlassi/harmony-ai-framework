@@ -75,6 +75,7 @@ detect_bash_version() { bash --version 2>/dev/null | head -1 | grep -oE '[0-9]+\
 detect_node_version() { command -v node &>/dev/null && node --version 2>/dev/null | sed 's/v//'; }
 detect_bun_version() { command -v bun &>/dev/null && bun --version 2>/dev/null; }
 detect_jq_version() { command -v jq &>/dev/null && jq --version 2>/dev/null | sed 's/jq-//'; }
+detect_yq_version() { command -v yq &>/dev/null && yq --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1; }
 
 detect_best_runtime() {
     [[ -n "$(detect_bun_version)" ]] && echo "bun" && return
@@ -104,6 +105,7 @@ detect_system_info() {
   "node": "$(detect_node_version)",
   "bun": "$(detect_bun_version)",
   "jq": "$(detect_jq_version)",
+  "yq": "$(detect_yq_version)",
   "best_runtime": "$(detect_best_runtime)",
   "performance_level": "$(detect_performance_level)"
 }
@@ -124,6 +126,7 @@ get_install_cmd() {
                 node) echo "brew install node" ;;
                 bun) echo "brew install bun" ;;
                 jq) echo "brew install jq" ;;
+                yq) echo "brew install yq" ;;
             esac ;;
         linux)
             case "$family" in
@@ -132,18 +135,21 @@ get_install_cmd() {
                         node) echo "sudo apt install -y nodejs npm" ;;
                         bun) echo "curl -fsSL https://bun.sh/install | bash" ;;
                         jq) echo "sudo apt install -y jq" ;;
+                        yq) echo "sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq" ;;
                     esac ;;
                 redhat)
                     case "$tool" in
                         node) echo "sudo dnf install -y nodejs npm" ;;
                         bun) echo "curl -fsSL https://bun.sh/install | bash" ;;
                         jq) echo "sudo dnf install -y jq" ;;
+                        yq) echo "sudo dnf install -y yq  # Or: snap install yq" ;;
                     esac ;;
                 arch)
                     case "$tool" in
                         node) echo "sudo pacman -S nodejs npm" ;;
                         bun) echo "curl -fsSL https://bun.sh/install | bash" ;;
                         jq) echo "sudo pacman -S jq" ;;
+                        yq) echo "sudo pacman -S yq  # AUR: yay -S yq-bin" ;;
                     esac ;;
             esac ;;
     esac
@@ -165,8 +171,9 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         --node) detect_node_version ;;
         --bun) detect_bun_version ;;
         --jq) detect_jq_version ;;
+        --yq) detect_yq_version ;;
         --install)
-            [[ -z "${2:-}" ]] && echo "Usage: $0 --install <node|bun|jq>" && exit 1
+            [[ -z "${2:-}" ]] && echo "Usage: $0 --install <node|bun|jq|yq>" && exit 1
             get_install_cmd "$2"
             ;;
         *) detect_system_info ;;

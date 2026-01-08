@@ -1,0 +1,221 @@
+# R-011: Filesystem Protection
+# Prevents dangerous filesystem operations (rm -rf, etc.)
+
+id: R-011
+name: Filesystem Protection
+version: 1.0.0
+status: active
+severity: critical
+enforcement: block
+
+description: |
+  Protects the filesystem from accidental destructive operations.
+  Blocks rm -rf on critical directories while allowing safe cleanup.
+  This rule is MANDATORY to prevent catastrophic file loss.
+
+protected_paths:
+  # System directories (ALWAYS blocked)
+  - path: "/"
+    description: "Root directory"
+  - path: "~"
+    description: "Home directory"
+  - path: "/etc"
+    description: "System configuration"
+  - path: "/var"
+    description: "System data"
+  - path: "/usr"
+    description: "System programs"
+  - path: "/bin"
+    description: "System binaries"
+  - path: "/sbin"
+    description: "System admin binaries"
+
+  # Project directories (blocked without confirmation)
+  - path: "src"
+    description: "Source code"
+  - path: "lib"
+    description: "Libraries"
+  - path: "app"
+    description: "Application code"
+  - path: ".git"
+    description: "Git repository"
+  - path: ".harmony"
+    description: "Harmony framework"
+  - path: "node_modules"
+    description: "Dependencies (use npm ci to restore)"
+  - path: "dist"
+    description: "Build output"
+
+allowed_paths:
+  # Safe directories (allowed for cleanup)
+  - path: "/tmp/"
+    description: "Temporary files"
+  - path: ".cache"
+    description: "Cache directory"
+  - path: "coverage"
+    description: "Test coverage"
+  - path: ".next"
+    description: "Next.js cache"
+  - path: ".turbo"
+    description: "Turbo cache"
+  - path: ".nyc_output"
+    description: "NYC coverage output"
+  - path: ".pytest_cache"
+    description: "Pytest cache"
+  - path: "__pycache__"
+    description: "Python cache"
+
+rules:
+  # FS-1: Block rm -rf without path
+  - id: FS-1
+    name: No Bare rm -rf
+    description: Block rm -rf without specifying a path
+    patterns:
+      - '^rm\s+-rf\s*$'
+      - '^rm\s+-fr\s*$'
+    action: block
+    message: |
+      BLOCKED: rm -rf requires a specific path.
+
+      Never run rm -rf without a target.
+
+  # FS-2: Block rm -rf on root/home
+  - id: FS-2
+    name: No rm -rf on System
+    description: Block rm -rf on system directories
+    patterns:
+      - 'rm\s+-(rf|fr)\s+/$'
+      - 'rm\s+-(rf|fr)\s+/\s'
+      - 'rm\s+-(rf|fr)\s+~'
+      - 'rm\s+-(rf|fr)\s+/etc'
+      - 'rm\s+-(rf|fr)\s+/var'
+      - 'rm\s+-(rf|fr)\s+/usr'
+      - 'rm\s+-(rf|fr)\s+/home$'
+    action: block
+    message: |
+      BLOCKED: Cannot rm -rf system directories.
+
+      This would destroy your system. Never do this.
+
+  # FS-3: Block rm -rf on project directories
+  - id: FS-3
+    name: No rm -rf on Project
+    description: Block rm -rf on important project directories
+    patterns:
+      - 'rm\s+-(rf|fr)\s+\./?$'
+      - 'rm\s+-(rf|fr)\s+\.\.'
+      - 'rm\s+-(rf|fr)\s+src'
+      - 'rm\s+-(rf|fr)\s+lib'
+      - 'rm\s+-(rf|fr)\s+app'
+      - 'rm\s+-(rf|fr)\s+\.git'
+      - 'rm\s+-(rf|fr)\s+\.harmony'
+      - 'rm\s+-(rf|fr)\s+\*'
+    action: block
+    message: |
+      BLOCKED: Cannot rm -rf project directories.
+
+      Protected: src/, lib/, app/, .git/, .harmony/
+
+      If you need to clean, be specific:
+        rm -rf dist/
+        rm -rf .cache/
+
+  # FS-4: Warn on node_modules deletion
+  - id: FS-4
+    name: Warn on node_modules Deletion
+    description: Warn before deleting node_modules
+    patterns:
+      - 'rm\s+-(rf|fr)\s+node_modules'
+    action: warn
+    message: |
+      WARNING: Deleting node_modules.
+
+      This is usually safe but will require reinstall:
+        npm ci (or npm install)
+
+      Make sure package-lock.json exists!
+
+  # FS-5: Warn on dist deletion
+  - id: FS-5
+    name: Warn on dist Deletion
+    description: Warn before deleting build output
+    patterns:
+      - 'rm\s+-(rf|fr)\s+dist'
+      - 'rm\s+-(rf|fr)\s+build'
+      - 'rm\s+-(rf|fr)\s+out'
+    action: warn
+    message: |
+      WARNING: Deleting build output.
+
+      Rebuild with:
+        npm run build
+
+  # FS-6: Allow safe cleanup paths
+  - id: FS-6
+    name: Allow Cache Cleanup
+    description: Allow rm -rf on cache directories
+    patterns:
+      - 'rm\s+-(rf|fr)\s+/tmp/'
+      - 'rm\s+-(rf|fr)\s+\.cache'
+      - 'rm\s+-(rf|fr)\s+coverage'
+      - 'rm\s+-(rf|fr)\s+\.next'
+      - 'rm\s+-(rf|fr)\s+\.turbo'
+    action: allow
+    message: "Cache cleanup allowed"
+
+  # FS-7: Warn on any rm -rf
+  - id: FS-7
+    name: Log All rm -rf
+    description: Log all rm -rf commands for audit
+    patterns:
+      - 'rm\s+-(rf|fr)'
+    action: log
+    log_level: warn
+
+  # FS-8: Block chmod 777
+  - id: FS-8
+    name: No chmod 777
+    description: Block overly permissive chmod
+    patterns:
+      - 'chmod\s+777'
+      - 'chmod\s+-R\s+777'
+    action: block
+    message: |
+      BLOCKED: chmod 777 is a security risk.
+
+      Use specific permissions:
+        chmod 755 for directories
+        chmod 644 for files
+        chmod 700 for private directories
+
+integration:
+  guardian:
+    enabled: true
+    priority: 2
+
+  hooks:
+    PreToolUse:
+      - matcher: "Bash.*rm\\s+-(rf|fr)\\s+(/|~|\\.|src|lib|app|\\.git|\\.harmony)"
+        action: block
+        message: "Filesystem Protection: Cannot delete protected directory"
+
+examples:
+  blocked:
+    - command: "rm -rf /"
+      reason: "System destruction (FS-2)"
+    - command: "rm -rf ."
+      reason: "Project deletion (FS-3)"
+    - command: "rm -rf src"
+      reason: "Source code deletion (FS-3)"
+
+  allowed:
+    - command: "rm -rf /tmp/test-build"
+      reason: "Temp cleanup (FS-6)"
+    - command: "rm -rf .cache"
+      reason: "Cache cleanup (FS-6)"
+    - command: "rm -rf coverage"
+      reason: "Coverage cleanup (FS-6)"
+
+related:
+  - R-009-harmony-protection.yaml
+  - guardian.md

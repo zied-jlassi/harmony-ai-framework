@@ -37,7 +37,8 @@ MIN_CONFIG_VERSION="1.0.0"
 # Config files (order of precedence: last wins)
 FRAMEWORK_CONFIG="${HARMONY_DIR}/config/harmony.config.json"
 OVERRIDE_CONFIG="${HARMONY_DIR}/config/overrides.yaml"
-LOCAL_CONFIG="${HARMONY_DIR}/local/config.yaml"
+LOCAL_CONFIG="${HARMONY_DIR}/local/config/overrides.yaml"
+LOCAL_CONFIG_LEGACY="${HARMONY_DIR}/local/config.yaml"  # Backward compat
 
 # Cached merged config
 MERGED_CONFIG=""
@@ -125,6 +126,133 @@ check_deprecated_keys() {
 }
 
 # -----------------------------------------------------------------------------
+# BASIC YAML PARSING (fallback when yq not available)
+# -----------------------------------------------------------------------------
+
+# Parse simple YAML to JSON (handles nested objects up to 3 levels)
+# Limitations: No arrays, no multiline strings
+# Usage: json=$(_basic_yaml_to_json "file.yaml")
+_basic_yaml_to_json() {
+    local yaml_file="$1"
+    local result="{"
+    local first_l0=true
+    local first_l1=true
+    local first_l2=true
+    local current_l0=""      # Level 0 section (e.g., "sentinel")
+    local current_l1=""      # Level 1 subsection (e.g., "circuit_breaker")
+    local in_l1_object=false # Are we inside a level 1 nested object?
+
+    # Helper to format a value
+    _format_value() {
+        local val="$1"
+        # Remove quotes
+        val="${val#\"}"
+        val="${val%\"}"
+        val="${val#\'}"
+        val="${val%\'}"
+        # Detect type
+        if [[ "$val" == "true" ]] || [[ "$val" == "false" ]]; then
+            echo "$val"
+        elif [[ "$val" =~ ^-?[0-9]+$ ]]; then
+            echo "$val"
+        else
+            val="${val//\\/\\\\}"
+            val="${val//\"/\\\"}"
+            echo "\"$val\""
+        fi
+    }
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "${line// }" ]] && continue
+        # Skip array items (not supported)
+        [[ "$line" =~ ^[[:space:]]*-[[:space:]] ]] && continue
+
+        # Count leading spaces
+        local stripped="${line#"${line%%[![:space:]]*}"}"
+        local indent=$(( ${#line} - ${#stripped} ))
+
+        # Level 0: No indentation, section header (key:)
+        if [[ $indent -eq 0 ]] && [[ "$line" =~ ^([a-zA-Z_][a-zA-Z0-9_-]*):[[:space:]]*$ ]]; then
+            # Close previous structures
+            if [[ "$in_l1_object" == "true" ]]; then
+                result+="}"
+                in_l1_object=false
+            fi
+            if [[ -n "$current_l0" ]]; then
+                result+="},"
+            fi
+            current_l0="${BASH_REMATCH[1]}"
+            current_l1=""
+            first_l1=true
+            first_l2=true
+            [[ "$first_l0" == "true" ]] && first_l0=false
+            result+="\"$current_l0\":{"
+
+        # Level 0: Top-level key-value (key: value)
+        elif [[ $indent -eq 0 ]] && [[ "$line" =~ ^([a-zA-Z_][a-zA-Z0-9_-]*):[[:space:]]*(.+)$ ]]; then
+            # Close previous structures
+            if [[ "$in_l1_object" == "true" ]]; then
+                result+="}"
+                in_l1_object=false
+            fi
+            if [[ -n "$current_l0" ]]; then
+                result+="},"
+                current_l0=""
+            fi
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            [[ "$first_l0" == "true" ]] && first_l0=false || result+=","
+            result+="\"$key\":$(_format_value "$value")"
+
+        # Level 1: 2 spaces, subsection header (  key:)
+        elif [[ $indent -eq 2 ]] && [[ "$stripped" =~ ^([a-zA-Z_][a-zA-Z0-9_-]*):[[:space:]]*$ ]]; then
+            # Close previous L1 object
+            if [[ "$in_l1_object" == "true" ]]; then
+                result+="}"
+                in_l1_object=false
+            fi
+            current_l1="${BASH_REMATCH[1]}"
+            first_l2=true
+            [[ "$first_l1" == "true" ]] && first_l1=false || result+=","
+            result+="\"$current_l1\":{"
+            in_l1_object=true
+
+        # Level 1: 2 spaces, key-value (  key: value)
+        elif [[ $indent -eq 2 ]] && [[ "$stripped" =~ ^([a-zA-Z_][a-zA-Z0-9_-]*):[[:space:]]*(.+)$ ]]; then
+            # Close previous L1 object if exists
+            if [[ "$in_l1_object" == "true" ]]; then
+                result+="}"
+                in_l1_object=false
+            fi
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            [[ "$first_l1" == "true" ]] && first_l1=false || result+=","
+            result+="\"$key\":$(_format_value "$value")"
+
+        # Level 2: 4 spaces, key-value (    key: value)
+        elif [[ $indent -eq 4 ]] && [[ "$stripped" =~ ^([a-zA-Z_][a-zA-Z0-9_-]*):[[:space:]]*(.+)$ ]]; then
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            [[ "$first_l2" == "true" ]] && first_l2=false || result+=","
+            result+="\"$key\":$(_format_value "$value")"
+        fi
+    done < "$yaml_file"
+
+    # Close any open structures
+    if [[ "$in_l1_object" == "true" ]]; then
+        result+="}"
+    fi
+    if [[ -n "$current_l0" ]]; then
+        result+="}"
+    fi
+
+    result+="}"
+    echo "$result"
+}
+
+# -----------------------------------------------------------------------------
 # CONFIG LOADING
 # -----------------------------------------------------------------------------
 
@@ -132,6 +260,10 @@ check_deprecated_keys() {
 load_config() {
     # Start with empty object
     MERGED_CONFIG="{}"
+
+    # Check for yq once
+    local has_yq=false
+    command -v yq &> /dev/null && has_yq=true
 
     # 1. Load framework defaults
     if [[ -f "$FRAMEWORK_CONFIG" ]]; then
@@ -143,23 +275,40 @@ load_config() {
     # 2. Load override config (YAML → JSON)
     if [[ -f "$OVERRIDE_CONFIG" ]]; then
         local override_content
-        if command -v yq &> /dev/null; then
-            override_content=$(yq -o=json "$OVERRIDE_CONFIG" 2>/dev/null || echo "{}")
-        else
-            # Fallback: basic YAML parsing (limited)
+        if [[ "$has_yq" == "true" ]]; then
+            # Try python-yq syntax first (apt install yq), then mikefarah syntax
+            override_content=$(cat "$OVERRIDE_CONFIG" | yq '.' 2>/dev/null) || \
+            override_content=$(yq -o=json '.' "$OVERRIDE_CONFIG" 2>/dev/null) || \
             override_content="{}"
+        else
+            # Fallback: basic YAML parsing
+            override_content=$(_basic_yaml_to_json "$OVERRIDE_CONFIG" 2>/dev/null || echo "{}")
         fi
         MERGED_CONFIG=$(echo "$MERGED_CONFIG" | jq -s '.[0] * .[1]' - <(echo "$override_content") 2>/dev/null || echo "$MERGED_CONFIG")
         check_deprecated_keys "$override_content"
     fi
 
     # 3. Load local config (highest priority)
+    # Check new path first, then legacy for backward compatibility
+    local local_config_file=""
     if [[ -f "$LOCAL_CONFIG" ]]; then
+        local_config_file="$LOCAL_CONFIG"
+    elif [[ -f "$LOCAL_CONFIG_LEGACY" ]]; then
+        local_config_file="$LOCAL_CONFIG_LEGACY"
+        echo -e "${C_YELLOW}⚠️  Legacy config path detected: $LOCAL_CONFIG_LEGACY${C_NC}" >&2
+        echo -e "${C_YELLOW}   Consider moving to: $LOCAL_CONFIG${C_NC}" >&2
+    fi
+
+    if [[ -n "$local_config_file" ]]; then
         local local_content
-        if command -v yq &> /dev/null; then
-            local_content=$(yq -o=json "$LOCAL_CONFIG" 2>/dev/null || echo "{}")
-        else
+        if [[ "$has_yq" == "true" ]]; then
+            # Try python-yq syntax first (apt install yq), then mikefarah syntax
+            local_content=$(cat "$local_config_file" | yq '.' 2>/dev/null) || \
+            local_content=$(yq -o=json '.' "$local_config_file" 2>/dev/null) || \
             local_content="{}"
+        else
+            # Fallback: basic YAML parsing
+            local_content=$(_basic_yaml_to_json "$local_config_file" 2>/dev/null || echo "{}")
         fi
         MERGED_CONFIG=$(echo "$MERGED_CONFIG" | jq -s '.[0] * .[1]' - <(echo "$local_content") 2>/dev/null || echo "$MERGED_CONFIG")
     fi
@@ -427,46 +576,50 @@ is_hook_disabled() {
 # Resolve agent with aliases, branch cache, and overrides
 # Supports specialty-branch pattern (e.g., "ucv-qa" → specialties/ucv/branchs/qa.md)
 # Uses LAZY LOADING - only loads specialty on-demand
+# Priority: local > specialty > framework
 # Usage: agent_path=$(resolve_agent "developer")
 # Usage: agent_path=$(resolve_agent "ucv-qa")  # → specialty branch
 resolve_agent() {
     local agent_name="$1"
+    local original_name="$agent_name"
 
-    # 1. Try lazy branch resolution first (O(1) if cached, O(specialty) if not)
-    #    e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md"
-    local lazy_result
-    lazy_result=$(_lazy_resolve_branch "$agent_name")
-    if [[ -n "$lazy_result" ]]; then
-        echo "$lazy_result"
-        return
-    fi
-
-    # 2. Check alias (e.g., "dev" → "developer")
+    # 1. Check alias FIRST (e.g., "dev" → "developer")
     local alias_value
     alias_value=$(get_config "agents.aliases.$agent_name" "")
     if [[ -n "$alias_value" ]]; then
         agent_name="$alias_value"
-
-        # Re-check with lazy resolution using aliased name
-        lazy_result=$(_lazy_resolve_branch "$agent_name")
-        if [[ -n "$lazy_result" ]]; then
-            echo "$lazy_result"
-            return
-        fi
     fi
 
-    # 3. Check if disabled
+    # 2. Check if disabled
     while IFS= read -r disabled_agent; do
-        if [[ "$disabled_agent" == "$agent_name" ]]; then
+        if [[ "$disabled_agent" == "$agent_name" ]] || [[ "$disabled_agent" == "$original_name" ]]; then
             echo ""
             return
         fi
     done < <(get_config_array "agents.disabled")
 
-    # 4. Check local override (flat structure)
+    # 3. Check local override FIRST (highest priority)
     local local_agent="${HARMONY_DIR}/local/agents/${agent_name}.md"
     if [[ -f "$local_agent" ]]; then
         echo "$local_agent"
+        return
+    fi
+
+    # Also check with original name if aliased
+    if [[ "$agent_name" != "$original_name" ]]; then
+        local_agent="${HARMONY_DIR}/local/agents/${original_name}.md"
+        if [[ -f "$local_agent" ]]; then
+            echo "$local_agent"
+            return
+        fi
+    fi
+
+    # 4. Try lazy branch resolution (specialty)
+    #    e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md"
+    local lazy_result
+    lazy_result=$(_lazy_resolve_branch "$agent_name")
+    if [[ -n "$lazy_result" ]]; then
+        echo "$lazy_result"
         return
     fi
 
@@ -493,6 +646,13 @@ resolve_agent() {
 
     # Not found
     echo ""
+}
+
+# Resolve agent alias directly
+# Usage: real_name=$(resolve_agent_alias "dev")  # → "developer"
+resolve_agent_alias() {
+    local alias_name="$1"
+    get_config "agents.aliases.$alias_name" ""
 }
 
 # -----------------------------------------------------------------------------

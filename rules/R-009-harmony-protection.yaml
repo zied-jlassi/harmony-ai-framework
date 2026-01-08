@@ -1,0 +1,260 @@
+# R-009: Harmony Framework Protection
+# Prevents modification of framework files - only local/ is writable
+
+id: R-009
+name: Harmony Framework Protection
+version: 1.0.0
+status: active
+severity: critical
+enforcement: block
+
+description: |
+  Protects the integrity of Harmony Framework files by restricting write access.
+  Only the .harmony/local/ directory is writable for user customizations.
+  All other framework directories are read-only to prevent accidental corruption.
+
+  This rule is CRITICAL for maintaining framework stability and upgrade compatibility.
+
+protected_paths:
+  # Core framework directories (READ-ONLY)
+  - path: ".harmony/agents/"
+    description: "Agent definitions"
+    writable: false
+
+  - path: ".harmony/commands/"
+    description: "Command documentation"
+    writable: false
+
+  - path: ".harmony/patterns/"
+    description: "System patterns"
+    writable: false
+
+  - path: ".harmony/workflows/"
+    description: "Workflow definitions"
+    writable: false
+
+  - path: ".harmony/templates/"
+    description: "Document templates"
+    writable: false
+
+  - path: ".harmony/hooks/"
+    description: "Framework hooks"
+    writable: false
+
+  - path: ".harmony/lib/"
+    description: "Core libraries"
+    writable: false
+
+  - path: ".harmony/bin/"
+    description: "Executables"
+    writable: false
+
+  - path: ".harmony/config/"
+    description: "Framework configuration"
+    writable: false
+
+  - path: ".harmony/rules/"
+    description: "Rule definitions"
+    writable: false
+
+  - path: ".harmony/knowledge/"
+    description: "Knowledge base"
+    writable: false
+
+  - path: ".harmony/integrations/"
+    description: "IDE integrations"
+    writable: false
+
+  - path: ".harmony/specialties/"
+    description: "Agent specialties"
+    writable: false
+
+  - path: ".harmony/profiles/"
+    description: "Tech stack profiles"
+    writable: false
+
+  - path: ".harmony/docs/"
+    description: "Documentation"
+    writable: false
+
+  - path: ".harmony/error-library/"
+    description: "Error patterns"
+    writable: false
+
+writable_paths:
+  # User customization directory (WRITABLE)
+  - path: ".harmony/local/"
+    description: "User overrides and customizations"
+    writable: true
+    subdirs:
+      - "local/config/"
+      - "local/agents/"
+      - "local/hooks/"
+      - "local/templates/"
+      - "local/patterns/"
+      - "local/rules/"
+      - "local/knowledge/"
+      - "local/commands/"
+
+  # Memory directory (WRITABLE - runtime data)
+  - path: ".harmony/memory/"
+    description: "Runtime state and memory"
+    writable: true
+    subdirs:
+      - "memory/working.json"
+      - "memory/circuit-breaker.json"
+      - "memory/error-journal.json"
+      - "memory/history/"
+
+rules:
+  # HP-1: Block Write to framework files
+  - id: HP-1
+    name: No Write to Framework Files
+    description: Block Write tool calls to protected .harmony directories
+    trigger:
+      tool: "Write"
+      path_pattern: "\\.harmony/(?!local/|memory/)"
+    action: block
+    message: |
+      BLOCKED: Cannot write to framework files.
+
+      Protected: .harmony/{agents,commands,patterns,lib,...}
+      Writable:  .harmony/local/* and .harmony/memory/*
+
+      To customize, create overrides in .harmony/local/:
+        .harmony/local/agents/your-agent.md
+        .harmony/local/hooks/your-hook.sh
+        .harmony/local/config/overrides.yaml
+
+  # HP-2: Block Edit to framework files
+  - id: HP-2
+    name: No Edit to Framework Files
+    description: Block Edit tool calls to protected .harmony directories
+    trigger:
+      tool: "Edit"
+      path_pattern: "\\.harmony/(?!local/|memory/)"
+    action: block
+    message: |
+      BLOCKED: Cannot edit framework files.
+
+      Framework files are read-only. To customize:
+      1. Copy the file to .harmony/local/
+      2. Edit your local copy
+      3. Your local version takes priority
+
+      Example:
+        cp .harmony/agents/developer.md .harmony/local/agents/developer.md
+        # Then edit .harmony/local/agents/developer.md
+
+  # HP-3: Block rm on framework files
+  - id: HP-3
+    name: No Delete Framework Files
+    description: Block rm/delete operations on protected .harmony directories
+    trigger:
+      command_pattern: "rm\\s+.*\\.harmony/(?!local/|memory/)"
+    action: block
+    message: |
+      BLOCKED: Cannot delete framework files.
+
+      If you need to disable a framework component:
+      1. Create an override in .harmony/local/
+      2. Set 'enabled: false' in the override
+
+      To reset framework: Run /hf:upgrade or reinstall
+
+  # HP-4: Block mv to framework directories
+  - id: HP-4
+    name: No Move to Framework Directories
+    description: Block mv operations that would overwrite framework files
+    trigger:
+      command_pattern: "mv\\s+.*\\s+\\.harmony/(?!local/|memory/)"
+    action: block
+    message: |
+      BLOCKED: Cannot move files into framework directories.
+
+      Move to .harmony/local/ instead:
+        mv file.md .harmony/local/agents/file.md
+
+  # HP-5: Block chmod/chown on framework
+  - id: HP-5
+    name: No Permission Changes on Framework
+    description: Block permission changes to framework files
+    trigger:
+      command_pattern: "(chmod|chown)\\s+.*\\.harmony/(?!local/|memory/)"
+    action: block
+    message: |
+      BLOCKED: Cannot change permissions on framework files.
+
+  # HP-6: Warn on any .harmony access
+  - id: HP-6
+    name: Warn on Framework Access
+    description: Log all access to .harmony for audit
+    trigger:
+      path_pattern: "\\.harmony/"
+    action: log
+    log_level: info
+
+integration:
+  guardian:
+    enabled: true
+    priority: 1  # Highest priority - check this rule first
+
+  hooks:
+    PreToolUse:
+      - matcher: "(Write|Edit).*\\.harmony/(?!local/|memory/)"
+        action: block
+        exit_code: 1
+        message: "Framework Protection: Only .harmony/local/ is writable"
+
+      - matcher: "Bash.*(rm|mv|chmod|chown).*\\.harmony/(?!local/|memory/)"
+        action: block
+        exit_code: 1
+        message: "Framework Protection: Cannot modify framework files via Bash"
+
+examples:
+  blocked:
+    - command: "Write .harmony/agents/developer.md"
+      reason: "Framework agents are read-only (HP-1)"
+
+    - command: "Edit .harmony/lib/sprint-tracker.sh"
+      reason: "Framework libraries are read-only (HP-2)"
+
+    - command: "rm .harmony/patterns/P-001.md"
+      reason: "Cannot delete framework patterns (HP-3)"
+
+    - command: "mv custom.md .harmony/commands/"
+      reason: "Cannot move files into framework directories (HP-4)"
+
+  allowed:
+    - command: "Write .harmony/local/agents/custom.md"
+      reason: "User customizations in local/ are allowed"
+
+    - command: "Edit .harmony/local/config/overrides.yaml"
+      reason: "User config overrides are allowed"
+
+    - command: "Read .harmony/agents/developer.md"
+      reason: "Reading framework files is always allowed"
+
+    - command: "cat .harmony/lib/sprint-tracker.sh"
+      reason: "Reading framework files is always allowed"
+
+    - command: "Write .harmony/memory/working.json"
+      reason: "Memory directory is writable for runtime state"
+
+error_messages:
+  fr: |
+    BLOQUE: Impossible de modifier les fichiers du framework.
+
+    Seul le dossier .harmony/local/ est modifiable.
+    Creez vos personnalisations dans ce dossier.
+
+  en: |
+    BLOCKED: Cannot modify framework files.
+
+    Only .harmony/local/ directory is writable.
+    Create your customizations in this folder.
+
+related:
+  - R-006-agent-separation.yaml
+  - guardian.md
+  - P-012-framework-guardian.md

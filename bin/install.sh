@@ -923,16 +923,8 @@ create_slash_commands() {
         "$SCRIPT_DIR/bin/generate-commands.sh" "$commands_dir" > /dev/null 2>&1
         local total_count=$(ls -1 "$commands_dir"/*.md 2>/dev/null | wc -l)
         print_success "Generated $total_count slash commands in .claude/commands/"
-
-        # Generate Skills for agents that benefit from isolation (context: fork)
-        # Skills provide: isolated context, model routing, tool restrictions, hooks
-        if [[ -x "$SCRIPT_DIR/bin/generate-skills.sh" ]]; then
-            "$SCRIPT_DIR/bin/generate-skills.sh" ".harmony" > /dev/null 2>&1
-            local skills_count=$(ls -1 .claude/skills/*.md 2>/dev/null | wc -l || echo 0)
-            if [[ "$skills_count" -gt 0 ]]; then
-                print_success "Generated $skills_count agent skills in .claude/skills/"
-            fi
-        fi
+        # Note: Commands now include Claude Code v2.1.0 features (context: fork, allowed-tools, hooks)
+        # for compliance agents (rgpd, security, pentest, etc.)
     else
         print_warning "generate-commands.sh not found. Creating minimal commands..."
 

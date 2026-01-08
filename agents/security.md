@@ -6,7 +6,7 @@ description: "Security guardian conducting audits, identifying vulnerabilities, 
 argument-hint: [audit-scope]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "security"
   - "audit"

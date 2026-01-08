@@ -562,15 +562,15 @@ handoff_protocol:
 # =============================================================================
 task_config:
   exploration:
-    model: haiku
+    model: model_3
     run_in_background: true
 
   implementation:
-    model: sonnet
+    model: model_2
     run_in_background: false
 
   complex:
-    model: opus
+    model: model_1
     run_in_background: false
 
 # =============================================================================
@@ -578,7 +578,7 @@ task_config:
 # =============================================================================
 fallback:
   agent: "general-purpose"
-  model: sonnet
+  model: model_2
   message: "Could not determine agent. Please clarify your request."
 
 # =============================================================================

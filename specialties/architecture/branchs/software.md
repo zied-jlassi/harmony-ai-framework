@@ -6,7 +6,7 @@ description: "Software architecture specialist - Clean Architecture, DDD, micros
 argument-hint: [architecture-decision]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "clean-architecture"
   - "ddd"

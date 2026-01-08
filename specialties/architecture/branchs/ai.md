@@ -6,7 +6,7 @@ description: "AI/LLM Systems Architect designing AI architectures, orchestrating
 argument-hint: [ai-topic]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "ai"
   - "llm"

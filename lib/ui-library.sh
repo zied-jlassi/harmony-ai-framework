@@ -147,6 +147,60 @@ ui_box_status() {
 }
 
 # ============================================================================
+# AFFICHAGE MODÈLE LLM
+# ============================================================================
+# Affiche le modèle utilisé en jaune
+# Usage: ui_show_model "sonnet"
+#        ui_show_model "opus" "architect"
+ui_show_model() {
+    local model_alias="$1"
+    local agent_name="${2:-}"
+    local model_key="${3:-}"
+
+    # Resolve model name if model-manager is available
+    local model_display="$model_alias"
+    if type resolve_model &>/dev/null; then
+        local resolved
+        resolved=$(resolve_model "$model_alias" 2>/dev/null)
+        if [[ -n "$resolved" ]]; then
+            model_display="$resolved"
+        fi
+    fi
+
+    # Format output
+    if [[ -n "$agent_name" ]]; then
+        printf "${UI_YELLOW}🤖 Modèle: ${UI_BOLD}%s${UI_RESET}${UI_YELLOW} (%s)${UI_RESET}" "$model_alias" "$agent_name"
+    else
+        printf "${UI_YELLOW}🤖 Modèle: ${UI_BOLD}%s${UI_RESET}" "$model_alias"
+    fi
+
+    # Show model key if provided
+    if [[ -n "$model_key" ]]; then
+        printf "${UI_GRAY} [%s]${UI_RESET}" "$model_key"
+    fi
+
+    echo ""
+}
+
+# Affiche le switch d'agent avec modèle
+# Usage: ui_agent_switch "architect" "model_1" "opus"
+ui_agent_switch() {
+    local agent_name="$1"
+    local model_key="${2:-inherit}"
+    local model_alias="${3:-}"
+
+    # Get alias if not provided
+    if [[ -z "$model_alias" ]] && type resolve_model_key_to_alias &>/dev/null; then
+        model_alias=$(resolve_model_key_to_alias "$model_key" 2>/dev/null || echo "$model_key")
+    fi
+
+    printf "${UI_CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${UI_RESET}\n"
+    printf "${UI_CYAN}▶ Agent: ${UI_BOLD}%s${UI_RESET}\n" "$agent_name"
+    printf "${UI_YELLOW}  🤖 Modèle: ${UI_BOLD}%s${UI_RESET}${UI_GRAY} [%s]${UI_RESET}\n" "$model_alias" "$model_key"
+    printf "${UI_CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${UI_RESET}\n"
+}
+
+# ============================================================================
 # ÉCRAN D'ACCUEIL
 # ============================================================================
 ui_welcome() {
@@ -467,7 +521,7 @@ ui_step() {
 # ============================================================================
 export -f ui_init ui_box_line ui_box_title ui_box_text ui_box_empty ui_box_status
 export -f ui_welcome ui_confirm ui_tip ui_section ui_progress ui_success ui_error
-export -f ui_continue ui_step
+export -f ui_continue ui_step ui_show_model ui_agent_switch
 
 # ============================================================================
 # TEST SI EXÉCUTÉ DIRECTEMENT

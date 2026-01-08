@@ -5,7 +5,7 @@ description: "Expert penetration tester and red team specialist for ethical hack
 argument-hint: [cible-test] [type-audit]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "pentest"
   - "exploit"

@@ -3,7 +3,7 @@ name: prompt-engineering-patterns
 displayName: "Prompt Engineering Patterns"
 category: llm-application-dev
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "prompt engineering"
   - "system prompt"

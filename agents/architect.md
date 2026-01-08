@@ -6,7 +6,7 @@ description: "Expert system architect specializing in Clean Architecture, micros
 argument-hint: [topic-or-decision]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "architect"
   - "architecture"

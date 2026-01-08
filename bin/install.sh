@@ -608,6 +608,15 @@ configure_hooks() {
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harmony/hooks/aria-detect.sh \"$TOOL_INPUT\""
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|Bash",
         "hooks": [
           {

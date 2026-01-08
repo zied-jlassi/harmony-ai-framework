@@ -6,7 +6,7 @@ description: "Quick-Flow Agent - Développement rapide - Prototypage MVP"
 argument-hint: [mode] [target-optionnel]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "quick"
   - "prototype"

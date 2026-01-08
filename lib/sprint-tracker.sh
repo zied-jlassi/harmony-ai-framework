@@ -393,18 +393,18 @@ complete_story() {
         set_working_value ".backlog.stories_in_progress" "$((in_progress - 1))"
     fi
 
-    # Clear current story
+    # Clear current story slot (no active story)
     local tmp_file
     tmp_file=$(mktemp)
     jq '.current_story = {
             id: null,
             title: null,
-            status: "TODO",
+            status: null,
             points: 0,
             started: null,
             epic: null,
             assigned: null,
-            ucv_status: "PENDING",
+            ucv_status: null,
             tasks_completed: 0,
             tasks_total: 0
         }' "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
@@ -759,10 +759,115 @@ run_story_pipeline() {
         start_story "$story_id" "Auto-pipeline story" 0
     fi
 
-    # Pipeline configuration: agent phases
-    local -a pipeline_agents=(
+    # ═══════════════════════════════════════════════════════════════════
+    # ARIA CONTEXT DETECTION (Two-Stage: Pattern → Haiku → Merge)
+    # ═══════════════════════════════════════════════════════════════════
+    local aria_triggered_agents=""
+    local aria_is_blocking="false"
+
+    # Get story title for context detection
+    local story_title
+    story_title=$(get_working_value ".current_story.title")
+
+    # Source ARIA detector if available
+    if [[ -f "${HARMONY_DIR}/lib/aria-detector.sh" ]]; then
+        source "${HARMONY_DIR}/lib/aria-detector.sh"
+
+        # Run ARIA detection on story title
+        local aria_result
+        aria_result=$(aria_detect_patterns "${story_title:-$story_id}" "$(pwd)")
+
+        if [[ -n "$aria_result" ]]; then
+            aria_triggered_agents=$(echo "$aria_result" | jq -r '.triggered_agents | join(" ")' 2>/dev/null || echo "")
+            aria_is_blocking=$(echo "$aria_result" | jq -r '.is_blocking' 2>/dev/null || echo "false")
+
+            local aria_flags
+            aria_flags=$(echo "$aria_result" | jq -r '.context_flags | join(", ")' 2>/dev/null || echo "")
+
+            if [[ -n "$aria_flags" ]] && [[ "$aria_flags" != "null" ]]; then
+                echo ""
+                if [[ "$aria_is_blocking" == "true" ]]; then
+                    echo -e "${C_RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+                    echo -e "${C_RED}🚨 ARIA: BLOCKING COMPLIANCE DETECTED${C_NC}"
+                    echo -e "${C_RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+                else
+                    echo -e "${C_YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+                    echo -e "${C_YELLOW}⚠️  ARIA: Compliance agents triggered${C_NC}"
+                    echo -e "${C_YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
+                fi
+                echo -e "  Detected flags: ${C_CYAN}${aria_flags}${C_NC}"
+                echo -e "  Triggered agents: ${C_CYAN}${aria_triggered_agents}${C_NC}"
+                echo ""
+
+                # Update workflow-state with ARIA context
+                if [[ -f "${HARMONY_DIR}/memory/workflow-state.json" ]]; then
+                    local tmp_file
+                    tmp_file=$(mktemp)
+                    local aria_ts
+                    aria_ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                    local flags_json
+                    flags_json=$(echo "$aria_result" | jq '.context_flags')
+                    local triggers_json
+                    triggers_json=$(echo "$aria_result" | jq '.triggered_agents')
+
+                    jq --arg ts "$aria_ts" \
+                       --argjson flags "$flags_json" \
+                       --argjson triggers "$triggers_json" \
+                       --argjson blocking "$aria_is_blocking" \
+                       '.aria_context.detected_at = $ts |
+                        .aria_context.context_flags = $flags |
+                        .aria_context.triggered_agents = $triggers |
+                        .aria_context.is_blocking = $blocking |
+                        .aria_context.source = "pattern"' \
+                       "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
+                       mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json"
+                fi
+            fi
+        fi
+    fi
+
+    # ═══════════════════════════════════════════════════════════════════
+    # BUILD DYNAMIC PIPELINE (Base + ARIA-triggered agents)
+    # ═══════════════════════════════════════════════════════════════════
+
+    # Base pipeline: developer → tester → ucv-qa → ucv-validator
+    local -a pipeline_agents=()
+
+    # Add compliance agents FIRST if ARIA detected them
+    if [[ -n "$aria_triggered_agents" ]]; then
+        for agent in $aria_triggered_agents; do
+            case "$agent" in
+                rgpd)
+                    pipeline_agents+=("rgpd:RGPD Compliance Validation")
+                    ;;
+                security)
+                    pipeline_agents+=("security:Security Audit")
+                    ;;
+                legal)
+                    pipeline_agents+=("legal:Legal Compliance Check")
+                    ;;
+                accessibility)
+                    pipeline_agents+=("accessibility:Accessibility Review")
+                    ;;
+                ux-designer)
+                    pipeline_agents+=("ux-designer:UX Design Review")
+                    ;;
+                database|architect)
+                    pipeline_agents+=("architect:Architecture Review")
+                    ;;
+                *)
+                    # Add any other triggered agent
+                    pipeline_agents+=("${agent}:${agent} Validation")
+                    ;;
+            esac
+        done
+    fi
+
+    # Add base development pipeline
+    pipeline_agents+=(
         "developer:Developer implementation phase"
         "tester:Tester validation phase"
+        "ucv-qa:UCV QA verification phase"
         "ucv-validator:UCV Validator final check"
     )
 
@@ -777,7 +882,21 @@ run_story_pipeline() {
 
         echo ""
         echo -e "${C_GREEN}Phase $phase_num: $phase_desc${C_NC}"
-        echo -e "  Agent: ${C_YELLOW}$agent_name${C_NC}"
+
+        # Get agent model from agent file
+        local agent_model="inherit"
+        local agent_file="${HARMONY_DIR}/agents/${agent_name}.md"
+        if [[ -f "$agent_file" ]]; then
+            agent_model=$(grep -m1 "^model:" "$agent_file" 2>/dev/null | sed 's/model:[[:space:]]*//' || echo "inherit")
+        fi
+
+        # Display agent with model
+        if type ui_agent_switch &>/dev/null; then
+            ui_agent_switch "$agent_name" "$agent_model"
+        else
+            echo -e "  Agent: ${C_YELLOW}$agent_name${C_NC}"
+            echo -e "  ${C_YELLOW}🤖 Modèle: $agent_model${C_NC}"
+        fi
         echo -e "  Story: ${C_YELLOW}$story_id${C_NC}"
 
         # PHASE 2: Initialize story circuit breaker and check status
@@ -821,6 +940,9 @@ run_story_pipeline() {
             "tester")
                 story_status="IN_TESTING"
                 ;;
+            "ucv-qa")
+                story_status="IN_QA"
+                ;;
             "ucv-validator")
                 story_status="IN_REVIEW"
                 ;;
@@ -858,6 +980,9 @@ run_story_pipeline() {
                     ;;
                 "tester")
                     agent_output="All tests passing - coverage 100%"
+                    ;;
+                "ucv-qa")
+                    agent_output="QA verification passed - all criteria met"
                     ;;
                 "ucv-validator")
                     agent_output="Coverage: 100% - All verifications validated"

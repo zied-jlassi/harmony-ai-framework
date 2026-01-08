@@ -6,7 +6,7 @@ description: "Coverage guardian validating 100% UCV coverage before story comple
 argument-hint: [story-id]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "validate"
   - "ucv-check"

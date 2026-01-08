@@ -1,0 +1,178 @@
+# =============================================================================
+# LLM DEFAULTS - Harmony Framework
+# =============================================================================
+# Simple architecture:
+#   1. MODELS: Available models with aliases
+#   2. MODEL_KEYS: Constants used in agents (model_1, model_2, model_3)
+#   3. Agents reference model_keys, not specific models
+#
+# =============================================================================
+
+version: "3.0"
+
+# =============================================================================
+# MODELS - Available LLM models with aliases
+# =============================================================================
+# Each model has a unique alias that can be referenced in model_keys
+#
+# In Claude Code: opus, sonnet, haiku are auto-connected (no API key needed)
+# For other providers: uncomment and add your API key
+
+models:
+  # ─────────────────────────────────────────────────────────────────────────
+  # CLAUDE (auto-connected in Claude Code environment)
+  # ─────────────────────────────────────────────────────────────────────────
+  - name: "claude-opus-4-20250514"
+    alias: opus
+    description: "Most powerful, complex reasoning"
+
+  - name: "claude-sonnet-4-20250514"
+    alias: sonnet
+    description: "Balanced performance"
+
+  - name: "claude-3-haiku-20240307"
+    alias: haiku
+    description: "Fast and cost-effective"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # OPENAI (uncomment to activate)
+  # ─────────────────────────────────────────────────────────────────────────
+  # - name: "gpt-4o"
+  #   alias: chatgpt
+  #   provider: openai
+  #   api_key_env: OPENAI_API_KEY
+  #   api_base: "https://api.openai.com/v1"
+  #   description: "OpenAI GPT-4o"
+
+  # - name: "gpt-4o-mini"
+  #   alias: chatgpt-mini
+  #   provider: openai
+  #   api_key_env: OPENAI_API_KEY
+  #   api_base: "https://api.openai.com/v1"
+  #   description: "OpenAI GPT-4o Mini (fast)"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # GROQ (uncomment to activate)
+  # ─────────────────────────────────────────────────────────────────────────
+  # - name: "llama-3.1-70b-versatile"
+  #   alias: groq-large
+  #   provider: groq
+  #   api_key_env: GROQ_API_KEY
+  #   api_base: "https://api.groq.com/openai/v1"
+  #   description: "Groq Llama 70B (ultra-fast)"
+
+  # - name: "llama-3.1-8b-instant"
+  #   alias: groq-fast
+  #   provider: groq
+  #   api_key_env: GROQ_API_KEY
+  #   api_base: "https://api.groq.com/openai/v1"
+  #   description: "Groq Llama 8B (instant)"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # MISTRAL (uncomment to activate)
+  # ─────────────────────────────────────────────────────────────────────────
+  # - name: "mistral-large-latest"
+  #   alias: mistral-large
+  #   provider: mistral
+  #   api_key_env: MISTRAL_API_KEY
+  #   api_base: "https://api.mistral.ai/v1"
+  #   description: "Mistral Large (EU data)"
+
+  # - name: "mistral-small-latest"
+  #   alias: mistral-small
+  #   provider: mistral
+  #   api_key_env: MISTRAL_API_KEY
+  #   api_base: "https://api.mistral.ai/v1"
+  #   description: "Mistral Small (fast)"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # DEEPSEEK (uncomment to activate)
+  # ─────────────────────────────────────────────────────────────────────────
+  # - name: "deepseek-chat"
+  #   alias: deepseek
+  #   provider: deepseek
+  #   api_key_env: DEEPSEEK_API_KEY
+  #   api_base: "https://api.deepseek.com/v1"
+  #   description: "DeepSeek (cost-effective)"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # OLLAMA LOCAL (uncomment to activate)
+  # ─────────────────────────────────────────────────────────────────────────
+  # - name: "llama3.1"
+  #   alias: ollama
+  #   provider: ollama
+  #   api_base: "http://localhost:11434"
+  #   description: "Local Ollama"
+
+# =============================================================================
+# MODEL KEYS - Constants used in agents
+# =============================================================================
+# Agents use these keys: model_1, model_2, model_3
+# Change the alias to switch all agents using that key
+#
+# Example agent file:
+#   model: model_1
+#
+# To switch all model_1 agents to ChatGPT:
+#   model_1: chatgpt
+
+# Model keys can be:
+#   - Single alias: model_1: opus
+#   - Array with fallback: model_1: [opus, chatgpt, groq-large]
+#     (tries first, if token limit → next in list)
+
+model_keys:
+  model_1: [opus]              # Complex tasks - add fallbacks: [opus, chatgpt]
+  model_2: [sonnet]            # Standard tasks - add fallbacks: [sonnet, chatgpt]
+  model_3: [haiku]             # Fast tasks - add fallbacks: [haiku, chatgpt-mini]
+  inherit: model_2             # Default fallback (uses model_2)
+
+# =============================================================================
+# HOW TO USE
+# =============================================================================
+#
+# 1. ADD A NEW MODEL
+#    ----------------
+#    Uncomment or add a model with a unique alias:
+#
+#    - name: "gpt-4o"
+#      alias: chatgpt
+#      provider: openai
+#      api_key_env: OPENAI_API_KEY
+#
+# 2. USE IT IN AN AGENT
+#    -------------------
+#    Option A: Change model_keys to affect all agents of that tier:
+#
+#      model_keys:
+#        model_1: chatgpt  # All model_1 agents now use ChatGPT
+#
+#    Option B: Use alias directly in a specific agent:
+#
+#      # In agents/analyst.md
+#      model: chatgpt
+#
+# 3. ENVIRONMENT VARIABLES
+#    ----------------------
+#    Set the required API key for your provider:
+#
+#    export OPENAI_API_KEY=sk-xxx
+#    export GROQ_API_KEY=gsk_xxx
+#    export MISTRAL_API_KEY=xxx
+#    export DEEPSEEK_API_KEY=xxx
+#
+# =============================================================================
+# LOCAL OVERRIDE
+# =============================================================================
+# Create .harmony/local/llm-config.yaml to override for a specific project:
+#
+# models:
+#   - name: "gpt-4o"
+#     alias: chatgpt
+#     provider: openai
+#     api_key_env: OPENAI_API_KEY
+#
+# model_keys:
+#   model_1: chatgpt
+#   model_2: sonnet
+#   model_3: haiku

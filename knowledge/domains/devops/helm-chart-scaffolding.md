@@ -3,7 +3,7 @@ name: helm-chart-scaffolding
 displayName: "Helm Chart Scaffolding"
 category: kubernetes-operations
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "helm"
   - "helm chart"

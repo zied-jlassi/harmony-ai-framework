@@ -392,11 +392,13 @@ export -f assistant_lint assistant_model assistant_map assistant_history
 export -f load_module load_all_modules is_module_loaded
 
 # ============================================================================
-# AUTO-LOAD ON SOURCE
+# AUTO-LOAD ON SOURCE (JIT Loading by default)
 # ============================================================================
 
-# Automatically load all modules when sourced
-if [[ "${ASSISTANT_TOOLKIT_AUTOLOAD:-true}" == "true" ]]; then
+# By default, DO NOT auto-load modules - use JIT loading per command
+# Set ASSISTANT_TOOLKIT_AUTOLOAD=true to load all modules at source time (not recommended)
+# Each assistant_* function loads its required module on-demand
+if [[ "${ASSISTANT_TOOLKIT_AUTOLOAD:-false}" == "true" ]]; then
     for module in "${!ASSISTANT_MODULES[@]}"; do
         load_module "$module" 2>/dev/null || true
     done

@@ -5,7 +5,7 @@ description: "Expert Data Protection Officer specializing in GDPR/RGPD complianc
 argument-hint: [tâche-rgpd] [scope-optionnel]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "rgpd"
   - "gdpr"

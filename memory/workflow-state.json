@@ -57,5 +57,47 @@
     "ucvs_created": 0,
     "errors_recorded": 0,
     "patterns_learned": 0
+  },
+  "aria_context": {
+    "detected_at": "2026-01-07T21:05:54Z",
+    "context_flags": [
+      "has_db_schema",
+      "has_minors",
+      "has_ui",
+      "personal_data"
+    ],
+    "triggered_agents": [
+      "accessibility",
+      "architect",
+      "database",
+      "legal",
+      "rgpd",
+      "security",
+      "ux-designer"
+    ],
+    "suggested_agent": "null",
+    "primary_intent": "unknown",
+    "confidence": 70,
+    "source": "pattern",
+    "is_blocking": true,
+    "last_request": null
+  },
+  "project_context": {
+    "has_ui": true,
+    "has_auth": false,
+    "personal_data": true,
+    "has_minors": true,
+    "has_media": false,
+    "has_social": false,
+    "security_critical": false,
+    "legal_compliance": false,
+    "has_db_schema": true,
+    "is_mobile": false,
+    "is_web": false,
+    "is_game": false,
+    "is_api": false,
+    "is_cli": false,
+    "needs_docs": false,
+    "needs_prd": false
   }
 }

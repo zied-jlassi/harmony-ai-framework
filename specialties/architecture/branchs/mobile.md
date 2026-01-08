@@ -4,7 +4,7 @@ displayName: "Mobile Architect"
 description: "Mobile architecture specialist - Cross-platform, native patterns, offline-first"
 version: "1.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "mobile-architecture"
   - "app-architecture"

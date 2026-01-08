@@ -42,10 +42,14 @@ LOCAL_CONFIG="${HARMONY_DIR}/local/config.yaml"
 # Cached merged config
 MERGED_CONFIG=""
 
-# Branch cache for specialty resolution (built once, O(1) lookup)
+# Branch cache for specialty resolution (lazy-loaded, O(1) lookup)
 # Maps "specialty-branch" → file path (e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md")
-declare -A BRANCH_CACHE
-BRANCH_CACHE_BUILT=false
+# Note: Using declare -g -A for global scope even when sourced from functions
+declare -g -A BRANCH_CACHE
+BRANCH_CACHE_BUILT=false  # For backward compatibility with full cache
+
+# Track which specialties have been loaded (lazy loading)
+declare -g -A SPECIALTY_LOADED
 
 # Colors (avoid readonly to prevent conflicts when sourced multiple times)
 C_YELLOW='\033[1;33m'
@@ -101,7 +105,7 @@ check_config_version() {
 # -----------------------------------------------------------------------------
 
 # Map of deprecated keys to their replacements
-declare -A DEPRECATED_KEYS=(
+declare -g -A DEPRECATED_KEYS=(
     ["docker_required"]="docker.required"
     ["container_prefix"]="docker.container_prefix"
     ["guardian_mode"]="guardian.mode"
@@ -165,11 +169,70 @@ load_config() {
 }
 
 # -----------------------------------------------------------------------------
-# BRANCH CACHE (for specialty resolution)
+# BRANCH CACHE (for specialty resolution) - LAZY LOADING
 # -----------------------------------------------------------------------------
 
-# Build the branch cache by scanning all specialties
-# Called once at initialization, provides O(1) lookup for resolve_agent
+# Lazy load branches for a single specialty (on-demand)
+# Usage: _lazy_load_specialty "ucv"
+_lazy_load_specialty() {
+    local specialty="$1"
+
+    # Skip if already loaded
+    if [[ "${SPECIALTY_LOADED[$specialty]:-}" == "true" ]]; then
+        return 0
+    fi
+
+    local specialty_dir="${HARMONY_DIR}/specialties/${specialty}"
+
+    if [[ -d "$specialty_dir" ]]; then
+        # Scan all branch files in this specialty
+        for branch_file in "${specialty_dir}"/branchs/*.md; do
+            if [[ -f "$branch_file" ]]; then
+                local branch
+                branch=$(basename "$branch_file" .md)
+
+                # Add to cache: "specialty-branch" → full path
+                BRANCH_CACHE["${specialty}-${branch}"]="$branch_file"
+            fi
+        done
+    fi
+
+    SPECIALTY_LOADED[$specialty]=true
+}
+
+# Try to resolve an agent using lazy loading
+# Input: agent-name (e.g., "ucv-qa")
+# Output: file path if found, empty string otherwise
+_lazy_resolve_branch() {
+    local agent_name="$1"
+
+    # Check if already in cache
+    if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
+        echo "${BRANCH_CACHE[$agent_name]}"
+        return 0
+    fi
+
+    # Try to extract specialty from agent name (e.g., "ucv-qa" → "ucv")
+    if [[ "$agent_name" == *"-"* ]]; then
+        local specialty="${agent_name%%-*}"  # First part before dash
+
+        # Lazy load that specialty
+        _lazy_load_specialty "$specialty"
+
+        # Check cache again
+        if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
+            echo "${BRANCH_CACHE[$agent_name]}"
+            return 0
+        fi
+    fi
+
+    # Not found
+    echo ""
+}
+
+# Build the FULL branch cache by scanning all specialties (backward compatibility)
+# DEPRECATED: Prefer lazy loading via _lazy_load_specialty
+# Only use when you need to list ALL available branches
 # Usage: build_branch_cache
 build_branch_cache() {
     # Skip if already built
@@ -183,16 +246,8 @@ build_branch_cache() {
             local specialty
             specialty=$(basename "$specialty_dir")
 
-            # Scan all branch files in this specialty
-            for branch_file in "${specialty_dir}"branchs/*.md; do
-                if [[ -f "$branch_file" ]]; then
-                    local branch
-                    branch=$(basename "$branch_file" .md)
-
-                    # Add to cache: "specialty-branch" → full path
-                    BRANCH_CACHE["${specialty}-${branch}"]="$branch_file"
-                fi
-            done
+            # Use lazy load function for consistency
+            _lazy_load_specialty "$specialty"
         fi
     done
 
@@ -371,20 +426,18 @@ is_hook_disabled() {
 
 # Resolve agent with aliases, branch cache, and overrides
 # Supports specialty-branch pattern (e.g., "ucv-qa" → specialties/ucv/branchs/qa.md)
+# Uses LAZY LOADING - only loads specialty on-demand
 # Usage: agent_path=$(resolve_agent "developer")
 # Usage: agent_path=$(resolve_agent "ucv-qa")  # → specialty branch
 resolve_agent() {
     local agent_name="$1"
 
-    # Ensure branch cache is built
-    if [[ "$BRANCH_CACHE_BUILT" != "true" ]]; then
-        build_branch_cache
-    fi
-
-    # 1. Check branch cache first (O(1) lookup for specialty-branch patterns)
+    # 1. Try lazy branch resolution first (O(1) if cached, O(specialty) if not)
     #    e.g., "ucv-qa" → "specialties/ucv/branchs/qa.md"
-    if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
-        echo "${BRANCH_CACHE[$agent_name]}"
+    local lazy_result
+    lazy_result=$(_lazy_resolve_branch "$agent_name")
+    if [[ -n "$lazy_result" ]]; then
+        echo "$lazy_result"
         return
     fi
 
@@ -394,9 +447,10 @@ resolve_agent() {
     if [[ -n "$alias_value" ]]; then
         agent_name="$alias_value"
 
-        # Re-check branch cache with aliased name
-        if [[ -n "${BRANCH_CACHE[$agent_name]:-}" ]]; then
-            echo "${BRANCH_CACHE[$agent_name]}"
+        # Re-check with lazy resolution using aliased name
+        lazy_result=$(_lazy_resolve_branch "$agent_name")
+        if [[ -n "$lazy_result" ]]; then
+            echo "$lazy_result"
             return
         fi
     fi

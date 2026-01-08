@@ -4,7 +4,7 @@ displayName: "Web Architect"
 description: "Web architecture specialist - Frontend architecture, JAMstack, SSR/SSG, API design"
 version: "1.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "web-architecture"
   - "frontend-architecture"

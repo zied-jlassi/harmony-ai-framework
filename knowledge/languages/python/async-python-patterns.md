@@ -3,7 +3,7 @@ name: async-python-patterns
 displayName: "Async Python Patterns"
 category: python-development
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "asyncio"
   - "async python"

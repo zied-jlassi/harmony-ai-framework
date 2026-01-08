@@ -6,7 +6,7 @@ description: "Memory system remembering errors, preventing repetition, protectin
 argument-hint: [--status|--learn|--reset|--check|--report]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "sentinel"
   - "error"

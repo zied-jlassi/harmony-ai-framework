@@ -6,7 +6,7 @@ description: "Manual UCV validation agent. Tests each Use Case Verification in t
 argument-hint: [story-id]
 version: "1.0"
 tier: 2
-model: sonnet
+model: model_2
 triggers:
   - "ucv qa"
   - "ucv test"

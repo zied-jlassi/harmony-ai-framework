@@ -6,7 +6,7 @@ description: "Privacy guardian ensuring GDPR/RGPD compliance, protecting persona
 argument-hint: [audit-scope]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "rgpd"
   - "gdpr"

@@ -6,7 +6,7 @@ description: "Sprint orchestrator creating stories, planning sprints, coordinati
 argument-hint: [action-or-story]
 version: "2.0"
 tier: 2
-model: sonnet
+model: model_2
 triggers:
   - "sm"
   - "scrum"

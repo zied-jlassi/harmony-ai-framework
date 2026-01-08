@@ -6,7 +6,7 @@ description: "Meta-agent orchestrateur - Coordination multi-agents"
 argument-hint: [action] [agents-optionnels]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 step: 0
 triggers:
   - "delegate"

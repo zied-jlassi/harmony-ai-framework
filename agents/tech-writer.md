@@ -6,7 +6,7 @@ description: "Technical Writer - API Docs, User Guides, Changelogs"
 argument-hint: [tâche-docs] [scope-optionnel]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "docs"
   - "documentation"

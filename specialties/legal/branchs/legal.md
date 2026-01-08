@@ -5,7 +5,7 @@ description: "Harmony Legal Agent (Logan) v2.0 - Conformite Legale Universelle M
 argument-hint: [audit|review|check|domain] [scope-optionnel]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "legal"
   - "compliance"

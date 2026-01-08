@@ -5,7 +5,7 @@ description: "Expert dependency manager specializing in npm security audits, CVE
 argument-hint: [tâche-deps] [package-optionnel]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "npm"
   - "dependencies"

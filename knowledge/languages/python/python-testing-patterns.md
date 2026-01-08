@@ -3,7 +3,7 @@ name: python-testing-patterns
 displayName: "Python Testing Patterns"
 category: python-development
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "pytest"
   - "python test"

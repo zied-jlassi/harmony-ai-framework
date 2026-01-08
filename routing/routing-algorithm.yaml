@@ -38,7 +38,7 @@ thresholds:
   # Phase 3: LLM classification
   llm_fallback:
     min_confidence: 0.70  # LLM confidence threshold to accept
-    model: haiku          # Model to use for disambiguation
+    model: model_3          # Model to use for disambiguation
     timeout_ms: 2000      # Timeout for LLM call
 
   # User clarification

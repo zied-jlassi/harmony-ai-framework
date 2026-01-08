@@ -6,7 +6,7 @@ description: "Requirements expert analyzing needs, creating briefs, defining req
 argument-hint: [topic-or-feature]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "analyst"
   - "analyze"

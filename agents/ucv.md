@@ -5,7 +5,7 @@ emoji: "📋"
 description: "UCV (Use Case Verifiable) domain expert - Creates, tests, and validates use case verifications for complete quality coverage"
 version: "1.0"
 tier: 2
-model: sonnet
+model: model_2
 triggers:
   - "ucv"
   - "use-case"

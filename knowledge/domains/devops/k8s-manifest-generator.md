@@ -3,7 +3,7 @@ name: k8s-manifest-generator
 displayName: "K8s Manifest Generator"
 category: kubernetes-operations
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "kubernetes"
   - "k8s manifest"

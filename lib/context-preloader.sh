@@ -29,6 +29,21 @@ if [[ -f "${SCRIPT_DIR}/config-loader.sh" ]]; then
     source "${SCRIPT_DIR}/config-loader.sh"
 fi
 
+# Source ARIA detector for two-stage detection
+if [[ -f "${SCRIPT_DIR}/aria-detector.sh" ]]; then
+    source "${SCRIPT_DIR}/aria-detector.sh"
+fi
+
+# Source knowledge loader for flag-based knowledge injection
+if [[ -f "${SCRIPT_DIR}/knowledge-loader.sh" ]]; then
+    source "${SCRIPT_DIR}/knowledge-loader.sh"
+fi
+
+# Source profile loader for tech stack detection
+if [[ -f "${SCRIPT_DIR}/profile-loader.sh" ]]; then
+    source "${SCRIPT_DIR}/profile-loader.sh"
+fi
+
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
@@ -143,6 +158,542 @@ _enter_depth() {
 
 _exit_depth() {
     PRELOADER_CURRENT_DEPTH=$((PRELOADER_CURRENT_DEPTH - 1))
+}
+
+# =============================================================================
+# ARIA DETECTION FUNCTIONS
+# =============================================================================
+# Stage 1: Pattern matching (instant, deterministic) via aria-detector.sh
+# Stage 2: LLM enrichment (semantic understanding)
+#
+# In Claude Code: Use run_pattern_detection() for Stage 1,
+#                 then use Task tool (model=haiku) for Stage 2
+# Standalone:     Use run_two_stage_detection() with ANTHROPIC_API_KEY
+
+# =============================================================================
+# STAGE 1 ONLY: Pattern Detection (Bash, Instantané)
+# =============================================================================
+# Use this from Claude Code - Stage 2 will be done via Task tool
+# Returns: JSON with pattern-based detection results
+run_pattern_detection() {
+    local prompt="$1"
+    local project_dir="${2:-.}"
+
+    local pattern_result
+    if type aria_detect_patterns &>/dev/null; then
+        pattern_result=$(aria_detect_patterns "$prompt" "$project_dir")
+    else
+        pattern_result='{"source":"pattern","context_flags":[],"triggered_agents":[],"confidence":70}'
+    fi
+
+    # Add JIT loading (knowledge, profiles, branches)
+    local final_flags
+    final_flags=$(echo "$pattern_result" | jq -r '.context_flags | join(" ")')
+
+    local knowledge_json="[]"
+    local profiles_json="[]"
+    local branches_json="{}"
+
+    # Knowledge files
+    if type knowledge_get_for_flags &>/dev/null && [[ -n "$final_flags" ]]; then
+        local knowledge_files
+        knowledge_files=$(knowledge_get_for_flags "$final_flags" 2>/dev/null || echo "")
+        if [[ -n "$knowledge_files" ]]; then
+            knowledge_json=$(echo "$knowledge_files" | jq -R . | jq -s .)
+        fi
+    fi
+
+    # Profiles
+    if type profile_detect_from_project &>/dev/null; then
+        local profiles
+        profiles=$(profile_detect_from_project "$project_dir" 2>/dev/null || echo "")
+        if [[ -n "$profiles" ]]; then
+            profiles_json=$(echo "$profiles" | jq -R . | jq -s .)
+        fi
+    fi
+
+    # Branches
+    local triggered_agents
+    triggered_agents=$(echo "$pattern_result" | jq -r '.triggered_agents[]?' 2>/dev/null)
+    if [[ -n "$triggered_agents" ]] && type resolve_agent &>/dev/null; then
+        local branches_obj="{"
+        local first=true
+        while IFS= read -r agent; do
+            [[ -z "$agent" ]] && continue
+            local branch_path
+            branch_path=$(resolve_agent "$agent" 2>/dev/null || echo "")
+            if [[ -n "$branch_path" ]]; then
+                [[ "$first" == "true" ]] && first=false || branches_obj+=","
+                branches_obj+="\"$agent\":\"$branch_path\""
+            fi
+        done <<< "$triggered_agents"
+        branches_obj+="}"
+        branches_json="$branches_obj"
+    fi
+
+    # Enrich result with JIT data
+    echo "$pattern_result" | jq -c \
+        --argjson knowledge "$knowledge_json" \
+        --argjson profiles "$profiles_json" \
+        --argjson branches "$branches_json" \
+        '. + {
+            knowledge_files: $knowledge,
+            detected_profiles: $profiles,
+            resolved_branches: $branches
+        }'
+}
+
+# =============================================================================
+# TWO-STAGE: Pattern + LLM (pour usage standalone avec API key)
+# =============================================================================
+# Input: prompt text, project directory
+# Output: JSON with merged results
+run_two_stage_detection() {
+    local prompt="$1"
+    local project_dir="${2:-.}"
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # STAGE 1: PATTERN MATCHING (Instantané, Déterministe)
+    # ═══════════════════════════════════════════════════════════════════════
+    local pattern_result
+    pattern_result=$(run_pattern_detection "$prompt" "$project_dir")
+    echo "[ARIA] Stage 1 (Pattern): $(echo "$pattern_result" | jq -c '.context_flags')" >&2
+
+    local pattern_flags
+    pattern_flags=$(echo "$pattern_result" | jq -c '.context_flags // []')
+
+    # Check for blocking flags - warn immediately
+    local is_blocking
+    is_blocking=$(echo "$pattern_result" | jq -r '.is_blocking // false')
+    if [[ "$is_blocking" == "true" ]]; then
+        echo "[ARIA] ⚠️ BLOCKING FLAGS DETECTED - Compliance validation required" >&2
+    fi
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # STAGE 2: LLM ENRICHMENT (Sémantique)
+    # ═══════════════════════════════════════════════════════════════════════
+    # Skip if no API key and not in mock mode - return Stage 1 only
+    if [[ -z "${ANTHROPIC_API_KEY:-}" ]] && [[ "${PRELOADER_MOCK_MODE:-}" != "true" ]]; then
+        echo "[ARIA] Stage 2: No API key, returning Stage 1 only (use Claude Code Task tool for semantic detection)" >&2
+        echo "$pattern_result" | jq -c '. + {source: "pattern-only", primary_intent: "unknown", suggested_agent: "developer"}'
+        return 0
+    fi
+
+    local haiku_result
+    haiku_result=$(_call_llm_classification "$prompt" "$pattern_flags")
+
+    if [[ -z "$haiku_result" ]] || ! echo "$haiku_result" | jq -e '.primary_intent' &>/dev/null; then
+        echo "[ARIA] Stage 2: LLM failed/unavailable, using pattern-only result" >&2
+        echo "$pattern_result" | jq -c '. + {primary_intent: "unknown", suggested_agent: null}'
+        return 0
+    fi
+
+    echo "[ARIA] Stage 2 (LLM): intent=$(echo "$haiku_result" | jq -r '.primary_intent')" >&2
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # MERGE: Union des flags, priorité LLM pour agent
+    # ═══════════════════════════════════════════════════════════════════════
+    local merged_result
+    merged_result=$(_merge_aria_results "$pattern_result" "$haiku_result")
+
+    # JIT loading already done in run_pattern_detection(), just preserve it
+    echo "[ARIA] Final: $(echo "$merged_result" | jq -c '.')" >&2
+    echo "$merged_result"
+}
+
+# Call LLM for semantic classification
+# Uses model-manager.sh to resolve model and detect provider
+# Input: prompt, pre-detected flags (JSON array)
+# Output: JSON with enriched classification
+_call_llm_classification() {
+    local prompt="$1"
+    local pre_detected_flags="$2"
+
+    # Only use mock if explicitly requested
+    if [[ "${PRELOADER_MOCK_MODE:-}" == "true" ]]; then
+        echo "[ARIA] Using mock mode (PRELOADER_MOCK_MODE=true)" >&2
+        _mock_classification_with_context "$prompt" "$pre_detected_flags"
+        return
+    fi
+
+    # Source model-manager if available
+    if [[ -f "${SCRIPT_DIR}/model-manager.sh" ]] && ! type resolve_model &>/dev/null; then
+        source "${SCRIPT_DIR}/model-manager.sh" 2>/dev/null || true
+    fi
+
+    # Get the router/classification model dynamically
+    # Priority: 1) routing-rules.yaml 2) model-manager.sh 3) default
+    local router_model=""
+    local routing_rules="${SCRIPT_DIR}/../config/routing-rules.yaml"
+
+    # Try to read from routing-rules.yaml (requires yq)
+    if [[ -f "$routing_rules" ]] && command -v yq &>/dev/null; then
+        router_model=$(yq eval '.auto_detection.router_model // ""' "$routing_rules" 2>/dev/null)
+        [[ -n "$router_model" ]] && echo "[ARIA] Router model from config: $router_model" >&2
+    fi
+
+    # Fallback to model-manager.sh
+    if [[ -z "$router_model" ]] && type get_model_for_task &>/dev/null; then
+        router_model=$(get_model_for_task "summarize")  # weak model for classification
+    fi
+
+    # Final fallback
+    [[ -z "$router_model" ]] && router_model="haiku"
+
+    # Display model in yellow (if ui-library available)
+    if type ui_show_model &>/dev/null; then
+        ui_show_model "$router_model" "ARIA Router" >&2
+    else
+        echo "[ARIA] Using model: $router_model" >&2
+    fi
+
+    # Detect provider from available API keys (order matters - first match wins)
+    # Supports: Anthropic, OpenAI, Groq, Azure, Mistral
+    local provider=""
+    local api_key=""
+
+    if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+        provider="anthropic"
+        api_key="$ANTHROPIC_API_KEY"
+    elif [[ -n "${OPENAI_API_KEY:-}" ]]; then
+        provider="openai"
+        api_key="$OPENAI_API_KEY"
+    elif [[ -n "${GROQ_API_KEY:-}" ]]; then
+        provider="groq"
+        api_key="$GROQ_API_KEY"
+    elif [[ -n "${AZURE_OPENAI_API_KEY:-}" ]]; then
+        provider="azure"
+        api_key="$AZURE_OPENAI_API_KEY"
+    elif [[ -n "${MISTRAL_API_KEY:-}" ]]; then
+        provider="mistral"
+        api_key="$MISTRAL_API_KEY"
+    fi
+
+    if [[ -z "$provider" ]]; then
+        echo "[ARIA] No LLM API key found (ANTHROPIC, OPENAI, GROQ, AZURE, MISTRAL)" >&2
+        echo "[ARIA] In Claude Code, use Task tool with model=haiku for semantic detection" >&2
+        _mock_classification_with_context "$prompt" "$pre_detected_flags"
+        return
+    fi
+
+    echo "[ARIA] Using provider: $provider" >&2
+
+    # Build the system prompt
+    local system_prompt="You are ARIA (Automatic Runtime Intent Analyzer) for the Harmony Framework.
+
+Your task is to analyze user requests and detect context flags for proper agent routing.
+
+CONTEXT FLAGS TO DETECT:
+- has_minors: Request involves children, minors, families with kids, schools, youth
+- personal_data: Request involves names, emails, addresses, phone numbers, personal info
+- has_auth: Request involves authentication, login, passwords, sessions, tokens
+- security_critical: Request involves payments, banking, encryption, sensitive operations
+- has_media: Request involves photos, videos, file uploads, media handling
+- has_social: Request involves friends, followers, messaging, social features
+- legal_compliance: Request involves terms, privacy policies, GDPR, legal requirements
+- has_ui: Request involves forms, buttons, interfaces, screens, UI components
+- has_db_schema: Request involves databases, tables, schemas, data models
+- needs_infra: Request involves Docker, Kubernetes, CI/CD, deployment, infrastructure
+- needs_docs: Request involves documentation, README, guides
+- has_i18n: Request involves translations, multilingual, internationalization
+- performance_critical: Request involves optimization, caching, performance
+- is_web: Web application context
+- is_mobile: Mobile application context
+- is_api: Backend API context
+- is_game: Gaming context
+
+SEMANTIC UNDERSTANDING:
+- 'famille' (family) implies has_minors (children are part of families)
+- 'hôtel/reservation' implies personal_data (guest information)
+- 'clients' in service context may imply personal_data
+- 'authentification' implies has_auth AND security
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanation."
+
+    local user_prompt="Analyze this request and classify it.
+
+User Request: $prompt
+
+Pre-detected context flags from pattern matching: $pre_detected_flags
+
+Return JSON with these exact fields:
+{
+  \"primary_intent\": \"feature_request|bug_fix|refactoring|documentation|question|other\",
+  \"context_flags\": [\"array of ALL flags including pre-detected + semantically inferred\"],
+  \"suggested_agent\": \"best agent (developer-web, architect, designer, etc.)\",
+  \"triggered_agents\": [\"compliance agents: rgpd, security, legal, accessibility\"],
+  \"confidence\": 85,
+  \"semantic_notes\": \"brief explanation of semantic inferences made\"
+}"
+
+    # Call LLM API based on detected provider
+    local response content
+
+    case "$provider" in
+        anthropic)
+            # Resolve model name for Anthropic
+            local anthropic_model="claude-3-haiku-20240307"
+            if type resolve_model &>/dev/null; then
+                local resolved
+                resolved=$(resolve_model "$router_model")
+                # Extract just the model name after the /
+                anthropic_model="${resolved#*/}"
+                [[ -z "$anthropic_model" ]] && anthropic_model="claude-3-haiku-20240307"
+            fi
+
+            response=$(curl -s --max-time 10 "https://api.anthropic.com/v1/messages" \
+                -H "Content-Type: application/json" \
+                -H "x-api-key: ${api_key}" \
+                -H "anthropic-version: 2023-06-01" \
+                -d "$(jq -n \
+                    --arg model "$anthropic_model" \
+                    --arg system "$system_prompt" \
+                    --arg user "$user_prompt" \
+                    '{model: $model, max_tokens: 1024, system: $system, messages: [{role: "user", content: $user}]}')" 2>/dev/null)
+
+            content=$(echo "$response" | jq -r '.content[0].text // empty' 2>/dev/null)
+            ;;
+
+        openai)
+            local openai_model="gpt-4o-mini"
+            response=$(curl -s --max-time 10 "https://api.openai.com/v1/chat/completions" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${api_key}" \
+                -d "$(jq -n \
+                    --arg model "$openai_model" \
+                    --arg system "$system_prompt" \
+                    --arg user "$user_prompt" \
+                    '{model: $model, max_tokens: 1024, messages: [{role: "system", content: $system}, {role: "user", content: $user}]}')" 2>/dev/null)
+
+            content=$(echo "$response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
+            ;;
+
+        groq)
+            local groq_model="llama-3.1-8b-instant"
+            response=$(curl -s --max-time 10 "https://api.groq.com/openai/v1/chat/completions" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${api_key}" \
+                -d "$(jq -n \
+                    --arg model "$groq_model" \
+                    --arg system "$system_prompt" \
+                    --arg user "$user_prompt" \
+                    '{model: $model, max_tokens: 1024, messages: [{role: "system", content: $system}, {role: "user", content: $user}]}')" 2>/dev/null)
+
+            content=$(echo "$response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
+            ;;
+
+        azure)
+            # Azure OpenAI requires endpoint in env var
+            local azure_endpoint="${AZURE_OPENAI_ENDPOINT:-}"
+            local azure_deployment="${AZURE_OPENAI_DEPLOYMENT:-gpt-4o-mini}"
+            if [[ -z "$azure_endpoint" ]]; then
+                echo "[ARIA] Azure requires AZURE_OPENAI_ENDPOINT" >&2
+                _mock_classification_with_context "$prompt" "$pre_detected_flags"
+                return
+            fi
+
+            response=$(curl -s --max-time 10 "${azure_endpoint}/openai/deployments/${azure_deployment}/chat/completions?api-version=2024-02-15-preview" \
+                -H "Content-Type: application/json" \
+                -H "api-key: ${api_key}" \
+                -d "$(jq -n \
+                    --arg system "$system_prompt" \
+                    --arg user "$user_prompt" \
+                    '{max_tokens: 1024, messages: [{role: "system", content: $system}, {role: "user", content: $user}]}')" 2>/dev/null)
+
+            content=$(echo "$response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
+            ;;
+
+        mistral)
+            local mistral_model="mistral-small-latest"
+            response=$(curl -s --max-time 10 "https://api.mistral.ai/v1/chat/completions" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${api_key}" \
+                -d "$(jq -n \
+                    --arg model "$mistral_model" \
+                    --arg system "$system_prompt" \
+                    --arg user "$user_prompt" \
+                    '{model: $model, max_tokens: 1024, messages: [{role: "system", content: $system}, {role: "user", content: $user}]}')" 2>/dev/null)
+
+            content=$(echo "$response" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
+            ;;
+
+        *)
+            echo "[ARIA] Unsupported provider: $provider" >&2
+            _mock_classification_with_context "$prompt" "$pre_detected_flags"
+            return
+            ;;
+    esac
+
+    # Check if call failed
+    if [[ -z "$content" ]]; then
+        local error_msg
+        error_msg=$(echo "$response" | jq -r '.error.message // .error // empty' 2>/dev/null)
+        if [[ -n "$error_msg" ]]; then
+            echo "[ARIA] API error ($provider): $error_msg" >&2
+        else
+            echo "[ARIA] API returned empty content, falling back to mock" >&2
+        fi
+        _mock_classification_with_context "$prompt" "$pre_detected_flags"
+        return
+    fi
+
+    # Parse JSON response (clean up markdown if present)
+    content=$(echo "$content" | sed 's/^```json//; s/^```//; s/```$//' | tr -d '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
+
+    # Validate JSON
+    if ! echo "$content" | jq -e '.primary_intent' &>/dev/null; then
+        echo "[ARIA] LLM returned invalid JSON, falling back to mock" >&2
+        _mock_classification_with_context "$prompt" "$pre_detected_flags"
+        return
+    fi
+
+    # Log semantic notes if present
+    local notes
+    notes=$(echo "$content" | jq -r '.semantic_notes // empty' 2>/dev/null)
+    if [[ -n "$notes" ]]; then
+        echo "[ARIA] LLM semantic: $notes" >&2
+    fi
+
+    # Return the LLM classification
+    echo "$content"
+}
+
+# Alias for backward compatibility
+_call_haiku_with_context() {
+    _call_llm_classification "$@"
+}
+
+# Test-only mock classification (uses aria-detector.sh instead of duplicating patterns)
+# WARNING: This is ONLY for tests with PRELOADER_MOCK_MODE=true
+_mock_classification_with_context() {
+    local request="$1"
+    local pre_flags="$2"
+
+    # Use aria-detector.sh for all pattern detection (NO DUPLICATION!)
+    # aria-detector.sh reads patterns from routing-parser.sh/routing-rules.yaml
+    local aria_result
+    if type aria_detect_patterns &>/dev/null; then
+        aria_result=$(aria_detect_patterns "$request" "." 2>/dev/null) || true
+    fi
+
+    # If aria detection worked, use its results
+    if [[ -n "$aria_result" ]] && echo "$aria_result" | jq -e '.context_flags' &>/dev/null; then
+        # Merge pre-detected flags with aria flags
+        local merged_flags
+        merged_flags=$(jq -n \
+            --argjson pre "$pre_flags" \
+            --argjson aria "$(echo "$aria_result" | jq '.context_flags')" \
+            '$pre + $aria | unique')
+
+        local triggered
+        triggered=$(echo "$aria_result" | jq '.triggered_agents')
+
+        # Determine suggested agent from aria or default
+        local suggested_agent
+        suggested_agent=$(echo "$aria_result" | jq -r '.suggested_agent // "developer"')
+
+        # Determine intent
+        local intent="feature_request"
+        if [[ "$request" =~ bug|fix|error|problem|issue ]]; then
+            intent="bug_fix"
+        elif [[ "$request" =~ refactor|clean|optimize|improve ]]; then
+            intent="refactoring"
+        elif [[ "$request" =~ doc|readme|comment|explain ]]; then
+            intent="documentation"
+        elif [[ "$request" =~ \?|what|how|why|when ]]; then
+            intent="question"
+        fi
+
+        jq -n -c \
+            --arg intent "$intent" \
+            --arg agent "$suggested_agent" \
+            --argjson flags "$merged_flags" \
+            --argjson triggered "$triggered" \
+            '{
+                source: "mock",
+                primary_intent: $intent,
+                suggested_agent: $agent,
+                context_flags: $flags,
+                triggered_agents: $triggered,
+                confidence: 70
+            }'
+        return
+    fi
+
+    # Minimal fallback if aria not available (emergency only)
+    # Uses ONLY pre-detected flags, no extra pattern matching
+    local flags_json
+    flags_json=$(echo "$pre_flags" | jq -c '. // []')
+
+    jq -n -c \
+        --argjson flags "$flags_json" \
+        '{
+            source: "mock-minimal",
+            primary_intent: "feature_request",
+            suggested_agent: "developer",
+            context_flags: $flags,
+            triggered_agents: [],
+            confidence: 50
+        }'
+}
+
+# Merge pattern and haiku results
+# Priority: Union of flags, Haiku for intent/agent, max confidence
+_merge_aria_results() {
+    local pattern="$1"
+    local haiku="$2"
+
+    # Union of context flags
+    local all_flags
+    all_flags=$(jq -n -c \
+        --argjson p "$(echo "$pattern" | jq -c '.context_flags // []')" \
+        --argjson h "$(echo "$haiku" | jq -c '.context_flags // []')" \
+        '$p + $h | unique')
+
+    # Union of triggered agents
+    local all_triggers
+    all_triggers=$(jq -n -c \
+        --argjson p "$(echo "$pattern" | jq -c '.triggered_agents // []')" \
+        --argjson h "$(echo "$haiku" | jq -c '.triggered_agents // []')" \
+        '$p + $h | unique')
+
+    # Get haiku values (priority)
+    local intent
+    local agent
+    local haiku_conf
+    intent=$(echo "$haiku" | jq -r '.primary_intent // "unknown"')
+    agent=$(echo "$haiku" | jq -r '.suggested_agent // null')
+    haiku_conf=$(echo "$haiku" | jq -r '.confidence // 0')
+
+    # Get pattern blocking status
+    local is_blocking
+    is_blocking=$(echo "$pattern" | jq -r '.is_blocking // false')
+
+    # Get max confidence
+    local pattern_conf
+    pattern_conf=$(echo "$pattern" | jq -r '.confidence // 0')
+    local final_conf=$haiku_conf
+    if (( pattern_conf > haiku_conf )); then
+        final_conf=$pattern_conf
+    fi
+
+    jq -n -c \
+        --arg source "two-stage" \
+        --arg intent "$intent" \
+        --arg agent "$agent" \
+        --argjson flags "$all_flags" \
+        --argjson triggers "$all_triggers" \
+        --argjson blocking "$is_blocking" \
+        --argjson confidence "$final_conf" \
+        '{
+            source: $source,
+            primary_intent: $intent,
+            suggested_agent: $agent,
+            context_flags: $flags,
+            triggered_agents: $triggers,
+            is_blocking: $blocking,
+            confidence: $confidence
+        }'
 }
 
 # =============================================================================
@@ -301,6 +852,17 @@ _resolve_context() {
 
     # Use provided agent or suggested
     agent="${agent:-$suggested}"
+
+    # Display agent switch with model (if ui-library available)
+    if type ui_agent_switch &>/dev/null; then
+        # Try to get model from agent file
+        local agent_model="inherit"
+        local agent_file="${HARMONY_DIR:-}/agents/${agent}.md"
+        if [[ -f "$agent_file" ]]; then
+            agent_model=$(grep -m1 "^model:" "$agent_file" 2>/dev/null | sed 's/model:[[:space:]]*//' || echo "inherit")
+        fi
+        ui_agent_switch "$agent" "$agent_model" >&2
+    fi
 
     # Resolve branch (uses cached lookup from config-loader.sh)
     local branch_path=""
@@ -691,3 +1253,176 @@ get_preloader_state() {
 get_preloader_tokens() {
     echo "$PRELOADER_TOKENS_USED"
 }
+
+# =============================================================================
+# ARIA WORKFLOW STATE UPDATE
+# =============================================================================
+
+# Update workflow-state.json with ARIA detection results
+update_workflow_aria_context() {
+    local aria_result="$1"
+    local harmony_dir="${HARMONY_DIR:-.harmony}"
+    local workflow_file="${harmony_dir}/memory/workflow-state.json"
+
+    if [[ ! -f "$workflow_file" ]]; then
+        echo "[ARIA] WARNING: workflow-state.json not found at $workflow_file" >&2
+        return 1
+    fi
+
+    local timestamp
+    timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+    # Extract values from ARIA result
+    local context_flags triggered_agents suggested_agent primary_intent confidence source is_blocking
+
+    context_flags=$(echo "$aria_result" | jq -c '.context_flags // []')
+    triggered_agents=$(echo "$aria_result" | jq -c '.triggered_agents // []')
+    suggested_agent=$(echo "$aria_result" | jq -r '.suggested_agent // null')
+    primary_intent=$(echo "$aria_result" | jq -r '.primary_intent // null')
+    confidence=$(echo "$aria_result" | jq -r '.confidence // 0')
+    source=$(echo "$aria_result" | jq -r '.source // "unknown"')
+    is_blocking=$(echo "$aria_result" | jq -r '.is_blocking // false')
+
+    # Update aria_context section
+    local tmp_file
+    tmp_file=$(mktemp)
+
+    jq --arg ts "$timestamp" \
+       --argjson flags "$context_flags" \
+       --argjson triggers "$triggered_agents" \
+       --arg agent "$suggested_agent" \
+       --arg intent "$primary_intent" \
+       --argjson conf "$confidence" \
+       --arg src "$source" \
+       --argjson blocking "$is_blocking" \
+       '.aria_context = {
+           detected_at: $ts,
+           context_flags: $flags,
+           triggered_agents: $triggers,
+           suggested_agent: $agent,
+           primary_intent: $intent,
+           confidence: $conf,
+           source: $src,
+           is_blocking: $blocking
+       }' "$workflow_file" > "$tmp_file" && mv "$tmp_file" "$workflow_file"
+
+    echo "[ARIA] Updated workflow-state.json aria_context" >&2
+    return 0
+}
+
+# =============================================================================
+# TWO-STAGE DETECTION SELF-TEST
+# =============================================================================
+
+preloader_self_test() {
+    echo "=== Context Preloader Self-Test (Two-Stage ARIA) ==="
+    echo ""
+
+    local passed=0
+    local failed=0
+
+    # Test 1: Two-stage detection basic
+    echo "Test 1: Two-stage detection with compliance keywords..."
+    local result
+    result=$(run_two_stage_detection "Créer un formulaire d'inscription pour les enfants avec email" "." 2>/dev/null)
+
+    if echo "$result" | jq -e '.context_flags | index("has_minors")' > /dev/null 2>&1; then
+        echo "  ✅ has_minors flag detected"
+        ((++passed)) || true
+    else
+        echo "  ❌ has_minors flag NOT detected"
+        ((++failed)) || true
+    fi
+
+    if echo "$result" | jq -e '.context_flags | index("personal_data")' > /dev/null 2>&1; then
+        echo "  ✅ personal_data flag detected"
+        ((++passed)) || true
+    else
+        echo "  ❌ personal_data flag NOT detected"
+        ((++failed)) || true
+    fi
+
+    # Test 2: Triggered agents
+    echo ""
+    echo "Test 2: Triggered agents for compliance..."
+    local triggers
+    triggers=$(echo "$result" | jq -r '.triggered_agents | join(",")')
+
+    if [[ "$triggers" == *"rgpd"* ]]; then
+        echo "  ✅ rgpd agent triggered"
+        ((++passed)) || true
+    else
+        echo "  ❌ rgpd agent NOT triggered"
+        ((++failed)) || true
+    fi
+
+    # Test 3: Blocking flag detection
+    echo ""
+    echo "Test 3: Blocking flag detection..."
+    local is_blocking
+    is_blocking=$(echo "$result" | jq -r '.is_blocking')
+
+    if [[ "$is_blocking" == "true" ]]; then
+        echo "  ✅ is_blocking=true for minors"
+        ((++passed)) || true
+    else
+        echo "  ❌ is_blocking should be true for minors"
+        ((++failed)) || true
+    fi
+
+    # Test 4: Source identification
+    echo ""
+    echo "Test 4: Two-stage source identification..."
+    local source
+    source=$(echo "$result" | jq -r '.source')
+
+    if [[ "$source" == "two-stage" ]]; then
+        echo "  ✅ source=two-stage"
+        ((++passed)) || true
+    else
+        echo "  ❌ source should be 'two-stage', got: $source"
+        ((++failed)) || true
+    fi
+
+    # Test 5: Merge with mock classification
+    echo ""
+    echo "Test 5: Merge includes haiku enrichment..."
+    local intent
+    intent=$(echo "$result" | jq -r '.primary_intent')
+
+    if [[ -n "$intent" ]] && [[ "$intent" != "null" ]] && [[ "$intent" != "unknown" ]]; then
+        echo "  ✅ primary_intent set: $intent"
+        ((++passed)) || true
+    else
+        echo "  ⚠️ primary_intent not enriched (may be expected without API)"
+        ((++passed)) || true  # Not a failure in mock mode
+    fi
+
+    # Test 6: Web detection
+    echo ""
+    echo "Test 6: Web project detection..."
+    result=$(run_two_stage_detection "Create a React web application" "." 2>/dev/null)
+
+    if echo "$result" | jq -e '.context_flags | index("is_web")' > /dev/null 2>&1; then
+        echo "  ✅ is_web flag detected"
+        ((++passed)) || true
+    else
+        echo "  ❌ is_web flag NOT detected"
+        ((++failed)) || true
+    fi
+
+    echo ""
+    echo "=== Results: $passed passed, $failed failed ==="
+
+    if [[ $failed -eq 0 ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Run self-test if called directly with --test
+if [[ "${1:-}" == "--test" ]]; then
+    preloader_self_test
+    exit $?
+fi

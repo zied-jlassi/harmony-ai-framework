@@ -6,7 +6,7 @@ description: "Gestion backlog intelligent - Visualisation WSJF"
 argument-hint: [action] [filters-optionnels]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "backlog"
   - "dashboard"

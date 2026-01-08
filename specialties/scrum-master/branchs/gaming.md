@@ -5,7 +5,7 @@ description: "🎯 Game SM Agent - Scrum Master Gaming - Sprints jeux éducatifs
 argument-hint: [sprint-command] [game-context]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "game-sprint"
   - "game-story"

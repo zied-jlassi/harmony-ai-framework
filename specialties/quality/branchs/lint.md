@@ -5,7 +5,7 @@ description: "🔍 Harmony Lint (Lenny) - ESLint/Prettier/TypeScript Strict - Co
 argument-hint: [tâche-lint] [fichier-optionnel]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "lint"
   - "eslint"

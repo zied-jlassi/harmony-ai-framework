@@ -5,7 +5,7 @@ description: "🧙 Harmony Builder - Agent & Workflow Creator - Meta Module"
 argument-hint: [action] [type-optionnel]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "create-agent"
   - "create-workflow"

@@ -6,7 +6,7 @@ description: "Post-development validation agent ensuring code structure follows 
 argument-hint: [feature-name]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "atlas"
   - "clean-arch"

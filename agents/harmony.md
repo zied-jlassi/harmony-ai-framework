@@ -6,7 +6,7 @@ description: "Central intelligence coordinating the entire Harmony ecosystem. Ma
 argument-hint: [command] [--option]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "harmony"
   - "orchestrate"

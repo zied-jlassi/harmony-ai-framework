@@ -6,7 +6,7 @@ description: "Central nervous system detecting intent, routing to agents, enforc
 argument-hint: []
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers: []
 phase: 0
 category: utility

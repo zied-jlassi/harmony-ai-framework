@@ -5,7 +5,7 @@ description: "🏛️ Harmony Game Architect (Cloud) - Game Systems Architecture
 argument-hint: [tâche-arch-game] [scope-optionnel]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "game-architecture"
   - "game-systems"

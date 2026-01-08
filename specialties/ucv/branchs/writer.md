@@ -6,7 +6,7 @@ description: "Verification architect creating exhaustive Use Case Verifications 
 argument-hint: [story-id]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "ucv"
   - "verification"

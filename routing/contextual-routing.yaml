@@ -61,7 +61,7 @@ context_detection:
     # Phase 3: LLM fallback if detection fails or ambiguous
     llm_fallback:
       enabled: true
-      model: haiku  # Fast and cheap
+      model: model_3  # Fast and cheap
       prompt_template: |
         Analyze this project structure and determine:
         - has_ui: true/false (has frontend/UI)

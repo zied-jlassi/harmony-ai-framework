@@ -5,7 +5,7 @@ description: "Expert DevOps engineer specializing in Docker Compose orchestratio
 argument-hint: [action-devops] [service-optionnel]
 version: "2.0"
 tier: 4
-model: haiku
+model: model_3
 triggers:
   - "docker"
   - "ci"

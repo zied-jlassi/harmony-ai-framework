@@ -5,7 +5,7 @@ description: "Expert security engineer specializing in OWASP Top 10, threat mode
 argument-hint: [tâche-audit] [scope-optionnel]
 version: "2.0"
 tier: 1
-model: opus
+model: model_1
 triggers:
   - "security"
   - "owasp"

@@ -6,7 +6,7 @@ description: "Accessibility guardian ensuring WCAG 2.2/RGAA/EAA 2025 compliance.
 argument-hint: [module] [wcag-level]
 version: "2.0"
 tier: 2
-model: sonnet
+model: model_2
 triggers:
   - "accessibility"
   - "a11y"

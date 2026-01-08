@@ -6,7 +6,7 @@ description: "Quality Engineer writing automated tests (E2E, unit, integration),
 argument-hint: [scope-or-story]
 version: "2.0"
 tier: 3
-model: sonnet
+model: model_2
 triggers:
   - "test"
   - "tester"

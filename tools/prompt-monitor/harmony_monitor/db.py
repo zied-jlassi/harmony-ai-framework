@@ -199,14 +199,36 @@ class Database:
         Returns:
             The ID of the created record
         """
-        # Analyze the request
-        analyzer = get_analyzer()
-        analysis = analyzer.analyze(
-            prompt=data.prompt_text,
-            response=data.response_text,
-            cost_usd=data.cost_usd,
-            response_tokens=data.response_tokens
+        # Check if this is a tool call (starts with [ToolName] but NOT [User])
+        is_tool_call = (
+            data.prompt_text.startswith("[") and
+            "]" in data.prompt_text[:20] and
+            not data.prompt_text.startswith("[User]")
         )
+
+        if is_tool_call:
+            # Skip detailed analysis for tool calls - use neutral scores
+            from .models import AlignmentCategory
+            class ToolAnalysis:
+                prompt_clarity_score = 50
+                response_quality_score = 50
+                alignment_score = 50
+                alignment_category = AlignmentCategory.EXPECTED
+                suggestion = "Tool call - no analysis needed"
+            analysis = ToolAnalysis()
+        else:
+            # Full analysis for user prompts
+            analyzer = get_analyzer()
+            # Strip [User] prefix if present for analysis
+            prompt_for_analysis = data.prompt_text
+            if prompt_for_analysis.startswith("[User] "):
+                prompt_for_analysis = prompt_for_analysis[7:]
+            analysis = analyzer.analyze(
+                prompt=prompt_for_analysis,
+                response=data.response_text,
+                cost_usd=data.cost_usd,
+                response_tokens=data.response_tokens
+            )
 
         # Insert request
         cursor = await self._connection.execute(
@@ -264,25 +286,53 @@ class Database:
         self,
         session_id: Optional[str] = None,
         limit: int = 50,
-        offset: int = 0
+        offset: int = 0,
+        prompt_type: Optional[str] = None,
+        category: Optional[str] = None,
+        time_filter: Optional[str] = None
     ) -> list[RequestRecord]:
-        """List requests with optional session filter."""
-        if session_id:
-            cursor = await self._connection.execute(
-                """SELECT * FROM requests
-                   WHERE session_id = ?
-                   ORDER BY timestamp DESC
-                   LIMIT ? OFFSET ?""",
-                (session_id, limit, offset)
-            )
-        else:
-            cursor = await self._connection.execute(
-                """SELECT * FROM requests
-                   ORDER BY timestamp DESC
-                   LIMIT ? OFFSET ?""",
-                (limit, offset)
-            )
+        """List requests with optional filters."""
+        from datetime import datetime, timedelta
 
+        conditions = []
+        params = []
+
+        if session_id:
+            conditions.append("session_id = ?")
+            params.append(session_id)
+
+        if prompt_type:
+            conditions.append("prompt_text LIKE ?")
+            params.append(f"[{prompt_type}]%")
+
+        if category:
+            conditions.append("alignment_category = ?")
+            params.append(category)
+
+        if time_filter:
+            now = datetime.utcnow()
+            if time_filter == "1h":
+                since = now - timedelta(hours=1)
+            elif time_filter == "24h":
+                since = now - timedelta(hours=24)
+            elif time_filter == "7d":
+                since = now - timedelta(days=7)
+            elif time_filter == "30d":
+                since = now - timedelta(days=30)
+            else:
+                since = None
+            if since:
+                conditions.append("timestamp >= ?")
+                params.append(since.isoformat())
+
+        where_clause = " AND ".join(conditions) if conditions else "1=1"
+        query = f"""SELECT * FROM requests
+                    WHERE {where_clause}
+                    ORDER BY timestamp DESC
+                    LIMIT ? OFFSET ?"""
+        params.extend([limit, offset])
+
+        cursor = await self._connection.execute(query, params)
         rows = await cursor.fetchall()
         return [self._row_to_request_record(row) for row in rows]
 

@@ -171,10 +171,13 @@ async def list_requests(
     session_id: Optional[str] = None,
     limit: int = Query(default=50, le=200),
     offset: int = Query(default=0, ge=0),
+    type: Optional[str] = None,
+    category: Optional[str] = None,
+    time: Optional[str] = None,
 ) -> list[RequestRecord]:
-    """List requests with optional session filter."""
+    """List requests with optional filters."""
     db = await get_database()
-    return await db.list_requests(session_id, limit, offset)
+    return await db.list_requests(session_id, limit, offset, type, category, time)
 
 
 @app.get("/api/requests/{request_id}")
@@ -189,37 +192,6 @@ async def get_request(request_id: int) -> RequestRecord:
     return request
 
 
-def estimate_tokens(text: str) -> int:
-    """Estimate token count from text (approx 4 chars per token for Claude)."""
-    if not text:
-        return 0
-    return max(1, len(text) // 4)
-
-
-def calculate_cost(prompt_tokens: int, response_tokens: int, model: str = "claude-sonnet-4") -> float:
-    """
-    Calculate cost based on Claude pricing.
-
-    Pricing (as of 2024):
-    - Claude Sonnet 4: $3/1M input, $15/1M output
-    - Claude Opus 4: $15/1M input, $75/1M output
-    - Claude Haiku: $0.25/1M input, $1.25/1M output
-    """
-    model_lower = model.lower()
-
-    if "opus" in model_lower:
-        input_price = 15.0 / 1_000_000
-        output_price = 75.0 / 1_000_000
-    elif "haiku" in model_lower:
-        input_price = 0.25 / 1_000_000
-        output_price = 1.25 / 1_000_000
-    else:  # Default to Sonnet
-        input_price = 3.0 / 1_000_000
-        output_price = 15.0 / 1_000_000
-
-    return (prompt_tokens * input_price) + (response_tokens * output_price)
-
-
 @app.post("/api/track")
 async def track_request(input_data: TrackInput) -> dict:
     """
@@ -227,7 +199,6 @@ async def track_request(input_data: TrackInput) -> dict:
 
     This is the main endpoint for recording LLM interactions.
     Only `prompt` and `response` are required, all other fields have defaults.
-    Tokens and cost are auto-estimated if not provided.
     """
     db = await get_database()
 
@@ -241,25 +212,16 @@ async def track_request(input_data: TrackInput) -> dict:
     else:
         session_id = await db.get_or_create_session()
 
-    # Estimate tokens if not provided
-    prompt_tokens = input_data.prompt_tokens or estimate_tokens(input_data.prompt)
-    response_tokens = input_data.response_tokens or estimate_tokens(input_data.response)
-
-    # Calculate cost if not provided
-    cost_usd = input_data.cost_usd
-    if cost_usd == 0.0:
-        cost_usd = calculate_cost(prompt_tokens, response_tokens, input_data.model)
-
     # Convert TrackInput to RequestData
     data = RequestData(
         session_id=session_id,
         prompt_text=input_data.prompt,
         response_text=input_data.response,
-        prompt_tokens=prompt_tokens,
-        response_tokens=response_tokens,
+        prompt_tokens=input_data.prompt_tokens,
+        response_tokens=input_data.response_tokens,
         model=input_data.model,
         latency_ms=input_data.latency_ms,
-        cost_usd=cost_usd,
+        cost_usd=input_data.cost_usd,
         agent=input_data.agent,
         tool_name=input_data.tool_name,
     )

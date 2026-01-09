@@ -12,6 +12,9 @@ const PAGE_SIZE = 10;
 let trendsChart = null;
 let currentPage = 1;
 let totalRequests = 0;
+let filterType = '';
+let filterCategory = '';
+let filterTime = '';
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,10 +60,18 @@ async function fetchAPI(endpoint) {
 function updateStats(stats) {
     document.getElementById('session-id').textContent = `Session: ${stats.session_id.slice(0, 25)}...`;
     document.getElementById('total-requests').textContent = stats.total_requests;
+    const totalTokens = (stats.total_prompt_tokens || 0) + (stats.total_response_tokens || 0);
+    document.getElementById('total-tokens').textContent = formatNumber(totalTokens);
     document.getElementById('total-cost').textContent = `$${stats.total_cost.toFixed(4)}`;
     document.getElementById('avg-clarity').textContent = Math.round(stats.avg_prompt_clarity);
     document.getElementById('avg-quality').textContent = Math.round(stats.avg_response_quality);
     document.getElementById('avg-alignment').textContent = Math.round(stats.avg_alignment);
+}
+
+function formatNumber(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
 }
 
 function updateLatestRequest(request) {
@@ -226,11 +237,15 @@ function updateInsights(insights) {
 async function updateRecentRequests() {
     try {
         const offset = (currentPage - 1) * PAGE_SIZE;
-        const requests = await fetchAPI(`/api/requests?limit=${PAGE_SIZE}&offset=${offset}`);
+        let url = `/api/requests?limit=${PAGE_SIZE}&offset=${offset}`;
+        if (filterType) url += `&type=${filterType}`;
+        if (filterCategory) url += `&category=${filterCategory}`;
+        if (filterTime) url += `&time=${filterTime}`;
+        const requests = await fetchAPI(url);
         const tbody = document.getElementById('requests-tbody');
 
         if (requests.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="no-data">No requests yet</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="no-data">No requests yet</td></tr>';
             return;
         }
 
@@ -243,6 +258,7 @@ async function updateRecentRequests() {
                 <td><span class="score ${getScoreClass(req.response_quality_score)}">${req.response_quality_score}</span></td>
                 <td><span class="score ${getScoreClass(req.alignment_score)}">${req.alignment_score}</span></td>
                 <td><span class="category-badge ${req.alignment_category}">${req.alignment_category}</span></td>
+                <td class="tokens-cell">${req.prompt_tokens + req.response_tokens}</td>
                 <td>$${req.cost_usd.toFixed(4)}</td>
             </tr>
         `).join('');
@@ -264,6 +280,14 @@ function updatePagination() {
 function changePage(delta) {
     currentPage += delta;
     if (currentPage < 1) currentPage = 1;
+    updateRecentRequests();
+}
+
+function applyFilters() {
+    filterType = document.getElementById('filter-type').value;
+    filterCategory = document.getElementById('filter-category').value;
+    filterTime = document.getElementById('filter-time').value;
+    currentPage = 1;
     updateRecentRequests();
 }
 
@@ -511,21 +535,40 @@ async function confirmReset() {
         if (data.status === 'success') {
             closeResetModal();
             currentPage = 1;
+            filterType = '';
+            filterCategory = '';
+            filterTime = '';
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-category').value = '';
+            document.getElementById('filter-time').value = '';
             await refreshDashboard();
-            alert('All data has been reset!');
+            showNotification('All data has been reset!', 'success');
         } else {
-            alert('Failed to reset: ' + (data.message || 'Unknown error'));
+            showNotification('Failed to reset: ' + (data.message || 'Unknown error'), 'error');
         }
     } catch (error) {
         console.error('Reset failed:', error);
-        alert('Failed to reset data');
+        showNotification('Failed to reset data', 'error');
     }
 }
 
 // Utility Functions
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.classList.add('show'), 10);
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
 function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert('Copied to clipboard!');
+        showNotification('Copied to clipboard!', 'success');
     }).catch(err => {
         console.error('Failed to copy:', err);
     });
@@ -561,10 +604,20 @@ function formatTime(timestamp) {
     const now = new Date();
     const diff = (now - date) / 1000;
 
-    if (diff < 60) return `${Math.floor(diff)}s ago`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    // Format dd/mm/YYYY H:m for times < 1h
+    if (diff < 3600) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        return `${day}/${month}/${year} ${hours}:${String(minutes).padStart(2, '0')}`;
+    }
+
+    // Relative time for >= 1h
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString().slice(0, 5);
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+    return `${Math.floor(diff / 604800)}w ago`;
 }
 
 function showError(message) {

@@ -26,6 +26,10 @@
                 <div class="stat-label">Total Requests</div>
             </div>
             <div class="stat-card">
+                <div class="stat-value" id="total-tokens">0</div>
+                <div class="stat-label">Total Tokens</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-value" id="total-cost">$0.00</div>
                 <div class="stat-label">Total Cost</div>
             </div>
@@ -115,6 +119,35 @@
         <div class="card requests-table">
             <div class="table-header">
                 <h2>Request History - Team Learning Journal</h2>
+                <div class="filter-controls">
+                    <select id="filter-type" onchange="applyFilters()">
+                        <option value="">All Types</option>
+                        <option value="User">User</option>
+                        <option value="Bash">Bash</option>
+                        <option value="Read">Read</option>
+                        <option value="Write">Write</option>
+                        <option value="Edit">Edit</option>
+                        <option value="Grep">Grep</option>
+                        <option value="Glob">Glob</option>
+                        <option value="Task">Task</option>
+                        <option value="WebFetch">WebFetch</option>
+                        <option value="WebSearch">WebSearch</option>
+                    </select>
+                    <select id="filter-category" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="optimal">Optimal</option>
+                        <option value="impressive">Impressive</option>
+                        <option value="problem">Problem</option>
+                        <option value="expected">Expected</option>
+                    </select>
+                    <select id="filter-time" onchange="applyFilters()">
+                        <option value="">All Time</option>
+                        <option value="1h">Last Hour</option>
+                        <option value="24h">Last 24h</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                    </select>
+                </div>
                 <div class="pagination-controls">
                     <button id="prev-page" onclick="changePage(-1)" disabled>Prev</button>
                     <span id="page-info">Page 1</span>
@@ -131,11 +164,12 @@
                         <th>Quality</th>
                         <th>Align</th>
                         <th>Category</th>
+                        <th>Tokens</th>
                         <th>Cost</th>
                     </tr>
                 </thead>
                 <tbody id="requests-tbody">
-                    <tr><td colspan="8" class="no-data">No requests yet</td></tr>
+                    <tr><td colspan="9" class="no-data">No requests yet</td></tr>
                 </tbody>
             </table>
         </div>

@@ -1,9 +1,16 @@
 #!/bin/bash
-# Harmony Prompt Monitor - Claude Code Hook (PostToolUse)
+# Harmony Prompt Monitor - Claude Code Hook
 # Captures tool interactions and sends to monitor API
 #
-# This hook is called AFTER each tool execution.
-# Data is sent asynchronously to not block Claude.
+# Usage: Add to .claude/settings.json:
+# {
+#   "hooks": {
+#     "PostToolUse": [{
+#       "matcher": "*",
+#       "command": "/path/to/track-interaction.sh"
+#     }]
+#   }
+# }
 
 MONITOR_URL="${HARMONY_MONITOR_URL:-http://localhost:8080}"
 
@@ -13,35 +20,57 @@ INPUT=$(cat)
 # Extract tool info
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"')
 TOOL_INPUT=$(echo "$INPUT" | jq -r '.tool_input // "{}"')
-TOOL_RESULT=$(echo "$INPUT" | jq -r '.tool_result // ""' | head -c 2000)
+
+# Extract response based on tool type (Claude Code uses tool_response, not tool_result)
+if [ "$TOOL_NAME" = "Read" ]; then
+    TOOL_RESPONSE=$(echo "$INPUT" | jq -r '.tool_response.file.content // ""' | head -c 10000)
+elif [ "$TOOL_NAME" = "Bash" ]; then
+    TOOL_RESPONSE=$(echo "$INPUT" | jq -r '.tool_response.stdout // .tool_response // ""' | head -c 10000)
+else
+    TOOL_RESPONSE=$(echo "$INPUT" | jq -r '.tool_response | if type == "object" then (. | tostring) else . end // ""' | head -c 10000)
+fi
 
 # Skip if no meaningful data
 if [ -z "$TOOL_INPUT" ] || [ "$TOOL_INPUT" = "{}" ]; then
     exit 0
 fi
 
-# Format prompt from tool input
+# Format prompt from tool input - capture more details
 case "$TOOL_NAME" in
     Bash)
-        PROMPT="[Bash] $(echo "$TOOL_INPUT" | jq -r '.command // ""' | head -c 500)"
+        PROMPT="[Bash] $(echo "$TOOL_INPUT" | jq -r '.command // ""' | head -c 1000)"
         ;;
     Read)
-        PROMPT="[Read] $(echo "$TOOL_INPUT" | jq -r '.file_path // ""')"
+        FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // ""')
+        PROMPT="[Read] $FILE_PATH"
         ;;
     Write)
-        PROMPT="[Write] $(echo "$TOOL_INPUT" | jq -r '.file_path // ""')"
+        FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // ""')
+        CONTENT=$(echo "$TOOL_INPUT" | jq -r '.content // ""' | head -c 3000)
+        PROMPT="[Write] $FILE_PATH
+--- Content (truncated) ---
+$CONTENT"
         ;;
     Edit)
-        PROMPT="[Edit] $(echo "$TOOL_INPUT" | jq -r '.file_path // ""')"
+        FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // ""')
+        OLD_STR=$(echo "$TOOL_INPUT" | jq -r '.old_string // ""' | head -c 1000)
+        NEW_STR=$(echo "$TOOL_INPUT" | jq -r '.new_string // ""' | head -c 1000)
+        PROMPT="[Edit] $FILE_PATH
+--- Old ---
+$OLD_STR
+--- New ---
+$NEW_STR"
         ;;
     Grep)
-        PROMPT="[Grep] $(echo "$TOOL_INPUT" | jq -r '.pattern // ""')"
+        PATTERN=$(echo "$TOOL_INPUT" | jq -r '.pattern // ""')
+        PATH_ARG=$(echo "$TOOL_INPUT" | jq -r '.path // "."')
+        PROMPT="[Grep] $PATTERN in $PATH_ARG"
         ;;
     Glob)
         PROMPT="[Glob] $(echo "$TOOL_INPUT" | jq -r '.pattern // ""')"
         ;;
     Task)
-        PROMPT="[Task] $(echo "$TOOL_INPUT" | jq -r '.prompt // ""' | head -c 500)"
+        PROMPT="[Task] $(echo "$TOOL_INPUT" | jq -r '.prompt // ""' | head -c 2000)"
         ;;
     WebFetch)
         PROMPT="[WebFetch] $(echo "$TOOL_INPUT" | jq -r '.url // ""')"
@@ -50,12 +79,12 @@ case "$TOOL_NAME" in
         PROMPT="[WebSearch] $(echo "$TOOL_INPUT" | jq -r '.query // ""')"
         ;;
     *)
-        PROMPT="[$TOOL_NAME] $(echo "$TOOL_INPUT" | jq -c '.' | head -c 500)"
+        PROMPT="[$TOOL_NAME] $(echo "$TOOL_INPUT" | jq -c '.' | head -c 1000)"
         ;;
 esac
 
-# Truncate response
-RESPONSE=$(echo "$TOOL_RESULT" | head -c 1500)
+# Response - use extracted tool response
+RESPONSE="$TOOL_RESPONSE"
 
 # Skip empty prompts
 if [ -z "$PROMPT" ] || [ "$PROMPT" = "[$TOOL_NAME] " ]; then

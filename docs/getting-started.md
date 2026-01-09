@@ -196,7 +196,23 @@ Both → Intent: IMPLEMENT → Developer Agent
 - [Core Concepts](concepts.md) - Deep dive into Harmony's architecture
 - [Agents Guide](agents/README.md) - Learn about all available agents
 - [Patterns Reference](patterns/README.md) - Design patterns library
+- [Prompt Monitor](../commands/monitor.md) - Track and improve your prompts
 - [Examples](examples/README.md) - Real-world examples
+
+### Optional: Enable Prompt Monitor
+
+Track your interactions and learn to write better prompts:
+
+```bash
+# Install Python dependencies (one-time)
+pip3 install -r .harmony/tools/prompt-monitor/requirements.txt
+
+# Start the dashboard
+harmony monitor start
+
+# Open in browser
+harmony monitor open   # → http://localhost:8080
+```
 
 ---
 

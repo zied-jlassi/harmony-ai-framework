@@ -32,57 +32,63 @@ When invoked without arguments, display this menu:
 ║   ──────────                                                                    ║
 ║    6  Matrice coherence   Rapport complet avec scores par categorie            ║
 ║    7  Tokens Report       Cout tokens par agent (auto vs manuel)               ║
+║    8  API Costs           Suivi couts API par session/agent/modele (USD/EUR)   ║
 ║                                                                                 ║
 ║   🎯 VALIDATION SPECIFIQUE                                                      ║
 ║   ────────────────────────                                                      ║
-║    8  Pipeline            Coherence pipeline config vs documentation           ║
-║    9  Hooks               Validation hooks Claude (executable, refs)           ║
-║   10  Patterns            Validation patterns (manifest, orphelins)            ║
+║    9  Pipeline            Coherence pipeline config vs documentation           ║
+║   10  Hooks               Validation hooks Claude (executable, refs)           ║
+║   11  Patterns            Validation patterns (manifest, orphelins)            ║
 ║                                                                                 ║
 ║   🔄 SYNCHRONISATION                                                            ║
 ║   ─────────────────                                                             ║
-║   11  Memory Sync         Sync regles MCP memory <-> CLAUDE.md                 ║
-║   12  Claude Compliance   Validation config Claude Code officielle             ║
-║   12u Claude Update       MAJ regles conformite (+ pattern GADER)              ║
+║   12  Memory Sync         Sync regles MCP memory <-> CLAUDE.md                 ║
+║   13  Claude Compliance   Validation config Claude Code officielle             ║
+║   13u Claude Update       MAJ regles conformite (+ pattern GADER)              ║
 ║                                                                                 ║
 ║   📏 REGLES APPLICATION                                                         ║
 ║   ─────────────────────                                                         ║
-║   13  Rules Audit         Scanner et valider toutes les regles                 ║
-║   14  Rules Usage         Verifier utilisation des regles dans le code         ║
-║   15  Rules Report        Generer rapport de conformite par categorie          ║
+║   14  Rules Audit         Scanner et valider toutes les regles                 ║
+║   15  Rules Usage         Verifier utilisation des regles dans le code         ║
+║   16  Rules Report        Generer rapport de conformite par categorie          ║
 ║                                                                                 ║
 ║   🛡️ HARMONY SENTINEL (Auto-Learning)                                           ║
 ║   ───────────────────────────────────                                           ║
-║   16  Sentinel Status     Dashboard sante: circuit breaker, erreurs, patterns  ║
-║   17  Sentinel Learn      Documenter une erreur dans error-journal             ║
-║   18  Sentinel Reset      Reinitialiser circuit breaker apres analyse          ║
-║   19  Sentinel Check      Verification complete du systeme memoire             ║
-║   20  Sentinel Report     Rapport detaille erreurs et patterns                 ║
+║   17  Sentinel Status     Dashboard sante: circuit breaker, erreurs, patterns  ║
+║   18  Sentinel Learn      Documenter une erreur dans error-journal             ║
+║   19  Sentinel Reset      Reinitialiser circuit breaker apres analyse          ║
+║   20  Sentinel Check      Verification complete du systeme memoire             ║
+║   21  Sentinel Report     Rapport detaille erreurs et patterns                 ║
 ║                                                                                 ║
 ║   📚 KNOWLEDGE & PROFILES                                                       ║
 ║   ───────────────────────                                                       ║
-║   21  Learn               Apprendre depuis URL/recherche (sources 2025)        ║
-║   22  Profiles            Lister/activer tech profiles (nestjs, angular...)    ║
-║   23  Specialties         Lister/activer specialties (gaming, medical...)      ║
+║   22  Learn               Apprendre depuis URL/recherche (sources 2025)        ║
+║   23  Profiles            Lister/activer tech profiles (nestjs, angular...)    ║
+║   24  Specialties         Lister/activer specialties (gaming, medical...)      ║
 ║                                                                                 ║
 ║   🔌 INTEGRATIONS (LLM/IDE)                                                     ║
 ║   ─────────────────────────                                                     ║
-║   24  Install             Deployer Harmony vers IDE (cursor, windsurf...)      ║
-║   25  Install Status      Afficher integrations installees                     ║
+║   25  Install             Deployer Harmony vers IDE (cursor, windsurf...)      ║
+║   26  Install Status      Afficher integrations installees                     ║
 ║                                                                                 ║
 ║   ✅ QUALITE (HQVF)                                                             ║
 ║   ─────────────────                                                             ║
-║   26  UCV Create          Creer UCVs pour une story                            ║
-║   27  UCV Validate        Verifier couverture 100% UCVs                        ║
+║   27  UCV Create          Creer UCVs pour une story                            ║
+║   28  UCV Validate        Verifier couverture 100% UCVs                        ║
 ║                                                                                 ║
 ║   🆕 FRAMEWORK                                                                  ║
 ║   ────────────                                                                  ║
-║   28  Init                Initialiser Harmony dans un nouveau projet           ║
-║   29  Upgrade             Mettre a jour le framework                           ║
-║   30  Export              Exporter configuration pour backup                   ║
+║   29  Init                Initialiser Harmony dans un nouveau projet           ║
+║   30  Upgrade             Mettre a jour le framework                           ║
+║   31  Export              Exporter configuration pour backup                   ║
+║                                                                                 ║
+║   📈 MONITORING                                                                 ║
+║   ─────────────                                                                 ║
+║   32  Costs               Suivi couts API par session/agent/modele             ║
+║   33  Monitor             Team Learning Journal - Prompt effectiveness         ║
 ║                                                                                 ║
 ╠════════════════════════════════════════════════════════════════════════════════╣
-║   Tapez le numero (1-30) ou 12u pour update:                                    ║
+║   Tapez le numero (1-33) ou 13u pour update:                                    ║
 ╚════════════════════════════════════════════════════════════════════════════════╝
 
 
@@ -102,6 +108,7 @@ When invoked without arguments, display this menu:
 - Start Session: Run /go to initialize session context
 - Health Check: Run harmony quick for rapid status
 - View Errors: Run harmony sentinel for error journal
+- Learning Journal: Run harmony monitor start for prompt analytics
 
 
 ---
@@ -150,6 +157,8 @@ Select a mode by entering its number or command (e.g., 2 or harmony quick)
 | 33 | coverage | `harmony coverage` | [coverage.md](coverage.md) |
 | 34 | matrix | `harmony matrix` | [matrix.md](matrix.md) |
 | 35 | test-book | `harmony test-book` | [test-book.md](test-book.md) |
+| 36 | costs | `harmony costs` | [costs.md](costs.md) |
+| 37 | monitor | `harmony monitor` | [monitor.md](monitor.md) |
 
 ---
 

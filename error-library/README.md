@@ -60,6 +60,7 @@ Le chargement se fait **uniquement quand nécessaire** (pas à chaque session):
 | [BASH-003](errors/bash/BASH-003.json) | Exit code perdu avec set -e | critical |
 | [BASH-004](errors/bash/BASH-004.json) | Fonction attend fichier pas string | medium |
 | [BASH-005](errors/bash/BASH-005.json) | Fonction retourne exit code pas string | medium |
+| [CLAUDE-001](errors/claude-code/CLAUDE-001.json) | Hooks matcher format invalide (objet vide) | critical |
 
 ## Usage Rapide
 
@@ -130,6 +131,7 @@ error-library/
 │   └── error.schema.json
 ├── errors/
 │   ├── bash/            # 5 erreurs
+│   ├── claude-code/     # 1 erreur (config CLI)
 │   ├── javascript/      # À venir
 │   ├── typescript/      # À venir
 │   └── python/          # À venir
@@ -140,9 +142,9 @@ error-library/
 ## Stats
 
 - **Version**: 1.0.0
-- **Erreurs**: 5
-- **Catégories**: 1 (bash)
-- **Dernière MAJ**: 2026-01-05
+- **Erreurs**: 6
+- **Catégories**: 2 (bash, claude-code)
+- **Dernière MAJ**: 2026-01-09
 
 ---
 

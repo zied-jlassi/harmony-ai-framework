@@ -153,6 +153,26 @@ Inclut:
 - File Watcher (detection de changements, hooks)
 - History Summarizer (historique, compression de contexte)
 
+### Prompt Monitor
+
+> Dashboard temps-reel pour tracker et ameliorer vos interactions avec Claude.
+
+**[Acceder au Prompt Monitor →](../commands/monitor.md)**
+
+Inclut:
+- Tracking automatique des prompts utilisateur et outils
+- Scoring de clarte (0-100) et qualite de reponse
+- Learning Mode avec insights et suggestions
+- Estimation automatique des tokens et couts
+- Categories d'alignement (OPTIMAL, IMPRESSIVE, PROBLEM, EXPECTED)
+
+**Prerequis:** Python 3.8+ avec FastAPI, uvicorn, aiosqlite, pydantic
+
+```bash
+pip3 install -r .harmony/tools/prompt-monitor/requirements.txt
+harmony monitor start
+```
+
 ### Error Library
 
 > Bibliotheque mondiale d'erreurs/solutions - AutoLearning collectif. Chargement JIT par agents.

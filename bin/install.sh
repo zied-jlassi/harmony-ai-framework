@@ -521,6 +521,7 @@ copy_framework_files() {
             "specialties"
             "templates"
             "tips"
+            "tools"
             "workflows"
         )
 
@@ -655,6 +656,16 @@ configure_hooks() {
         cat > "$settings_file" << 'EOF'
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harmony/tools/prompt-monitor/hooks/track-user-prompt.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
@@ -686,6 +697,15 @@ configure_hooks() {
           {
             "type": "command",
             "command": "bash .harmony/hooks/sentinel-post.sh \"$TOOL_NAME\" \"$TOOL_RESULT\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read|Write|Edit|Glob|Grep|Task|WebFetch|WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harmony/tools/prompt-monitor/hooks/track-interaction.sh"
           }
         ]
       }
@@ -1565,6 +1585,9 @@ Happy coding with Harmony! 🎵"
         echo ""
         print_message "$YELLOW" "Next step:"
         echo "  → $start_cmd"
+        echo ""
+        print_message "$CYAN" "Optional: Start Prompt Monitor for team learning"
+        echo "  → harmony monitor install && harmony monitor start"
         echo ""
         print_message "$CYAN" "Data: $memory_path"
         print_message "$PURPLE" "Happy coding with Harmony! 🎵"

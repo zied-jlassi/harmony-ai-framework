@@ -379,6 +379,11 @@ function applyFilters() {
 }
 
 // Request Detail Modal
+function isToolCall(promptText) {
+    // Tool calls start with [ToolName] but NOT [User]
+    return promptText && promptText.startsWith('[') && !promptText.startsWith('[User]');
+}
+
 async function showRequestDetail(requestId) {
     try {
         const data = await fetchAPI(`/api/requests/${requestId}/detail`);
@@ -387,13 +392,15 @@ async function showRequestDetail(requestId) {
 
         const efficiency = data.efficiency_percent;
         const efficiencyClass = efficiency >= 100 ? 'excellent' : efficiency >= 70 ? 'good' : 'poor';
+        const isUserPrompt = !isToolCall(data.prompt_text);
 
         document.getElementById('detail-body').innerHTML = `
             <div class="detail-section">
-                <h3>📝 My Prompt</h3>
+                <h3>📝 ${isUserPrompt ? 'My Prompt' : 'Tool Call'}</h3>
                 <div class="text-box prompt-box">${escapeHtml(data.prompt_text)}</div>
             </div>
 
+            ${isUserPrompt ? `
             <div class="detail-section">
                 <h3>📊 Clarity Analysis <span class="score-badge ${getScoreClass(data.clarity.score)}">${data.clarity.score}/100</span></h3>
                 <div class="breakdown-grid">
@@ -406,18 +413,21 @@ async function showRequestDetail(requestId) {
                 <div class="text-box improved-box">${escapeHtml(data.improved_prompt)}</div>
                 <button class="copy-btn" onclick="copyText(\`${escapeHtml(data.improved_prompt).replace(/`/g, '\\`')}\`)">📋 Copy to Clipboard</button>
             </div>
+            ` : ''}
 
             <div class="detail-section">
                 <h3>🤖 AI Response</h3>
                 <div class="text-box response-box">${escapeHtml(data.response_text)}</div>
             </div>
 
+            ${isUserPrompt ? `
             <div class="detail-section">
                 <h3>📊 Quality Analysis <span class="score-badge ${getScoreClass(data.quality.score)}">${data.quality.score}/100</span></h3>
                 <div class="breakdown-grid">
                     ${renderQualityBreakdown(data.quality.breakdown)}
                 </div>
             </div>
+            ` : ''}
 
             <div class="detail-footer">
                 <div class="efficiency-display ${efficiencyClass}">
@@ -430,12 +440,14 @@ async function showRequestDetail(requestId) {
                 </div>
             </div>
 
+            ${isUserPrompt && data.suggestion ? `
             <div class="detail-section suggestion-section">
                 <div class="suggestion-box large">
                     <span class="icon">💡</span>
                     ${escapeHtml(data.suggestion)}
                 </div>
             </div>
+            ` : ''}
         `;
 
         document.getElementById('detail-modal').style.display = 'flex';

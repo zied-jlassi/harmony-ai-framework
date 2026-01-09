@@ -436,6 +436,153 @@ class Database:
             daily_requests=requests,
         )
 
+    async def get_learning_tips(self, days: int = 7) -> dict:
+        """
+        Generate learning tips based on real patterns from accumulated data.
+
+        Analyzes:
+        - Common issues in low-clarity prompts
+        - Patterns from successful prompts
+        - Most frequent suggestions
+        - Category-specific insights
+        """
+        start_date = datetime.now() - timedelta(days=days)
+        tips = []
+
+        # Get stats summary
+        cursor = await self._connection.execute(
+            """SELECT
+                COUNT(*) as total,
+                AVG(prompt_clarity_score) as avg_clarity,
+                AVG(response_quality_score) as avg_quality,
+                AVG(alignment_score) as avg_alignment,
+                SUM(CASE WHEN alignment_category = 'optimal' THEN 1 ELSE 0 END) as optimal,
+                SUM(CASE WHEN alignment_category = 'problem' THEN 1 ELSE 0 END) as problem
+               FROM requests WHERE timestamp >= ?""",
+            (start_date.isoformat(),)
+        )
+        stats = await cursor.fetchone()
+        total = stats["total"] or 0
+
+        if total == 0:
+            return {
+                "tips": [{"type": "info", "text": "Pas encore assez de données. Continue à utiliser le monitor!"}],
+                "stats": {"total": 0, "avg_clarity": 0, "avg_quality": 0}
+            }
+
+        # Analyze low-clarity prompts
+        cursor = await self._connection.execute(
+            """SELECT prompt_text, prompt_clarity_score, suggestion
+               FROM requests
+               WHERE timestamp >= ? AND prompt_clarity_score < 40
+               ORDER BY timestamp DESC LIMIT 10""",
+            (start_date.isoformat(),)
+        )
+        low_clarity = await cursor.fetchall()
+
+        if len(low_clarity) >= 3:
+            tips.append({
+                "type": "warning",
+                "text": f"{len(low_clarity)} prompts avec clarté < 40. Ajoute plus de contexte et de contraintes.",
+                "count": len(low_clarity)
+            })
+
+        # Analyze high-performing prompts
+        cursor = await self._connection.execute(
+            """SELECT prompt_text, prompt_clarity_score, alignment_score
+               FROM requests
+               WHERE timestamp >= ? AND alignment_score >= 80
+               ORDER BY alignment_score DESC LIMIT 5""",
+            (start_date.isoformat(),)
+        )
+        high_perf = await cursor.fetchall()
+
+        if high_perf:
+            # Find common patterns in successful prompts
+            tips.append({
+                "type": "success",
+                "text": f"{len(high_perf)} prompts avec alignement > 80. Analyse leurs patterns!",
+                "count": len(high_perf)
+            })
+
+        # Get most common suggestions (real patterns)
+        cursor = await self._connection.execute(
+            """SELECT suggestion, COUNT(*) as count
+               FROM requests
+               WHERE timestamp >= ? AND suggestion IS NOT NULL AND suggestion != ''
+               GROUP BY suggestion
+               HAVING count > 1
+               ORDER BY count DESC LIMIT 5""",
+            (start_date.isoformat(),)
+        )
+        common_suggestions = await cursor.fetchall()
+
+        for row in common_suggestions:
+            tips.append({
+                "type": "pattern",
+                "text": row["suggestion"],
+                "count": row["count"]
+            })
+
+        # Problem category analysis
+        if stats["problem"] and stats["problem"] > 0:
+            problem_pct = (stats["problem"] / total) * 100
+            if problem_pct > 20:
+                tips.append({
+                    "type": "alert",
+                    "text": f"{problem_pct:.0f}% de tes requêtes sont 'problem'. Relis les prompts problématiques.",
+                    "count": stats["problem"]
+                })
+
+        # Optimal category encouragement
+        if stats["optimal"] and stats["optimal"] > 0:
+            optimal_pct = (stats["optimal"] / total) * 100
+            tips.append({
+                "type": "success",
+                "text": f"{optimal_pct:.0f}% de tes requêtes sont 'optimal'. Continue comme ça!",
+                "count": stats["optimal"]
+            })
+
+        # Tool usage patterns
+        cursor = await self._connection.execute(
+            """SELECT
+                CASE
+                    WHEN prompt_text LIKE '[User]%' THEN 'User'
+                    WHEN prompt_text LIKE '[%' THEN substr(prompt_text, 2, instr(prompt_text, ']') - 2)
+                    ELSE 'Other'
+                END as tool_type,
+                AVG(prompt_clarity_score) as avg_clarity,
+                COUNT(*) as count
+               FROM requests
+               WHERE timestamp >= ?
+               GROUP BY tool_type
+               HAVING count >= 3
+               ORDER BY avg_clarity DESC""",
+            (start_date.isoformat(),)
+        )
+        tool_stats = await cursor.fetchall()
+
+        user_prompts = next((r for r in tool_stats if r["tool_type"] == "User"), None)
+        if user_prompts and user_prompts["avg_clarity"] < 50:
+            tips.append({
+                "type": "tip",
+                "text": f"Tes prompts utilisateur ont une clarté moyenne de {user_prompts['avg_clarity']:.0f}. Ajoute du contexte!",
+                "count": user_prompts["count"]
+            })
+
+        return {
+            "tips": tips[:10],  # Limit to top 10 tips
+            "stats": {
+                "total": total,
+                "avg_clarity": round(stats["avg_clarity"] or 0, 1),
+                "avg_quality": round(stats["avg_quality"] or 0, 1),
+                "avg_alignment": round(stats["avg_alignment"] or 0, 1),
+                "optimal_count": stats["optimal"] or 0,
+                "problem_count": stats["problem"] or 0,
+            },
+            "period_days": days
+        }
+
     async def get_insights(self, days: int = 7) -> InsightData:
         """Generate insights and recommendations."""
         start_date = datetime.now() - timedelta(days=days)

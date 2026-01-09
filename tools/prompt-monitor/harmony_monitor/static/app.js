@@ -43,9 +43,78 @@ async function refreshDashboard() {
         totalRequests = data.current_session.total_requests;
         await updateRecentRequests();
         await updateClaudeStats();
+        await updateLearningTips();
     } catch (error) {
         console.error('Failed to refresh dashboard:', error);
     }
+}
+
+async function updateLearningTips() {
+    try {
+        const days = document.getElementById('tips-period').value;
+        const data = await fetchAPI(`/api/learning-tips?days=${days}`);
+
+        // Update stats summary
+        const statsDiv = document.getElementById('tips-stats');
+        if (data.stats) {
+            statsDiv.innerHTML = `
+                <div class="tips-stat">
+                    <span class="tips-stat-value">${data.stats.total}</span>
+                    <span class="tips-stat-label">Total Requests</span>
+                </div>
+                <div class="tips-stat">
+                    <span class="tips-stat-value">${data.stats.avg_clarity}</span>
+                    <span class="tips-stat-label">Avg Clarity</span>
+                </div>
+                <div class="tips-stat">
+                    <span class="tips-stat-value">${data.stats.avg_quality}</span>
+                    <span class="tips-stat-label">Avg Quality</span>
+                </div>
+                <div class="tips-stat optimal">
+                    <span class="tips-stat-value">${data.stats.optimal_count || 0}</span>
+                    <span class="tips-stat-label">Optimal</span>
+                </div>
+                <div class="tips-stat problem">
+                    <span class="tips-stat-value">${data.stats.problem_count || 0}</span>
+                    <span class="tips-stat-label">Problem</span>
+                </div>
+            `;
+        }
+
+        // Update tips list
+        const tipsDiv = document.getElementById('tips-list');
+        if (!data.tips || data.tips.length === 0) {
+            tipsDiv.innerHTML = '<p class="no-data">Pas encore de tips. Continue à utiliser le monitor!</p>';
+            return;
+        }
+
+        tipsDiv.innerHTML = data.tips.map(tip => {
+            const icon = getTipIcon(tip.type);
+            const countBadge = tip.count ? `<span class="tip-count">${tip.count}x</span>` : '';
+            return `
+                <div class="tip-item tip-${tip.type}">
+                    <span class="tip-icon">${icon}</span>
+                    <span class="tip-text">${escapeHtml(tip.text)}</span>
+                    ${countBadge}
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Failed to fetch learning tips:', error);
+        document.getElementById('tips-list').innerHTML = '<p class="no-data">Error loading tips</p>';
+    }
+}
+
+function getTipIcon(type) {
+    const icons = {
+        'success': '✅',
+        'warning': '⚠️',
+        'alert': '🚨',
+        'pattern': '🔄',
+        'tip': '💡',
+        'info': 'ℹ️'
+    };
+    return icons[type] || '📝';
 }
 
 async function updateClaudeStats() {
@@ -367,8 +436,6 @@ async function showRequestDetail(requestId) {
                     ${escapeHtml(data.suggestion)}
                 </div>
             </div>
-
-            ${renderLearningMode(data.learning)}
         `;
 
         document.getElementById('detail-modal').style.display = 'flex';
@@ -431,104 +498,6 @@ function renderQualityBreakdown(breakdown) {
             </div>
         `;
     }).join('');
-}
-
-function renderLearningMode(learning) {
-    if (!learning) return '';
-
-    let html = '<div class="learning-mode-section">';
-    html += '<h3>🎓 Learning Mode</h3>';
-
-    // Mental Model Visualization
-    if (learning.mental_model) {
-        html += `
-            <div class="learning-card mental-model">
-                <h4>📊 Ton Prompt Analysis</h4>
-                <pre class="mental-model-box">${escapeHtml(learning.mental_model)}</pre>
-            </div>
-        `;
-    }
-
-    // Thinking Patterns
-    if (learning.thinking_patterns && learning.thinking_patterns.length > 0) {
-        html += '<div class="learning-card patterns">';
-        html += '<h4>🧠 Patterns de Pensee a Ameliorer</h4>';
-        html += '<div class="patterns-list">';
-        learning.thinking_patterns.forEach(pattern => {
-            html += `
-                <div class="pattern-item">
-                    <div class="pattern-header">
-                        <span class="pattern-badge">${escapeHtml(pattern.pattern)}</span>
-                    </div>
-                    <div class="pattern-body">
-                        <p class="issue"><strong>Probleme:</strong> ${escapeHtml(pattern.issue)}</p>
-                        <p class="fix"><strong>Solution:</strong> ${escapeHtml(pattern.fix)}</p>
-                        <pre class="example-block">${escapeHtml(pattern.example)}</pre>
-                    </div>
-                </div>
-            `;
-        });
-        html += '</div></div>';
-    }
-
-    // Why Response Differs
-    if (learning.why_response_differs && learning.why_response_differs.length > 0) {
-        html += '<div class="learning-card why-differs">';
-        html += '<h4>🔍 Pourquoi la Reponse Differe</h4>';
-        learning.why_response_differs.forEach(item => {
-            html += `
-                <div class="why-item">
-                    <p class="reason"><strong>❓</strong> ${escapeHtml(item.reason)}</p>
-                    <p class="explanation">${escapeHtml(item.explanation)}</p>
-                    <p class="solution"><strong>✅</strong> ${escapeHtml(item.solution)}</p>
-                </div>
-            `;
-        });
-        html += '</div>';
-    }
-
-    // Learning Tips
-    if (learning.learning_tips && learning.learning_tips.length > 0) {
-        html += '<div class="learning-card tips">';
-        html += '<h4>📚 Conseils d\'Apprentissage</h4>';
-        html += '<div class="tips-list">';
-        learning.learning_tips.forEach(tip => {
-            const levelClass = tip.level || 'fundamental';
-            html += `
-                <div class="tip-item ${levelClass}">
-                    <span class="tip-level">${getLevelLabel(tip.level)}</span>
-                    <p class="tip-text">${escapeHtml(tip.tip)}</p>
-                    <p class="tip-why"><em>${escapeHtml(tip.why)}</em></p>
-                </div>
-            `;
-        });
-        html += '</div></div>';
-    }
-
-    // If no learning insights available
-    if ((!learning.thinking_patterns || learning.thinking_patterns.length === 0) &&
-        (!learning.why_response_differs || learning.why_response_differs.length === 0) &&
-        (!learning.learning_tips || learning.learning_tips.length === 0)) {
-        html += `
-            <div class="learning-card success">
-                <h4>✨ Excellent!</h4>
-                <p>Ton prompt est bien structure. Continue comme ca!</p>
-            </div>
-        `;
-    }
-
-    html += '</div>';
-    return html;
-}
-
-function getLevelLabel(level) {
-    const labels = {
-        'fundamental': '🔰 Fondamental',
-        'intermediate': '📈 Intermediaire',
-        'advanced': '🎯 Avance',
-        'diagnostic': '🔬 Diagnostic'
-    };
-    return labels[level] || '📝 Conseil';
 }
 
 function closeDetailModal() {

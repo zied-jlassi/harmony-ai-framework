@@ -141,6 +141,24 @@
             </div>
         </div>
 
+        <!-- Learning Tips Section -->
+        <div class="card learning-tips-card">
+            <div class="tips-header">
+                <h2>Team Tips (Based on Real Data)</h2>
+                <select id="tips-period" onchange="updateLearningTips()">
+                    <option value="7">Last 7 days</option>
+                    <option value="14">Last 14 days</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+            <div class="tips-stats" id="tips-stats">
+                <!-- Dynamic stats -->
+            </div>
+            <div class="tips-list" id="tips-list">
+                <p class="no-data">Loading tips...</p>
+            </div>
+        </div>
+
         <!-- Full History Table -->
         <div class="card requests-table">
             <div class="table-header">

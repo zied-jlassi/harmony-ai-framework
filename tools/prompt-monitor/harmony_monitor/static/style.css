@@ -1182,3 +1182,164 @@ td {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* =========================================================================
+   LEARNING TIPS CARD
+   ========================================================================= */
+
+.learning-tips-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 255, 136, 0.05) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tips-header h2 {
+    color: var(--success);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tips-header select {
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.tips-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tips-stat {
+    text-align: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.tips-stat.optimal {
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.tips-stat.problem {
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.tips-stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tips-stat.optimal .tips-stat-value {
+    color: var(--success);
+}
+
+.tips-stat.problem .tips-stat-value {
+    color: var(--error);
+}
+
+.tips-stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.learning-tips-card .tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.learning-tips-card .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border-left: 3px solid var(--text-secondary);
+}
+
+.learning-tips-card .tip-item.tip-success {
+    border-left-color: var(--success);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.learning-tips-card .tip-item.tip-warning {
+    border-left-color: var(--warning);
+    background: rgba(255, 170, 0, 0.05);
+}
+
+.learning-tips-card .tip-item.tip-alert {
+    border-left-color: var(--error);
+    background: rgba(255, 68, 68, 0.05);
+}
+
+.learning-tips-card .tip-item.tip-pattern {
+    border-left-color: var(--accent);
+    background: rgba(0, 212, 255, 0.05);
+}
+
+.learning-tips-card .tip-item.tip-tip {
+    border-left-color: var(--accent-secondary);
+    background: rgba(123, 44, 191, 0.05);
+}
+
+.learning-tips-card .tip-item.tip-info {
+    border-left-color: var(--text-secondary);
+}
+
+.learning-tips-card .tip-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.learning-tips-card .tip-text {
+    flex: 1;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.learning-tips-card .tip-count {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .tips-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .tips-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

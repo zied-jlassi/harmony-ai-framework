@@ -279,6 +279,17 @@ async def get_insights(days: int = Query(default=7, le=90)) -> InsightData:
     return await db.get_insights(days)
 
 
+@app.get("/api/learning-tips")
+async def get_learning_tips(days: int = Query(default=7, le=90)) -> dict:
+    """
+    Get learning tips based on real patterns from accumulated data.
+
+    Analyzes actual prompts and responses to generate actionable insights.
+    """
+    db = await get_database()
+    return await db.get_learning_tips(days)
+
+
 # =========================================================================
 # Health Check
 # =========================================================================

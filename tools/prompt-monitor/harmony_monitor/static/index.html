@@ -43,6 +43,40 @@
             </div>
         </div>
 
+        <!-- Claude Session Stats -->
+        <div class="claude-stats-row">
+            <div class="claude-stats-card">
+                <h3>Claude Code Session</h3>
+                <div class="claude-stats-grid">
+                    <div class="claude-stat">
+                        <span class="claude-stat-value" id="claude-input-tokens">-</span>
+                        <span class="claude-stat-label">Input Tokens</span>
+                    </div>
+                    <div class="claude-stat">
+                        <span class="claude-stat-value" id="claude-output-tokens">-</span>
+                        <span class="claude-stat-label">Output Tokens</span>
+                    </div>
+                    <div class="claude-stat">
+                        <span class="claude-stat-value" id="claude-cache-read">-</span>
+                        <span class="claude-stat-label">Cache Read</span>
+                    </div>
+                    <div class="claude-stat">
+                        <span class="claude-stat-value" id="claude-cache-write">-</span>
+                        <span class="claude-stat-label">Cache Write</span>
+                    </div>
+                    <div class="claude-stat highlight">
+                        <span class="claude-stat-value" id="claude-total-tokens">-</span>
+                        <span class="claude-stat-label">Total Tokens</span>
+                    </div>
+                    <div class="claude-stat highlight cost">
+                        <span class="claude-stat-value" id="claude-estimated-cost">-</span>
+                        <span class="claude-stat-label">Est. Cost</span>
+                    </div>
+                </div>
+                <div class="claude-session-id" id="claude-session-id">Loading...</div>
+            </div>
+        </div>
+
         <!-- Main Grid -->
         <div class="main-grid">
             <!-- Latest Request -->

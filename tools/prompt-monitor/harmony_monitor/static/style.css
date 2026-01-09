@@ -1074,3 +1074,111 @@ td {
     border: 1px solid var(--accent);
     color: var(--accent);
 }
+
+/* =========================================================================
+   CLAUDE SESSION STATS
+   ========================================================================= */
+
+.claude-stats-row {
+    margin: 15px 0;
+}
+
+.claude-stats-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(123, 44, 191, 0.1) 100%);
+    border: 1px solid rgba(123, 44, 191, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.claude-stats-card h3 {
+    color: var(--accent-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.claude-stats-card h3::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-secondary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.claude-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.claude-stat {
+    text-align: center;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.claude-stat.highlight {
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.claude-stat.highlight.cost {
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.claude-stat-value {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'SF Mono', monospace;
+}
+
+.claude-stat.highlight .claude-stat-value {
+    color: var(--accent);
+}
+
+.claude-stat.highlight.cost .claude-stat-value {
+    color: var(--success);
+}
+
+.claude-stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+.claude-session-id {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .claude-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .claude-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

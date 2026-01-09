@@ -27,6 +27,7 @@ from .models import (
     DashboardData,
     TrackInput,
 )
+from .claude_session import get_current_session_stats, get_all_sessions_stats
 
 # Create FastAPI app
 app = FastAPI(
@@ -279,6 +280,80 @@ async def health_check() -> dict:
         "service": "harmony-prompt-monitor",
         "version": "0.1.0",
     }
+
+
+# =========================================================================
+# Claude Code Session Stats
+# =========================================================================
+
+@app.get("/api/claude-stats")
+async def get_claude_session_stats(project_path: Optional[str] = None) -> dict:
+    """
+    Get token usage statistics from the current Claude Code session.
+
+    Parses the Claude Code session JSONL file to extract:
+    - Input/output tokens
+    - Cache creation/read tokens
+    - Estimated cost
+
+    Args:
+        project_path: Optional project path. Defaults to current working directory.
+
+    Returns:
+        Token usage statistics and estimated cost.
+    """
+    stats = get_current_session_stats(project_path)
+
+    if stats is None:
+        return {
+            "found": False,
+            "message": "No Claude Code session found for this project",
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "total_tokens": 0,
+            "cache_creation_tokens": 0,
+            "cache_read_tokens": 0,
+            "estimated_cost_usd": 0.0,
+            "total_requests": 0,
+        }
+
+    return {
+        "found": True,
+        "session_id": stats.session_id,
+        "input_tokens": stats.input_tokens,
+        "output_tokens": stats.output_tokens,
+        "total_tokens": stats.total_tokens,
+        "cache_creation_tokens": stats.cache_creation_tokens,
+        "cache_read_tokens": stats.cache_read_tokens,
+        "effective_input_tokens": stats.effective_input_tokens,
+        "estimated_cost_usd": stats.estimated_cost_usd,
+        "total_requests": stats.total_requests,
+    }
+
+
+@app.get("/api/claude-stats/all")
+async def get_all_claude_session_stats(project_path: Optional[str] = None) -> list[dict]:
+    """
+    Get token usage statistics for all Claude Code sessions of a project.
+
+    Returns:
+        List of token usage statistics for each session.
+    """
+    all_stats = get_all_sessions_stats(project_path)
+
+    return [
+        {
+            "session_id": stats.session_id,
+            "input_tokens": stats.input_tokens,
+            "output_tokens": stats.output_tokens,
+            "total_tokens": stats.total_tokens,
+            "cache_creation_tokens": stats.cache_creation_tokens,
+            "cache_read_tokens": stats.cache_read_tokens,
+            "estimated_cost_usd": stats.estimated_cost_usd,
+            "total_requests": stats.total_requests,
+        }
+        for stats in all_stats
+    ]
 
 
 @app.delete("/api/reset")

@@ -42,8 +42,31 @@ async function refreshDashboard() {
         updateInsights(data.insights);
         totalRequests = data.current_session.total_requests;
         await updateRecentRequests();
+        await updateClaudeStats();
     } catch (error) {
         console.error('Failed to refresh dashboard:', error);
+    }
+}
+
+async function updateClaudeStats() {
+    try {
+        const data = await fetchAPI('/api/claude-stats');
+
+        if (!data.found) {
+            document.getElementById('claude-session-id').textContent = 'No Claude session found';
+            return;
+        }
+
+        document.getElementById('claude-input-tokens').textContent = formatNumber(data.input_tokens);
+        document.getElementById('claude-output-tokens').textContent = formatNumber(data.output_tokens);
+        document.getElementById('claude-cache-read').textContent = formatNumber(data.cache_read_tokens);
+        document.getElementById('claude-cache-write').textContent = formatNumber(data.cache_creation_tokens);
+        document.getElementById('claude-total-tokens').textContent = formatNumber(data.total_tokens);
+        document.getElementById('claude-estimated-cost').textContent = `$${data.estimated_cost_usd.toFixed(2)}`;
+        document.getElementById('claude-session-id').textContent = `Session: ${data.session_id.slice(0, 20)}...`;
+    } catch (error) {
+        console.error('Failed to fetch Claude stats:', error);
+        document.getElementById('claude-session-id').textContent = 'Error loading stats';
     }
 }
 

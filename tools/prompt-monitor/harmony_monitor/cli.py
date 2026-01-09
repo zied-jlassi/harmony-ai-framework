@@ -157,8 +157,6 @@ async def show_stats(days: int):
         print()
         print("Session Stats:")
         print(f"  Total Requests:    {stats.total_requests}")
-        print(f"  Total Cost:        ${stats.total_cost:.4f}")
-        print(f"  Avg Cost/Request:  ${stats.avg_cost_per_request:.4f}")
         print()
         print("Average Scores:")
         print(f"  Prompt Clarity:    {stats.avg_prompt_clarity:.1f}/100")

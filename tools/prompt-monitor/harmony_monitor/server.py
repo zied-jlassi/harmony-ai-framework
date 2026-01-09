@@ -223,7 +223,6 @@ HARMONY PROMPT MONITOR - Session Summary
 
 Session: {session_id}
 Total Requests: {stats.total_requests}
-Total Cost: ${stats.total_cost:.4f}
 
 Average Scores:
   Prompt Clarity:    {stats.avg_prompt_clarity:.1f}/100

@@ -33,7 +33,6 @@ class Database:
         started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         project_path TEXT,
         total_requests INTEGER DEFAULT 0,
-        total_cost REAL DEFAULT 0,
         avg_prompt_clarity REAL DEFAULT 0,
         avg_response_quality REAL DEFAULT 0,
         avg_alignment REAL DEFAULT 0
@@ -143,7 +142,6 @@ class Database:
             started_at=datetime.fromisoformat(row["started_at"]),
             project_path=row["project_path"],
             total_requests=row["total_requests"],
-            total_cost=row["total_cost"],
             avg_prompt_clarity=row["avg_prompt_clarity"],
             avg_response_quality=row["avg_response_quality"],
             avg_alignment=row["avg_alignment"],
@@ -180,7 +178,6 @@ class Database:
                 started_at=datetime.fromisoformat(row["started_at"]),
                 project_path=row["project_path"],
                 total_requests=row["total_requests"],
-                total_cost=row["total_cost"],
                 avg_prompt_clarity=row["avg_prompt_clarity"],
                 avg_response_quality=row["avg_response_quality"],
                 avg_alignment=row["avg_alignment"],
@@ -361,7 +358,6 @@ class Database:
         cursor = await self._connection.execute(
             """SELECT
                 COUNT(*) as total_requests,
-                COALESCE(SUM(cost_usd), 0) as total_cost,
                 COALESCE(SUM(prompt_tokens), 0) as total_prompt_tokens,
                 COALESCE(SUM(response_tokens), 0) as total_response_tokens,
                 COALESCE(AVG(latency_ms), 0) as avg_latency_ms,
@@ -379,19 +375,16 @@ class Database:
         row = await cursor.fetchone()
 
         total = row["total_requests"] or 0
-        avg_cost = row["total_cost"] / total if total > 0 else 0
 
         return SessionStats(
             session_id=session_id,
             total_requests=total,
-            total_cost=row["total_cost"] or 0,
             total_prompt_tokens=row["total_prompt_tokens"] or 0,
             total_response_tokens=row["total_response_tokens"] or 0,
             avg_latency_ms=row["avg_latency_ms"] or 0,
             avg_prompt_clarity=row["avg_prompt_clarity"] or 0,
             avg_response_quality=row["avg_response_quality"] or 0,
             avg_alignment=row["avg_alignment"] or 0,
-            avg_cost_per_request=avg_cost,
             optimal_count=row["optimal_count"] or 0,
             impressive_count=row["impressive_count"] or 0,
             problem_count=row["problem_count"] or 0,
@@ -529,7 +522,6 @@ class Database:
         cursor = await self._connection.execute(
             """SELECT
                 COUNT(*) as total,
-                SUM(cost_usd) as cost,
                 AVG(prompt_clarity_score) as clarity,
                 AVG(response_quality_score) as quality,
                 AVG(alignment_score) as alignment
@@ -541,14 +533,12 @@ class Database:
         await self._connection.execute(
             """UPDATE sessions SET
                 total_requests = ?,
-                total_cost = ?,
                 avg_prompt_clarity = ?,
                 avg_response_quality = ?,
                 avg_alignment = ?
                WHERE id = ?""",
             (
                 row["total"],
-                row["cost"] or 0,
                 row["clarity"] or 0,
                 row["quality"] or 0,
                 row["alignment"] or 0,

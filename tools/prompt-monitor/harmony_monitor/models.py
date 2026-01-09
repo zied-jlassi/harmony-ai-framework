@@ -95,7 +95,6 @@ class SessionData(BaseModel):
     started_at: datetime
     project_path: Optional[str] = None
     total_requests: int = 0
-    total_cost: float = 0.0
     avg_prompt_clarity: float = 0.0
     avg_response_quality: float = 0.0
     avg_alignment: float = 0.0
@@ -105,14 +104,12 @@ class SessionStats(BaseModel):
     """Statistics for a session."""
     session_id: str
     total_requests: int
-    total_cost: float
     total_prompt_tokens: int
     total_response_tokens: int
     avg_latency_ms: float
     avg_prompt_clarity: float
     avg_response_quality: float
     avg_alignment: float
-    avg_cost_per_request: float
 
     # Category breakdown
     optimal_count: int = 0

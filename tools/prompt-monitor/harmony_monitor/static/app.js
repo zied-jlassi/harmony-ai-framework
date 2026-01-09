@@ -62,7 +62,6 @@ function updateStats(stats) {
     document.getElementById('total-requests').textContent = stats.total_requests;
     const totalTokens = (stats.total_prompt_tokens || 0) + (stats.total_response_tokens || 0);
     document.getElementById('total-tokens').textContent = formatNumber(totalTokens);
-    document.getElementById('total-cost').textContent = `$${stats.total_cost.toFixed(4)}`;
     document.getElementById('avg-clarity').textContent = Math.round(stats.avg_prompt_clarity);
     document.getElementById('avg-quality').textContent = Math.round(stats.avg_response_quality);
     document.getElementById('avg-alignment').textContent = Math.round(stats.avg_alignment);
@@ -221,9 +220,6 @@ function updateInsights(insights) {
     document.getElementById('clarity-trend').innerHTML =
         `Prompt clarity: <strong>${formatTrend(insights.clarity_trend)}</strong> vs last period`;
 
-    document.getElementById('cost-insight').innerHTML =
-        `Most expensive: <strong>${insights.most_expensive_category}</strong> ($${insights.most_expensive_avg_cost.toFixed(4)} avg)`;
-
     const suggestionsContainer = document.getElementById('suggestions');
     if (insights.top_suggestions && insights.top_suggestions.length > 0) {
         suggestionsContainer.innerHTML = insights.top_suggestions
@@ -245,7 +241,7 @@ async function updateRecentRequests() {
         const tbody = document.getElementById('requests-tbody');
 
         if (requests.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" class="no-data">No requests yet</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="no-data">No requests yet</td></tr>';
             return;
         }
 
@@ -259,7 +255,6 @@ async function updateRecentRequests() {
                 <td><span class="score ${getScoreClass(req.alignment_score)}">${req.alignment_score}</span></td>
                 <td><span class="category-badge ${req.alignment_category}">${req.alignment_category}</span></td>
                 <td class="tokens-cell">${req.prompt_tokens + req.response_tokens}</td>
-                <td>$${req.cost_usd.toFixed(4)}</td>
             </tr>
         `).join('');
 
@@ -339,7 +334,6 @@ async function showRequestDetail(requestId) {
                 </div>
                 <div class="meta-info">
                     <span class="category-badge large ${data.alignment_category}">${data.alignment_category.toUpperCase()}</span>
-                    <span class="meta-item">Cost: $${data.cost_usd.toFixed(4)}</span>
                     <span class="meta-item">Tokens: ${data.prompt_tokens + data.response_tokens}</span>
                 </div>
             </div>

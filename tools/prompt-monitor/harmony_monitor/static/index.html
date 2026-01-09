@@ -30,10 +30,6 @@
                 <div class="stat-label">Total Tokens</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="total-cost">$0.00</div>
-                <div class="stat-label">Total Cost</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-value" id="avg-clarity">0</div>
                 <div class="stat-label">Avg Clarity</div>
             </div>
@@ -105,10 +101,6 @@
                     <span class="insight-icon">📈</span>
                     <span id="clarity-trend">Loading...</span>
                 </div>
-                <div class="insight-item">
-                    <span class="insight-icon">💰</span>
-                    <span id="cost-insight">Loading...</span>
-                </div>
                 <div class="suggestions" id="suggestions">
                     <!-- Dynamic suggestions -->
                 </div>
@@ -165,11 +157,10 @@
                         <th>Align</th>
                         <th>Category</th>
                         <th>Tokens</th>
-                        <th>Cost</th>
                     </tr>
                 </thead>
                 <tbody id="requests-tbody">
-                    <tr><td colspan="9" class="no-data">No requests yet</td></tr>
+                    <tr><td colspan="8" class="no-data">No requests yet</td></tr>
                 </tbody>
             </table>
         </div>
@@ -183,7 +174,6 @@
             <ul>
                 <li>All request history</li>
                 <li>All sessions</li>
-                <li>All cost tracking</li>
             </ul>
             <p><strong>This action cannot be undone!</strong></p>
             <div class="modal-actions">

@@ -6,9 +6,9 @@
   "license": "MIT",
 
   "stats": {
-    "total_errors": 5,
-    "categories": 1,
-    "last_updated": "2026-01-05"
+    "total_errors": 6,
+    "categories": 2,
+    "last_updated": "2026-01-09"
   },
 
   "categories": [
@@ -35,6 +35,12 @@
       "path": "errors/python/",
       "count": 0,
       "description": "Python errors"
+    },
+    {
+      "name": "claude-code",
+      "path": "errors/claude-code/",
+      "count": 1,
+      "description": "Claude Code CLI configuration and settings errors"
     }
   ],
 

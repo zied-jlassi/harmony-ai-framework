@@ -1,0 +1,13 @@
+{
+  "category": "claude-code",
+  "description": "Claude Code CLI configuration and settings errors",
+  "count": 1,
+  "errors": [
+    {
+      "id": "CLAUDE-001",
+      "file": "CLAUDE-001.json",
+      "title": "Hooks matcher format invalid - object instead of string",
+      "severity": "critical"
+    }
+  ]
+}

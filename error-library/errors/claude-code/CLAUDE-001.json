@@ -1,0 +1,29 @@
+{
+  "id": "CLAUDE-001",
+  "title": "Hooks matcher format invalid - object instead of string",
+  "category": "claude-code",
+  "severity": "critical",
+  "version": "1.0.0",
+  "error": "hooks.PostToolUse.0.matcher: Expected string, but received object",
+  "cause": "The hooks matcher field in settings.json uses an object format {\"tools\": [...]} instead of the required string format with pipe separators. Claude Code hooks now require matcher to be a string.",
+  "solution": "Replace object matcher {\"tools\": [\"Edit\", \"Write\", \"Bash\"]} with string format: \"Edit|Write|Bash\"",
+  "example_bad": "{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": {\"tools\": [\"Edit\", \"Write\", \"Bash\"]},\n        \"hooks\": [...]\n      }\n    ]\n  }\n}",
+  "example_good": "{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Edit|Write|Bash\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"/path/to/your/hook-script.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+  "tags": ["claude-code", "hooks", "settings", "matcher", "PostToolUse", "PreToolUse", "configuration", "migration"],
+  "discovered": "2026-01-09",
+  "source": "harmony-framework development",
+  "references": [
+    "https://code.claude.com/docs/en/hooks"
+  ],
+  "file_locations": [
+    "~/.claude/settings.json",
+    ".claude/settings.json",
+    ".claude/settings.local.json"
+  ],
+  "migration_notes": "Join array of tool names with pipe separator. Example: {\"tools\": [\"Edit\", \"Write\"]} becomes \"Edit|Write\"",
+  "available_tools": [
+    "Bash", "Read", "Write", "Edit", "MultiEdit", "Glob", "Grep",
+    "Task", "WebFetch", "WebSearch", "NotebookEdit",
+    "TodoWrite", "AskUserQuestion", "Skill"
+  ]
+}

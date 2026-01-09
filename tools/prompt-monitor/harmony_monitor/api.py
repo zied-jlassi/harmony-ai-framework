@@ -193,6 +193,13 @@ async def get_request(request_id: int) -> RequestRecord:
     return request
 
 
+def estimate_tokens(text: str) -> int:
+    """Estimate token count from text (roughly 4 chars per token for English)."""
+    if not text:
+        return 0
+    return len(text) // 4
+
+
 @app.post("/api/track")
 async def track_request(input_data: TrackInput) -> dict:
     """
@@ -213,13 +220,17 @@ async def track_request(input_data: TrackInput) -> dict:
     else:
         session_id = await db.get_or_create_session()
 
+    # Estimate tokens if not provided
+    prompt_tokens = input_data.prompt_tokens or estimate_tokens(input_data.prompt)
+    response_tokens = input_data.response_tokens or estimate_tokens(input_data.response)
+
     # Convert TrackInput to RequestData
     data = RequestData(
         session_id=session_id,
         prompt_text=input_data.prompt,
         response_text=input_data.response,
-        prompt_tokens=input_data.prompt_tokens,
-        response_tokens=input_data.response_tokens,
+        prompt_tokens=prompt_tokens,
+        response_tokens=response_tokens,
         model=input_data.model,
         latency_ms=input_data.latency_ms,
         cost_usd=input_data.cost_usd,

@@ -6,7 +6,7 @@
 // Configuration
 const API_BASE = '';
 const REFRESH_INTERVAL = 5000;
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 // State
 let trendsChart = null;

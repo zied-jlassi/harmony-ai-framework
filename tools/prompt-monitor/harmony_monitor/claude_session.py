@@ -68,10 +68,9 @@ def find_current_session(project_path: Optional[str] = None) -> Optional[Path]:
     if project_path is None:
         project_path = os.getcwd()
 
-    # Claude Code encodes project paths with dashes
+    # Claude Code encodes project paths: /home/dev/project -> -home-dev-project
     encoded_path = project_path.replace("/", "-")
-    if encoded_path.startswith("-"):
-        encoded_path = encoded_path[1:]  # Remove leading dash
+    # Keep the leading dash (Claude Code format)
 
     projects_dir = get_claude_projects_dir()
     project_dir = projects_dir / encoded_path
@@ -85,8 +84,8 @@ def find_current_session(project_path: Optional[str] = None) -> Optional[Path]:
         else:
             return None
 
-    # Find most recent session file
-    session_files = list(project_dir.glob("*.jsonl"))
+    # Find most recent session file (exclude agent-* files)
+    session_files = [f for f in project_dir.glob("*.jsonl") if not f.name.startswith("agent-")]
     if not session_files:
         return None
 
@@ -150,20 +149,58 @@ def get_current_session_stats(project_path: Optional[str] = None) -> Optional[Cl
     Get usage statistics for the current Claude Code session.
 
     Args:
-        project_path: Project path. Defaults to current working directory.
+        project_path: Project path. Defaults to HARMONY_PROJECT_PATH env var or current working directory.
 
     Returns:
         ClaudeUsageStats or None if no session found.
     """
+    # Use env var if no path provided
+    if project_path is None:
+        project_path = os.environ.get("HARMONY_PROJECT_PATH", os.getcwd())
+
     session_path = find_current_session(project_path)
+
+    # If not found, try to find the most recently modified session across all projects
+    if session_path is None:
+        session_path = find_most_recent_session()
 
     if session_path is None:
         return None
 
     stats = parse_session_file(session_path)
-    stats.project_path = project_path or os.getcwd()
+    stats.project_path = project_path
 
     return stats
+
+
+def find_most_recent_session() -> Optional[Path]:
+    """
+    Find the most recently modified session file across all projects.
+
+    Returns:
+        Path to the most recent session JSONL file, or None if not found.
+    """
+    projects_dir = get_claude_projects_dir()
+
+    if not projects_dir.exists():
+        return None
+
+    all_sessions = []
+    for project_dir in projects_dir.iterdir():
+        if not project_dir.is_dir():
+            continue
+        for session_file in project_dir.glob("*.jsonl"):
+            if session_file.name.startswith("agent-"):
+                continue
+            all_sessions.append(session_file)
+
+    if not all_sessions:
+        return None
+
+    # Sort by modification time, newest first
+    all_sessions.sort(key=lambda f: f.stat().st_mtime, reverse=True)
+
+    return all_sessions[0]
 
 
 def get_all_sessions_stats(project_path: Optional[str] = None) -> list[ClaudeUsageStats]:

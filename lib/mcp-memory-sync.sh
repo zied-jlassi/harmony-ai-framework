@@ -189,11 +189,10 @@ generate_sync_commands() {
     errors=$(jq -c '.errors[]?' "$journal_path" 2>/dev/null)
 
     if [[ -z "$errors" ]]; then
-        _mcp_log "INFO" "No errors to sync"
+        # Output valid empty JSON
+        echo '{"action":"sync_to_mcp_memory","entities":[],"relations":[],"summary":{"total_errors":0,"total_categories":0,"total_relations":0}}'
         return 0
     fi
-
-    _mcp_log "INFO" "Generating sync commands from error journal..."
 
     local all_entities="[]"
     local all_relations="[]"

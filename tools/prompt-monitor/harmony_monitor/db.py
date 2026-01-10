@@ -467,7 +467,8 @@ class Database:
         if total == 0:
             return {
                 "tips": [{"type": "info", "text": "Pas encore assez de données. Continue à utiliser le monitor!"}],
-                "stats": {"total": 0, "avg_clarity": 0, "avg_quality": 0}
+                "stats": {"total": 0, "avg_clarity": 0, "avg_quality": 0},
+                "period_days": days
             }
 
         # Analyze low-clarity prompts

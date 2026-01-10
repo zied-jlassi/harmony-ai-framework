@@ -1061,6 +1061,24 @@ _load_context() {
         fi
     fi
 
+    # === SPRINT MANAGEMENT: Auto-load sprint dashboard when needed ===
+    local sprint_info=""
+    local context_flags
+    context_flags=$(echo "$PRELOADER_CLASSIFICATION_CACHE" | jq -r '.context_flags[]?' 2>/dev/null | tr '\n' ' ')
+
+    if [[ "$context_flags" =~ needs_sprint_mgmt ]]; then
+        # Source sprint-tracker if not already loaded
+        if ! type show_sprint_dashboard &>/dev/null; then
+            local sprint_tracker="${HARMONY_DIR:-$PWD/.harmony}/lib/sprint-tracker.sh"
+            [[ -f "$sprint_tracker" ]] && source "$sprint_tracker"
+        fi
+
+        if type show_sprint_dashboard &>/dev/null; then
+            echo "[PRELOADER] Loading sprint dashboard for Scrum Master context" >&2
+            sprint_info=$(show_sprint_dashboard 2>/dev/null | grep -v "^[0-9]*$" || echo "")
+        fi
+    fi
+
     local loaded_content=""
 
     # Load branch (main content)
@@ -1122,6 +1140,16 @@ _load_context() {
             loaded_content+=$'\n'"$sentinel_warnings"
             _add_tokens "$warning_tokens"
             echo "[PRELOADER] Injected Sentinel warnings (${warning_tokens} tokens)" >&2
+        fi
+    fi
+
+    # Add Sprint dashboard (for Scrum Master context)
+    if [[ -n "$sprint_info" ]]; then
+        local sprint_tokens=$((${#sprint_info} / 4))
+        if _can_add_tokens "$sprint_tokens"; then
+            loaded_content+=$'\n'"### SPRINT DASHBOARD ###"$'\n'"$sprint_info"
+            _add_tokens "$sprint_tokens"
+            echo "[PRELOADER] Injected Sprint Dashboard (${sprint_tokens} tokens)" >&2
         fi
     fi
 

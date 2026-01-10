@@ -141,6 +141,56 @@ Sprint Complete → Generate report
 - Warning at 80% budget usage
 - Auto-checkpoint on Ctrl+C for safe interruption
 
+### Escalation Management
+
+When a story fails 10+ times, it is marked `NEEDS_ESCALATION` and the Scrum Master is notified.
+
+**Key Functions (from `sprint-tracker.sh`):**
+
+```bash
+# "What's the sprint status?" / "Show me the dashboard"
+show_sprint_dashboard    # Visual dashboard with escalated stories highlighted
+
+# "Any escalated stories?" / "What needs attention?"
+get_escalated_stories    # Returns JSON array of stories needing escalation
+
+# "Next story?" / "What should we work on?"
+get_next_todo_story      # Returns next TODO story (skips escalated)
+
+# "Sprint health?"
+get_sprint_health        # Returns {total, done, escalated, todo, healthy}
+```
+
+**When story fails 10 times:**
+1. Error recorded in `error-journal.json` (Sentinel learns)
+2. Story marked as `NEEDS_ESCALATION` in sprint
+3. Similar past errors shown from Sentinel memory
+4. Auto-escalates to next TODO story
+5. Sprint marked `NEEDS_REVIEW` if no more stories
+
+**Dashboard Example:**
+```
+╔════════════════════════════════════════════════════════════════╗
+║               SPRINT DASHBOARD (Scrum Master View)              ║
+╠════════════════════════════════════════════════════════════════╣
+║ Sprint: SPRINT-005 - User Authentication
+║ Status: IN_PROGRESS | Velocity: 8/20 pts
+╠════════════════════════════════════════════════════════════════╣
+║ 📊 STORIES: 5 total
+║    ✅ Done: 2
+║    🔄 In Progress: 1
+║    📋 Todo: 1
+╠════════════════════════════════════════════════════════════════╣
+║ ⚠️  NEEDS ESCALATION: 1 stories
+╠════════════════════════════════════════════════════════════════╣
+║ ❌ STORY-003: OAuth Integration
+║    └─ Phase: developer | Errors: 10
+╠════════════════════════════════════════════════════════════════╣
+║ ➡️  Next Story: STORY-004
+║    Add password reset flow
+╚════════════════════════════════════════════════════════════════╝
+```
+
 **Exit Conditions:**
 ✅ All stories processed → Sprint marked DONE
 ❌ Circuit breaker OPEN → Story marked FAILED, continue next story

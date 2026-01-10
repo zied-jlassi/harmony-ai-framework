@@ -86,6 +86,9 @@ ARIA_UI_PATTERNS=(
 
     ["needs_prd"]="prd|product|requirement|specification|spec|feature|story|user.story|epic|roadmap|backlog"
 
+    # Sprint/Scrum management
+    ["needs_sprint_mgmt"]="sprint|velocity|burndown|standup|daily|retro|retrospective|planning|backlog|scrum|kanban|story.suivante|next.story|qu.est.ce.qu.il.reste|what.remains|blocked|bloqué|escalat|impediment"
+
     # Priority 2: Infrastructure/DevOps
     ["needs_infra"]="deploy|deploiement|docker|kubernetes|k8s|ci|cd|pipeline|jenkins|github.actions|gitlab|aws|azure|gcp|cloud|infra|infrastructure|container|helm|terraform"
 
@@ -130,6 +133,7 @@ ARIA_FLAG_AGENTS=(
     ["has_db_schema"]="database,architect"
     ["needs_docs"]="tech-writer"
     ["needs_prd"]="analyst,scrum-master"
+    ["needs_sprint_mgmt"]="scrum-master"
 
     # Infrastructure triggers
     ["needs_infra"]="devops"

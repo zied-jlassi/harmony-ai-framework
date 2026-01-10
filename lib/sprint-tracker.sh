@@ -42,6 +42,8 @@ WORKING_TEMPLATE="${HARMONY_DIR}/memory/templates/working.template.json"
 # Colors
 C_GREEN='\033[0;32m'
 C_YELLOW='\033[1;33m'
+C_CYAN='\033[0;36m'
+C_WHITE='\033[1;37m'
 C_BLUE='\033[0;34m'
 C_RED='\033[0;31m'
 C_NC='\033[0m'
@@ -605,6 +607,111 @@ remove_next_step() {
     _update_timestamp
 }
 
+# Show sprint dashboard with escalated stories (for Scrum Master)
+# Displays: current sprint status, all stories by status, escalation warnings
+show_sprint_dashboard() {
+    if [[ ! -f "$WORKING_MEMORY" ]]; then
+        echo -e "${C_YELLOW}No working memory found${C_NC}"
+        return 1
+    fi
+
+    echo ""
+    echo -e "${C_CYAN}╔════════════════════════════════════════════════════════════════╗${C_NC}"
+    echo -e "${C_CYAN}║               SPRINT DASHBOARD (Scrum Master View)              ║${C_NC}"
+    echo -e "${C_CYAN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+
+    # Sprint info
+    local sprint_id sprint_name sprint_status velocity_achieved velocity_target
+    sprint_id=$(jq -r '.current_sprint.id // "None"' "$WORKING_MEMORY")
+    sprint_name=$(jq -r '.current_sprint.name // "N/A"' "$WORKING_MEMORY")
+    sprint_status=$(jq -r '.current_sprint.status // "unknown"' "$WORKING_MEMORY")
+    velocity_achieved=$(jq -r '.current_sprint.velocity_achieved // 0' "$WORKING_MEMORY")
+    velocity_target=$(jq -r '.current_sprint.velocity_target // 0' "$WORKING_MEMORY")
+
+    echo -e "║ Sprint: ${C_WHITE}$sprint_id${C_NC} - $sprint_name"
+    echo -e "║ Status: ${C_WHITE}$sprint_status${C_NC} | Velocity: $velocity_achieved/$velocity_target pts"
+    echo -e "${C_CYAN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+
+    # Count stories by status
+    local total done escalated in_progress todo
+    total=$(jq -r '.current_sprint.stories | length // 0' "$WORKING_MEMORY")
+    done=$(jq -r '[.current_sprint.stories[]? | select(.status == "DONE")] | length' "$WORKING_MEMORY")
+    escalated=$(jq -r '[.current_sprint.stories[]? | select(.status == "NEEDS_ESCALATION")] | length' "$WORKING_MEMORY")
+    in_progress=$(jq -r '[.current_sprint.stories[]? | select(.status == "IN_PROGRESS")] | length' "$WORKING_MEMORY")
+    todo=$(jq -r '[.current_sprint.stories[]? | select(.status == "TODO")] | length' "$WORKING_MEMORY")
+
+    echo -e "║ 📊 STORIES: ${C_WHITE}$total total${C_NC}"
+    echo -e "║    ${C_GREEN}✅ Done:${C_NC} $done"
+    echo -e "║    ${C_YELLOW}🔄 In Progress:${C_NC} $in_progress"
+    echo -e "║    ${C_CYAN}📋 Todo:${C_NC} $todo"
+
+    # Show escalated stories with warning
+    if [[ "$escalated" -gt 0 ]]; then
+        echo -e "${C_CYAN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+        echo -e "║ ${C_RED}⚠️  NEEDS ESCALATION: $escalated stories${C_NC}"
+        echo -e "${C_CYAN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+
+        # List escalated stories
+        jq -r '.current_sprint.stories[]? | select(.status == "NEEDS_ESCALATION") |
+            "║ ❌ \(.id): \(.title // "Untitled")\n║    └─ Phase: \(.escalation.failed_phase // "unknown") | Errors: \(.escalation.error_count // "?")"' \
+            "$WORKING_MEMORY"
+    fi
+
+    echo -e "${C_CYAN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+
+    # Next available story
+    local next_story
+    next_story=$(jq -r '.current_sprint.stories[]? | select(.status == "TODO") | .id' "$WORKING_MEMORY" | head -1)
+
+    if [[ -n "$next_story" && "$next_story" != "null" ]]; then
+        local next_title
+        next_title=$(jq -r ".current_sprint.stories[]? | select(.id == \"$next_story\") | .title // \"Untitled\"" "$WORKING_MEMORY")
+        echo -e "║ ${C_GREEN}➡️  Next Story:${C_NC} $next_story"
+        echo -e "║    $next_title"
+    else
+        echo -e "║ ${C_YELLOW}⚠️  No more TODO stories in sprint${C_NC}"
+    fi
+
+    echo -e "${C_CYAN}╚════════════════════════════════════════════════════════════════╝${C_NC}"
+    echo ""
+
+    # Return escalated count for programmatic use
+    echo "$escalated"
+}
+
+# Get escalated stories list (for Scrum Master queries)
+get_escalated_stories() {
+    if [[ ! -f "$WORKING_MEMORY" ]]; then
+        echo "[]"
+        return 1
+    fi
+
+    jq -r '[.current_sprint.stories[]? | select(.status == "NEEDS_ESCALATION") |
+        {
+            id: .id,
+            title: .title,
+            failed_phase: .escalation.failed_phase,
+            error_id: .escalation.error_id,
+            error_count: .escalation.error_count,
+            escalated_at: .escalation.escalated_at
+        }]' "$WORKING_MEMORY"
+}
+
+# Get next available story in sprint
+get_next_todo_story() {
+    if [[ ! -f "$WORKING_MEMORY" ]]; then
+        echo "null"
+        return 1
+    fi
+
+    jq -r '.current_sprint.stories[]? | select(.status == "TODO") | {
+        id: .id,
+        title: .title,
+        points: .points,
+        acceptance_criteria: .acceptance_criteria
+    }' "$WORKING_MEMORY" | jq -s 'first // null'
+}
+
 # -----------------------------------------------------------------------------
 # QUALITY GATES
 # -----------------------------------------------------------------------------
@@ -691,29 +798,8 @@ clear_handoff() {
 # DISPLAY FUNCTIONS
 # -----------------------------------------------------------------------------
 
-# Display sprint dashboard
-show_sprint_dashboard() {
-    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
-    echo -e "${C_BLUE}                    SPRINT DASHBOARD                      ${C_NC}"
-    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
-    echo ""
-    echo -e "${C_GREEN}Current Sprint:${C_NC}"
-    get_current_sprint
-    echo ""
-    echo -e "${C_GREEN}Current Story:${C_NC}"
-    get_current_story
-    echo ""
-    echo -e "${C_GREEN}Velocity:${C_NC}"
-    get_velocity
-    echo ""
-    echo -e "${C_GREEN}Blockers:${C_NC}"
-    get_blockers
-    echo ""
-    echo -e "${C_GREEN}Next Steps:${C_NC}"
-    get_next_steps
-    echo ""
-    echo -e "${C_BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_NC}"
-}
+# NOTE: show_sprint_dashboard() is now in GETTERS section (line ~610)
+# It includes escalation awareness and Scrum Master features
 
 # Export as JSON for AI consumption
 export_for_ai() {
@@ -1240,8 +1326,20 @@ record_story_failure() {
     failures=$(jq -r ".stories[\"$story_id\"].failures" "$circuit_breaker_file" 2>/dev/null)
     local phase_failures
     phase_failures=$(jq -r ".stories[\"$story_id\"].phase_failures.$phase" "$circuit_breaker_file" 2>/dev/null)
+    local state
+    state=$(jq -r ".stories[\"$story_id\"].state" "$circuit_breaker_file" 2>/dev/null)
 
     echo -e "${C_YELLOW}⚠️  Story $story_id failure recorded (Total: $failures/10, Phase: $phase_failures/5)${C_NC}"
+
+    # If circuit breaker just opened, trigger Sentinel auto-learning and escalation
+    if [[ "$state" == "OPEN" && "$failures" -eq 10 ]]; then
+        # Get last error from story history if available
+        local last_error
+        last_error=$(jq -r ".stories[\"$story_id\"].history[-1] | \"Phase: \(.phase), Failure #\(.total_failures)\"" "$circuit_breaker_file" 2>/dev/null || echo "Max failures reached")
+
+        # Trigger escalation with auto-learning
+        on_circuit_breaker_open "$story_id" "$phase" "$last_error"
+    fi
 
     return 0
 }
@@ -1289,6 +1387,228 @@ record_story_success() {
     echo -e "${C_GREEN}✅ Story $story_id phase $phase completed successfully${C_NC}"
 
     return 0
+}
+
+# =============================================================================
+# CIRCUIT BREAKER ESCALATION (Sentinel Auto-Learning Integration)
+# =============================================================================
+
+# Handle circuit breaker opening - triggers Sentinel auto-learning
+# Called when a story reaches max failures (10) or phase failures (5)
+# Actions:
+#   1. Record error pattern to error-journal.json
+#   2. Mark story as NEEDS_ESCALATION in current sprint
+#   3. Show similar past errors (if available)
+#   4. Auto-escalate to next story in sprint
+on_circuit_breaker_open() {
+    local story_id="${1:-}"
+    local phase="${2:-unknown}"
+    local last_error="${3:-No error details captured}"
+    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    # Error journal is in project root .claude/memory/, not in .harmony/
+    local project_root="${HARMONY_DIR%/.harmony}"
+    local error_journal="${project_root}/.claude/memory/error-journal.json"
+
+    if [[ -z "$story_id" ]]; then
+        return 1
+    fi
+
+    local timestamp
+    timestamp=$(date -Iseconds)
+
+    echo ""
+    echo -e "${C_RED}╔════════════════════════════════════════════════════════════════╗${C_NC}"
+    echo -e "${C_RED}║           CIRCUIT BREAKER OPEN - ESCALATION                     ║${C_NC}"
+    echo -e "${C_RED}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+    echo -e "${C_RED}║  Story: ${story_id}${C_NC}"
+    echo -e "${C_RED}║  Phase: ${phase}${C_NC}"
+    echo -e "${C_RED}║  Status: NEEDS_ESCALATION                                       ║${C_NC}"
+    echo -e "${C_RED}╚════════════════════════════════════════════════════════════════╝${C_NC}"
+    echo ""
+
+    # =========================================================================
+    # STEP 1: Record error to error-journal.json (Sentinel Auto-Learning)
+    # =========================================================================
+    local error_id="ERR-CB-$(date +%Y%m%d%H%M%S)"
+
+    if [[ -f "$error_journal" ]] && check_jq_available; then
+        local tmp_file
+        tmp_file=$(mktemp)
+
+        jq --arg id "$error_id" \
+           --arg date "$(date +%Y-%m-%d)" \
+           --arg story "$story_id" \
+           --arg phase "$phase" \
+           --arg error "$last_error" \
+           --arg ts "$timestamp" \
+           '.errors += [{
+                id: $id,
+                date: $date,
+                category: "circuit-breaker",
+                severity: "critical",
+                title: "Circuit breaker opened for \($story)",
+                context: {
+                    story_id: $story,
+                    phase: $phase,
+                    triggered_at: $ts
+                },
+                symptom: "Story reached maximum failure threshold (10 failures or 5 per phase)",
+                root_cause: $error,
+                correct_solution: "Review error patterns, fix root cause, then reset circuit breaker",
+                prevention_rule: "Monitor failure patterns early, address issues before threshold",
+                tags: ["circuit-breaker", "escalation", $phase]
+            }] |
+            .statistics.total_errors = (.errors | length)' \
+            "$error_journal" > "$tmp_file" && mv "$tmp_file" "$error_journal"
+
+        echo -e "${C_YELLOW}📝 Sentinel: Error recorded → $error_id${C_NC}"
+    fi
+
+    # =========================================================================
+    # STEP 2: Mark story as NEEDS_ESCALATION in current sprint
+    # =========================================================================
+    if [[ -f "$WORKING_MEMORY" ]] && check_jq_available; then
+        local tmp_file
+        tmp_file=$(mktemp)
+
+        jq --arg story "$story_id" \
+           --arg ts "$timestamp" \
+           --arg error_id "$error_id" \
+           --arg phase "$phase" \
+           'if .current_sprint.stories then
+                .current_sprint.stories = [.current_sprint.stories[] |
+                    if .id == $story then
+                        .status = "NEEDS_ESCALATION" |
+                        .escalation = {
+                            escalated_at: $ts,
+                            error_id: $error_id,
+                            failed_phase: $phase,
+                            error_count: 10,
+                            reason: "Circuit breaker opened after 10 failures"
+                        }
+                    else . end]
+            else . end' \
+            "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
+
+        echo -e "${C_YELLOW}📋 Sprint: Story marked as NEEDS_ESCALATION${C_NC}"
+    fi
+
+    # =========================================================================
+    # STEP 3: Show similar past errors (Sentinel memory)
+    # =========================================================================
+    local mcp_sync="${HARMONY_DIR}/lib/mcp-memory-sync.sh"
+    if [[ -f "$mcp_sync" ]]; then
+        source "$mcp_sync" 2>/dev/null || true
+
+        if type check_relevant_errors &>/dev/null; then
+            local similar_errors
+            similar_errors=$(check_relevant_errors "circuit-breaker $phase" 2>/dev/null || echo "[]")
+
+            local similar_count
+            similar_count=$(echo "$similar_errors" | jq 'length' 2>/dev/null || echo "0")
+
+            if [[ "$similar_count" -gt 1 ]]; then
+                echo ""
+                echo -e "${C_CYAN}═══ SENTINEL: ERREURS SIMILAIRES PASSÉES ═══${C_NC}"
+                echo "$similar_errors" | jq -r '.[] | select(.id != "'"$error_id"'") | "  ⚠️  \(.id): \(.title)"' 2>/dev/null | head -3
+                echo -e "${C_CYAN}═══════════════════════════════════════════${C_NC}"
+            fi
+        fi
+    fi
+
+    # =========================================================================
+    # STEP 4: Find next story in current sprint for auto-escalation
+    # =========================================================================
+    local next_story=""
+    local remaining_stories=0
+
+    if [[ -f "$WORKING_MEMORY" ]] && check_jq_available; then
+        next_story=$(jq -r --arg current "$story_id" '
+            .current_sprint.stories // [] |
+            map(select(.status == "TODO" or .status == "IN_PROGRESS")) |
+            map(select(.id != $current)) |
+            .[0].id // ""
+        ' "$WORKING_MEMORY" 2>/dev/null)
+
+        remaining_stories=$(jq --arg current "$story_id" '
+            [.current_sprint.stories // [] |
+            .[] | select(.status == "TODO" or .status == "IN_PROGRESS") |
+            select(.id != $current)] | length
+        ' "$WORKING_MEMORY" 2>/dev/null)
+    fi
+
+    # =========================================================================
+    # STEP 5: Show next actions
+    # =========================================================================
+    echo ""
+    if [[ -n "$next_story" ]]; then
+        echo -e "${C_GREEN}╔════════════════════════════════════════════════════════════════╗${C_NC}"
+        echo -e "${C_GREEN}║  AUTO-ESCALATION: Passage à la story suivante                  ║${C_NC}"
+        echo -e "${C_GREEN}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+        echo -e "${C_GREEN}║  Next: ${next_story} (${remaining_stories} stories restantes)${C_NC}"
+        echo -e "${C_GREEN}╚════════════════════════════════════════════════════════════════╝${C_NC}"
+    else
+        echo -e "${C_RED}╔════════════════════════════════════════════════════════════════╗${C_NC}"
+        echo -e "${C_RED}║  ⚠️  SPRINT BLOQUÉ - Plus de stories disponibles               ║${C_NC}"
+        echo -e "${C_RED}╠════════════════════════════════════════════════════════════════╣${C_NC}"
+        echo -e "${C_RED}║  Actions requises:                                              ║${C_NC}"
+        echo -e "${C_RED}║  1. /harmony sentinel --status                                  ║${C_NC}"
+        echo -e "${C_RED}║  2. Corriger les erreurs manuellement                           ║${C_NC}"
+        echo -e "${C_RED}║  3. /harmony sentinel --reset $story_id                         ║${C_NC}"
+        echo -e "${C_RED}╚════════════════════════════════════════════════════════════════╝${C_NC}"
+
+        # Mark sprint as needing review
+        if [[ -f "$WORKING_MEMORY" ]] && check_jq_available; then
+            local tmp_file
+            tmp_file=$(mktemp)
+            jq --arg ts "$timestamp" '
+                .current_sprint.status = "NEEDS_REVIEW" |
+                .current_sprint.blocked_at = $ts
+            ' "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
+        fi
+    fi
+    echo ""
+
+    # Return next story ID (empty if sprint blocked)
+    echo "$next_story"
+}
+
+# Get next available story in current sprint
+get_next_story_in_sprint() {
+    local current_story="${1:-}"
+
+    if [[ ! -f "$WORKING_MEMORY" ]] || ! check_jq_available; then
+        echo ""
+        return 1
+    fi
+
+    jq -r --arg current "$current_story" '
+        .current_sprint.stories // [] |
+        map(select(.status == "TODO" or .status == "IN_PROGRESS")) |
+        map(select(.id != $current)) |
+        .[0].id // ""
+    ' "$WORKING_MEMORY" 2>/dev/null
+}
+
+# Check sprint health - count escalated vs total stories
+get_sprint_health() {
+    if [[ ! -f "$WORKING_MEMORY" ]] || ! check_jq_available; then
+        echo '{"healthy":true}'
+        return 0
+    fi
+
+    jq '
+        (.current_sprint.stories | length) as $total |
+        ([.current_sprint.stories[] | select(.status == "NEEDS_ESCALATION")] | length) as $escalated |
+        {
+            total: $total,
+            done: ([.current_sprint.stories[] | select(.status == "DONE")] | length),
+            escalated: $escalated,
+            todo: ([.current_sprint.stories[] | select(.status == "TODO")] | length),
+            in_progress: ([.current_sprint.stories[] | select(.status == "IN_PROGRESS")] | length),
+            healthy: ($escalated < ($total / 2))
+        }
+    ' "$WORKING_MEMORY" 2>/dev/null
 }
 
 # Reset circuit breaker (manual recovery after analysis)

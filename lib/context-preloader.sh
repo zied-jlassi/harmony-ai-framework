@@ -44,6 +44,11 @@ if [[ -f "${SCRIPT_DIR}/profile-loader.sh" ]]; then
     source "${SCRIPT_DIR}/profile-loader.sh"
 fi
 
+# Source MCP memory sync for cross-session learning
+if [[ -f "${SCRIPT_DIR}/mcp-memory-sync.sh" ]]; then
+    source "${SCRIPT_DIR}/mcp-memory-sync.sh"
+fi
+
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
@@ -1035,6 +1040,27 @@ _load_context() {
     knowledge_files=$(echo "$resolution" | jq -r '.knowledge_files[]?' 2>/dev/null || echo "")
     triggered=$(echo "$resolution" | jq -r '.triggered_agents[]?' 2>/dev/null || echo "")
 
+    # === SENTINEL AUTO-LEARNING: Check for relevant past errors ===
+    local sentinel_warnings=""
+    if type check_relevant_errors &>/dev/null; then
+        # Get context flags from classification cache
+        local context_flags
+        context_flags=$(echo "$PRELOADER_CLASSIFICATION_CACHE" | jq -r '.context_flags[]?' 2>/dev/null | tr '\n' ' ')
+
+        local relevant_errors
+        relevant_errors=$(check_relevant_errors "$context_flags" 2>/dev/null || echo "[]")
+
+        local error_count
+        error_count=$(echo "$relevant_errors" | jq 'length' 2>/dev/null || echo "0")
+
+        if [[ "$error_count" -gt 0 ]]; then
+            echo "[PRELOADER] Found $error_count relevant past errors from Sentinel" >&2
+            if type format_errors_for_context &>/dev/null; then
+                sentinel_warnings=$(format_errors_for_context "$relevant_errors" 2>/dev/null || echo "")
+            fi
+        fi
+    fi
+
     local loaded_content=""
 
     # Load branch (main content)
@@ -1088,6 +1114,16 @@ _load_context() {
             _add_tokens "$tokens"
         fi
     done <<< "$triggered"
+
+    # Add Sentinel warnings (past errors relevant to this context)
+    if [[ -n "$sentinel_warnings" ]]; then
+        local warning_tokens=$((${#sentinel_warnings} / 4))
+        if _can_add_tokens "$warning_tokens"; then
+            loaded_content+=$'\n'"$sentinel_warnings"
+            _add_tokens "$warning_tokens"
+            echo "[PRELOADER] Injected Sentinel warnings (${warning_tokens} tokens)" >&2
+        fi
+    fi
 
     _exit_depth
 

@@ -9,13 +9,20 @@
 #   - Node.js 18+    : Runtime for npx
 #   - jq             : JSON processing (apt install jq / brew install jq)
 #   - yq             : YAML processing (apt install yq / brew install yq)
+#   - MCP Servers    : Official Anthropic MCP servers (via npx)
+#     - @modelcontextprotocol/server-memory          : Cross-session memory
+#     - @modelcontextprotocol/server-sequentialthinking : Structured reasoning
 #
 #   Why jq and yq?
 #   - Performance: Native JSON/YAML parsing is 10-100x faster than shell
 #   - Reliability: Robust config handling without regex hacks
 #   - Features: Deep merge, path queries, format conversion
 #
-#   Installation will FAIL if jq or yq are not found.
+#   Why MCP servers?
+#   - server-memory: Cross-session learning, Sentinel error patterns
+#   - server-sequentialthinking: Complex problem decomposition
+#
+#   Installation will FAIL if jq, yq, or MCP servers are not available.
 #
 # Usage:
 #   ./install.sh [options]
@@ -398,7 +405,7 @@ check_prerequisites() {
 
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         echo ""
-        print_error "DÉPENDANCES MANQUANTES: ${missing_deps[*]}"
+        print_error "DEPENDANCES MANQUANTES: ${missing_deps[*]}"
         echo ""
         print_message "$YELLOW" "jq et yq sont OBLIGATOIRES pour Harmony Framework."
         print_message "$YELLOW" "Ils permettent l'analyse performante des fichiers JSON et YAML."
@@ -416,8 +423,53 @@ check_prerequisites() {
             fi
         done
         echo ""
-        print_message "$YELLOW" "Après installation, relancez: npx harmony-ai-framework --full"
+        print_message "$YELLOW" "Apres installation, relancez: npx harmony-ai-framework --full"
         exit 1
+    fi
+
+    # Check MCP servers availability (required for cross-session learning)
+    local missing_mcp=()
+
+    # Check server-memory
+    if ! npx -y @modelcontextprotocol/server-memory --help &>/dev/null 2>&1; then
+        missing_mcp+=("@modelcontextprotocol/server-memory")
+    fi
+
+    # Check server-sequentialthinking
+    if ! npx -y @modelcontextprotocol/server-sequentialthinking --help &>/dev/null 2>&1; then
+        missing_mcp+=("@modelcontextprotocol/server-sequentialthinking")
+    fi
+
+    if [[ ${#missing_mcp[@]} -gt 0 ]]; then
+        echo ""
+        print_warning "MCP SERVERS NON DISPONIBLES: ${missing_mcp[*]}"
+        echo ""
+        print_message "$YELLOW" "Les MCP servers officiels Anthropic sont OBLIGATOIRES pour Harmony."
+        print_message "$YELLOW" "Ils permettent la memoire cross-session et le raisonnement structure."
+        echo ""
+        print_message "$CYAN" "Ces serveurs seront telecharges automatiquement via npx lors de l'utilisation."
+        print_message "$CYAN" "Assurez-vous que Node.js 18+ est installe et que npx fonctionne."
+        echo ""
+        print_message "$CYAN" "Test manuel:"
+        print_message "$CYAN" "  npx -y @modelcontextprotocol/server-memory --help"
+        print_message "$CYAN" "  npx -y @modelcontextprotocol/server-sequentialthinking --help"
+        echo ""
+        print_message "$YELLOW" "Configuration MCP client (Claude Desktop / Cursor / VS Code):"
+        print_message "$CYAN" '  {'
+        print_message "$CYAN" '    "mcpServers": {'
+        print_message "$CYAN" '      "memory": {'
+        print_message "$CYAN" '        "command": "npx",'
+        print_message "$CYAN" '        "args": ["-y", "@modelcontextprotocol/server-memory"]'
+        print_message "$CYAN" '      },'
+        print_message "$CYAN" '      "sequentialthinking": {'
+        print_message "$CYAN" '        "command": "npx",'
+        print_message "$CYAN" '        "args": ["-y", "@modelcontextprotocol/server-sequentialthinking"]'
+        print_message "$CYAN" '      }'
+        print_message "$CYAN" '    }'
+        print_message "$CYAN" '  }'
+        echo ""
+        # Continue anyway - MCP will be downloaded on first use
+        print_message "$YELLOW" "Installation continue... MCP servers seront telecharges lors de l'utilisation."
     fi
 
     # Note: print_success is hidden when UI is loaded (ui_show_step handles it)

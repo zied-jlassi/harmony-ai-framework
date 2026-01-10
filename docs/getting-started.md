@@ -4,10 +4,45 @@ Welcome to Harmony Framework! This guide will help you get up and running in min
 
 ## Prerequisites
 
-- **Node.js** 18.0.0 or higher
+### Required Tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| **Node.js 18+** | Runtime for npx | [nodejs.org](https://nodejs.org/) |
+| **jq** | JSON processing | `sudo apt install jq` / `brew install jq` |
+| **yq** | YAML processing | `sudo apt install yq` / `brew install yq` |
+| **Git** | Version control | Pre-installed on most systems |
+
+### Required MCP Servers (Official Anthropic)
+
+Harmony Framework requires these official MCP servers for cross-session learning and structured reasoning:
+
+| MCP Server | Package | Purpose |
+|------------|---------|---------|
+| **server-memory** | `@modelcontextprotocol/server-memory` | Cross-session memory, Sentinel error patterns |
+| **server-sequentialthinking** | `@modelcontextprotocol/server-sequentialthinking` | Structured problem decomposition |
+
+**Configuration MCP Client** (Claude Desktop / Cursor / VS Code):
+
+```json
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequentialthinking"]
+    }
+  }
+}
+```
+
+### Optional
+
 - **AI Assistant**: Claude Code, Cursor, Windsurf, or similar
-- **Git** (for version control)
-- **Docker** (optional, for containerized development)
+- **Docker** (for containerized development)
 
 ## Quick Start
 

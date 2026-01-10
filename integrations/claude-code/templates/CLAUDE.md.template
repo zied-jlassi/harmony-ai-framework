@@ -11,6 +11,34 @@ Uses the **Harmony AI Framework** with three pillars:
 - **Sentinel System** - Error memory, circuit breaker (3 failures = stop), pattern learning
 - **HQVF** - Use Case Verifiables (UCVs), triple validation (Dev+Test+QA)
 
+## Prerequisites (Mandatory)
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| **Node.js 18+** | Runtime | [nodejs.org](https://nodejs.org/) |
+| **jq** | JSON processing | `apt install jq` / `brew install jq` |
+| **yq** | YAML processing | `apt install yq` / `brew install yq` |
+
+### MCP Servers (Official Anthropic - Required)
+
+```json
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequentialthinking"]
+    }
+  }
+}
+```
+
+- **server-memory**: Cross-session learning, Sentinel error patterns
+- **server-sequentialthinking**: Structured problem decomposition
+
 ## Essential Commands
 
 ```bash

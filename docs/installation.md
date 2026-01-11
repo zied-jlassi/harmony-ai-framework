@@ -86,7 +86,7 @@ npx harmony init
 
 ```bash
 # Clone the repository
-git clone https://github.com/harmony-ai/harmony-framework.git
+git clone https://github.com/harmony-ai-framework/framework.git
 
 # Run the installer
 cd harmony-framework

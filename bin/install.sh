@@ -210,7 +210,7 @@ INSTALLATION METHODS:
   ./node_modules/harmony-ai-framework/bin/install.sh [options]
 
   # Or clone the repo:
-  git clone https://github.com/harmony-ai/harmony-framework
+  git clone https://github.com/harmony-ai-framework/framework
   ./harmony-framework/bin/install.sh --project-dir /your/project
 
 OPTIONS:
@@ -250,7 +250,7 @@ AFTER INSTALLATION:
 
 DOCUMENTATION:
 
-  https://github.com/harmony-ai/harmony-framework
+  https://github.com/harmony-ai-framework/framework
 
 EOF
 }

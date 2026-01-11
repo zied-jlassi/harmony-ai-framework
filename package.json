@@ -1,16 +1,16 @@
 {
   "name": "harmony-ai-framework",
-  "version": "1.0.25",
+  "version": "0.1.0",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/harmony-ai/harmony-framework"
+    "url": "https://github.com/harmony-ai-framework/framework"
   },
-  "homepage": "https://harmony-ai.dev",
+  "homepage": "https://github.com/harmony-ai-framework/framework",
   "bugs": {
-    "url": "https://github.com/harmony-ai/harmony-framework/issues"
+    "url": "https://github.com/harmony-ai-framework/framework/issues"
   },
   "keywords": [
     "ai",
@@ -54,6 +54,7 @@
     "specialties/",
     "templates/",
     "tips/",
+    "tools/",
     "workflows/",
     "harmony.manifest.json",
     "checksums.sha256",

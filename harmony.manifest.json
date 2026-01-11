@@ -119,7 +119,7 @@
       "npm": "npm install harmony-ai-framework",
       "yarn": "yarn add harmony-ai-framework",
       "pnpm": "pnpm add harmony-ai-framework",
-      "manual": "git clone https://github.com/harmony-ai/harmony-framework && ./install.sh"
+      "manual": "git clone https://github.com/harmony-ai-framework/framework && ./install.sh"
     }
   }
 }

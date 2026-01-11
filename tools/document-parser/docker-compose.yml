@@ -1,0 +1,22 @@
+# Document Parser Service
+# 100% Local RGPD Compliant - NO cloud APIs
+#
+# Usage in your project:
+#   1. Copy this file to your project
+#   2. Adjust container_name and volumes
+#   3. Run: docker compose up -d
+
+services:
+  harmony-doc-parser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: harmony-doc-parser
+    volumes:
+      - ./documents/source:/documents:ro  # Read-only for security
+      - ./documents/parsed:/parsed        # Output directory
+    restart: unless-stopped
+
+# Note: Add your project's network if needed
+# networks:
+#   - myapp-backend

@@ -8,7 +8,7 @@
 
 [![npm version](https://img.shields.io/npm/v/harmony-ai-framework.svg?style=for-the-badge)](https://www.npmjs.com/package/harmony-ai-framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/harmony-ai/harmony-framework?style=for-the-badge)](https://github.com/harmony-ai/harmony-framework/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/harmony-ai-framework/framework?style=for-the-badge)](https://github.com/harmony-ai-framework/framework/stargazers)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?style=for-the-badge&logo=discord)](https://discord.gg/harmony-ai)
 
 [📚 Documentation](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md) • [🚀 Quick Start](#-quick-start) • [💬 Discord](https://discord.gg/harmony-ai)
@@ -444,8 +444,8 @@ npx harmony-ai-framework --full
 | 💬 Channel | Link |
 |------------|------|
 | Discord | [Join 500+ developers](https://discord.gg/harmony-ai) |
-| Issues | [Report bugs](https://github.com/harmony-ai/harmony-framework/issues) |
-| Discussions | [Ideas & help](https://github.com/harmony-ai/harmony-framework/discussions) |
+| Issues | [Report bugs](https://github.com/harmony-ai-framework/framework/issues) |
+| Discussions | [Ideas & help](https://github.com/harmony-ai-framework/framework/discussions) |
 
 ---
 

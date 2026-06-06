@@ -65,10 +65,10 @@ yq --version     # any version works
 
 ```bash
 # Install globally
-npm install -g harmony-ai-framework
+npm install -g harmony-ai
 
 # Or install locally in your project
-npm install harmony-ai-framework
+npm install harmony-ai
 
 # Initialize
 npx harmony init
@@ -77,14 +77,14 @@ npx harmony init
 ### Method 2: Yarn
 
 ```bash
-yarn add harmony-ai-framework
+yarn add harmony-ai
 npx harmony init
 ```
 
 ### Method 3: PNPM
 
 ```bash
-pnpm add harmony-ai-framework
+pnpm add harmony-ai
 npx harmony init
 ```
 
@@ -92,7 +92,7 @@ npx harmony init
 
 ```bash
 # Clone the repository
-git clone https://github.com/harmony-ai-framework/framework.git
+git clone https://github.com/zied-jlassi/harmony-ai-framework.git
 
 # Run the installer
 cd harmony-framework
@@ -420,7 +420,7 @@ npx harmony uninstall
 
 # Or manually
 rm -rf .harmony
-npm uninstall harmony-ai-framework
+npm uninstall harmony-ai
 ```
 
 ---
@@ -429,7 +429,7 @@ npm uninstall harmony-ai-framework
 
 ```bash
 # Upgrade to latest version
-npm update harmony-ai-framework
+npm update harmony-ai
 
 # Run migrations
 npx harmony migrate
@@ -443,7 +443,7 @@ npx harmony migrate
 
 ```bash
 # Try with sudo (not recommended)
-sudo npm install -g harmony-ai-framework
+sudo npm install -g harmony-ai
 
 # Better: Fix npm permissions
 mkdir ~/.npm-global

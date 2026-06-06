@@ -116,10 +116,10 @@
   "installation": {
     "methods": ["npm", "yarn", "pnpm", "manual"],
     "commands": {
-      "npm": "npm install harmony-ai-framework",
-      "yarn": "yarn add harmony-ai-framework",
-      "pnpm": "pnpm add harmony-ai-framework",
-      "manual": "git clone https://github.com/harmony-ai-framework/framework && ./install.sh"
+      "npm": "npm install harmony-ai",
+      "yarn": "yarn add harmony-ai",
+      "pnpm": "pnpm add harmony-ai",
+      "manual": "git clone https://github.com/zied-jlassi/harmony-ai-framework && ./install.sh"
     }
   }
 }

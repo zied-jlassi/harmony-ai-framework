@@ -1,16 +1,16 @@
 {
-  "name": "harmony-ai-framework",
+  "name": "harmony-ai",
   "version": "1.0.0",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/harmony-ai-framework/framework"
+    "url": "https://github.com/zied-jlassi/harmony-ai-framework"
   },
-  "homepage": "https://github.com/harmony-ai-framework/framework",
+  "homepage": "https://github.com/zied-jlassi/harmony-ai-framework",
   "bugs": {
-    "url": "https://github.com/harmony-ai-framework/framework/issues"
+    "url": "https://github.com/zied-jlassi/harmony-ai-framework/issues"
   },
   "keywords": [
     "ai",
@@ -28,10 +28,10 @@
     "quality-assurance"
   ],
   "bin": {
-    "harmony-init": "./bin/install.sh"
+    "harmony-ai": "./bin/install.sh"
   },
   "scripts": {
-    "postinstall": "echo '\\n📦 Harmony installed! Run: npx harmony-init --help\\n'"
+    "postinstall": "echo '\\n📦 Harmony installed! Run: npx harmony-ai --help\\n'"
   },
   "files": [
     "agents/",

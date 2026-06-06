@@ -6,9 +6,9 @@
 
 **Learn. Protect. Deliver.**
 
-[![npm version](https://img.shields.io/npm/v/harmony-ai-framework.svg?style=for-the-badge)](https://www.npmjs.com/package/harmony-ai-framework)
+[![npm version](https://img.shields.io/npm/v/harmony-ai.svg?style=for-the-badge)](https://www.npmjs.com/package/harmony-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/harmony-ai-framework/framework?style=for-the-badge)](https://github.com/harmony-ai-framework/framework/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/zied-jlassi/harmony-ai-framework?style=for-the-badge)](https://github.com/zied-jlassi/harmony-ai-framework/stargazers)
 
 [📚 Documentation](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md) • [🚀 Quick Start](#-quick-start)
 
@@ -294,7 +294,7 @@ yq --version      # any version
 
 ```bash
 # Install (requires jq + yq)
-npx harmony-ai-framework --full
+npx harmony-ai --full
 
 # Start coding
 /go                    # Session kickoff
@@ -477,8 +477,8 @@ npx harmony-ai-framework --full
 
 | 💬 Channel | Link |
 |------------|------|
-| Issues | [Report bugs](https://github.com/harmony-ai-framework/framework/issues) |
-| Discussions | [Ideas & help](https://github.com/harmony-ai-framework/framework/discussions) |
+| Issues | [Report bugs](https://github.com/zied-jlassi/harmony-ai-framework/issues) |
+| Discussions | [Ideas & help](https://github.com/zied-jlassi/harmony-ai-framework/discussions) |
 
 ---
 

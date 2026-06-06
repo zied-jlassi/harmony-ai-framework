@@ -202,16 +202,16 @@ INSTALLATION METHODS:
 
   Method 1: NPM (Recommended)
   ─────────────────────────────
-  npm install harmony-ai-framework
-  npx harmony-init [options]
+  npm install harmony-ai
+  npx harmony-ai [options]
 
   Method 2: Direct Script
   ─────────────────────────────
   # If already in a project with Harmony installed:
-  ./node_modules/harmony-ai-framework/bin/install.sh [options]
+  ./node_modules/harmony-ai/bin/install.sh [options]
 
   # Or clone the repo:
-  git clone https://github.com/harmony-ai-framework/framework
+  git clone https://github.com/zied-jlassi/harmony-ai-framework
   ./harmony-framework/bin/install.sh --project-dir /your/project
 
 OPTIONS:
@@ -228,19 +228,19 @@ OPTIONS:
 EXAMPLES:
 
   # Full installation with hooks (recommended)
-  npx harmony-init --full
+  npx harmony-ai --full
 
   # Full installation for Cursor IDE
-  npx harmony-init --full --ide cursor
+  npx harmony-ai --full --ide cursor
 
   # Full installation WITHOUT hooks
-  npx harmony-init --full --no-hooks
+  npx harmony-ai --full --no-hooks
 
   # Minimal installation (core files only, no hooks)
-  npx harmony-init --minimal
+  npx harmony-ai --minimal
 
   # Force reinstall
-  npx harmony-init --full --force
+  npx harmony-ai --full --force
 
 AFTER INSTALLATION:
 
@@ -251,7 +251,7 @@ AFTER INSTALLATION:
 
 DOCUMENTATION:
 
-  https://github.com/harmony-ai-framework/framework
+  https://github.com/zied-jlassi/harmony-ai-framework
 
 EOF
 }
@@ -1142,7 +1142,7 @@ create_claude_md() {
 
 > **COMMANDS**: `/go` (session start) • `/harmony` (30 commands) • `/harmony status`
 
-> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai-framework --force` to restore.
+> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai --force` to restore.
 
 ---
 

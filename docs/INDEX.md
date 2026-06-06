@@ -280,8 +280,8 @@ harmony-framework/
 
 ## Liens Externes
 
-- [GitHub Repository](https://github.com/harmony-ai-framework/framework)
-- [Issues & Support](https://github.com/harmony-ai-framework/framework/issues)
+- [GitHub Repository](https://github.com/zied-jlassi/harmony-ai-framework)
+- [Issues & Support](https://github.com/zied-jlassi/harmony-ai-framework/issues)
 
 ---
 

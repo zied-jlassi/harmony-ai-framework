@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Local npm/registry credentials (never commit)
+.npmrc
+
+# Logs & OS noise
+*.log
+.DS_Store

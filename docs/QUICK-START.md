@@ -5,7 +5,7 @@
 ## 1. Install (30 sec)
 
 ```bash
-npm install harmony-ai-framework
+npm install harmony-ai
 npx harmony init
 ```
 

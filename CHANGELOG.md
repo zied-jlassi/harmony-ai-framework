@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0] - 2026-06-06
+
+### Added
+- **TestArch — 8 workflows de test complets** (100% originaux Harmony)
+  - `testarch/framework` : sélection automatique Vitest, Jest, Playwright, Cypress, pytest, JUnit, go test
+  - `testarch/atdd` : cycle RED→GREEN→REFACTOR depuis les critères d'acceptation (BDD, Gherkin)
+  - `testarch/test-design` : équivalence, boundary values, tables de décision, transition d'état
+  - `testarch/automate` : analyse couverture (line/branch/function) + génération tests manquants
+  - `testarch/test-review` : détection anti-patterns (ice cream cone, flaky, over-mocking, dead tests)
+  - `testarch/nfr-assess` : performance (k6/Gatling/Artillery), sécurité (OWASP/SAST/DAST), accessibilité (WCAG 2.1/Axe)
+  - `testarch/trace` : matrice de traçabilité bidirectionnelle exigences ↔ tests + quality gate CI
+  - `testarch/ci` : pipeline 4 couches GitHub Actions + GitLab CI avec sharding Playwright
+- **8 slash commands TestArch** : `/hf:testarch:framework`, `atdd`, `test-design`, `automate`, `test-review`, `nfr-assess`, `trace`, `ci`
+- **25 agents enrichis** : propriété `persona`, section `Règle Absolue`, template de fin obligatoire
+- **12 nouvelles libs** : `harmony-audit`, `security-gates`, `ab-testing`, `agent-maturity`, `anomaly-detector`, `audit-trail`, `compliance-reporter`, `confidence-scorer`, `context-filter`, `data-sandbox`, `mesh-network`, `recovery`
+- **5 nouveaux patterns** : P-020 parallel-execution, P-021 meta-prompting, P-022 agent-maturity, P-023 mesh-networks, P-024 context-filtering
+- **3 patterns cognitifs** : emotional-prompting, meta-prompting, self-evolving
+- **Workflows testarch intégrés** : templates CI GitHub Actions et GitLab CI prêts à l'emploi
+- **`docs/prompt-monitor.md`** : guide d'activation avec `${HARMONY_DIR}`, Cas A (copie) / Cas B (fusion)
+- **`tools/prompt-monitor/settings-addon.json`** : hooks isolés, copier vers `.claude/settings.local.json`
+- **2 nouveaux agents** : `analyst-mini`, `developer-quickwin`
+- **Nouveaux patterns de qualité** : `knowledge/domains/quality/` (atdd, nfr, traceability, test-framework-setup)
+- **Templates memory** : 18 schemas/templates JSON pour la persistance Harmony
+- **`memory/` folder** : état initial et templates pour l'onboarding
+
+### Changed
+- **Prompt Monitor désactivé par défaut** : hooks retirés du `settings.json` installé, activation opt-in via `settings-addon.json`
+- **`generate-commands.sh`** : 4 → 8 commandes TestArch enregistrées
+- **`checksums.sha256`** : régénéré (857 fichiers, exclut `bin/` et `memory/`)
+
+### Fixed
+- **`autopilot-commands.sh`** : suppression du mot-clé `local` invalide sur déclaration de fonction `display_status()`
+- **`rules/R-001-story-required.yaml`** : `allowed_paths` plus restrictif (suppression de `docs/`)
+
+### Security
+- **15 vulnérabilités Dependabot** corrigées dans `tools/document-parser/requirements.txt` :
+  - `pillow` 10.4.0 → 12.2.0 (OOB write, decompression bomb)
+  - `urllib3` 2.6.2 → 2.7.0 (decompression bomb, sensitive headers)
+  - `lxml` 5.1.0 → 6.1.0 (XXE local files)
+  - `protobuf` 6.33.2 → 6.33.5 (JSON recursion bypass)
+  - `requests` 2.32.5 → 2.33.0 (temp file reuse)
+  - `transformers` 4.57.3 → 5.0.0rc3 (code exec in Trainer)
+  - `idna` 3.11 → 3.15, `python-dotenv` 1.2.1 → 1.2.2, `filelock` 3.20.1 → 3.20.3
+- **`torch==2.9.1+cpu`** → `torch==2.9.1` : version installable via PyPI standard
+
+## [2.0] - 2026-06-04
+
+### Security
+- **Retrait des modules pentest offensifs** pour usage public sécurisé
+  - `pentest-metasploit.md` supprimé : Meterpreter, EternalBlue, reverse shells
+  - `pentest-exploit.md` supprimé : shellcode, buffer overflow, ROP chains
+  - `pentest-malware.md` supprimé : msfvenom payloads, techniques d'évasion AV
+  - `pentest-post.md` supprimé : credential harvesting, data exfiltration
+  - `pentest-network.md` supprimé : WiFi hacking, MITM, Pass the Hash
+  - `pentest-social.md` supprimé : phishing, USB attacks (Rubber Ducky/BadUSB)
+  - Ces modules restent archivés dans le tag `1.0` pour usage en environnement lab isolé et autorisé uniquement
+  - Référence : OWASP Testing Guide — usage défensif et éducatif
+
 ## [1.0.20] - 2026-01-05
 
 ### Fixed

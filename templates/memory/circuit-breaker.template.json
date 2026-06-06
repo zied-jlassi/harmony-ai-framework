@@ -1,0 +1,12 @@
+{
+  "$schema": "./circuit-breaker.schema.json",
+  "version": "1.0.0",
+  "state": "CLOSED",
+  "consecutive_failures": 0,
+  "max_failures": 3,
+  "last_failure": null,
+  "last_success": null,
+  "cooldown_minutes": 5,
+  "auto_reset": false,
+  "history": []
+}

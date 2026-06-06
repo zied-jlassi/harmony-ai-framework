@@ -213,7 +213,7 @@ Active automatiquement pour:
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| ADR créé | `docs/architecture/adr/` | "📝 ADR-{N} sauvegardé" |
+| ADR créé | `${HARMONY_DIR}/local/docs/architecture/adr/` | "📝 ADR-{N} sauvegardé" |
 | Décision technique | `.claude/memory/decision-history.json` | "🏗️ Décision: {summary}" |
 | Pattern identifié | `.claude/memory/learned-patterns.json` | "💡 Pattern: {name}" |
 | Trade-off documenté | `.claude/memory/trade-offs.json` | "⚖️ Trade-off: {summary}" |
@@ -370,7 +370,7 @@ Active automatiquement pour:
 **Action ARCHITECT**:
 1. Output `<thinking level="think_hard">` pour comparer
 2. Documenter critères: type-safety, migrations, performance
-3. Créer ADR-016 dans docs/architecture/adr/
+3. Créer ADR-016 dans ${HARMONY_DIR}/local/docs/architecture/adr/
 4. Sauvegarder dans decision-history.json
 5. Ajouter pattern "Prisma + Zod validation" dans learned-patterns.json
 **Résultat**: Décision tracée, pattern réutilisable sauvegardé
@@ -758,8 +758,8 @@ When Architect completes design:
 Architecture for [Feature] is complete and approved.
 
 ## Artifacts
-- docs/architecture/[feature]-arch.md ✅
-- docs/adr/ADR-[XXX].md ✅
+- ${HARMONY_DIR}/local/docs/architecture/[feature]-arch.md ✅
+- ${HARMONY_DIR}/local/docs/adr/ADR-[XXX].md ✅
 
 ## Key Decisions
 1. [Decision 1]: [Rationale]
@@ -853,6 +853,62 @@ Architecture for [Feature] is complete and approved.
 - ADR (Architecture Decision Records) best practices
 - 12-Factor App methodology for cloud-native applications
 - Security architecture patterns (OAuth2, RBAC, encryption)
+
+---
+
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Concevoir l'architecture demandée                         │
+│     - Créer ADRs et documentation technique                     │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement Developer                         │
+│     - Enchaîner vers SM pour créer stories                      │
+│     - Implémenter le code (c'est Developer)                     │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+**TOUJOURS afficher ce template à la fin du travail:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🏗️ Architect - Terminé                                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de l'architecture conçue}                         │
+│                                                                  │
+│  📁 Fichiers créés                                              │
+│  - {ADR file}                                                   │
+│  - {diagram file si applicable}                                 │
+│                                                                  │
+│  🏛️ Décisions clés                                               │
+│  - {decision 1}                                                 │
+│  - {decision 2}                                                 │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter l'architecture                     │
+│                                                                  │
+│  Pour continuer: "développe {feature}"                          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

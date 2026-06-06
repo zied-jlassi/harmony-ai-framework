@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-working-memory",
+  "title": "Harmony Working Memory",
+  "description": "Schema for sprint/backlog tracking in Harmony Framework",
+  "type": "object",
+  "required": ["version", "type", "current_sprint", "backlog"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "type": {
+      "type": "string",
+      "const": "working_memory"
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "language": { "type": "string", "enum": ["en", "fr", "es", "de", "it", "pt"] },
+        "repository": { "type": "string" },
+        "team_velocity": { "type": "number", "minimum": 0 }
+      }
+    },
+    "current_sprint": {
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "name": { "type": ["string", "null"] },
+        "started": { "type": ["string", "null"], "format": "date" },
+        "end_date": { "type": ["string", "null"], "format": "date" },
+        "status": {
+          "type": "string",
+          "enum": ["NOT_STARTED", "IN_PROGRESS", "DONE", "CANCELLED"]
+        },
+        "velocity_target": { "type": "number", "minimum": 0 },
+        "velocity_achieved": { "type": "number", "minimum": 0 },
+        "sprint_goal": { "type": "string" },
+        "axes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "epic": { "type": "string" },
+              "points": { "type": "number" },
+              "status": { "type": "string" },
+              "note": { "type": "string" }
+            }
+          }
+        },
+        "stories": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "description": { "type": "string" },
+              "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+              "owner": { "type": "string" },
+              "created": { "type": "string", "format": "date" },
+              "resolved": { "type": ["string", "null"], "format": "date" }
+            }
+          }
+        }
+      }
+    },
+    "current_story": {
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "status": { "type": "string", "enum": ["TODO", "IN_PROGRESS", "DONE", "BLOCKED"] },
+        "points": { "type": "number", "minimum": 0 },
+        "started": { "type": ["string", "null"] },
+        "epic": { "type": ["string", "null"] },
+        "assigned": { "type": ["string", "null"] },
+        "ucv_status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "tasks_completed": { "type": "number", "minimum": 0 },
+        "tasks_total": { "type": "number", "minimum": 0 }
+      }
+    },
+    "sprint_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "started": { "type": "string", "format": "date" },
+          "ended": { "type": "string", "format": "date" },
+          "status": { "type": "string" },
+          "velocity_target": { "type": "number" },
+          "velocity_achieved": { "type": "number" },
+          "stories_planned": { "type": "number" },
+          "stories_completed": { "type": "number" }
+        },
+        "required": ["id", "name", "ended", "velocity_achieved"]
+      }
+    },
+    "velocity": {
+      "type": "object",
+      "properties": {
+        "average_3_sprints": { "type": "number", "minimum": 0 },
+        "average_5_sprints": { "type": "number", "minimum": 0 },
+        "trend": { "type": "string", "enum": ["improving", "stable", "declining"] },
+        "recommended_capacity": { "type": "number", "minimum": 0 },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sprint_id": { "type": "string" },
+              "velocity": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "backlog": {
+      "type": "object",
+      "properties": {
+        "epics_total": { "type": "number", "minimum": 0 },
+        "epics_done": { "type": "number", "minimum": 0 },
+        "stories_total": { "type": "number", "minimum": 0 },
+        "stories_done": { "type": "number", "minimum": 0 },
+        "stories_in_progress": { "type": "number", "minimum": 0 },
+        "stories_todo": { "type": "number", "minimum": 0 },
+        "priority_queue": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "story": { "type": "string" },
+          "severity": { "type": "string" },
+          "owner": { "type": "string" },
+          "created": { "type": "string" },
+          "status": { "type": "string", "enum": ["open", "resolved", "escalated"] }
+        }
+      }
+    },
+    "recent_decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "decision": { "type": "string" },
+          "reason": { "type": "string" },
+          "made_by": { "type": "string" }
+        },
+        "required": ["date", "decision"]
+      }
+    },
+    "session_context": {
+      "type": "object",
+      "properties": {
+        "agent_active": { "type": ["string", "null"] },
+        "workflow_active": { "type": ["string", "null"] },
+        "last_action": { "type": ["string", "null"] },
+        "last_action_time": { "type": ["string", "null"] },
+        "pending_handoffs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "context": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "quality_gates": {
+      "type": "object",
+      "properties": {
+        "tests_passing": { "type": ["boolean", "null"] },
+        "coverage_percent": { "type": ["number", "null"] },
+        "build_success": { "type": ["boolean", "null"] },
+        "ucv_coverage": { "type": ["number", "null"] },
+        "luna_approved": { "type": ["boolean", "null"] }
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "stories_completed_total": { "type": "number", "minimum": 0 },
+        "points_delivered_total": { "type": "number", "minimum": 0 },
+        "sprints_completed": { "type": "number", "minimum": 0 },
+        "bugs_found": { "type": "number", "minimum": 0 },
+        "bugs_fixed": { "type": "number", "minimum": 0 },
+        "ucvs_created": { "type": "number", "minimum": 0 },
+        "tests_written": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

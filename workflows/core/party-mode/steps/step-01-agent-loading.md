@@ -33,7 +33,7 @@ Load the complete agent roster from manifest and initialize party mode with enga
 
 Begin agent loading process:
 
-"Now initializing **Party Mode** with our complete BMAD agent roster! Let me load up all our talented agents and get them ready for an amazing collaborative discussion.
+"Now initializing **Party Mode** with our complete Harmony agent roster! Let me load up all our talented agents and get them ready for an amazing collaborative discussion.
 
 **Agent Manifest Loading:**"
 

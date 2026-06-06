@@ -1,77 +1,105 @@
-# Harmony Framework - TestArch Commands Registry
-# Usage: /hf:testarch:<name> [arguments]
-# These are aliases pointing to existing test architecture workflows
+# Harmony Framework — Registre des commandes TestArch
+# Architecture de test complète intégrée au cycle de développement Harmony
+# Usage : /hf:testarch:<commande> [arguments]
 
 version: "1.0"
+author: "Harmony Framework"
 prefix: "/hf:testarch"
+category: testing
+phase: 4
 
-testarch:
-  # Test Framework Setup
+commands:
+
   framework:
     path: workflows/testarch/framework/workflow.yaml
-    description: "Initialize test framework - Jest, Vitest, Playwright setup"
-    arguments: "[framework: jest|vitest|playwright]"
+    description: "Sélectionne et initialise le framework de test adapté au stack détecté (Vitest, Jest, Playwright, Cypress, pytest, JUnit, go test, cargo test)"
+    arguments: "[framework: vitest|jest|playwright|cypress|pytest|junit|go-test|rspec|cargo-test]"
     phase: 4
     requires: []
+    tags: [setup, framework, vitest, jest, playwright, cypress, pytest, junit]
 
-  # ATDD Workflow
   atdd:
     path: workflows/testarch/atdd/workflow.yaml
-    description: "Acceptance Test Driven Development workflow"
+    description: "Transforme les critères d'acceptation en tests exécutables — cycle RED→GREEN→REFACTOR (BDD, Given/When/Then, Gherkin)"
     arguments: "[story-id]"
     phase: 4
     requires: [story-exists]
+    tags: [atdd, bdd, tdd, gherkin, acceptance, red-green-refactor]
 
-  # Test Automation
-  automate:
-    path: workflows/testarch/automate/workflow.yaml
-    description: "Automate manual test cases - generate test code"
-    arguments: "[test-scope]"
-    phase: 4
-    requires: [tests-designed]
-
-  # CI/CD Integration
-  ci:
-    path: workflows/testarch/ci/workflow.yaml
-    description: "Setup CI/CD pipeline for tests - GitHub Actions, GitLab CI"
-    arguments: "[platform: github|gitlab]"
-    phase: 4
-    requires: [tests-exist]
-
-  # Test Design
   test-design:
     path: workflows/testarch/test-design/workflow.yaml
-    description: "Design test cases from requirements"
-    arguments: "[story-or-feature]"
+    description: "Conçoit la stratégie de test et les cas de test — équivalence, boundary values, tables de décision, transitions d'état"
+    arguments: "[story-ou-feature]"
     phase: 4
     requires: [requirements-exist]
+    tags: [design, strategy, boundary-values, equivalence, decision-table, pact, contract-testing]
 
-  # Test Review
+  automate:
+    path: workflows/testarch/automate/workflow.yaml
+    description: "Analyse la couverture (line/branch/function) et génère les tests manquants — unit (mocks, stubs, spies) et integration"
+    arguments: "[scope: all|changed|path/to/module]"
+    phase: 4
+    requires: [source-code-exists]
+    tags: [coverage, automation, vitest, jest, pytest, testing-library, msw, supertest, mocking]
+
   test-review:
     path: workflows/testarch/test-review/workflow.yaml
-    description: "Review test quality and coverage"
-    arguments: "[scope]"
+    description: "Audite la qualité des tests — détecte ice cream cone, tests flaky, over-mocking, assertions faibles, tests morts"
+    arguments: "[scope: all|unit|integration|e2e]"
     phase: 4
     requires: [tests-exist]
+    tags: [review, quality, flaky, anti-patterns, ice-cream-cone, coverage, mutation-testing]
 
-  # NFR Assessment
   nfr-assess:
     path: workflows/testarch/nfr-assess/workflow.yaml
-    description: "Non-functional requirements assessment - performance, security"
-    arguments: "[nfr-type: performance|security|accessibility]"
+    description: "Évalue les NFR — performance (k6/Gatling/Artillery/JMeter), sécurité (OWASP ZAP/SAST), accessibilité (WCAG 2.1/Axe/Lighthouse), fiabilité"
+    arguments: "[type: performance|security|accessibility|reliability|all]"
     phase: 4
     requires: []
+    tags: [nfr, k6, gatling, artillery, jmeter, owasp, sast, dast, wcag, axe, lighthouse, core-web-vitals, p95, p99]
 
-  # Traceability
   trace:
     path: workflows/testarch/trace/workflow.yaml
-    description: "Requirements to tests traceability matrix"
-    arguments: "[scope]"
+    description: "Génère la matrice de traçabilité bidirectionnelle exigences ↔ tests et détecte les lacunes (quality gate configurable)"
+    arguments: "[scope: full|story-id]"
     phase: 4
     requires: [tests-exist]
+    tags: [traceability, rtm, coverage-gap, quality-gate, requirements, orphaned-tests]
 
-# Example usage:
-# /hf:testarch:framework jest
+  ci:
+    path: workflows/testarch/ci/workflow.yaml
+    description: "Configure le pipeline CI/CD 4 couches — GitHub Actions et/ou GitLab CI avec parallélisme Playwright, services Docker éphémères, Codecov, Allure"
+    arguments: "[platform: github|gitlab|both]"
+    phase: 4
+    requires: [tests-exist]
+    tags: [ci, cd, github-actions, gitlab-ci, playwright-sharding, docker, codecov, allure, junit-xml, quality-gate]
+
+# ─────────────────────────────────────────────
+# Exemples d'utilisation
+# ─────────────────────────────────────────────
+# /hf:testarch:framework vitest
+# /hf:testarch:framework playwright
 # /hf:testarch:atdd STORY-042
-# /hf:testarch:ci github
+# /hf:testarch:test-design epic-3-checkout
+# /hf:testarch:automate changed
+# /hf:testarch:automate src/services/
+# /hf:testarch:test-review all
+# /hf:testarch:test-review e2e
 # /hf:testarch:nfr-assess performance
+# /hf:testarch:nfr-assess all
+# /hf:testarch:trace full
+# /hf:testarch:trace STORY-042
+# /hf:testarch:ci github
+# /hf:testarch:ci both
+
+# ─────────────────────────────────────────────
+# Ordre recommandé dans un projet
+# ─────────────────────────────────────────────
+# 1. framework  → Initialiser le stack de test
+# 2. test-design → Concevoir la stratégie
+# 3. atdd        → ATDD story par story (pendant le dev)
+# 4. automate    → Compléter la couverture
+# 5. test-review → Auditer la qualité
+# 6. nfr-assess  → Valider les NFR
+# 7. trace       → Vérifier la traçabilité complète
+# 8. ci          → Automatiser dans le pipeline

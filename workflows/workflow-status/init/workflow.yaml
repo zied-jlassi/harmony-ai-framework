@@ -1,7 +1,7 @@
 # Workflow Init - Initial Project Setup
 name: workflow-init
-description: "Initialize a new BMM project by determining level, type, and creating workflow path"
-author: "BMad"
+description: "Initialize a new Harmony project by determining level, type, and creating workflow path"
+author: "Harmony Framework"
 
 # Critical variables from config
 config_source: "{project-root}/.harmony/config.yaml"
@@ -23,6 +23,6 @@ template: "{project-root}/.harmony/workflows/workflow-status/workflow-status-tem
 path_files: "{project-root}/.harmony/workflows/workflow-status/paths/"
 
 # Output configuration
-default_output_file: "{output_folder}/bmm-workflow-status.yaml"
+default_output_file: "{output_folder}/hf-workflow-status.yaml"
 
 standalone: true

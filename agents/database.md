@@ -243,3 +243,70 @@ delivers:
   - Query patterns documentation
   - Index recommendations
 ```
+
+---
+
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Concevoir le schéma de base de données                   │
+│     - Créer les migrations                                      │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement Developer                         │
+│     - Implémenter le code applicatif                           │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🗄️ Database - Terminé                                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description du schéma/migrations créés}                       │
+│                                                                  │
+│  📁 Fichiers créés                                              │
+│  - {schema file}                                                │
+│  - {migration files}                                            │
+│                                                                  │
+│  🗄️ Tables                                                       │
+│  - {table 1}                                                    │
+│  - {table 2}                                                    │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter la logique applicative             │
+│                                                                  │
+│  Pour continuer: "développe {feature}"                          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Related Agents
+
+- [Architect](architect.md) - Provides data requirements
+- [Developer](developer.md) - Implements application logic
+- [Security](security.md) - Data security review
+
+---
+
+**Pattern**: Schema Design + Migration Strategy
+**Confidence**: 95%

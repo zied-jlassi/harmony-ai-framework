@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-user-preferences",
+  "title": "Harmony User Preferences",
+  "description": "Schema for user preferences in Harmony Framework",
+  "type": "object",
+  "required": ["version", "user"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "skill_level": { "type": "string", "enum": ["beginner", "intermediate", "advanced", "expert"] },
+        "communication_language": { "type": "string" },
+        "document_language": { "type": "string" }
+      }
+    },
+    "guardian": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["off", "warn", "strict"] },
+        "allowed_skip_phases": { "type": "boolean" }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "properties": {
+        "preferred_personas": { "type": "boolean" },
+        "verbose_output": { "type": "boolean" }
+      }
+    },
+    "learned_habits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trigger": { "type": "string" },
+          "action": { "type": "string" },
+          "frequency": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "shortcuts": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

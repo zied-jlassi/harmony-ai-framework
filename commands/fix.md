@@ -33,8 +33,8 @@ Found 5 issues, proposing 5 fixes:
 2. [BROKEN_REF] architect.md:145 → missing-file.md
    → Propose: Remove link (file doesn't exist)
 
-3. [DUPLICATE] dev.md ≈ bmm-dev.md (87% similar)
-   → Propose: Merge to bmm-dev.md, archive dev.md
+3. [DUPLICATE] dev.md ≈ hf-dev.md (87% similar)
+   → Propose: Merge to hf-dev.md, archive dev.md
 
 4. [MISSING] profiles/python/manifest.yaml
    → Propose: Create from template

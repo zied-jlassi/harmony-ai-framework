@@ -273,6 +273,7 @@ if [[ -f "$COMMANDS_DIR/agents.yaml" ]]; then
     # IMPLEMENTATION AGENTS (standard, full access)
     # ============================================================
     generate_agent_command "dev" "agents/developer.md" "Expert full-stack developer - TDD, Clean Architecture"
+    generate_agent_command "dev-quickwin" "agents/developer-quickwin.md" "Fast developer - quick implementations, prototypes, POCs"
     generate_agent_command "tester" "agents/tester.md" "QA engineer - test strategy, automation, coverage"
     generate_agent_command "docs" "agents/tech-writer.md" "Tech Writer - documentation, guides"
     generate_agent_command "quick-flow" "agents/quick-flow.md" "Quick flow mode - fast development, shortcuts"
@@ -307,6 +308,7 @@ if [[ -f "$COMMANDS_DIR/agents.yaml" ]]; then
     generate_agent_command "ucv" "agents/ucv.md" "UCV Coordinator - verification workflow" "orchestration"
     generate_agent_command "brainstorm" "specialties/creative/branchs/brainstorm-facilitator.md" "Brainstorm facilitator - ideation, creative sessions" "orchestration"
     generate_agent_command "analyst" "agents/analyst.md" "Business analyst - requirements, briefs, PRD" "orchestration"
+    generate_agent_command "analyst-mini" "agents/analyst-mini.md" "Lightweight analyst - quick clarification for unclear requests" "orchestration"
     generate_agent_command "pm" "agents/product-manager.md" "Product Manager - roadmap, priorities" "orchestration"
 
     # ============================================================
@@ -378,10 +380,14 @@ fi
 echo ""
 echo "=== Generating TestArch Commands ==="
 if [[ -f "$COMMANDS_DIR/testarch.yaml" ]]; then
-    generate_testarch_command "framework" "workflows/testarch/framework/workflow.yaml" "Initialize production-ready test framework architecture (Playwright or Cypress) with fixtures, helpers, and configuration"
-    generate_testarch_command "atdd" "workflows/testarch/atdd/workflow.yaml" "Generate failing acceptance tests before implementation using TDD red-green-refactor cycle"
-    generate_testarch_command "automate" "workflows/testarch/automate/workflow.yaml" "Expand test automation coverage after implementation or analyze existing codebase to generate comprehensive test suite"
-    generate_testarch_command "ci" "workflows/testarch/ci/workflow.yaml" "Scaffold CI/CD quality pipeline with test execution, burn-in loops, and artifact collection"
+    generate_testarch_command "framework" "workflows/testarch/framework/workflow.yaml" "Select and initialize test framework for the detected stack (Vitest, Jest, Playwright, Cypress, pytest, JUnit, go test)"
+    generate_testarch_command "atdd" "workflows/testarch/atdd/workflow.yaml" "Transform story acceptance criteria into failing tests — RED→GREEN→REFACTOR cycle (BDD, Gherkin)"
+    generate_testarch_command "test-design" "workflows/testarch/test-design/workflow.yaml" "Design test strategy and test cases — equivalence partitioning, boundary values, decision tables, state transition"
+    generate_testarch_command "automate" "workflows/testarch/automate/workflow.yaml" "Analyze code coverage (line/branch/function) and generate missing unit and integration tests"
+    generate_testarch_command "test-review" "workflows/testarch/test-review/workflow.yaml" "Audit test quality — detect ice cream cone, flaky tests, over-mocking, missing assertions, dead tests"
+    generate_testarch_command "nfr-assess" "workflows/testarch/nfr-assess/workflow.yaml" "Assess non-functional requirements: performance (k6/Gatling), security (OWASP/SAST/DAST), accessibility (WCAG 2.1/Axe)"
+    generate_testarch_command "trace" "workflows/testarch/trace/workflow.yaml" "Generate bidirectional traceability matrix requirements ↔ tests with configurable quality gate"
+    generate_testarch_command "ci" "workflows/testarch/ci/workflow.yaml" "Configure 4-layer CI/CD test pipeline for GitHub Actions and/or GitLab CI with Playwright sharding"
 fi
 
 # ============================================================
@@ -410,5 +416,5 @@ echo "  /harmony         - Interactive menu (30 commands)"
 echo "  /sentinel        - Error memory system"
 echo "  /hf:agent:*      - Agent commands (18 agents)"
 echo "  /hf:workflow:*   - Workflow commands (8 workflows)"
-echo "  /hf:testarch:*   - Test architecture commands (4 commands)"
+echo "  /hf:testarch:*   - Test architecture commands (8 commands)"
 echo "  /hf:diagram:*    - Diagram generation commands (4 commands)"

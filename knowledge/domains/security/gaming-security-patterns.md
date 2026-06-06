@@ -395,4 +395,4 @@ Avant chaque merge, vérifier:
 
 ---
 
-*Gaming Security Patterns - BMAD Gaming Platform*
+*Gaming Security Patterns - Harmony Gaming Platform*

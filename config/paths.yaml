@@ -18,10 +18,11 @@ framework:
 local:
   root: ".harmony/local"
 
-  # Backlog
+  # Backlog (nested structure: epics/EP-XXX-slug/stories/)
   backlog: ".harmony/local/backlog"
   epics: ".harmony/local/backlog/epics"
-  stories: ".harmony/local/backlog/stories"
+  # Stories are nested inside their epic folder:
+  # .harmony/local/backlog/epics/EP-XXX-slug/stories/
 
   # Documentation
   docs: ".harmony/local/docs"
@@ -32,12 +33,16 @@ local:
   briefs: ".harmony/local/docs/briefs"
   ucv: ".harmony/local/docs/ucv"
 
-# IDE memory (separate from .harmony)
+# Memory (ADR-010: user data in local/memory/)
 memory:
-  claude: ".claude/memory"
-  cursor: ".cursor/harmony-memory"
-  windsurf: ".windsurf/harmony-memory"
-  generic: ".harmony-local/memory"
+  root: ".harmony/local/memory"
+  templates: ".harmony/templates/memory"
+  workflow_state: ".harmony/local/memory/workflow-state.json"
+  circuit_breaker: ".harmony/local/memory/circuit-breaker.json"
+  error_journal: ".harmony/local/memory/error-journal.json"
+  learned_patterns: ".harmony/local/memory/learned-patterns.json"
+  user_preferences: ".harmony/local/memory/user-preferences.json"
+  working: ".harmony/local/memory/working.json"
 
 # Default epic when no context
 defaults:

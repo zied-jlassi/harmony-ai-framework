@@ -53,9 +53,9 @@ fi
 PROFILES_DIR="$FRAMEWORK_PROFILES"
 LOCAL_PROFILES_DIR="$LOCAL_OVERRIDES"
 
-# Memory directories
-CLAUDE_MEMORY_DIR="${PROJECT_DIR}/.claude/memory"
-WORKFLOW_STATE="${CLAUDE_MEMORY_DIR}/workflow-state.json"
+# Memory directories (ADR-010: user data in .harmony/local/memory/)
+HARMONY_MEMORY_DIR="${PROJECT_DIR}/.harmony/local/memory"
+WORKFLOW_STATE="${HARMONY_MEMORY_DIR}/workflow-state.json"
 
 # Defaults
 MAX_SECTIONS=2

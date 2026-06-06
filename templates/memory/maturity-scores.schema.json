@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-maturity-scores",
+  "title": "Harmony Agent Maturity Scores",
+  "description": "Schema for agent maturity level tracking (L1-L4)",
+  "type": "object",
+  "required": ["version", "agents"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "agents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "level": { "type": "integer", "minimum": 1, "maximum": 4 },
+          "capabilities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "tasks_completed": { "type": "integer", "minimum": 0 },
+          "self_corrections": { "type": "integer", "minimum": 0 },
+          "autonomous_decisions": { "type": "integer", "minimum": 0 },
+          "last_assessment": { "type": ["string", "null"], "format": "date-time" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "avg_maturity_level": { "type": "number" },
+        "total_assessments": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

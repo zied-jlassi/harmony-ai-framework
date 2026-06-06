@@ -36,8 +36,8 @@ if [[ -z "${HARMONY_DIR:-}" ]]; then
     HARMONY_DIR=".harmony"
 fi
 
-WORKING_MEMORY="${HARMONY_DIR}/memory/working.json"
-WORKING_TEMPLATE="${HARMONY_DIR}/memory/templates/working.template.json"
+WORKING_MEMORY="${HARMONY_DIR}/local/memory/working.json"
+WORKING_TEMPLATE="${HARMONY_DIR}/templates/memory/working.template.json"
 
 # Colors
 C_GREEN='\033[0;32m'
@@ -430,6 +430,165 @@ update_story_progress() {
 update_ucv_status() {
     local status="$1"  # PENDING, APPROVED, REJECTED
     set_working_value ".current_story.ucv_status" "\"$status\""
+}
+
+# -----------------------------------------------------------------------------
+# SUBTASK OPERATIONS (Harmony+ v1.1.0)
+# -----------------------------------------------------------------------------
+
+# Add a subtask to current story
+# Usage: add_subtask "subtask-1" "Create API endpoint" '["subtask-0"]' 1
+add_subtask() {
+    local subtask_id="$1"
+    local title="$2"
+    local depends_on="${3:-[]}"  # JSON array
+    local parallel_group="${4:-1}"
+    local now
+    now=$(date -Iseconds)
+
+    local story_id
+    story_id=$(get_working_value ".current_story.id")
+    if [[ "$story_id" == "null" || -z "$story_id" ]]; then
+        echo -e "${C_YELLOW}No story in progress${C_NC}" >&2
+        return 1
+    fi
+
+    # Initialize subtasks array if not exists
+    local has_subtasks
+    has_subtasks=$(jq -r '.current_story.subtasks // "null"' "$WORKING_MEMORY" 2>/dev/null)
+    if [[ "$has_subtasks" == "null" ]]; then
+        local tmp_file
+        tmp_file=$(mktemp)
+        jq '.current_story.subtasks = []' "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
+    fi
+
+    # Add subtask
+    local tmp_file
+    tmp_file=$(mktemp)
+    jq --arg id "$subtask_id" \
+       --arg title "$title" \
+       --argjson depends "$depends_on" \
+       --argjson pgroup "$parallel_group" \
+       --arg created "$now" \
+       '.current_story.subtasks += [{
+            id: $id,
+            title: $title,
+            status: "pending",
+            depends_on: $depends,
+            parallel_group: $pgroup,
+            created_at: $created,
+            completed_at: null
+        }]' "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
+
+    # Update task count
+    local total
+    total=$(jq '.current_story.subtasks | length' "$WORKING_MEMORY")
+    set_working_value ".current_story.tasks_total" "$total"
+
+    _update_timestamp
+    echo -e "${C_CYAN}Subtask added: $subtask_id - $title (group $parallel_group)${C_NC}"
+}
+
+# Complete a subtask
+# Usage: complete_subtask "subtask-1"
+complete_subtask() {
+    local subtask_id="$1"
+    local now
+    now=$(date -Iseconds)
+
+    local story_id
+    story_id=$(get_working_value ".current_story.id")
+    if [[ "$story_id" == "null" || -z "$story_id" ]]; then
+        echo -e "${C_YELLOW}No story in progress${C_NC}" >&2
+        return 1
+    fi
+
+    # Update subtask status
+    local tmp_file
+    tmp_file=$(mktemp)
+    jq --arg id "$subtask_id" \
+       --arg now "$now" \
+       '(.current_story.subtasks[] | select(.id == $id)) |= . + {
+            status: "completed",
+            completed_at: $now
+        }' "$WORKING_MEMORY" > "$tmp_file" && mv "$tmp_file" "$WORKING_MEMORY"
+
+    # Update completed count
+    local completed
+    completed=$(jq '[.current_story.subtasks[] | select(.status == "completed")] | length' "$WORKING_MEMORY")
+    set_working_value ".current_story.tasks_completed" "$completed"
+
+    _update_timestamp
+    echo -e "${C_GREEN}Subtask completed: $subtask_id${C_NC}"
+}
+
+# Get next pending subtask (respects dependencies)
+# Usage: subtask=$(get_next_subtask)
+get_next_subtask() {
+    local story_id
+    story_id=$(get_working_value ".current_story.id")
+    if [[ "$story_id" == "null" || -z "$story_id" ]]; then
+        return 1
+    fi
+
+    # Get completed subtask IDs
+    local completed_ids
+    completed_ids=$(jq -r '[.current_story.subtasks[] | select(.status == "completed") | .id]' "$WORKING_MEMORY")
+
+    # Find first pending subtask where all dependencies are completed
+    jq -r --argjson completed "$completed_ids" '
+        .current_story.subtasks[] |
+        select(.status == "pending") |
+        select((.depends_on | length == 0) or (.depends_on | all(. as $dep | $completed | index($dep)))) |
+        .id
+    ' "$WORKING_MEMORY" | head -1
+}
+
+# Check if subtask can run in parallel with others
+# Usage: can_run_parallel "subtask-1"
+can_run_parallel() {
+    local subtask_id="$1"
+
+    # Get the subtask's parallel group
+    local group
+    group=$(jq -r --arg id "$subtask_id" '.current_story.subtasks[] | select(.id == $id) | .parallel_group' "$WORKING_MEMORY")
+
+    # Check if there are other pending subtasks in the same group with satisfied deps
+    local count
+    count=$(jq -r --argjson group "$group" '
+        [.current_story.subtasks[] |
+         select(.status == "pending" and .parallel_group == $group)] |
+        length
+    ' "$WORKING_MEMORY")
+
+    [[ "$count" -gt 1 ]]
+}
+
+# Get all subtasks in a parallel group that can run
+# Usage: subtasks=$(get_parallel_subtasks 1)
+get_parallel_subtasks() {
+    local group="$1"
+
+    local completed_ids
+    completed_ids=$(jq -r '[.current_story.subtasks[] | select(.status == "completed") | .id]' "$WORKING_MEMORY")
+
+    jq -r --argjson group "$group" --argjson completed "$completed_ids" '
+        [.current_story.subtasks[] |
+         select(.status == "pending" and .parallel_group == $group) |
+         select((.depends_on | length == 0) or (.depends_on | all(. as $dep | $completed | index($dep))))] |
+        .[].id
+    ' "$WORKING_MEMORY"
+}
+
+# Get subtask status summary
+# Usage: get_subtask_summary
+get_subtask_summary() {
+    jq -r '
+        .current_story.subtasks // [] |
+        group_by(.status) |
+        map({key: .[0].status, count: length}) |
+        from_entries
+    ' "$WORKING_MEMORY"
 }
 
 # -----------------------------------------------------------------------------
@@ -886,7 +1045,7 @@ run_story_pipeline() {
                 echo ""
 
                 # Update workflow-state with ARIA context
-                if [[ -f "${HARMONY_DIR}/memory/workflow-state.json" ]]; then
+                if [[ -f "${HARMONY_DIR}/local/memory/workflow-state.json" ]]; then
                     local tmp_file
                     tmp_file=$(mktemp)
                     local aria_ts
@@ -905,8 +1064,8 @@ run_story_pipeline() {
                         .aria_context.triggered_agents = $triggers |
                         .aria_context.is_blocking = $blocking |
                         .aria_context.source = "pattern"' \
-                       "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
-                       mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json"
+                       "${HARMONY_DIR}/local/memory/workflow-state.json" > "$tmp_file" && \
+                       mv "$tmp_file" "${HARMONY_DIR}/local/memory/workflow-state.json"
                 fi
             fi
         fi
@@ -1011,8 +1170,8 @@ run_story_pipeline() {
         tmp_file=$(mktemp)
         jq --arg agent "$agent_name" \
            '.active_context.active_agent = $agent' \
-           "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
-           mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json" || {
+           "${HARMONY_DIR}/local/memory/workflow-state.json" > "$tmp_file" && \
+           mv "$tmp_file" "${HARMONY_DIR}/local/memory/workflow-state.json" || {
             echo -e "${C_RED}Failed to update workflow state${C_NC}" >&2
             return 1
         }
@@ -1055,9 +1214,9 @@ run_story_pipeline() {
         local completion_status=""
 
         # Try to get test completion signal from environment or test file
-        if [[ -f "${HARMONY_DIR}/memory/.test_completion_${story_id}_${agent_name}" ]]; then
-            agent_output=$(cat "${HARMONY_DIR}/memory/.test_completion_${story_id}_${agent_name}")
-            rm -f "${HARMONY_DIR}/memory/.test_completion_${story_id}_${agent_name}"
+        if [[ -f "${HARMONY_DIR}/local/memory/.test_completion_${story_id}_${agent_name}" ]]; then
+            agent_output=$(cat "${HARMONY_DIR}/local/memory/.test_completion_${story_id}_${agent_name}")
+            rm -f "${HARMONY_DIR}/local/memory/.test_completion_${story_id}_${agent_name}"
         else
             # Default completion signal for testing (simulates successful agent output)
             case "$agent_name" in
@@ -1112,8 +1271,8 @@ run_story_pipeline() {
     local tmp_file
     tmp_file=$(mktemp)
     jq '.active_context.active_agent = null' \
-       "${HARMONY_DIR}/memory/workflow-state.json" > "$tmp_file" && \
-       mv "$tmp_file" "${HARMONY_DIR}/memory/workflow-state.json"
+       "${HARMONY_DIR}/local/memory/workflow-state.json" > "$tmp_file" && \
+       mv "$tmp_file" "${HARMONY_DIR}/local/memory/workflow-state.json"
 
     echo -e "  ${C_GREEN}✅ Story marked DONE${C_NC}"
 
@@ -1136,7 +1295,7 @@ get_pipeline_status() {
             status: .current_story.status,
             active_agent: .active_context.active_agent,
             phase: .phase.current
-        }' "${HARMONY_DIR}/memory/workflow-state.json" 2>/dev/null || echo "null"
+        }' "${HARMONY_DIR}/local/memory/workflow-state.json" 2>/dev/null || echo "null"
         return
     fi
 
@@ -1145,7 +1304,7 @@ get_pipeline_status() {
     story_status=$(jq -r ".current_story.status // \"NOT_FOUND\"" "$WORKING_MEMORY" 2>/dev/null)
 
     local active_agent
-    active_agent=$(jq -r ".active_context.active_agent // \"none\"" "${HARMONY_DIR}/memory/workflow-state.json" 2>/dev/null)
+    active_agent=$(jq -r ".active_context.active_agent // \"none\"" "${HARMONY_DIR}/local/memory/workflow-state.json" 2>/dev/null)
 
     echo -e "Story: ${C_YELLOW}$story_id${C_NC}"
     echo -e "Status: ${C_YELLOW}$story_status${C_NC}"
@@ -1171,7 +1330,7 @@ check_jq_available() {
 # Requires: jq for JSON manipulation
 init_story_circuit_breaker() {
     local story_id="${1:-}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ -z "$story_id" ]]; then
         return 1
@@ -1218,7 +1377,7 @@ init_story_circuit_breaker() {
 check_story_circuit_breaker() {
     local story_id="${1:-}"
     local phase="${2:-}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ -z "$story_id" ]]; then
         return 0  # No circuit check if no story
@@ -1277,7 +1436,7 @@ check_story_circuit_breaker() {
 record_story_failure() {
     local story_id="${1:-}"
     local phase="${2:-developer}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ -z "$story_id" ]]; then
         return 1
@@ -1350,7 +1509,7 @@ record_story_failure() {
 record_story_success() {
     local story_id="${1:-}"
     local phase="${2:-developer}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ -z "$story_id" ]]; then
         return 1
@@ -1404,10 +1563,9 @@ on_circuit_breaker_open() {
     local story_id="${1:-}"
     local phase="${2:-unknown}"
     local last_error="${3:-No error details captured}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
-    # Error journal is in project root .claude/memory/, not in .harmony/
-    local project_root="${HARMONY_DIR%/.harmony}"
-    local error_journal="${project_root}/.claude/memory/error-journal.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
+    # ADR-010: Memory centralized in .harmony/memory/
+    local error_journal="${HARMONY_DIR}/local/memory/error-journal.json"
 
     if [[ -z "$story_id" ]]; then
         return 1
@@ -1617,7 +1775,7 @@ get_sprint_health() {
 reset_circuit_breaker() {
     local story_id="${1:-}"
     local reason="${2:-Manual reset}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ ! -f "$circuit_breaker_file" ]]; then
         echo -e "${C_YELLOW}⚠️ Circuit breaker file not found${C_NC}" >&2
@@ -1720,7 +1878,7 @@ detect_story_completion() {
 # Tracks cumulative API calls across all stories
 # Requires: jq for JSON manipulation
 check_api_budget() {
-    local working_memory="${HARMONY_DIR}/memory/working.json"
+    local working_memory="${HARMONY_DIR}/local/memory/working.json"
 
     if [[ ! -f "$working_memory" ]]; then
         return 0  # No budget check if file missing
@@ -1768,7 +1926,7 @@ log_phase_execution() {
     local phase="${2:-}"
     local status="${3:-started}"  # started, completed, failed
 
-    local working_memory="${HARMONY_DIR}/memory/working.json"
+    local working_memory="${HARMONY_DIR}/local/memory/working.json"
 
     if [[ ! -f "$working_memory" ]]; then
         return 1
@@ -1809,7 +1967,7 @@ log_phase_execution() {
 # Shows visual status of circuit breaker state for stories and global
 show_circuit_status() {
     local story_id="${1:-}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ ! -f "$circuit_breaker_file" ]]; then
         echo -e "${C_YELLOW}⚠️  Circuit breaker file not found${C_NC}"
@@ -2035,7 +2193,7 @@ analyze_response_confidence() {
     fi
 
     # 7. Check output length trend
-    local last_length_file="${HARMONY_DIR}/memory/.last_output_length"
+    local last_length_file="${HARMONY_DIR}/local/memory/.last_output_length"
     if [[ -f "$last_length_file" ]]; then
         local last_length
         last_length=$(cat "$last_length_file")
@@ -2080,7 +2238,7 @@ EOF
 transition_to_half_open() {
     local story_id="${1:-}"
     local reason="${2:-Monitoring for recovery}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ ! -f "$circuit_breaker_file" ]]; then
         return 1
@@ -2130,7 +2288,7 @@ transition_to_half_open() {
 # Shows status and returns 0 if should halt, 1 if can continue
 should_halt_execution() {
     local story_id="${1:-}"
-    local circuit_breaker_file="${HARMONY_DIR}/memory/circuit-breaker.json"
+    local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 
     if [[ ! -f "$circuit_breaker_file" ]]; then
         return 1  # Can continue if no file

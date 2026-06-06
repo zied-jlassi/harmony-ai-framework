@@ -1,8 +1,8 @@
-# BMad Enterprise Method - Brownfield
+# Harmony Enterprise Method - Brownfield
 # Extended enterprise planning for complex brownfield with security/devops/test (30+ stories typically)
 
-method_name: "BMad Enterprise Method"
-track: "enterprise-bmad-method"
+method_name: "Harmony Enterprise Method"
+track: "enterprise-harmony-method"
 field_type: "brownfield"
 description: "Enterprise-grade planning for complex brownfield additions with extended requirements"
 

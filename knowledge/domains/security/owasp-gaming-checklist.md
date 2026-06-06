@@ -340,4 +340,4 @@ security-audit:
 
 ---
 
-*OWASP Gaming Checklist - BMAD Gaming Platform*
+*OWASP Gaming Checklist - Harmony Gaming Platform*

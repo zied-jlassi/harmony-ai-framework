@@ -1,6 +1,6 @@
 # Dangerous Patterns Detection
 
-> Module de l'agent `/bmad:security`
+> Module de l'agent `/hf-agent-security`
 > **Source**: Audit CIS Benchmark
 > **Commandes**: `audit-patterns`, `audit-code`
 

@@ -1,6 +1,7 @@
 {
-  "ide": "claude-code",
-  "memory_dir": "./.claude/memory",
-  "ide_config_dir": "./.claude",
-  "core_dir": "./.harmony"
+  "ide": "auto",
+  "memory_dir": ".harmony/local/memory",
+  "template_dir": ".harmony/templates/memory",
+  "ide_config_dir": ".claude",
+  "core_dir": ".harmony"
 }

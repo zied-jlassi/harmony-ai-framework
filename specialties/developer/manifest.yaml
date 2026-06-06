@@ -17,6 +17,9 @@ branchs:
     description: "Software developer - Desktop, CLI, libraries"
     condition: "default"
     knowledge:
+      # Methodologies (Harmony+ v1.1.0)
+      - ../../knowledge/methodologies/implementation-methodology.md
+      # Languages
       - ../../knowledge/languages/typescript/typescript-advanced-types.md
       - ../../knowledge/languages/javascript/modern-javascript-patterns.md
       - ../../knowledge/languages/python/async-python-patterns.md
@@ -38,6 +41,8 @@ branchs:
     description: "Web developer - Frontend, backend, fullstack"
     condition: "feature_flags.is_web == true"
     knowledge:
+      # Methodologies (Harmony+ v1.1.0)
+      - ../../knowledge/methodologies/implementation-methodology.md
       # Frontend
       - ../../knowledge/frameworks/react/architecture.md
       - ../../knowledge/frameworks/react/patterns.md
@@ -85,6 +90,9 @@ branchs:
     description: "Mobile developer - iOS, Android, React Native, Expo, Flutter, cross-platform"
     condition: "feature_flags.is_mobile == true"
     knowledge:
+      # Methodologies (Harmony+ v1.1.0)
+      - ../../knowledge/methodologies/implementation-methodology.md
+      # Mobile
       - ../../knowledge/frameworks/react/react-native-architecture.md
       - ../../knowledge/languages/typescript/typescript-advanced-types.md
       - ../../knowledge/languages/javascript/async.md

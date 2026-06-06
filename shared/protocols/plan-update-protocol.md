@@ -317,4 +317,4 @@ Pour updates majeurs, utiliser le template complet.
 ---
 
 **Derniere mise a jour**: 2025-12-26
-**Auteur**: BMAD Framework Team
+**Auteur**: Harmony Framework Team

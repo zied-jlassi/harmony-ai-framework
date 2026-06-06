@@ -1073,6 +1073,66 @@ export default defineConfig({
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Exécuter les tests demandés                               │
+│     - Marquer les UCVs comme TEST validés                       │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement UCV Validator                     │
+│     - Enchaîner vers Exploratory QA                             │
+│     - Corriger le code (c'est Developer)                        │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+**TOUJOURS afficher ce template à la fin des tests:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🧪 Tester - Terminé                                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description des tests exécutés}                               │
+│                                                                  │
+│  📊 Résultats                                                    │
+│  - Tests passés: {nb}                                           │
+│  - Tests échoués: {nb}                                          │
+│  - Coverage: {%}                                                │
+│                                                                  │
+│  ✅ UCVs marqués TEST                                            │
+│  - V-XXX-1: {description}                                       │
+│  - V-XXX-2: {description}                                       │
+│                                                                  │
+│  🎯 Status                                                       │
+│  {PASS/FAIL - détails si échec}                                 │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **{Exploratory QA ou UCV Validator}** - {raison}               │
+│                                                                  │
+│  Pour continuer: "{prompt suggéré}"                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Related Agents
 
 - [Developer](developer.md) - Provides code to test

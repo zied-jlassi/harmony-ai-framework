@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-circuit-breaker",
+  "title": "Harmony Circuit Breaker",
+  "description": "Schema for circuit breaker state in Harmony Framework",
+  "type": "object",
+  "required": ["version", "state", "consecutive_failures", "max_failures"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "state": {
+      "type": "string",
+      "enum": ["CLOSED", "OPEN", "HALF_OPEN"],
+      "description": "Circuit breaker state"
+    },
+    "consecutive_failures": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of consecutive failures"
+    },
+    "max_failures": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum failures before opening circuit"
+    },
+    "last_failure": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of last failure"
+    },
+    "last_success": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of last success"
+    },
+    "cooldown_minutes": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Minutes to wait before half-open"
+    },
+    "auto_reset": {
+      "type": "boolean",
+      "description": "Whether to auto-reset after cooldown"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "event": { "type": "string", "enum": ["success", "failure", "open", "half_open", "close", "reset"] },
+          "details": { "type": "string" }
+        },
+        "required": ["timestamp", "event"]
+      }
+    }
+  }
+}

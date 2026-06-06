@@ -324,7 +324,7 @@
     </check>
 
     <action>Report completion</action>
-    <output>**🎯 ULTIMATE BMad Method STORY CONTEXT CREATED, {user_name}!**
+    <output>**🎯 ULTIMATE Harmony Method STORY CONTEXT CREATED, {user_name}!**
 
       **Story Details:**
       - Story ID: {{story_id}}

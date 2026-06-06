@@ -49,9 +49,12 @@ branchs:
     knowledge:
       - ../../knowledge/shared/patterns/dor-dod.md
       - ../../knowledge/domains/quality/e2e-testing-patterns.md
+      - ../../knowledge/domains/quality/traceability-patterns.md
     profiles: []
     patterns:
       - P-008-ucv-gate
+    templates:
+      - ../../knowledge/templates/quality/traceability-matrix.md
 
 # Global knowledge (all branches)
 knowledge:

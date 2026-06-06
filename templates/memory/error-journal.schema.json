@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-error-journal",
+  "title": "Harmony Error Journal",
+  "description": "Schema for error tracking and pattern learning in Harmony Framework",
+  "type": "object",
+  "required": ["version", "errors"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "type": { "type": "string" },
+          "message": { "type": "string" },
+          "context": {
+            "type": "object",
+            "properties": {
+              "story_id": { "type": ["string", "null"] },
+              "agent": { "type": ["string", "null"] },
+              "phase": { "type": ["integer", "null"] },
+              "file": { "type": ["string", "null"] },
+              "line": { "type": ["integer", "null"] }
+            }
+          },
+          "resolved": { "type": "boolean" },
+          "resolution": { "type": ["string", "null"] },
+          "pattern_id": { "type": ["string", "null"] }
+        },
+        "required": ["id", "timestamp", "type", "message"]
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "error_signature": { "type": "string" },
+          "solution": { "type": "string" },
+          "occurrences": { "type": "integer", "minimum": 0 },
+          "last_seen": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "name", "error_signature"]
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_errors": { "type": "integer", "minimum": 0 },
+        "resolved_errors": { "type": "integer", "minimum": 0 },
+        "patterns_extracted": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

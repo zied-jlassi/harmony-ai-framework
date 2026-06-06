@@ -1,7 +1,7 @@
 # Full Project Scan Workflow Configuration
 name: "document-project-full-scan"
 description: "Complete project documentation workflow (initial scan or full rescan)"
-author: "BMad"
+author: "Harmony Framework"
 
 # This is a sub-workflow called by document-project/workflow.yaml
 parent_workflow: "{project-root}/.harmony/workflows/document-project/workflow.yaml"

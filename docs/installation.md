@@ -40,6 +40,12 @@ sudo dnf install -y jq yq
 sudo pacman -S jq yq
 ```
 
+**Windows (WSL2 recommended):**
+```bash
+# In WSL2 Ubuntu:
+sudo apt update && sudo apt install -y jq yq
+```
+
 ### Verify Installation
 
 ```bash
@@ -468,5 +474,5 @@ npx harmony memory reset
 
 - [Getting Started](getting-started.md) - Your first workflow
 - [Core Concepts](concepts.md) - Understand Harmony's architecture
-- [Agents Guide](agents/README.md) - Configure agents
+- [Agents Guide](../agents/INDEX.md) - Configure agents
 

@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-session-tracker",
+  "title": "Harmony Session Tracker",
+  "description": "Schema for session tracking in Harmony Framework (compacting warnings)",
+  "type": "object",
+  "required": ["session_start", "message_count"],
+  "properties": {
+    "session_start": {
+      "type": "integer",
+      "description": "Unix timestamp when session started"
+    },
+    "message_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of messages in current session"
+    },
+    "analysis_mode": {
+      "type": "boolean",
+      "description": "Whether session is in analysis mode"
+    },
+    "analysis_topics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Topics being analyzed"
+    },
+    "analysis_session_id": {
+      "type": ["string", "null"],
+      "description": "ID of current analysis session"
+    },
+    "last_warning": {
+      "type": "integer",
+      "description": "Timestamp of last compacting warning"
+    },
+    "last_auto_save": {
+      "type": "integer",
+      "description": "Timestamp of last auto-save"
+    },
+    "warnings_shown": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of warnings shown in session"
+    },
+    "auto_save_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of auto-saves performed"
+    }
+  }
+}

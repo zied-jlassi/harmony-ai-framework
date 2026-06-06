@@ -442,11 +442,11 @@ SLIDE 5: RÈGLES CRITIQUES
 SLIDE 6: RESSOURCES
 ─────────────────────────────────────
 📚 Documentation:
-├── /docs/architecture/
-├── /docs/games/
+├── /${HARMONY_DIR}/local/docs/architecture/
+├── /${HARMONY_DIR}/local/docs/games/
 └── /.harmony/patterns/
 
-🤖 Agents BMAD:
+🤖 Agents Harmony:
 ├── DEV Agent - Implémentation
 ├── TEA Agent - Tests
 └── Architect - Design decisions
@@ -506,7 +506,7 @@ curl http://localhost:3001/health  # Should return 200
 ## 📚 Lectures Obligatoires
 
 1. `/.harmony/patterns/architecture-patterns.md`
-2. `/docs/games/prd/game-design.md`
+2. `/${HARMONY_DIR}/local/docs/games/prd/game-design.md`
 3. `/CLAUDE.md` (instructions projet)
 
 ## ✅ Checklist Jour 1

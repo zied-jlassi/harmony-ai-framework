@@ -91,7 +91,7 @@ find_pending_sessions() {
     done
 
     # Also check session-tracker.json from compacting-warning
-    local session_file="$HARMONY_DIR/memory/session-tracker.json"
+    local session_file="$HARMONY_DIR/local/memory/session-tracker.json"
     if [[ -f "$session_file" ]]; then
         local analysis_mode=$(jq -r '.analysis_mode // false' "$session_file" 2>/dev/null)
         local session_id=$(jq -r '.analysis_session_id // empty' "$session_file" 2>/dev/null)

@@ -671,10 +671,10 @@ MONITORING:
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Bottleneck trouvé | `.harmony/memory/perf-issues.json` | "⚡ Bottleneck: {component}" |
-| Optimization appliquée | `.harmony/memory/perf-fixes.json` | "✅ Fix: {description}" |
-| Baseline établie | `.harmony/memory/perf-baselines.json` | "📊 Baseline: {endpoint}" |
-| Regression détectée | `.harmony/memory/perf-regressions.json` | "⚠️ Regression: {component}" |
+| Bottleneck trouvé | `${HARMONY_DIR}/memory/perf-issues.json` | "⚡ Bottleneck: {component}" |
+| Optimization appliquée | `${HARMONY_DIR}/memory/perf-fixes.json` | "✅ Fix: {description}" |
+| Baseline établie | `${HARMONY_DIR}/memory/perf-baselines.json` | "📊 Baseline: {endpoint}" |
+| Regression détectée | `${HARMONY_DIR}/memory/perf-regressions.json` | "⚠️ Regression: {component}" |
 
 ### Plan Update Protocol
 

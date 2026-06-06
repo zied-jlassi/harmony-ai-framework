@@ -15,7 +15,7 @@
 | **Docs** | `framework/docs/**/*.md` | ADRs, design docs |
 | **Hooks** | `framework/hooks/*.sh` | Executable, syntax |
 | **Integrations** | `framework/integrations/*/templates/` | Per-IDE templates |
-| **Memory** | `framework/memory/templates/*.json` | Schema templates |
+| **Memory** | `framework/templates/memory/*.json` | Schema templates |
 | **Patterns** | `framework/patterns/*.md` | Structure, references |
 | **Profiles** | `framework/profiles/*/*/` | Manifest, knowledge |
 | **Rules** | `framework/rules/*.yaml` | Schema, IDs |
@@ -30,7 +30,7 @@
 | Category | Installed Path | Validation |
 |----------|----------------|------------|
 | **Config** | `.harmony/config/*.yaml` | Valid YAML, coherence |
-| **Memory** | `.claude/memory/*.json` | Schema, state |
+| **Memory** | `.harmony/local/memory/*.json` | Schema, state |
 | **Commands** | `.claude/commands/*.md` | /harmony present |
 | **Hooks** | `.claude/hooks/*.sh` | Executable |
 | **CLAUDE.md** | `CLAUDE.md` | References valid |
@@ -65,7 +65,7 @@
 ║   INSTALLED PROJECT                                                           ║
 ║   ─────────────────                                                           ║
 ║   .harmony/config    3/3      ✅ Valid                                        ║
-║   .claude/memory     4/4      ✅ Valid                                        ║
+║   .harmony/local/memory 18/18  ✅ Valid                                        ║
 ║   .claude/commands   1/1      ✅ /harmony present                             ║
 ║   .claude/hooks      2/2      ✅ Executable                                   ║
 ║   CLAUDE.md          1/1      ✅ References valid                             ║

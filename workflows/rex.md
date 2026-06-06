@@ -281,7 +281,7 @@ triggers:
 7. Action items (with owners)
 8. Follow-up plan
 
-**Storage:** `docs/rex/REX-YYYY-MM-DD.md`
+**Storage:** `${HARMONY_DIR}/local/docs/rex/REX-YYYY-MM-DD.md`
 
 ---
 
@@ -325,7 +325,7 @@ Patterns extracted during REX become available for:
 
 | Output | Location | Status |
 |--------|----------|--------|
-| REX Document | `docs/rex/REX-YYYY-MM-DD.md` | Required |
+| REX Document | `${HARMONY_DIR}/local/docs/rex/REX-YYYY-MM-DD.md` | Required |
 | Action Items | In REX document | Required |
 | Patterns | `memory/learned-patterns.json` | Required |
 | Metrics | In REX document | Required |

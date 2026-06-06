@@ -1,0 +1,31 @@
+{
+  "thresholds": {
+    "confident": 85,
+    "uncertain": 60,
+    "low": 40
+  },
+  "review_threshold": 40,
+  "auto_escalate": true,
+  "escalation_notify": true,
+  "scoring_weights": {
+    "context_completeness": 25,
+    "pattern_match": 25,
+    "history_accuracy": 25,
+    "complexity_assessment": 25
+  },
+  "calibration": {
+    "enabled": true,
+    "min_samples": 10,
+    "recalibrate_interval": 50
+  },
+  "high_risk_domains": [
+    "security",
+    "authentication",
+    "payment",
+    "database",
+    "production",
+    "deployment"
+  ],
+  "low_risk_boost": 10,
+  "high_risk_penalty": 15
+}

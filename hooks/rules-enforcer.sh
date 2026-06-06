@@ -35,7 +35,7 @@ set -euo pipefail
 # -----------------------------------------------------------------------------
 
 readonly HARMONY_DIR="${HARMONY_DIR:-.harmony}"
-readonly LOG_FILE="${HARMONY_DIR}/memory/.security.log"
+readonly LOG_FILE="${HARMONY_DIR}/local/memory/.security.log"
 readonly DEBUG="${HARMONY_HOOK_DEBUG:-0}"
 
 # Paramètres d'entrée Claude Code

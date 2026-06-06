@@ -18,7 +18,7 @@ set -euo pipefail
 
 # Configuration
 HARMONY_DIR="${HARMONY_DIR:-.harmony}"
-SESSION_FILE="${HARMONY_DIR}/memory/session-tracker.json"
+SESSION_FILE="${HARMONY_DIR}/local/memory/session-tracker.json"
 ANALYSIS_DIR="${HARMONY_DIR}/local/tmp/sessions"  # Project-specific
 WARNING_THRESHOLD_MESSAGES=50
 WARNING_THRESHOLD_MINUTES=45

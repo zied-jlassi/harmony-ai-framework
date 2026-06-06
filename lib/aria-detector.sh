@@ -94,6 +94,21 @@ ARIA_UI_PATTERNS=(
 
     # Priority 2: Performance critical
     ["performance_critical"]="performance|optimization|optimisation|benchmark|latency|latence|cache|caching|speed|vitesse|slow|lent|bottleneck|goulot|profiling|memory|mémoire"
+
+    # Priority 2: Testing patterns
+    ["needs_test_setup"]="playwright|cypress|jest|vitest|mocha|test.setup|test.framework|e2e.setup|configurer.tests|setup.tests"
+
+    # Priority 2: TDD/ATDD patterns
+    ["needs_tdd"]="tdd|test.driven|red.green|refactor|test.first|atdd|bdd|acceptance.test|test.avant|tests.d.abord"
+
+    # Priority 2: CI/CD Pipeline for tests
+    ["needs_ci_tests"]="ci.test|pipeline.test|github.actions.test|gitlab.ci.test|continuous.testing|test.automation|automatiser.tests"
+
+    # Priority 2: Coverage and traceability
+    ["needs_coverage"]="coverage|couverture|traceability|traçabilité|requirements.mapping|matrice.couverture|test.coverage"
+
+    # Priority 2: NFR Assessment
+    ["needs_nfr_audit"]="nfr|non.functional|audit.performance|audit.security|quality.gate|release.readiness|pre.release"
 )
 
 # =============================================================================
@@ -149,6 +164,13 @@ ARIA_FLAG_AGENTS=(
     ["is_web"]="developer-web,designer-web"
     ["is_api"]="developer-software,architect-software"
     ["is_cli"]="developer-software"
+
+    # Testing triggers
+    ["needs_test_setup"]="tester-web,tester-software"
+    ["needs_tdd"]="tester-software,developer"
+    ["needs_ci_tests"]="devops,tester"
+    ["needs_coverage"]="ucv-validator,tester"
+    ["needs_nfr_audit"]="performance,security,tester"
 )
 
 # Flag priorities (0 = BLOCKING, 1-3 = WARNING levels)
@@ -442,6 +464,80 @@ aria_get_warning_message() {
     done
 
     printf '%s\n' "${messages[@]}"
+}
+
+# =============================================================================
+# COMPLEXITY LEVEL FUNCTIONS (Harmony+ v1.1.0)
+# =============================================================================
+# Aggregate detected flags into complexity level for pipeline depth adjustment
+
+aria_get_complexity_level() {
+    local flags_json="${1:-[]}"
+
+    # Handle empty or invalid input
+    if [[ -z "$flags_json" ]] || [[ "$flags_json" == "null" ]]; then
+        echo "SIMPLE"
+        return 0
+    fi
+
+    # Count blocking flags (priority 0 - require special handling)
+    local blocking
+    blocking=$(echo "$flags_json" | jq '[.[] | select(
+        . == "has_minors" or
+        . == "security_critical" or
+        . == "legal_compliance"
+    )] | length' 2>/dev/null || echo "0")
+
+    # Count total flags
+    local total
+    total=$(echo "$flags_json" | jq 'length' 2>/dev/null || echo "0")
+
+    # Determine complexity level
+    if [[ "$blocking" -gt 0 ]] || [[ "$total" -gt 5 ]]; then
+        echo "COMPLEX"
+    elif [[ "$total" -gt 2 ]]; then
+        echo "STANDARD"
+    else
+        echo "SIMPLE"
+    fi
+}
+
+aria_get_pipeline_depth() {
+    local complexity="${1:-SIMPLE}"
+
+    case "$complexity" in
+        SIMPLE)
+            echo "CONTEXT,IMPLEMENT"
+            ;;
+        STANDARD)
+            echo "CONTEXT,SPEC,IMPLEMENT,VALIDATE"
+            ;;
+        COMPLEX)
+            echo "DISCOVERY,REQUIREMENTS,CONTEXT,SPEC,PLANNING,IMPLEMENT,CRITIQUE,VALIDATE"
+            ;;
+        *)
+            echo "CONTEXT,IMPLEMENT"
+            ;;
+    esac
+}
+
+aria_get_complexity_config() {
+    local complexity="${1:-SIMPLE}"
+
+    case "$complexity" in
+        SIMPLE)
+            echo '{"phases":["CONTEXT","IMPLEMENT"],"critique":false,"full_ucv":false}'
+            ;;
+        STANDARD)
+            echo '{"phases":["CONTEXT","SPEC","IMPLEMENT","VALIDATE"],"critique":"light","full_ucv":true}'
+            ;;
+        COMPLEX)
+            echo '{"phases":["DISCOVERY","REQUIREMENTS","CONTEXT","SPEC","PLANNING","IMPLEMENT","CRITIQUE","VALIDATE"],"critique":"full","full_ucv":true}'
+            ;;
+        *)
+            echo '{"phases":["CONTEXT","IMPLEMENT"],"critique":false,"full_ucv":false}'
+            ;;
+    esac
 }
 
 # =============================================================================

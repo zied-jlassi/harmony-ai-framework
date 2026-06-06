@@ -1,6 +1,6 @@
 {
   "name": "harmony-ai-framework",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
@@ -58,6 +58,8 @@
     "workflows/",
     "harmony.manifest.json",
     "checksums.sha256",
+    "INSTRUCTIONS.md",
+    "AGENTS.md",
     "README.md",
     "LICENSE"
   ],

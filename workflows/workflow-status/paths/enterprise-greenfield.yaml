@@ -1,8 +1,8 @@
-# BMad Enterprise Method - Greenfield
+# Harmony Enterprise Method - Greenfield
 # Extended enterprise planning with security/devops/test for greenfield (30+ stories typically)
 
-method_name: "Enterprise BMad Method"
-track: "enterprise-bmad-method"
+method_name: "Enterprise Harmony Method"
+track: "enterprise-harmony-method"
 field_type: "greenfield"
 description: "Complete enterprise-grade planning with security, devops, and test strategy"
 

@@ -1,7 +1,7 @@
 # Quick-Flow: Quick-Dev
 name: quick-dev
 description: "Flexible development - execute tech-specs OR direct instructions with optional planning."
-author: "BMad"
+author: "Harmony Framework"
 
 # Config
 config_source: "{project-root}/.harmony/config.yaml"
@@ -16,12 +16,12 @@ date: system-generated
 project_context: "**/project-context.md"
 
 # Workflow components
-installed_path: "{project-root}/.harmony/workflows/bmad-quick-flow/quick-dev"
+installed_path: "{project-root}/.harmony/workflows/harmony-quick-flow/quick-dev"
 instructions: "{installed_path}/instructions.md"
 checklist: "{installed_path}/checklist.md"
 
 # Related workflows
-create_tech_spec_workflow: "{project-root}/.harmony/workflows/bmad-quick-flow/create-tech-spec/workflow.yaml"
+create_tech_spec_workflow: "{project-root}/.harmony/workflows/harmony-quick-flow/create-tech-spec/workflow.yaml"
 party_mode_exec: "{project-root}/.harmony/core/workflows/party-mode/workflow.md"
 advanced_elicitation: "{project-root}/.harmony/core/tasks/advanced-elicitation.xml"
 

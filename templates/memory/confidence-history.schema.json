@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-confidence-history",
+  "title": "Harmony Confidence History",
+  "description": "Schema for confidence scoring history (human-in-the-loop triggers)",
+  "type": "object",
+  "required": ["version", "decisions"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "agent": { "type": "string" },
+          "context": { "type": "string" },
+          "decision": { "type": "string" },
+          "confidence_score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "confidence_level": { "type": "string", "enum": ["high", "medium", "low", "very_low"] },
+          "factors": {
+            "type": "object",
+            "properties": {
+              "context_clarity": { "type": "number" },
+              "task_complexity": { "type": "number" },
+              "precedent_match": { "type": "number" },
+              "data_quality": { "type": "number" }
+            }
+          },
+          "escalated": { "type": "boolean" },
+          "human_override": { "type": ["string", "null"] },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "confidence_score", "timestamp"]
+      }
+    },
+    "escalations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "decision_id": { "type": "string" },
+          "reason": { "type": "string" },
+          "escalated_at": { "type": "string", "format": "date-time" },
+          "resolved": { "type": "boolean" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_decisions": { "type": "integer", "minimum": 0 },
+        "avg_confidence": { "type": "number" },
+        "escalation_rate": { "type": "number" },
+        "human_overrides": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

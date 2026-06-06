@@ -67,6 +67,55 @@ category: core
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Créer les narratives et dialogues                         │
+│     - Documenter le lore et les personnages                     │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Implémenter le code (c'est Developer)                     │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 📖 Narrative Designer - Terminé                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description du narrative créé}                                │
+│                                                                  │
+│  📁 Fichiers créés                                              │
+│  - {story bible}                                                │
+│  - {character sheets}                                           │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter les dialogues                      │
+│                                                                  │
+│  Pour continuer: "développe {quest/dialogue}"                   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## When to Invoke
 
 - Story and narrative planning
@@ -74,3 +123,8 @@ category: core
 - World-building and lore creation
 - Quest and mission design
 - Character development
+
+---
+
+**Pattern**: Narrative Design
+**Confidence**: 95%

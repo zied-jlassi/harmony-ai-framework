@@ -12,7 +12,7 @@
 |-----------|-----------|
 | Levenshtein distance | < 3 |
 | Same base name | Different extensions |
-| Different prefixes/suffixes | dev.md vs bmm-dev.md |
+| Different prefixes/suffixes | dev.md vs hf-dev.md |
 
 ### Phase 2: Similar Content
 
@@ -37,7 +37,7 @@ Phase 2: Comparing content...
 
 | Fichier 1 | Fichier 2 | Type | Checksum Match | Diff Lines |
 |-----------|-----------|------|----------------|------------|
-| dev.md | bmm-dev.md | PARTIAL | NO | 45 lines |
+| dev.md | hf-dev.md | PARTIAL | NO | 45 lines |
 | sm.md | scrum-master.md | EXACT | YES | 0 lines |
 | qa.md | exploratory-qa.md | PARTIAL | NO | 120 lines |
 

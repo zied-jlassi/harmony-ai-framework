@@ -49,8 +49,8 @@ templates:
 
 # Output Paths
 outputs:
-  prd: "docs/prd/{project_name}-prd.md"
-  roadmap: "docs/roadmap.md"
+  prd: "${HARMONY_DIR}/local/docs/prd/{project_name}-prd.md"
+  roadmap: "${HARMONY_DIR}/local/docs/roadmap.md"
 
 # Workflow Chaining
 prev_workflow: "discovery"
@@ -310,9 +310,9 @@ feature:
 
 | Output | Location | Status |
 |--------|----------|--------|
-| PRD | `docs/prd/[name]-prd.md` | Required |
-| Epic files | `.harmony/local/backlog/epics/EPIC-XXX.md` | Required |
-| Roadmap | `docs/roadmap.md` | Optional |
+| PRD | `${HARMONY_DIR}/local/docs/prd/[name]-prd.md` | Required |
+| Epic files | `${HARMONY_DIR}/local/backlog/epics/EPIC-XXX.md` | Required |
+| Roadmap | `${HARMONY_DIR}/local/docs/roadmap.md` | Optional |
 
 ---
 

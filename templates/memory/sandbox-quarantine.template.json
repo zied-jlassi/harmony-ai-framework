@@ -1,0 +1,11 @@
+{
+  "$schema": "./sandbox-quarantine.schema.json",
+  "version": "1.0.0",
+  "quarantined": [],
+  "statistics": {
+    "total_quarantined": 0,
+    "reviewed": 0,
+    "released": 0,
+    "by_threat_level": {}
+  }
+}

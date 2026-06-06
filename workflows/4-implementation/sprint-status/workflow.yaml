@@ -1,7 +1,7 @@
 # Sprint Status - Implementation Tracker
 name: sprint-status
 description: "Summarize sprint-status.yaml, surface risks, and route to the right implementation workflow."
-author: "BMad"
+author: "Harmony Framework"
 
 # Critical variables from config
 config_source: "{project-root}/.harmony/config.yaml"

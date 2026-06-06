@@ -265,3 +265,17 @@ hqvf:
 | **Harmony** | **UCV** | **Yes** | **DEV+TEST+QA** |
 
 **HQVF is exclusive to Harmony.**
+
+---
+
+## UCV Types
+
+UCVs are classified into 3 types for complete coverage:
+
+| Type | Description | Priority |
+|------|-------------|----------|
+| **Fonctionnel** | Happy path, nominal behavior | P0 |
+| **Edge Case** | Limits, errors, exceptions | P1 |
+| **Non-fonctionnel** | Performance, security, accessibility | P1/P2 |
+
+**[Complete UCV Types Guide →](../docs/ucv-types.md)**

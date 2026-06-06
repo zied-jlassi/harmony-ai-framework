@@ -132,4 +132,4 @@ This project is organized into {{parts_count}} distinct parts:
 
 ---
 
-_Generated using BMAD Method `document-project` workflow_
+_Generated using Harmony Framework `document-project` workflow_

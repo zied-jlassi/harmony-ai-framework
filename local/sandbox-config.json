@@ -1,0 +1,51 @@
+{
+  "strict_mode": false,
+  "max_input_size": 100000,
+  "types": {
+    "user_command": {
+      "required_trust_level": 50,
+      "max_length": 5000,
+      "allowed_patterns": [],
+      "blocked_patterns": []
+    },
+    "file_content": {
+      "required_trust_level": 70,
+      "max_length": 500000,
+      "allowed_patterns": [],
+      "blocked_patterns": []
+    },
+    "api_response": {
+      "required_trust_level": 30,
+      "max_length": 100000,
+      "allowed_patterns": [],
+      "blocked_patterns": []
+    },
+    "config_data": {
+      "required_trust_level": 90,
+      "max_length": 50000,
+      "allowed_patterns": [],
+      "blocked_patterns": []
+    }
+  },
+  "schemas": {
+    "user_data": {
+      "allowed_fields": ["name", "email", "role", "preferences"]
+    },
+    "project_data": {
+      "allowed_fields": ["name", "description", "version", "dependencies"]
+    },
+    "story_data": {
+      "allowed_fields": ["id", "title", "description", "status", "points"]
+    }
+  },
+  "trust_overrides": {},
+  "blocked_patterns": [
+    "\\\\x00",
+    "\\\\u0000"
+  ],
+  "quarantine": {
+    "auto_delete_days": 30,
+    "max_items": 1000,
+    "notify_on_quarantine": true
+  }
+}

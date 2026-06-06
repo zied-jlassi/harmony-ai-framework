@@ -58,4 +58,4 @@ THOUGHT → ACTION → OBSERVATION → REFLECT → REPEAT
 
 ---
 
-*Based on BMAD Method (MIT License) - Adapted for Harmony Framework*
+*Based on Harmony Framework (MIT License) - Adapted for Harmony Framework*

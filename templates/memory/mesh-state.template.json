@@ -1,0 +1,11 @@
+{
+  "$schema": "./mesh-state.schema.json",
+  "version": "1.0.0",
+  "meshes": {},
+  "statistics": {
+    "total_meshes": 0,
+    "active_meshes": 0,
+    "total_handoffs": 0,
+    "total_messages": 0
+  }
+}

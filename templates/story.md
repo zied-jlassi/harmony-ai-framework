@@ -1,4 +1,4 @@
-# US-{epic_id}-{story_id}: [{LAYER}] {title}
+# US-{epic_id}-{story_id}-{slug}: [{LAYER}] {title}
 
 > **{summary}**
 >
@@ -11,9 +11,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Story ID** | US-{epic_id}-{story_id} |
+| **Story ID** | US-{epic_id}-{story_id}-{slug} |
 | **Layer** | {LAYER} - [FE] \| [BE] \| [DB] \| [FS] \| [DO] \| [TEST] |
-| **Epic** | [EP-{epic_id}](../EP-{epic_id}.md) |
+| **Epic** | [EP-{epic_id}-{epic_slug}](../EP-{epic_id}-{epic_slug}.md) |
 | **Status** | 🔴 TODO |
 | **Priority** | HIGH \| MEDIUM \| LOW |
 | **Points** | {story_points} (Fibonacci: 1,2,3,5,8,13) |
@@ -27,9 +27,9 @@
 
 | Type | File | Status |
 |------|------|--------|
-| Epic | [EP-{epic_id}](../EP-{epic_id}.md) | ✅ |
-| Brief | [brief.md](../../docs/briefs/{brief_file}.md) | ✅ |
-| ADR | [ADR-XXX.md](../../docs/architecture/ADR-{XXX}.md) | Optional |
+| Epic | [EP-{epic_id}-{epic_slug}](../EP-{epic_id}-{epic_slug}.md) | ✅ |
+| Brief | [brief.md](../../../../docs/briefs/{brief_file}.md) | ✅ |
+| ADR | [ADR-XXX.md](../../../../docs/architecture/ADR-{XXX}.md) | Optional |
 | Figma | [{figma_link}]({figma_url}) | Optional |
 
 ---
@@ -357,8 +357,8 @@ Story DONE ✅ (100% validated)
 
 ## Related
 
-- Epic: [EP-{epic_id}](../EP-{epic_id}.md)
-- ADR: [ADR-{XXX}](../../docs/architecture/ADR-{XXX}.md)
+- Epic: [EP-{epic_id}-{epic_slug}](../EP-{epic_id}-{epic_slug}.md)
+- ADR: [ADR-{XXX}](../../../../docs/architecture/ADR-{XXX}.md)
 
 ---
 

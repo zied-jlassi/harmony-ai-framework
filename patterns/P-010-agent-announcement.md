@@ -181,6 +181,107 @@ fi
 
 ---
 
+## R4: 1 Prompt = 1 Agent (STRICT)
+
+> **Règle absolue**: Un prompt utilisateur ne peut déclencher qu'UN SEUL agent.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - 1 PROMPT = 1 AGENT              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  POURQUOI:                                                       │
+│  - Cadrer Claude au maximum pour meilleures performances        │
+│  - Protéger l'application contre les dérives                    │
+│  - Éviter le travail "gauche-droite" non contrôlé               │
+│  - Responsabilités claires et traçables                         │
+│                                                                  │
+│  INTERDIT:                                                       │
+│  ❌ Agent A qui déclenche automatiquement Agent B               │
+│  ❌ Chaînage implicite d'agents                                 │
+│  ❌ Mélange de responsabilités dans un prompt                   │
+│  ❌ "Je vais maintenant appeler Tester..."                      │
+│                                                                  │
+│  AUTORISÉ:                                                       │
+│  ✅ Suggestion du prochain agent (sans déclenchement)           │
+│  ✅ Affichage du Template de Fin avec suggestion                │
+│  ✅ Workflow complet si OPT-IN explicite par utilisateur        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Agents Concernés (24)
+
+Tous les agents opérationnels doivent respecter cette règle:
+
+| Catégorie | Agents |
+|-----------|--------|
+| **Core Dev** | developer, developer-quickwin, architect, database |
+| **QA/Test** | tester, exploratory-qa, ucv, review |
+| **Design** | designer, ux-designer, narrative-designer |
+| **Management** | scrum-master, product-manager, analyst, analyst-mini, backlog |
+| **Security** | security, pentest, rgpd, accessibility |
+| **Infra** | atlas, supervisor |
+| **Docs** | tech-writer |
+| **Special** | quick-flow, quick-flow-solo, party |
+
+**Exclus** (agents système): guardian, harmony, sentinel
+
+---
+
+## R5: Template de Fin (OBLIGATOIRE)
+
+> **Chaque agent DOIT afficher un template de fin standardisé.**
+
+### Format Standard
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ {emoji} {agent_name} - Terminé                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de ce qui a été fait}                             │
+│                                                                  │
+│  📁 Fichiers modifiés                                           │
+│  - {fichier1}                                                   │
+│  - {fichier2}                                                   │
+│                                                                  │
+│  🎯 Résultat                                                     │
+│  {SUCCESS/PARTIAL/BLOCKED - détails}                            │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **{next_agent}** - {raison}                                    │
+│                                                                  │
+│  Pour continuer: "{example_prompt}"                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Règles du Template
+
+| Règle | Description |
+|-------|-------------|
+| **TF-1** | Afficher TOUJOURS à la fin du travail |
+| **TF-2** | Inclure suggestion de prochain agent |
+| **TF-3** | NE JAMAIS déclencher l'agent suggéré |
+| **TF-4** | Donner un exemple de prompt exact |
+| **TF-5** | Indiquer le status (success/partial/blocked) |
+
+### Mapping Suggestions
+
+| Agent Qui Termine | Suggestion Typique | Exemple Prompt |
+|-------------------|-------------------|----------------|
+| Developer | Tester | "teste {story}" |
+| Scrum Master | UCV Writer | "écris UCVs {story}" |
+| Analyst | Scrum Master | "crée story {feature}" |
+| Tester | UCV Validator | "valide UCVs {story}" |
+| Architect | Developer | "développe {feature}" |
+| Developer QuickWin | Tester | "teste {feature}" |
+| Analyst Mini | (selon intent) | (selon clarification) |
+
+---
+
 ## Validation
 
 ### Checklist Agent
@@ -189,6 +290,9 @@ fi
 - [ ] Titre H1 suit le format `# {emoji} {Name} Agent : {greeting}`
 - [ ] Greeting est en français
 - [ ] Greeting décrit le rôle en 1-2 phrases
+- [ ] Section "Règle Absolue - 1 Prompt = 1 Agent" présente
+- [ ] Section "Template de Fin (OBLIGATOIRE)" présente
+- [ ] Agent ne déclenche JAMAIS un autre agent automatiquement
 
 ---
 

@@ -609,6 +609,57 @@ RÈGLE: Max 1 jour de dette par feature Quick-Flow
        Rembourser avant next sprint
 ```
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Créer des prototypes et MVPs rapides                      │
+│     - Itérer sur prototypes existants                           │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Production-ready code (c'est Developer)                   │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ ⚡ Quick-Flow - Terminé                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description du prototype créé}                                │
+│                                                                  │
+│  📁 Fichiers créés                                              │
+│  - {prototype files}                                            │
+│                                                                  │
+│  ⚠️ Tech Debt                                                   │
+│  - {dette technique documentée}                                 │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter version production                 │
+│                                                                  │
+│  Pour continuer: "développe {feature}"                          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Références
 
 - [Lean Startup - Build Measure Learn](https://theleanstartup.com/)

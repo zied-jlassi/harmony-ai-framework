@@ -1,0 +1,11 @@
+{
+  "$schema": "./error-journal.schema.json",
+  "version": "1.0.0",
+  "errors": [],
+  "patterns": [],
+  "statistics": {
+    "total_errors": 0,
+    "resolved_errors": 0,
+    "patterns_extracted": 0
+  }
+}

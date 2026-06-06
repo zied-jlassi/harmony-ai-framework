@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-workflow-state",
+  "title": "Harmony Workflow State",
+  "description": "Schema for workflow state tracking in Harmony Framework",
+  "type": "object",
+  "required": ["version", "phase", "guardian", "sentinel"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "last_updated": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "harmony": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" },
+        "initialized": { "type": "boolean" },
+        "project_name": { "type": ["string", "null"] },
+        "language": { "type": "string", "enum": ["en", "fr", "es", "de", "it", "pt"] }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "properties": {
+        "current": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "name": { "type": "string", "enum": ["Discovery", "Planning", "Solutioning", "Implementation", "Maintenance"] },
+        "started": { "type": ["string", "null"], "format": "date-time" },
+        "gates_passed": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "guardian": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "mode": { "type": "string", "enum": ["off", "warn", "strict"] },
+        "require_story": { "type": "boolean" },
+        "require_ucv": { "type": "boolean" },
+        "allowed_directories": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "sentinel": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "error_memory": { "type": "boolean" },
+        "pattern_learning": { "type": "boolean" }
+      }
+    },
+    "hqvf": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "require_approval": { "type": "boolean" },
+        "coverage_target": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "active_context": {
+      "type": "object",
+      "properties": {
+        "current_story": { "type": ["string", "null"] },
+        "current_sprint": { "type": ["string", "null"] },
+        "current_epic": { "type": ["string", "null"] },
+        "active_agent": { "type": ["string", "null"] },
+        "last_handoff": { "type": ["string", "null"] }
+      }
+    },
+    "sprint": {
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "name": { "type": ["string", "null"] },
+        "start_date": { "type": ["string", "null"], "format": "date" },
+        "end_date": { "type": ["string", "null"], "format": "date" },
+        "stories": { "type": "array", "items": { "type": "string" } },
+        "velocity": { "type": "number", "minimum": 0 }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "stories_completed": { "type": "integer", "minimum": 0 },
+        "ucvs_created": { "type": "integer", "minimum": 0 },
+        "errors_recorded": { "type": "integer", "minimum": 0 },
+        "patterns_learned": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

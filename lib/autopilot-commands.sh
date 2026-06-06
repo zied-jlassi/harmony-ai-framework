@@ -71,7 +71,7 @@ autopilot_start_command() {
 
     # Get current sprint if not specified
     if [[ -z "$sprint_id" ]]; then
-        sprint_id=$(jq -r '.current_sprint.id // empty' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        sprint_id=$(jq -r '.current_sprint.id // empty' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
         if [[ -z "$sprint_id" ]]; then
             echo "ERROR: No sprint specified and no current sprint found" >&2
             return 1
@@ -88,7 +88,7 @@ autopilot_start_command() {
 
     # Get stories from working.json
     local stories
-    stories=$(jq -r '.current_sprint.stories[]? // empty' "${HARMONY_DIR}/memory/working.json" 2>/dev/null || echo "")
+    stories=$(jq -r '.current_sprint.stories[]? // empty' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null || echo "")
 
     if [[ -z "$stories" ]]; then
         echo "ℹ️  No stories found in sprint"
@@ -176,7 +176,7 @@ autopilot_status_command() {
 
     # Get current sprint if not specified
     if [[ -z "$sprint_id" ]]; then
-        sprint_id=$(jq -r '.current_sprint.id // empty' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        sprint_id=$(jq -r '.current_sprint.id // empty' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
         if [[ -z "$sprint_id" ]]; then
             echo "ERROR: No sprint specified and no current sprint found" >&2
             return 1
@@ -184,25 +184,25 @@ autopilot_status_command() {
     fi
 
     # Display status
-    local display_status() {
+    display_status() {
         echo ""
         echo "┌─────────────────────────────────────────────────────────┐"
         echo "│           SPRINT AUTOPILOT - STATUS                     │"
         echo "├─────────────────────────────────────────────────────────┤"
 
         # Sprint info
-        local sprint_name=$(jq -r ".current_sprint.name // \"$sprint_id\"" "${HARMONY_DIR}/memory/working.json" 2>/dev/null || echo "$sprint_id")
+        local sprint_name=$(jq -r ".current_sprint.name // \"$sprint_id\"" "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null || echo "$sprint_id")
         echo "│ Sprint:  $sprint_name"
 
         # Current story
-        local current_story=$(jq -r '.current_story.id // "None"' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
-        local current_status=$(jq -r '.current_story.status // "Unknown"' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        local current_story=$(jq -r '.current_story.id // "None"' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
+        local current_status=$(jq -r '.current_story.status // "Unknown"' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
         echo "│ Current: $current_story ($current_status)"
 
         # Story counts
-        local completed=$(jq -r '.autopilot_progress.completed // 0' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
-        local total=$(jq -r '.autopilot_progress.total_stories // 0' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
-        local failed=$(jq -r '.autopilot_progress.failed // 0' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        local completed=$(jq -r '.autopilot_progress.completed // 0' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
+        local total=$(jq -r '.autopilot_progress.total_stories // 0' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
+        local failed=$(jq -r '.autopilot_progress.failed // 0' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
 
         if [[ $total -gt 0 ]]; then
             local pct=$((completed * 100 / total))
@@ -212,13 +212,13 @@ autopilot_status_command() {
         fi
 
         # API budget
-        local api_calls=$(jq -r '.budget.api_calls_total // 0' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
-        local api_limit=$(jq -r '.budget.api_calls_limit // 10000' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        local api_calls=$(jq -r '.budget.api_calls_total // 0' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
+        local api_limit=$(jq -r '.budget.api_calls_limit // 10000' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
         local api_pct=$((api_calls * 100 / api_limit))
         echo "│ Budget:  $api_calls / $api_limit calls ($api_pct%)"
 
         # Circuit breaker
-        local cb_state=$(jq -r '.global.state // "CLOSED"' "${HARMONY_DIR}/memory/circuit-breaker.json" 2>/dev/null)
+        local cb_state=$(jq -r '.global.state // "CLOSED"' "${HARMONY_DIR}/local/memory/circuit-breaker.json" 2>/dev/null)
         echo "│ Circuit: $cb_state"
 
         echo "└─────────────────────────────────────────────────────────┘"
@@ -274,13 +274,13 @@ autopilot_stop_command() {
     echo "⏸️  Stopping autopilot..."
 
     # Mark current story as paused (not failed)
-    local current_story=$(jq -r '.current_story.id // empty' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+    local current_story=$(jq -r '.current_story.id // empty' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
 
     if [[ -n "$current_story" ]]; then
         local tmp_file
         tmp_file=$(mktemp)
-        jq ".current_story.status = \"PAUSED\"" "${HARMONY_DIR}/memory/working.json" > "$tmp_file" && \
-        mv "$tmp_file" "${HARMONY_DIR}/memory/working.json"
+        jq ".current_story.status = \"PAUSED\"" "${HARMONY_DIR}/local/memory/working.json" > "$tmp_file" && \
+        mv "$tmp_file" "${HARMONY_DIR}/local/memory/working.json"
     fi
 
     if [[ "$save_checkpoint" == true ]]; then
@@ -340,7 +340,7 @@ autopilot_resume_command() {
     # Determine resume point
     if [[ -z "$resume_from" ]]; then
         # Get from working.json checkpoint
-        resume_from=$(jq -r '.current_story.id // empty' "${HARMONY_DIR}/memory/working.json" 2>/dev/null)
+        resume_from=$(jq -r '.current_story.id // empty' "${HARMONY_DIR}/local/memory/working.json" 2>/dev/null)
 
         if [[ -z "$resume_from" ]]; then
             echo "ERROR: No checkpoint found. Start with: autopilot_start_command"
@@ -355,8 +355,8 @@ autopilot_resume_command() {
     local tmp_file
     tmp_file=$(mktemp)
     jq ".current_story.status = \"IN_PROGRESS\" | .current_story.resumed_at = \"$(date -Iseconds)\"" \
-        "${HARMONY_DIR}/memory/working.json" > "$tmp_file" && \
-    mv "$tmp_file" "${HARMONY_DIR}/memory/working.json"
+        "${HARMONY_DIR}/local/memory/working.json" > "$tmp_file" && \
+    mv "$tmp_file" "${HARMONY_DIR}/local/memory/working.json"
 
     echo "✅ Ready to continue"
     echo ""
@@ -418,7 +418,7 @@ autopilot_story_command() {
         if [[ "$verbose" == true ]]; then
             echo ""
             echo "Final state:"
-            jq ".current_story" "${HARMONY_DIR}/memory/working.json"
+            jq ".current_story" "${HARMONY_DIR}/local/memory/working.json"
         fi
     else
         echo ""
@@ -427,7 +427,7 @@ autopilot_story_command() {
         if [[ "$verbose" == true ]]; then
             echo ""
             echo "Circuit breaker state:"
-            jq ".stories[\"$story_id\"]" "${HARMONY_DIR}/memory/circuit-breaker.json"
+            jq ".stories[\"$story_id\"]" "${HARMONY_DIR}/local/memory/circuit-breaker.json"
         fi
 
         return 1

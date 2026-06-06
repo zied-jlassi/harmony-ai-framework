@@ -57,7 +57,7 @@ _mcp_available() {
 # Get error journal path
 _get_error_journal_path() {
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    echo "${harmony_dir}/memory/error-journal.json"
+    echo "${harmony_dir}/local/memory/error-journal.json"
 }
 
 # Log with prefix

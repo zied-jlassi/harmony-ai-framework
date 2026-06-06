@@ -119,6 +119,99 @@ blocking:
       redirect_to: ucv-writer
 
 # ═══════════════════════════════════════════════════════════════════
+# CLARITY SCORE (ADR-008)
+# ═══════════════════════════════════════════════════════════════════
+#
+# Measures how clear and actionable the user's request is.
+# Low clarity triggers Analyst Minimaliste for clarification.
+#
+clarity_score:
+
+  # Threshold for triggering clarification
+  threshold: 70  # Below this → Analyst Minimaliste
+
+  # Scoring factors (0-100 each, weighted average)
+  factors:
+    has_clear_action: 0.40      # "développe", "teste", "crée" vs vague
+    has_target: 0.30            # Specific target mentioned
+    has_context: 0.20           # Enough context to act
+    no_ambiguity: 0.10          # No contradictory instructions
+
+  # Clarity indicators (boost score)
+  positive_indicators:
+    - pattern: "(développe|code|implémente|crée|ajoute)\\s+\\w+"
+      boost: 20
+    - pattern: "(teste|vérifie|valide)\\s+\\w+"
+      boost: 20
+    - pattern: "(story|US-|feature)\\s*[A-Z0-9-]+"
+      boost: 15
+    - pattern: "(fichier|composant|module|service)\\s+\\w+"
+      boost: 10
+
+  # Ambiguity indicators (reduce score)
+  negative_indicators:
+    - pattern: "^(aide|help|comment|how)\\s"
+      penalty: 30
+    - pattern: "(ou|either|maybe|peut-être)"
+      penalty: 15
+    - pattern: "^\\w{1,10}$"  # Very short requests
+      penalty: 40
+
+  # Action when below threshold
+  on_low_clarity:
+    redirect_to: analyst-mini
+    message: |
+      Je détecte un contexte flou. Laissez-moi clarifier quelques points
+      avant de vous orienter vers le bon agent.
+
+# ═══════════════════════════════════════════════════════════════════
+# TASK COUNTING (ADR-008)
+# ═══════════════════════════════════════════════════════════════════
+#
+# Detects multiple tasks in a single request.
+# Multiple tasks → Propose full workflow (opt-in).
+#
+task_counting:
+
+  # Threshold for proposing workflow
+  threshold: 2  # >= 2 tasks → propose workflow
+
+  # Task detection patterns
+  patterns:
+    # Numbered lists
+    - regex: "^\\s*\\d+[.)\\s]"
+      multiline: true
+    # Bullet points
+    - regex: "^\\s*[-*•]\\s"
+      multiline: true
+    # "puis", "ensuite", "après"
+    - regex: "(puis|ensuite|après|then|and then)\\s"
+      count_as: 1
+    # Multiple verbs
+    - regex: "(développe|teste|crée|ajoute|modifie|supprime)"
+      count_each: true
+
+  # Workflow proposal
+  on_multiple_tasks:
+    propose_workflow: true
+    message: |
+      Je détecte {task_count} tâches dans votre demande.
+
+      Options:
+      1. **Mode Agent Unique**: Je traite uniquement la première tâche
+         → "{first_task}"
+
+      2. **Workflow Complet** (opt-in): J'orchestre les {task_count} tâches
+         → Story → UCVs → Dev → Test → Review
+
+      Que préférez-vous?
+
+  # Single task behavior
+  on_single_task:
+    route_directly: true
+    message: null  # No message, direct routing
+
+# ═══════════════════════════════════════════════════════════════════
 # PERFORMANCE METRICS
 # ═══════════════════════════════════════════════════════════════════
 metrics:

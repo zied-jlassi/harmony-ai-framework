@@ -1,0 +1,12 @@
+{
+  "$schema": "./compliance-proofs.schema.json",
+  "version": "1.0.0",
+  "proofs": [],
+  "reports": [],
+  "statistics": {
+    "total_checks": 0,
+    "passed_checks": 0,
+    "failed_checks": 0,
+    "compliance_rate": 0
+  }
+}

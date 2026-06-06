@@ -421,8 +421,8 @@ handoff:
 
 ## Next Steps
 
-- [Agents Guide](agents/README.md) - Deep dive into each agent
-- [Patterns Reference](patterns/README.md) - Design patterns library
-- [Rules Reference](rules/README.md) - Rules engine documentation
-- [API Reference](api-reference.md) - CLI and programmatic API
+- [Agents Guide](../agents/INDEX.md) - Deep dive into each agent
+- [Patterns Reference](../patterns/INDEX.md) - Design patterns library
+- [Rules Reference](../rules/README.md) - Rules engine documentation
+- [Commands Reference](../commands/index.md) - CLI commands
 

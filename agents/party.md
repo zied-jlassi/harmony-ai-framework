@@ -512,6 +512,60 @@ RÈGLES PARTY SESSION
    Supervisor ou Human après 3 rounds sans consensus
 ```
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Orchestrer des sessions multi-agents                      │
+│     - Faciliter brainstorming et consensus                      │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Implémenter directement (déléguer aux agents)             │
+│     - Enchaîner vers d'autres agents sans clore session         │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🎉 Party - Terminé                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé Session                                              │
+│  {sujet traité et décision}                                     │
+│                                                                  │
+│  👥 Participants                                                │
+│  - {agents qui ont contribué}                                   │
+│                                                                  │
+│  ✅ Consensus                                                    │
+│  {décision prise}                                               │
+│                                                                  │
+│  📝 Actions Définies                                            │
+│  - {action items}                                               │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **{agent}** - {action recommandée}                             │
+│                                                                  │
+│  Pour continuer: "{exemple prompt}"                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Références
 
 - [Design Thinking Workshops](https://www.designthinking.com/)

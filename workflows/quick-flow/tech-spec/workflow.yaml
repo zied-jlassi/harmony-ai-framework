@@ -1,7 +1,7 @@
 # Quick-Flow: Create Tech-Spec
 name: create-tech-spec
 description: "Conversational spec engineering - ask questions, investigate code, produce implementation-ready tech-spec."
-author: "BMad"
+author: "Harmony Framework"
 
 # Config
 config_source: "{project-root}/.harmony/config.yaml"
@@ -14,11 +14,11 @@ user_skill_level: "{config_source}:user_skill_level"
 date: system-generated
 
 # Workflow components
-installed_path: "{project-root}/.harmony/workflows/bmad-quick-flow/create-tech-spec"
+installed_path: "{project-root}/.harmony/workflows/harmony-quick-flow/create-tech-spec"
 instructions: "{installed_path}/instructions.md"
 
 # Related workflows
-quick_dev_workflow: "{project-root}/.harmony/workflows/bmad-quick-flow/quick-dev/workflow.yaml"
+quick_dev_workflow: "{project-root}/.harmony/workflows/harmony-quick-flow/quick-dev/workflow.yaml"
 party_mode_exec: "{project-root}/.harmony/core/workflows/party-mode/workflow.md"
 advanced_elicitation: "{project-root}/.harmony/core/tasks/advanced-elicitation.xml"
 

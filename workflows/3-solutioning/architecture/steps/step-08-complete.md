@@ -250,7 +250,7 @@ The chosen starter template and architectural patterns provide a production-read
 **Workflow Status Update:**
 If not in standalone mode, update workflow status:
 
-- Load `{output_folder}/bmm-workflow-status.yaml`
+- Load `{output_folder}/hf-workflow-status.yaml`
 - Update workflow_status["create-architecture"] = "{output_folder}/architecture.md"
 - Save file with all structure and comments preserved
 

@@ -14,9 +14,9 @@
 
 # Framework dir (fixed, read-only except local/)
 HARMONY_DIR=".harmony"
-# Runtime memory dir (writable, Claude-specific) - live counter
-CLAUDE_MEMORY_DIR=".claude/memory"
-TOKEN_LOG="${CLAUDE_MEMORY_DIR}/token-usage.json"
+# Runtime memory dir (ADR-010: user data in .harmony/local/memory/)
+HARMONY_MEMORY_DIR=".harmony/local/memory"
+TOKEN_LOG="${HARMONY_MEMORY_DIR}/token-usage.json"
 # Historical logs dir (by day, with rotation)
 LOGS_DIR="${HARMONY_DIR}/local/logs"
 TODAY=$(date +%Y-%m-%d)
@@ -56,7 +56,7 @@ check_dependencies() {
 
 # Ensure directories exist (runtime dirs only)
 ensure_dirs() {
-    mkdir -p "${CLAUDE_MEMORY_DIR}" 2>/dev/null || true
+    mkdir -p "${HARMONY_MEMORY_DIR}" 2>/dev/null || true
     mkdir -p "${LOGS_DIR}" 2>/dev/null || true
 }
 

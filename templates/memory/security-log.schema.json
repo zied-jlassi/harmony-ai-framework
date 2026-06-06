@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-security-log",
+  "title": "Harmony Security Log",
+  "description": "Schema for security gate events and blocked operations",
+  "type": "object",
+  "required": ["version", "events"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "gate": { "type": "string" },
+          "action": { "type": "string" },
+          "target": { "type": "string" },
+          "agent": { "type": "string" },
+          "result": { "type": "string", "enum": ["allowed", "blocked", "warned"] },
+          "reason": { "type": "string" },
+          "risk_level": { "type": "integer", "minimum": 1, "maximum": 5 }
+        },
+        "required": ["id", "timestamp", "gate", "result"]
+      }
+    },
+    "blocked_operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "operation": { "type": "string" },
+          "count": { "type": "integer" },
+          "last_blocked": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_checks": { "type": "integer", "minimum": 0 },
+        "allowed": { "type": "integer", "minimum": 0 },
+        "blocked": { "type": "integer", "minimum": 0 },
+        "warned": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

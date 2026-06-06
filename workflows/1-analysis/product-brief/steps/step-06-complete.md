@@ -84,7 +84,7 @@ This brief serves as the foundation for all subsequent product development activ
 **Status File Management:**
 Update the main workflow status file:
 
-- Check if `{output_folder}/bmm-workflow-status.yaml` exists
+- Check if `{output_folder}/hf-workflow-status.yaml` exists
 - If not, create it with basic structure
 - Update workflow_status["product-brief"] = `{outputFile}`
 - Add completion timestamp and metadata

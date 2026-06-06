@@ -1,6 +1,6 @@
 # CIS Benchmarks - HTTP, Timeouts, Static Files
 
-> Module de l'agent `/bmad:security`
+> Module de l'agent `/hf-agent-security`
 > **Source**: CIS Benchmark (adapte NestJS)
 > **Commandes**: `audit-http-methods`, `audit-timeouts`, `audit-static-files`
 

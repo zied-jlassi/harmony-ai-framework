@@ -1,0 +1,56 @@
+{
+  "retention_days": 90,
+  "max_entries": 10000,
+  "checkpoint_interval": 10,
+  "auto_checkpoint": true,
+  "sensitive_fields": [
+    "password",
+    "token",
+    "secret",
+    "key",
+    "credential",
+    "api_key",
+    "private_key",
+    "access_token",
+    "refresh_token",
+    "auth_token"
+  ],
+  "redact_patterns": [
+    "Bearer [A-Za-z0-9-_\\.]+",
+    "sk-[A-Za-z0-9]+",
+    "ghp_[A-Za-z0-9]+",
+    "gho_[A-Za-z0-9]+",
+    "github_pat_[A-Za-z0-9_]+",
+    "xoxb-[A-Za-z0-9-]+",
+    "AKIA[A-Z0-9]{16}"
+  ],
+  "export_formats": ["json", "csv"],
+  "rollback": {
+    "enabled": true,
+    "require_confirmation": true,
+    "max_rollback_depth": 50,
+    "preserve_checkpoints": true
+  },
+  "agents_to_track": [
+    "developer",
+    "architect",
+    "tester",
+    "security",
+    "rgpd",
+    "analyst",
+    "scrum-master",
+    "devops"
+  ],
+  "actions_to_track": [
+    "create_file",
+    "modify_file",
+    "delete_file",
+    "execute_command",
+    "approve_ucv",
+    "deploy",
+    "git_commit",
+    "git_push",
+    "database_migration",
+    "config_change"
+  ]
+}

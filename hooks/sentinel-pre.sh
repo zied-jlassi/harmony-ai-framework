@@ -10,9 +10,9 @@
 set -e
 
 HARMONY_DIR=".harmony"
-ERROR_JOURNAL="${HARMONY_DIR}/memory/error-journal.json"
-CIRCUIT_BREAKER="${HARMONY_DIR}/memory/circuit-breaker.json"
-LEARNED_PATTERNS="${HARMONY_DIR}/memory/learned-patterns.json"
+ERROR_JOURNAL="${HARMONY_DIR}/local/memory/error-journal.json"
+CIRCUIT_BREAKER="${HARMONY_DIR}/local/memory/circuit-breaker.json"
+LEARNED_PATTERNS="${HARMONY_DIR}/local/memory/learned-patterns.json"
 TOOL_NAME="${1:-unknown}"
 TOOL_INPUT="${2:-{}}"
 

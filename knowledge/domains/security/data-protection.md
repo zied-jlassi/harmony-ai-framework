@@ -1,6 +1,6 @@
 # Data Protection - Files, Anonymization, Secrets, RGPD
 
-> Module de l'agent `/bmad:security`
+> Module de l'agent `/hf-agent-security`
 > **Commandes**: `audit-files`, `audit-anonymization`, `rgpd-check`
 
 ---

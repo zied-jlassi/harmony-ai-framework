@@ -1,6 +1,6 @@
 # OWASP Top 10 Checklists
 
-> Module de l'agent `/bmad:security`
+> Module de l'agent `/hf-agent-security`
 > **Commandes**: `audit`, `audit-code`, `audit-rbac`
 
 ---

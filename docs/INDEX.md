@@ -8,8 +8,9 @@
 
 | Section | Description |
 |---------|-------------|
-| [INDEX-REFERENCE](INDEX-REFERENCE.md) | **Reference rapide** (agents, commandes, HQVF) |
-| [Getting Started](getting-started.md) | Guide de demarrage rapide |
+| [QUICK-START](QUICK-START.md) | **Demarrage en 2 minutes** |
+| [INDEX-REFERENCE](INDEX-REFERENCE.md) | Reference rapide (agents, commandes, HQVF) |
+| [Getting Started](getting-started.md) | Guide de demarrage complet |
 | [Installation](installation.md) | Installation et configuration |
 | [Concepts](concepts.md) | Concepts fondamentaux |
 | [Architecture](architecture.md) | Architecture technique |
@@ -44,74 +45,7 @@ Ces outils sont détectés automatiquement à l'installation. Leur présence am�
 | **STANDARD** | Bash + Node | Performances correctes |
 | **BASIC** | Bash seul | Fonctionnel, performances de base |
 
-### Installation des Optionnels
-
-<details>
-<summary><b>Linux (Debian/Ubuntu)</b></summary>
-
-```bash
-# Node.js
-sudo apt install -y nodejs npm
-
-# jq
-sudo apt install -y jq
-
-# Bun
-curl -fsSL https://bun.sh/install | bash
-```
-</details>
-
-<details>
-<summary><b>Linux (Fedora/RHEL)</b></summary>
-
-```bash
-# Node.js
-sudo dnf install -y nodejs npm
-
-# jq
-sudo dnf install -y jq
-
-# Bun
-curl -fsSL https://bun.sh/install | bash
-```
-</details>
-
-<details>
-<summary><b>Linux (Arch)</b></summary>
-
-```bash
-# Node.js
-sudo pacman -S nodejs npm
-
-# jq
-sudo pacman -S jq
-
-# Bun
-curl -fsSL https://bun.sh/install | bash
-```
-</details>
-
-<details>
-<summary><b>macOS</b></summary>
-
-```bash
-# Homebrew (si pas installé)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Node.js, jq, Bun
-brew install node jq bun
-```
-</details>
-
-<details>
-<summary><b>Windows (WSL2 recommandé)</b></summary>
-
-```bash
-# Dans WSL2 Ubuntu:
-sudo apt install -y nodejs npm jq
-curl -fsSL https://bun.sh/install | bash
-```
-</details>
+> Voir [Installation](installation.md) pour les instructions detaillees par OS.
 
 ---
 
@@ -126,19 +60,44 @@ curl -fsSL https://bun.sh/install | bash
 ### Reference Technique
 
 - [Architecture](architecture.md) - Architecture du framework
+- [Architecture Reference](ARCHITECTURE-REFERENCE.md) - Reference complete architecture
+- [Library Reference](library-reference.md) - **Reference complete des bibliotheques bash** (ARIA, Circuit Breaker, Cost Tracker...)
+- [How It Works](how-it-works.md) - Fonctionnement interne
 - [Working Memory](working-memory.md) - Systeme de memoire
+- [UCV Types](ucv-types.md) - **Classification des Use Case Verifiables** (Fonctionnel, Edge Case, Non-fonctionnel)
+- [Context Persistence](context-persistence.md) - Persistance du contexte entre sessions
+- [MCP AutoLearning](mcp-autolearning.md) - Apprentissage automatique via MCP servers
 - [Overrides](overrides.md) - Personnalisation et surcharges
 - [Natural Language Config](natural-language-config.md) - Configuration en langage naturel
 - [Evolution](evolution.md) - Roadmap et evolution
+- [Commands Reference](commands.md) - Reference rapide des commandes
 
 ### Guidelines
 
 - [Documentation Guidelines](DOCUMENTATION-GUIDELINES.md) - Standards de documentation
 - [README Technique](README-technical.md) - Details techniques
 
+### Enterprise
+
+- [Enterprise Features](enterprise.md) - Plans et options enterprise
+
 ---
 
 ## Bibliotheques
+
+### Core Libraries
+
+> Bibliotheques bash puissantes qui propulsent le framework.
+
+**[Reference Complete des Bibliotheques →](library-reference.md)**
+
+| Bibliotheque | Description |
+|--------------|-------------|
+| **ARIA Detector** | Detection automatique d'intent et contexte (Two-Stage: Pattern + LLM) |
+| **Context Preloader** | Chargement securise avec state machine (anti-boucle infinie) |
+| **Sprint Tracker** | Gestion sprint/story avec Autopilot Pipeline et Circuit Breaker |
+| **Cost Tracker** | Suivi des couts API avec multi-devises (USD/EUR) |
+| **Config Loader** | Configuration avec lazy caching et backward compatibility |
 
 ### Assistant Toolkit
 
@@ -184,6 +143,48 @@ Inclut:
 - Sync MCP Memory automatique
 - Loader bash pour agents JIT
 
+### Quality & Testing Knowledge
+
+> Knowledge pour configurer des frameworks de test et assurer la qualite.
+
+**[Acceder au Knowledge Quality →](../knowledge/domains/quality/)**
+
+Inclut:
+- **test-framework-setup.md** - Configuration Playwright/Cypress, fixtures, factories
+- **atdd-patterns.md** - TDD red-green-refactor, acceptance testing
+- **nfr-assessment.md** - Audit performance, securite, release readiness
+- **traceability-patterns.md** - Matrices de couverture, requirements mapping
+
+**Templates:**
+- **CI Templates** - GitHub Actions et GitLab CI pour test automation
+- **Quality Templates** - Matrices de tracabilite, rapports NFR, design de tests
+
+**ARIA Detection:**
+Les flags `needs_test_setup`, `needs_tdd`, `needs_ci_tests`, `needs_coverage`, `needs_nfr_audit` sont detectes automatiquement et routent vers les agents tester/devops/ucv-validator.
+
+### Governance Modules (v1.1)
+
+> 15 concepts de gouvernance avancée pour agents IA enterprise-grade.
+
+**[Référence des Modules →](governance-reference.md)**
+
+| Couche | Modules | Description |
+|--------|---------|-------------|
+| **Governance** | audit-trail, compliance-reporter | Traçabilité et conformité |
+| **Intelligence** | confidence-scorer, agent-maturity, ab-testing | Mesure et évolution |
+| **Context** | context-filter (FILCO), mesh-network | Optimisation et collaboration |
+| **Safety** | data-sandbox, security-gates, anomaly-detector | Protection et détection |
+
+**Patterns Cognitifs:**
+- `emotional-prompting.md` - Engagement psychologique
+- `meta-prompting.md` - Génération dynamique de prompts
+- `self-evolving.md` - Amélioration continue LLM-as-Judge
+
+**Tests:**
+```bash
+./tests/e2e/scripts/test.sh /path/to/project governance
+```
+
 ### Patterns
 
 > Bibliotheque de patterns pour la detection automatique et resolution rapide des problemes.
@@ -191,8 +192,9 @@ Inclut:
 **[Acceder aux Patterns →](../patterns/INDEX.md)**
 
 Inclut:
-- 11 patterns documentes
+- 15 patterns documentes (dont P-021 à P-024 gouvernance)
 - 7 patterns auto-detectables par Sentinel
+- 3 patterns cognitifs (emotional, meta, self-evolving)
 - Case studies avec benchmarks ROI
 
 ### Agents

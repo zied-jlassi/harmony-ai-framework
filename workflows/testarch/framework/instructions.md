@@ -1,481 +1,166 @@
-<!-- Powered by BMAD-CORE™ -->
-
-# Test Framework Setup
-
-**Workflow ID**: `.harmony/testarch/framework`
-**Version**: 4.0 (BMad v6)
-
----
-
-## Overview
-
-Initialize a production-ready test framework architecture (Playwright or Cypress) with fixtures, helpers, configuration, and best practices. This workflow scaffolds the complete testing infrastructure for modern web applications.
-
----
-
-## Preflight Requirements
-
-**Critical:** Verify these requirements before proceeding. If any fail, HALT and notify the user.
-
-- ✅ `package.json` exists in project root
-- ✅ No modern E2E test harness is already configured (check for existing `playwright.config.*` or `cypress.config.*`)
-- ✅ Architectural/stack context available (project type, bundler, dependencies)
-
----
-
-## Step 1: Run Preflight Checks
-
-### Actions
-
-1. **Validate package.json**
-   - Read `{project-root}/package.json`
-   - Extract project type (React, Vue, Angular, Next.js, Node, etc.)
-   - Identify bundler (Vite, Webpack, Rollup, esbuild)
-   - Note existing test dependencies
-
-2. **Check for Existing Framework**
-   - Search for `playwright.config.*`, `cypress.config.*`, `cypress.json`
-   - Check `package.json` for `@playwright/test` or `cypress` dependencies
-   - If found, HALT with message: "Existing test framework detected. Use workflow `upgrade-framework` instead."
-
-3. **Gather Context**
-   - Look for architecture documents (`architecture.md`, `tech-spec*.md`)
-   - Check for API documentation or endpoint lists
-   - Identify authentication requirements
-
-**Halt Condition:** If preflight checks fail, stop immediately and report which requirement failed.
-
----
-
-## Step 2: Scaffold Framework
-
-### Actions
-
-1. **Framework Selection**
-
-   **Default Logic:**
-   - **Playwright** (recommended for):
-     - Large repositories (100+ files)
-     - Performance-critical applications
-     - Multi-browser support needed
-     - Complex user flows requiring video/trace debugging
-     - Projects requiring worker parallelism
-
-   - **Cypress** (recommended for):
-     - Small teams prioritizing developer experience
-     - Component testing focus
-     - Real-time reloading during test development
-     - Simpler setup requirements
-
-   **Detection Strategy:**
-   - Check `package.json` for existing preference
-   - Consider `project_size` variable from workflow config
-   - Use `framework_preference` variable if set
-   - Default to **Playwright** if uncertain
-
-2. **Create Directory Structure**
-
-   ```
-   {project-root}/
-   ├── tests/                        # Root test directory
-   │   ├── e2e/                      # Test files (users organize as needed)
-   │   ├── support/                  # Framework infrastructure (key pattern)
-   │   │   ├── fixtures/             # Test fixtures (data, mocks)
-   │   │   ├── helpers/              # Utility functions
-   │   │   └── page-objects/         # Page object models (optional)
-   │   └── README.md                 # Test suite documentation
-   ```
-
-   **Note**: Users organize test files (e2e/, api/, integration/, component/) as needed. The **support/** folder is the critical pattern for fixtures and helpers used across tests.
-
-3. **Generate Configuration File**
-
-   **For Playwright** (`playwright.config.ts` or `playwright.config.js`):
-
-   ```typescript
-   import { defineConfig, devices } from '@playwright/test';
-
-   export default defineConfig({
-     testDir: './tests/e2e',
-     fullyParallel: true,
-     forbidOnly: !!process.env.CI,
-     retries: process.env.CI ? 2 : 0,
-     workers: process.env.CI ? 1 : undefined,
-
-     timeout: 60 * 1000, // Test timeout: 60s
-     expect: {
-       timeout: 15 * 1000, // Assertion timeout: 15s
-     },
-
-     use: {
-       baseURL: process.env.BASE_URL || 'http://localhost:3000',
-       trace: 'retain-on-failure',
-       screenshot: 'only-on-failure',
-       video: 'retain-on-failure',
-       actionTimeout: 15 * 1000, // Action timeout: 15s
-       navigationTimeout: 30 * 1000, // Navigation timeout: 30s
-     },
-
-     reporter: [['html', { outputFolder: 'test-results/html' }], ['junit', { outputFile: 'test-results/junit.xml' }], ['list']],
-
-     projects: [
-       { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-       { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-       { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-     ],
-   });
-   ```
-
-   **For Cypress** (`cypress.config.ts` or `cypress.config.js`):
-
-   ```typescript
-   import { defineConfig } from 'cypress';
-
-   export default defineConfig({
-     e2e: {
-       baseUrl: process.env.BASE_URL || 'http://localhost:3000',
-       specPattern: 'tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
-       supportFile: 'tests/support/e2e.ts',
-       video: false,
-       screenshotOnRunFailure: true,
-
-       setupNodeEvents(on, config) {
-         // implement node event listeners here
-       },
-     },
-
-     retries: {
-       runMode: 2,
-       openMode: 0,
-     },
-
-     defaultCommandTimeout: 15000,
-     requestTimeout: 30000,
-     responseTimeout: 30000,
-     pageLoadTimeout: 60000,
-   });
-   ```
-
-4. **Generate Environment Configuration**
-
-   Create `.env.example`:
-
-   ```bash
-   # Test Environment Configuration
-   TEST_ENV=local
-   BASE_URL=http://localhost:3000
-   API_URL=http://localhost:3001/api
-
-   # Authentication (if applicable)
-   TEST_USER_EMAIL=test@example.com
-   TEST_USER_PASSWORD=
-
-   # Feature Flags (if applicable)
-   FEATURE_FLAG_NEW_UI=true
-
-   # API Keys (if applicable)
-   TEST_API_KEY=
-   ```
-
-5. **Generate Node Version File**
-
-   Create `.nvmrc`:
-
-   ```
-   20.11.0
-   ```
-
-   (Use Node version from existing `.nvmrc` or default to current LTS)
-
-6. **Implement Fixture Architecture**
-
-   **Knowledge Base Reference**: `testarch/knowledge/fixture-architecture.md`
-
-   Create `tests/support/fixtures/index.ts`:
-
-   ```typescript
-   import { test as base } from '@playwright/test';
-   import { UserFactory } from './factories/user-factory';
-
-   type TestFixtures = {
-     userFactory: UserFactory;
-   };
-
-   export const test = base.extend<TestFixtures>({
-     userFactory: async ({}, use) => {
-       const factory = new UserFactory();
-       await use(factory);
-       await factory.cleanup(); // Auto-cleanup
-     },
-   });
-
-   export { expect } from '@playwright/test';
-   ```
-
-7. **Implement Data Factories**
-
-   **Knowledge Base Reference**: `testarch/knowledge/data-factories.md`
-
-   Create `tests/support/fixtures/factories/user-factory.ts`:
-
-   ```typescript
-   import { faker } from '@faker-js/faker';
-
-   export class UserFactory {
-     private createdUsers: string[] = [];
-
-     async createUser(overrides = {}) {
-       const user = {
-         email: faker.internet.email(),
-         name: faker.person.fullName(),
-         password: faker.internet.password({ length: 12 }),
-         ...overrides,
-       };
-
-       // API call to create user
-       const response = await fetch(`${process.env.API_URL}/users`, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(user),
-       });
-
-       const created = await response.json();
-       this.createdUsers.push(created.id);
-       return created;
-     }
-
-     async cleanup() {
-       // Delete all created users
-       for (const userId of this.createdUsers) {
-         await fetch(`${process.env.API_URL}/users/${userId}`, {
-           method: 'DELETE',
-         });
-       }
-       this.createdUsers = [];
-     }
-   }
-   ```
-
-8. **Generate Sample Tests**
-
-   Create `tests/e2e/example.spec.ts`:
-
-   ```typescript
-   import { test, expect } from '../support/fixtures';
-
-   test.describe('Example Test Suite', () => {
-     test('should load homepage', async ({ page }) => {
-       await page.goto('/');
-       await expect(page).toHaveTitle(/Home/i);
-     });
-
-     test('should create user and login', async ({ page, userFactory }) => {
-       // Create test user
-       const user = await userFactory.createUser();
-
-       // Login
-       await page.goto('/login');
-       await page.fill('[data-testid="email-input"]', user.email);
-       await page.fill('[data-testid="password-input"]', user.password);
-       await page.click('[data-testid="login-button"]');
-
-       // Assert login success
-       await expect(page.locator('[data-testid="user-menu"]')).toBeVisible();
-     });
-   });
-   ```
-
-9. **Update package.json Scripts**
-
-   Add minimal test script to `package.json`:
-
-   ```json
-   {
-     "scripts": {
-       "test:e2e": "playwright test"
-     }
-   }
-   ```
-
-   **Note**: Users can add additional scripts as needed (e.g., `--ui`, `--headed`, `--debug`, `show-report`).
-
-10. **Generate Documentation**
-
-    Create `tests/README.md` with setup instructions (see Step 3 deliverables).
-
----
-
-## Step 3: Deliverables
-
-### Primary Artifacts Created
-
-1. **Configuration File**
-   - `playwright.config.ts` or `cypress.config.ts`
-   - Timeouts: action 15s, navigation 30s, test 60s
-   - Reporters: HTML + JUnit XML
-
-2. **Directory Structure**
-   - `tests/` with `e2e/`, `api/`, `support/` subdirectories
-   - `support/fixtures/` for test fixtures
-   - `support/helpers/` for utility functions
-
-3. **Environment Configuration**
-   - `.env.example` with `TEST_ENV`, `BASE_URL`, `API_URL`
-   - `.nvmrc` with Node version
-
-4. **Test Infrastructure**
-   - Fixture architecture (`mergeTests` pattern)
-   - Data factories (faker-based, with auto-cleanup)
-   - Sample tests demonstrating patterns
-
-5. **Documentation**
-   - `tests/README.md` with setup instructions
-   - Comments in config files explaining options
-
-### README Contents
-
-The generated `tests/README.md` should include:
-
-- **Setup Instructions**: How to install dependencies, configure environment
-- **Running Tests**: Commands for local execution, headed mode, debug mode
-- **Architecture Overview**: Fixture pattern, data factories, page objects
-- **Best Practices**: Selector strategy (data-testid), test isolation, cleanup
-- **CI Integration**: How tests run in CI/CD pipeline
-- **Knowledge Base References**: Links to relevant TEA knowledge fragments
-
----
-
-## Important Notes
-
-### Knowledge Base Integration
-
-**Critical:** Check configuration and load appropriate fragments.
-
-Read `{config_source}` and check `config.tea_use_playwright_utils`.
-
-**If `config.tea_use_playwright_utils: true` (Playwright Utils Integration):**
-
-Consult `{project-root}/.harmony/testarch/tea-index.csv` and load:
-
-- `overview.md` - Playwright utils installation and design principles
-- `fixtures-composition.md` - mergeTests composition with playwright-utils
-- `auth-session.md` - Token persistence setup (if auth needed)
-- `api-request.md` - API testing utilities (if API tests planned)
-- `burn-in.md` - Smart test selection for CI (recommend during framework setup)
-- `network-error-monitor.md` - Automatic HTTP error detection (recommend in merged fixtures)
-- `data-factories.md` - Factory patterns with faker (498 lines, 5 examples)
-
-Recommend installing playwright-utils:
-
+# Workflow : Sélection et Initialisation du Framework de Test
+
+<critical>Ce workflow détecte automatiquement le stack technologique et configure le framework de test optimal. Il doit être exécuté AVANT tout autre workflow testarch.</critical>
+
+<workflow>
+
+<step n="1" goal="Détecter le stack technologique du projet">
+<action>Communiquer en {communication_language} avec {user_name}</action>
+<action>Scanner les fichiers de configuration à la racine du projet :</action>
+
+**Fichiers à inspecter (par ordre de priorité) :**
+- `package.json` → TypeScript/JavaScript (React, Vue, Angular, Next.js, NestJS, Express)
+- `pyproject.toml` / `requirements.txt` / `setup.py` → Python (Django, FastAPI, Flask)
+- `pom.xml` / `build.gradle` → Java/Kotlin (Spring Boot)
+- `go.mod` → Go
+- `Cargo.toml` → Rust
+- `Gemfile` → Ruby (Rails)
+- `composer.json` → PHP (Laravel, Symfony)
+- `*.csproj` / `*.sln` → C#/.NET
+
+**Vérifier si un framework de test existe déjà :**
+- `jest.config.*`, `vitest.config.*`, `playwright.config.*`, `cypress.config.*`
+- `pytest.ini`, `pyproject.toml [tool.pytest]`
+- `src/test/`, `tests/`, `spec/`, `__tests__/`
+</step>
+
+<step n="2" goal="Recommander le framework optimal selon le stack">
+<action>Appliquer la matrice de décision suivante :</action>
+
+**TypeScript/JavaScript — Recommandations 2026 :**
+
+| Use case | Framework recommandé | Alternative |
+|----------|---------------------|-------------|
+| Tests unitaires/intégration (TS/JS) | **Vitest** (10x plus rapide que Jest, natif ESM) | Jest (écosystème plus large) |
+| Tests E2E / browser automation | **Playwright** (multi-browser, traces, screenshots) | Cypress (DX supérieure, mono-browser) |
+| Tests de composants React/Vue | **Vitest + Testing Library** | Jest + Testing Library |
+| Tests API/HTTP | **Vitest + supertest** ou **msw** (mock service worker) | Jest + nock |
+| Tests de contrat | **Pact** (consumer-driven contract testing) | — |
+| Tests visuels | **Playwright** + screenshots comparaison | Chromatic + Storybook |
+
+**Python :**
+| Use case | Framework recommandé |
+|----------|---------------------|
+| Tous types de tests | **pytest** + pytest-cov |
+| Tests BDD/ATDD | **pytest-bdd** ou **Behave** |
+| Tests async | **pytest-asyncio** |
+| Tests E2E | **Playwright** (bindings Python) |
+
+**Java/Kotlin :**
+| Use case | Framework recommandé |
+|----------|---------------------|
+| Tests unitaires | **JUnit 5** + Mockito |
+| Tests intégration | **Spring Boot Test** + Testcontainers |
+| Tests E2E | **Playwright** (bindings Java) ou **Selenium** |
+| Tests de contrat | **Pact JVM** |
+
+**Go :**
+- Tests unitaires/intégration : `go test` + **testify** + **httptest**
+- Tests E2E : **Playwright** (bindings Go) ou `net/http/httptest`
+
+**Rust :**
+- Tests unitaires/intégration : **cargo test** (built-in)
+- Benchmarks : **criterion**
+- Tests de propriétés : **proptest**
+</step>
+
+<step n="3" goal="Installer et configurer le framework sélectionné">
+<action>Générer les commandes d'installation adaptées au gestionnaire de paquets détecté (npm/yarn/pnpm/bun, pip/poetry/uv, cargo, go mod)</action>
+
+**Pour Vitest (TypeScript/JavaScript) :**
 ```bash
-npm install -D @seontechnologies/playwright-utils
+# Installation
+pnpm add -D vitest @vitest/coverage-v8 @vitest/ui
+
+# Configuration vitest.config.ts
+```
+```typescript
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node', // ou 'jsdom' pour React/Vue
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      thresholds: {
+        lines: 80,
+        branches: 80,
+        functions: 80,
+        statements: 80
+      }
+    }
+  }
+})
 ```
 
-Recommend adding burn-in and network-error-monitor to merged fixtures for enhanced reliability.
-
-**If `config.tea_use_playwright_utils: false` (Traditional Patterns):**
-
-Consult `{project-root}/.harmony/testarch/tea-index.csv` and load:
-
-- `fixture-architecture.md` - Pure function → fixture → `mergeTests` composition with auto-cleanup (406 lines, 5 examples)
-- `data-factories.md` - Faker-based factories with overrides, nested factories, API seeding, auto-cleanup (498 lines, 5 examples)
-- `network-first.md` - Network-first testing safeguards: intercept before navigate, HAR capture, deterministic waiting (489 lines, 5 examples)
-- `playwright-config.md` - Playwright-specific configuration: environment-based, timeout standards, artifact output, parallelization, project config (722 lines, 5 examples)
-- `test-quality.md` - Test design principles: deterministic, isolated with cleanup, explicit assertions, length/time limits (658 lines, 5 examples)
-
-### Framework-Specific Guidance
-
-**Playwright Advantages:**
-
-- Worker parallelism (significantly faster for large suites)
-- Trace viewer (powerful debugging with screenshots, network, console)
-- Multi-language support (TypeScript, JavaScript, Python, C#, Java)
-- Built-in API testing capabilities
-- Better handling of multiple browser contexts
-
-**Cypress Advantages:**
-
-- Superior developer experience (real-time reloading)
-- Excellent for component testing (Cypress CT or use Vitest)
-- Simpler setup for small teams
-- Better suited for watch mode during development
-
-**Avoid Cypress when:**
-
-- API chains are heavy and complex
-- Multi-tab/window scenarios are common
-- Worker parallelism is critical for CI performance
-
-### Selector Strategy
-
-**Always recommend**:
-
-- `data-testid` attributes for UI elements
-- `data-cy` attributes if Cypress is chosen
-- Avoid brittle CSS selectors or XPath
-
-### Contract Testing
-
-For microservices architectures, **recommend Pact** for consumer-driven contract testing alongside E2E tests.
-
-### Failure Artifacts
-
-Configure **failure-only** capture:
-
-- Screenshots: only on failure
-- Videos: retain on failure (delete on success)
-- Traces: retain on failure (Playwright)
-
-This reduces storage overhead while maintaining debugging capability.
-
----
-
-## Output Summary
-
-After completing this workflow, provide a summary:
-
-```markdown
-## Framework Scaffold Complete
-
-**Framework Selected**: Playwright (or Cypress)
-
-**Artifacts Created**:
-
-- ✅ Configuration file: `playwright.config.ts`
-- ✅ Directory structure: `tests/e2e/`, `tests/support/`
-- ✅ Environment config: `.env.example`
-- ✅ Node version: `.nvmrc`
-- ✅ Fixture architecture: `tests/support/fixtures/`
-- ✅ Data factories: `tests/support/fixtures/factories/`
-- ✅ Sample tests: `tests/e2e/example.spec.ts`
-- ✅ Documentation: `tests/README.md`
-
-**Next Steps**:
-
-1. Copy `.env.example` to `.env` and fill in environment variables
-2. Run `npm install` to install test dependencies
-3. Run `npm run test:e2e` to execute sample tests
-4. Review `tests/README.md` for detailed setup instructions
-
-**Knowledge Base References Applied**:
-
-- Fixture architecture pattern (pure functions + mergeTests)
-- Data factories with auto-cleanup (faker-based)
-- Network-first testing safeguards
-- Failure-only artifact capture
+**Pour Playwright :**
+```bash
+pnpm create playwright
+# Choisir: TypeScript, tests/, GitHub Actions CI
 ```
 
----
+**Pour pytest :**
+```toml
+# pyproject.toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=term-missing --cov-report=lcov"
 
-## Validation
+[tool.coverage.run]
+branch = true
 
-After completing all steps, verify:
+[tool.coverage.report]
+fail_under = 80
+```
 
-- [ ] Configuration file created and valid
-- [ ] Directory structure exists
-- [ ] Environment configuration generated
-- [ ] Sample tests run successfully
-- [ ] Documentation complete and accurate
-- [ ] No errors or warnings during scaffold
+<action>Créer la structure de répertoires standard :</action>
 
-Refer to `checklist.md` for comprehensive validation criteria.
+```
+tests/
+├── unit/           # Tests unitaires rapides (< 10ms)
+├── integration/    # Tests d'intégration (services, DB, API)
+├── e2e/            # Tests end-to-end (navigateur, flux complets)
+├── fixtures/       # Données de test partagées
+├── helpers/        # Utilitaires de test
+└── README.md       # Documentation de la stratégie de test
+```
+</step>
+
+<step n="4" goal="Créer les fichiers de base et exemples">
+<action>Générer un test d'exemple fonctionnel pour chaque type :</action>
+
+- Un test unitaire simple (fonction pure)
+- Un test d'intégration (service avec dépendance mockée)
+- Un test E2E basique (si Playwright/Cypress installé)
+
+<action>Ajouter les scripts npm/scripts de build :</action>
+```json
+{
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  }
+}
+```
+</step>
+
+<step n="5" goal="Documenter la stratégie de test du projet">
+<action>Créer ou mettre à jour `tests/README.md` avec :</action>
+
+- Framework(s) choisi(s) et justification
+- Pyramide de test cible (distribution 70/20/10)
+- Seuils de couverture (line, branch, function)
+- Conventions de nommage (`*.test.ts`, `*.spec.ts`, `test_*.py`)
+- Comment lancer les tests localement
+- Comment lancer les tests en CI
+
+<action>Afficher un résumé à {user_name} avec les prochaines étapes recommandées</action>
+</step>
+
+</workflow>

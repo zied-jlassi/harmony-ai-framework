@@ -258,8 +258,8 @@ Analyser l'intention et router automatiquement.
 
 ## 🔴 CONFORMITÉ LÉGALE - VÉRIFICATION QUICK FLOW
 
-> **Document**: `.harmony/local/backlog/LEGAL-COMPLIANCE.md`
-> **Stories Legal**: `.harmony/local/backlog/stories/legal/LEGAL-XXX-*.md`
+> **Document**: `${HARMONY_DIR}/local/backlog/LEGAL-COMPLIANCE.md`
+> **Stories Legal**: `${HARMONY_DIR}/local/backlog/stories/legal/LEGAL-XXX-*.md`
 
 ### EPICs avec Contraintes Légales
 
@@ -314,7 +314,7 @@ Analyser l'intention et router automatiquement.
 │                                                                              │
 │  0. LEGAL CHECK (NOUVEAU - OBLIGATOIRE)                                      │
 │     - Vérifier si EPIC a des contraintes légales (voir tableau)             │
-│     - Si OUI: lire .harmony/local/backlog/LEGAL-COMPLIANCE.md                         │
+│     - Si OUI: lire ${HARMONY_DIR}/local/backlog/LEGAL-COMPLIANCE.md                         │
 │     - Inclure les contraintes dans l'implémentation                         │
 │                                                                              │
 │  1. LOAD TECH SPEC                                                           │
@@ -501,7 +501,7 @@ Pour démarrer: `/harmony:party [sujet]`
 ```
 Charger automatiquement si existant:
 1. .harmony/project-context.md - Standards et conventions Gaming
-2. .harmony/memory/working.json - État session
+2. ${HARMONY_DIR}/memory/working.json - État session
 3. .harmony/tech-specs/ - Tech specs existantes
 ```
 
@@ -577,9 +577,9 @@ Charger automatiquement si existant:
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | Tech spec créée | `.harmony/tech-specs/` | "📝 Tech spec: {name}" |
-| Story complétée | `.harmony/memory/completed-stories.json` | "✅ Story: {ID}" |
-| Pattern appris | `.harmony/memory/dev-patterns.json` | "💡 Pattern: {name}" |
-| Décision technique | `.harmony/memory/tech-decisions.json` | "🔧 Decision: {summary}" |
+| Story complétée | `${HARMONY_DIR}/memory/completed-stories.json` | "✅ Story: {ID}" |
+| Pattern appris | `${HARMONY_DIR}/memory/dev-patterns.json` | "💡 Pattern: {name}" |
+| Décision technique | `${HARMONY_DIR}/memory/tech-decisions.json` | "🔧 Decision: {summary}" |
 
 ### Plan Update Protocol
 
@@ -684,3 +684,59 @@ Charger automatiquement si existant:
 - Autonomous: minimal handoffs, maximum velocity
 - Quality-conscious: lint clean, tests green
 - Documentation-aware: docs with dev, not after
+
+---
+
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Créer tech specs avec stories                             │
+│     - Implémenter stories end-to-end (TDD)                      │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Créer stories dans backlog (c'est SM)                     │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🚀 Quick Flow Solo - Terminé                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de la tech spec ou implémentation}                │
+│                                                                  │
+│  📁 Fichiers créés/modifiés                                     │
+│  - {files}                                                      │
+│                                                                  │
+│  ✅ Stories complétées                                          │
+│  - {GAME-XXX}: {title}                                          │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Review** - Code review multi-perspectives                    │
+│                                                                  │
+│  Pour continuer: "review le code"                               │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+**Pattern**: Quick Flow + TDD + Autonomous Execution
+**Confidence**: 95%

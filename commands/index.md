@@ -119,6 +119,8 @@ Select a mode by entering its number or command (e.g., 2 or harmony quick)
 
 ## Command Mapping
 
+> **Note:** This table lists **37 command entries** mapping to **30 command files**. Some entries are **variants** (subcommands with flags) that share the same documentation file. Variants are indicated by suffixes like `-update`, `-usage`, `-learn`, etc.
+
 | # | Command | Syntax | File |
 |---|---------|--------|------|
 | 1 | full | `harmony full` | [full.md](full.md) |

@@ -1,0 +1,12 @@
+{
+  "$schema": "./confidence-history.schema.json",
+  "version": "1.0.0",
+  "decisions": [],
+  "escalations": [],
+  "statistics": {
+    "total_decisions": 0,
+    "avg_confidence": 0,
+    "escalation_rate": 0,
+    "human_overrides": 0
+  }
+}

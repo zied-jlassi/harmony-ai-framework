@@ -76,7 +76,7 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 │                                                                  │
 │  STEP 1: LOAD STORY FILE                                        │
 │  ───────────────────────                                        │
-│  Read .harmony/local/backlog/epics/EP-XXX/stories/US-XXX-XXX.md │
+│  Read ${HARMONY_DIR}/local/backlog/epics/EP-XXX/stories/US-XXX-XXX.md │
 │  Parse section <!-- UCV_SECTION_START --> à <!-- ..._END -->    │
 │                                                                  │
 │  STEP 2: FOR EACH UCV (V1, V2, V3...)                          │
@@ -104,7 +104,7 @@ This is **NOT exploratory testing** - it's systematic validation against the UCV
 │  STEP 4: GENERATE REPORT                                        │
 │  ───────────────────────                                        │
 │  Summary: X/Y UCVs validés                                      │
-│  Screenshots: docs/qa/US-XXX-XXX/                               │
+│  Screenshots: ${HARMONY_DIR}/local/docs/qa/US-XXX-XXX/                               │
 │  Issues: listés si échecs                                       │
 │                                                                  │
 │  OUTPUT: Story avec QA ☑ marqués inline                        │
@@ -163,7 +163,7 @@ Before UCV QA can run:
 
 | Prerequisite | Check |
 |--------------|-------|
-| Story exists | `.harmony/local/backlog/epics/EP-{epic}/stories/US-{epic}-{story}.md` |
+| Story exists | `${HARMONY_DIR}/local/backlog/epics/EP-{epic}/stories/US-{epic}-{story}.md` |
 | UCVs inline | Section `<!-- UCV_SECTION_START -->` présente dans la story |
 | UCVs approved | Story status: 🟡 IN_PROGRESS ou supérieur |
 | Dev completed | Tous les UCVs ont DEV ☑ (V1, V2, V3...) |
@@ -213,8 +213,8 @@ Then une popin modale s'affiche au centre
 
 **Stockage Screenshots** (temporaire):
 ```
-.harmony/local/tmp/qa/US-{epic}-{story}/    ← Screenshots (gitignored)
-.harmony/local/reports/qa/US-{epic}-{story}/ ← REPORT.md final uniquement
+${HARMONY_DIR}/local/tmp/qa/US-{epic}-{story}/    ← Screenshots (gitignored)
+${HARMONY_DIR}/local/reports/qa/US-{epic}-{story}/ ← REPORT.md final uniquement
 ```
 
 **Politique de nettoyage**:
@@ -274,7 +274,7 @@ const snapshot = await mcp_playwright_snapshot();
 
 // 4. Take screenshot as evidence
 await mcp_playwright_screenshot({
-  path: ".harmony/local/tmp/qa/US-001-042/V1.png"
+  path: "${HARMONY_DIR}/local/tmp/qa/US-001-042/V1.png"
 });
 
 // 5. Mark as validated
@@ -342,7 +342,7 @@ When a verification fails:
 **QA Issue**:
 - Expected: Error message visible below field
 - Actual: Error only in console
-- Screenshot: `.harmony/local/tmp/qa/US-001-002/V2-fail.png`
+- Screenshot: `${HARMONY_DIR}/local/tmp/qa/US-001-002/V2-fail.png`
 ```
 
 ---
@@ -393,7 +393,7 @@ When `is_responsive: true` (default for UI projects) or `is_mobile: true`, UCV-Q
 │     → All viewports should pass                                 │
 │     → Report viewport-specific failures                         │
 │                                                                  │
-│  OUTPUT: Screenshots per viewport in docs/qa/STORY-XXX/         │
+│  OUTPUT: Screenshots per viewport in ${HARMONY_DIR}/local/docs/qa/STORY-XXX/         │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -401,7 +401,7 @@ When `is_responsive: true` (default for UI projects) or `is_mobile: true`, UCV-Q
 ### Screenshot Naming Convention
 
 ```
-.harmony/local/tmp/qa/US-{epic}-{story}/   ← Temporaire (1 jour)
+${HARMONY_DIR}/local/tmp/qa/US-{epic}-{story}/   ← Temporaire (1 jour)
 ├── V1.png                          # Default (Desktop)
 ├── V1_mobile-s.png                 # Mobile S viewport
 ├── V1_mobile-m.png                 # Mobile M viewport
@@ -409,7 +409,7 @@ When `is_responsive: true` (default for UI projects) or `is_mobile: true`, UCV-Q
 ├── V1_iphone-14-pro.png            # iPhone 14 Pro (mobile app)
 └── ...
 
-.harmony/local/reports/qa/US-{epic}-{story}/ ← Permanent
+${HARMONY_DIR}/local/reports/qa/US-{epic}-{story}/ ← Permanent
 └── REPORT.md                       # Rapport final uniquement
 ```
 
@@ -508,33 +508,33 @@ User: /ucv-qa STORY-042
    → Navigating to /admin/users
    → Clicking edit button for john@test.com
    → Checking modal visibility... ✅ PASS
-   → Screenshot saved: docs/qa/STORY-042/V-001-1.png
+   → Screenshot saved: ${HARMONY_DIR}/local/docs/qa/STORY-042/V-001-1.png
 
    V-001-2: Email pre-rempli
    → Checking email field value... ✅ PASS
-   → Screenshot saved: docs/qa/STORY-042/V-001-2.png
+   → Screenshot saved: ${HARMONY_DIR}/local/docs/qa/STORY-042/V-001-2.png
 
 🔍 Validating UC-002: Soumettre modification
 
    V-002-1: Validation email format
    → Entering invalid email... ✅ PASS
-   → Screenshot saved: docs/qa/STORY-042/V-002-1.png
+   → Screenshot saved: ${HARMONY_DIR}/local/docs/qa/STORY-042/V-002-1.png
 
    V-002-2: Message erreur visible
    → Checking error message display... ❌ FAIL
    → Issue: Error only in console, not visible to user
-   → Screenshot saved: docs/qa/STORY-042/V-002-2.png
+   → Screenshot saved: ${HARMONY_DIR}/local/docs/qa/STORY-042/V-002-2.png
 
    V-002-3: Success message after save
    → Entering valid data and saving... ✅ PASS
-   → Screenshot saved: docs/qa/STORY-042/V-002-3.png
+   → Screenshot saved: ${HARMONY_DIR}/local/docs/qa/STORY-042/V-002-3.png
 
 📊 Results: 4/5 passed (80%)
    ✅ V-001-1, V-001-2, V-002-1, V-002-3
    ❌ V-002-2 (needs fix)
 
 📝 UCV file updated with [qa] marks
-📁 Report saved: .harmony/local/reports/qa/US-001-042/REPORT.md
+📁 Report saved: ${HARMONY_DIR}/local/reports/qa/US-001-042/REPORT.md
 🧹 Screenshots cleaned up (validation 100% or 1 day auto-cleanup)
 
 ⚠️ Story not ready for UCV Validator - 1 issue needs fix.

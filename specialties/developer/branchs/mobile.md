@@ -1319,10 +1319,10 @@ CHECKLIST PLAY STORE (Enfants)
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Pattern mobile | `.harmony/memory/mobile-patterns.json` | "📱 Pattern: {name}" |
-| Platform-specific code | `.harmony/memory/platform-code.json` | "🔧 Platform: {iOS/Android}" |
-| Offline strategy | `.harmony/memory/offline-strategies.json` | "📴 Offline: {strategy}" |
-| Store submission | `.harmony/memory/store-submissions.json` | "🚀 Submitted: {store}" |
+| Pattern mobile | `${HARMONY_DIR}/memory/mobile-patterns.json` | "📱 Pattern: {name}" |
+| Platform-specific code | `${HARMONY_DIR}/memory/platform-code.json` | "🔧 Platform: {iOS/Android}" |
+| Offline strategy | `${HARMONY_DIR}/memory/offline-strategies.json` | "📴 Offline: {strategy}" |
+| Store submission | `${HARMONY_DIR}/memory/store-submissions.json` | "🚀 Submitted: {store}" |
 
 ### Plan Update Protocol
 

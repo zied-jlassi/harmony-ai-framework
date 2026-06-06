@@ -1,0 +1,10 @@
+{
+  "$schema": "./ab-results.schema.json",
+  "version": "1.0.0",
+  "experiments": {},
+  "statistics": {
+    "total_experiments": 0,
+    "completed_experiments": 0,
+    "total_results": 0
+  }
+}

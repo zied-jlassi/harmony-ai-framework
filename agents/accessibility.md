@@ -626,6 +626,61 @@ RECOMMANDE:
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Effectuer les audits d'accessibilité                      │
+│     - Documenter les problèmes WCAG/RGAA                        │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement Developer                         │
+│     - Enchaîner vers UX Designer                                │
+│     - Corriger le code (c'est Developer)                        │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ ♿ Accessibility - Terminé                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de l'audit effectué}                              │
+│                                                                  │
+│  🔴 Violations WCAG                                              │
+│  - {issue 1 - Level A/AA/AAA}                                   │
+│                                                                  │
+│  ✅ Points conformes                                             │
+│  - {point 1}                                                    │
+│                                                                  │
+│  🎯 Score accessibilité                                          │
+│  {score}/100 (Level {A/AA/AAA})                                 │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Corriger les violations critiques              │
+│                                                                  │
+│  Pour continuer: "corrige a11y {issue}"                         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Related Agents
 
 - [UX Designer](../ux-designer.md) - Design accessible

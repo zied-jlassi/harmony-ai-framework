@@ -19,7 +19,7 @@ if [[ -z "${HARMONY_DIR:-}" ]]; then
     HARMONY_DIR=".harmony"
 fi
 FRAMEWORK_LIB="${HARMONY_DIR}/lib"
-WORKFLOW_STATE="${HARMONY_DIR}/memory/workflow-state.json"
+WORKFLOW_STATE="${HARMONY_DIR}/local/memory/workflow-state.json"
 TOOL_INPUT="${1:-{}}"
 
 # Colors

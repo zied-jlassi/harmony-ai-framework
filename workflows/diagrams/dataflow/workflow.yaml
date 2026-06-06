@@ -1,6 +1,6 @@
 name: create-excalidraw-dataflow
 description: "Create data flow diagrams (DFD) in Excalidraw format"
-author: "BMad"
+author: "Harmony Framework"
 
 # Config values
 config_source: "{project-root}/.harmony/config.yaml"

@@ -119,3 +119,64 @@ UCVs are the bridge between requirements and implementation, ensuring:
 - No ambiguity in expectations
 - Traceable quality validation
 - Audit trail for compliance
+
+---
+
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Créer/valider les UCVs                                    │
+│     - Documenter les critères d'acceptance                      │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement Developer                         │
+│     - Enchaîner vers Tester                                     │
+│     - Implémenter le code (c'est Developer)                     │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ ✅ UCV - Terminé                                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description des UCVs créés/validés}                           │
+│                                                                  │
+│  📁 Fichiers modifiés                                           │
+│  - {story file avec UCVs}                                       │
+│                                                                  │
+│  ✅ UCVs créés                                                   │
+│  - V-XXX-1: {description}                                       │
+│  - V-XXX-2: {description}                                       │
+│                                                                  │
+│  🎯 Couverture                                                   │
+│  {coverage}% ({validated}/{total})                              │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter les UCVs                           │
+│                                                                  │
+│  Pour continuer: "développe {story}"                            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+**Pattern**: Triple Validation (DEV/TEST/QA)
+**Confidence**: 95%

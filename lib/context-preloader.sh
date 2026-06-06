@@ -708,7 +708,7 @@ _merge_aria_results() {
 # Cache file path (file-based to survive subshells)
 _get_cache_file() {
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    echo "${harmony_dir}/memory/.classification-cache.json"
+    echo "${harmony_dir}/local/memory/.classification-cache.json"
 }
 
 # Variable cache for within same shell (optimization)
@@ -1179,7 +1179,7 @@ _inject_context() {
     local classification="$PRELOADER_CLASSIFICATION_CACHE"
 
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    local memory_dir="${harmony_dir}/memory"
+    local memory_dir="${harmony_dir}/local/memory"
     local working_file="${memory_dir}/working.json"
 
     mkdir -p "$memory_dir"
@@ -1220,7 +1220,7 @@ _inject_context() {
 
 _lock_context() {
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    local working_file="${harmony_dir}/memory/working.json"
+    local working_file="${harmony_dir}/local/memory/working.json"
 
     if [[ -f "$working_file" ]]; then
         # Update state to LOCKED
@@ -1238,7 +1238,7 @@ _lock_context() {
 
 display_context_summary() {
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    local working_file="${harmony_dir}/memory/working.json"
+    local working_file="${harmony_dir}/local/memory/working.json"
 
     if [[ -f "$working_file" ]]; then
         echo ""
@@ -1326,7 +1326,7 @@ get_preloader_tokens() {
 update_workflow_aria_context() {
     local aria_result="$1"
     local harmony_dir="${HARMONY_DIR:-.harmony}"
-    local workflow_file="${harmony_dir}/memory/workflow-state.json"
+    local workflow_file="${harmony_dir}/local/memory/workflow-state.json"
 
     if [[ ! -f "$workflow_file" ]]; then
         echo "[ARIA] WARNING: workflow-state.json not found at $workflow_file" >&2

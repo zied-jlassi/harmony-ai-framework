@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-anomaly-events",
+  "title": "Harmony Anomaly Events",
+  "description": "Schema for anomaly detection events (loops, hallucinations, degradation)",
+  "type": "object",
+  "required": ["version", "events"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["loop_detected", "hallucination", "performance_degradation", "unusual_output", "repetitive_errors"]
+          },
+          "agent": { "type": "string" },
+          "severity": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "description": { "type": "string" },
+          "context": { "type": "object" },
+          "detected_at": { "type": "string", "format": "date-time" },
+          "resolved": { "type": "boolean" },
+          "resolved_at": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": ["id", "type", "severity", "detected_at"]
+      }
+    },
+    "baselines": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "metric": { "type": "string" },
+          "value": { "type": "number" },
+          "samples": { "type": "integer" },
+          "last_updated": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_anomalies": { "type": "integer", "minimum": 0 },
+        "resolved_anomalies": { "type": "integer", "minimum": 0 },
+        "by_type": { "type": "object" }
+      }
+    }
+  }
+}

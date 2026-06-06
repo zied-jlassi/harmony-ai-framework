@@ -3,16 +3,16 @@
 <critical>The workflow execution engine is governed by: {project-root}/.harmony/core/tasks/workflow.xml</critical>
 <critical>You MUST have already loaded and processed: workflow-init/workflow.yaml</critical>
 <critical>Communicate in {communication_language} with {user_name}</critical>
-<critical>This workflow handles BOTH new projects AND legacy projects following the BMad Method</critical>
+<critical>This workflow handles BOTH new projects AND legacy projects following the Harmony Method</critical>
 
 <workflow>
 
 <step n="1" goal="Scan for existing work">
-<output>Welcome to BMad Method, {user_name}!</output>
+<output>Welcome to Harmony Method, {user_name}!</output>
 
 <action>Perform comprehensive scan for existing work:
 
-- BMM artifacts: PRD, epics, architecture, UX, brief, research, brainstorm
+- Harmony artifacts: PRD, epics, architecture, UX, brief, research, brainstorm
 - Implementation: stories, sprint-status, workflow-status
 - Codebase: source directories, package files, git repo
 - Check both {output_folder} and {sprint_artifacts} locations
@@ -23,7 +23,7 @@
 - CLEAN: No artifacts or code (or scaffold only)
 - PLANNING: Has PRD/spec but no implementation
 - ACTIVE: Has stories or sprint status
-- LEGACY: Has code but no BMM artifacts
+- LEGACY: Has code but no Harmony artifacts
 - UNCLEAR: Mixed state needs clarification
   </action>
 
@@ -41,7 +41,7 @@
 <check if="state == ACTIVE AND workflow_status exists">
   <output>✅ You already have workflow tracking at: {{workflow_status_path}}
 
-To check progress: Load any BMM agent and run /harmony:workflows:workflow-status
+To check progress: Load any Harmony agent and run /harmony:workflows:workflow-status
 
 Happy building! 🚀</output>
 <action>Exit workflow (already initialized)</action>
@@ -110,7 +110,7 @@ Choice [1/2]:</ask>
 
 <ask>Planning approach:
 
-1. **BMad Method** - Full planning for complex projects
+1. **Harmony Method** - Full planning for complex projects
 2. **Enterprise Method** - Extended planning with security/DevOps
 
 Choice [1/2]:</ask>
@@ -153,7 +153,7 @@ Choice [1/2]:</ask>
 For game development, install the BMGD module:
 
 ```bash
-bmad install bmgd
+harmony init
 ```
 
 Continue with software workflows? (y/n)</output>
@@ -167,11 +167,11 @@ Continue with software workflows? (y/n)</output>
 </step>
 
 <step n="5" goal="Guided setup - select track">
-<output>Based on your project, here are your BMad Method planning options:
+<output>Based on your project, here are your Harmony Method planning options:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**1. BMad Method** 🎯 {{#if recommended}}(RECOMMENDED){{/if}}
+**1. Harmony Method** 🎯 {{#if recommended}}(RECOMMENDED){{/if}}
 
 - Full planning: PRD + UX + Architecture
 - Best for: Products, platforms, complex features
@@ -192,9 +192,9 @@ Load the **quick-flow-solo-dev** agent instead - use Quick Flow agent for faster
 💡 Architecture creates focused solution design from your codebase, keeping AI agents on track.
 {{/if}}</output>
 
-<ask>Which BMad Method approach fits best?
+<ask>Which Harmony Method approach fits best?
 
-1. BMad Method {{#if recommended}}(recommended){{/if}}
+1. Harmony Method {{#if recommended}}(recommended){{/if}}
 2. Enterprise Method
 3. Help me decide
 4. Switch to Quick Flow (use quick-flow-solo-dev agent)
@@ -275,7 +275,7 @@ Enter numbers (e.g., "1,2" or "none"): </ask>
 
 <step n="7" goal="Detect track from artifacts" if="continuing_existing OR migrating_legacy">
 <action>Analyze artifacts to detect track:
-- Has PRD → BMad Method
+- Has PRD → Harmony Method
 - Has Security/DevOps → Enterprise Method
 - Has tech-spec only → Suggest switching to quick-flow-solo-dev agent
 </action>
@@ -283,9 +283,9 @@ Enter numbers (e.g., "1,2" or "none"): </ask>
 <output>Detected: **{{detected_track}}** based on {{found_artifacts}}</output>
 <ask>Correct? (y/n)</ask>
 
-<ask if="n">Which BMad Method track instead?
+<ask if="n">Which Harmony Method track instead?
 
-1. BMad Method
+1. Harmony Method
 2. Enterprise Method
 3. Switch to Quick Flow (use quick-flow-solo-dev agent)
 
@@ -307,7 +307,7 @@ Choice:</ask>
 </step>
 
 <step n="9" goal="Create tracking file">
-<output>Your BMad workflow path:
+<output>Your Harmony workflow path:
 
 **Track:** {{selected_track}}
 **Type:** {{field_type}}
@@ -323,10 +323,10 @@ Choice:</ask>
 
 <check if="y">
   <action>Generate YAML from template with all variables</action>
-  <action>Save to {output_folder}/bmm-workflow-status.yaml</action>
+  <action>Save to {output_folder}/hf-workflow-status.yaml</action>
   <action>Identify next workflow and agent</action>
 
-<output>✅ **Created:** {output_folder}/bmm-workflow-status.yaml
+<output>✅ **Created:** {output_folder}/hf-workflow-status.yaml
 
 **Next:** {{next_workflow_name}}
 **Agent:** {{next_agent}}

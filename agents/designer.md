@@ -59,6 +59,54 @@ category: core
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Créer les designs et spécifications                       │
+│     - Documenter les choix créatifs                             │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Implémenter le code (c'est Developer)                     │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🎨 Designer - Terminé                                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description du design créé}                                   │
+│                                                                  │
+│  📁 Fichiers créés                                              │
+│  - {design specs}                                               │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Implémenter le design                          │
+│                                                                  │
+│  Pour continuer: "développe {feature}"                          │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## When to Invoke
 
 - Creative design requirements
@@ -66,3 +114,8 @@ category: core
 - Sound design planning
 - Visual design direction
 - Product design decisions
+
+---
+
+**Pattern**: Design Thinking
+**Confidence**: 95%

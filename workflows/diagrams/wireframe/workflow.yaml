@@ -1,6 +1,6 @@
 name: create-excalidraw-wireframe
 description: "Create website or app wireframes in Excalidraw format"
-author: "BMad"
+author: "Harmony Framework"
 
 # Config values
 config_source: "{project-root}/.harmony/config.yaml"

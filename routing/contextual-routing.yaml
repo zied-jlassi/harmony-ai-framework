@@ -127,7 +127,7 @@ context_detection:
       - "**/*player*.ts"
 
     config_indicators:
-      - "gaming" in project_type
+      - project_type: "gaming"
       - has_game_module: true
 
   # Admin/Dashboard context
@@ -147,7 +147,7 @@ context_detection:
       - "**/backoffice/**"
 
     config_indicators:
-      - "admin" in project_type
+      - project_type: "admin"
       - has_admin_module: true
 
   # API/Backend context

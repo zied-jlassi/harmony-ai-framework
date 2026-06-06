@@ -1,0 +1,11 @@
+{
+  "$schema": "./learned-patterns.schema.json",
+  "version": "1.0.0",
+  "patterns": [],
+  "anti_patterns": [],
+  "statistics": {
+    "total_patterns": 0,
+    "applied_count": 0,
+    "prevented_errors": 0
+  }
+}

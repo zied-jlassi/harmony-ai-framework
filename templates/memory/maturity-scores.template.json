@@ -1,0 +1,9 @@
+{
+  "$schema": "./maturity-scores.schema.json",
+  "version": "1.0.0",
+  "agents": {},
+  "statistics": {
+    "avg_maturity_level": 1.0,
+    "total_assessments": 0
+  }
+}

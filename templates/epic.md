@@ -26,11 +26,11 @@
 
 | Type | File | Status |
 |------|------|--------|
-| **Brief** | [brief.md](../docs/briefs/{brief_file}.md) | ✅ Required |
-| PRD | [prd.md](../docs/prd/{prd_file}.md) | Optional |
-| Research | [research.md](../docs/research/{research_file}.md) | Optional |
-| Analysis | [analysis.md](../docs/analysis/{analysis_file}.md) | Optional |
-| Architecture | [ADR-XXX.md](../docs/architecture/ADR-{XXX}.md) | Optional |
+| **Brief** | [brief.md](../../docs/briefs/{brief_file}.md) | ✅ Required |
+| PRD | [prd.md](../../docs/prd/{prd_file}.md) | Optional |
+| Research | [research.md](../../docs/research/{research_file}.md) | Optional |
+| Analysis | [analysis.md](../../docs/analysis/{analysis_file}.md) | Optional |
+| Architecture | [ADR-XXX.md](../../docs/architecture/ADR-{XXX}.md) | Optional |
 
 ---
 
@@ -256,14 +256,19 @@ Progress: {X}%
 ## File Structure
 
 ```
-.harmony/local/backlog/
-├── epics/
-│   └── EP-{XXX}.md          ← This file
-└── stories/
-    ├── US-001.md            ← Story files
-    ├── US-001-UCV.md        ← UCV for story
-    ├── US-002.md
-    └── tasks/
-        ├── TS-001.md        ← Task files (optional, can be inline)
-        └── TS-002.md
+${HARMONY_DIR}/local/backlog/epics/
+└── EP-{XXX}-{slug}/                    ← Epic folder (ID + slug)
+    ├── EP-{XXX}-{slug}.md              ← This file
+    └── stories/
+        ├── US-{XXX}-001-{slug}.md      ← Story files (UCVs inline)
+        ├── US-{XXX}-002-{slug}.md
+        └── US-{XXX}-003-{slug}.md
 ```
+
+### Naming Convention
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Epic folder | `EP-{NNN}-{slug}/` | `EP-001-core-architecture/` |
+| Epic file | `EP-{NNN}-{slug}.md` | `EP-001-core-architecture.md` |
+| Story file | `US-{NNN}-{XXX}-{slug}.md` | `US-001-001-setup-projet.md` |

@@ -126,7 +126,7 @@ Routes to the appropriate agent based on intent:
 │          → Priority: profiles > knowledge > patterns            │
 │                                                                  │
 │  STEP 4: Injection (Immutable)                                  │
-│          → Write to .harmony/memory/working.json                │
+│          → Write to ${HARMONY_DIR}/memory/working.json                │
 │          → State locked (no re-injection)                       │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -299,7 +299,7 @@ To override (not recommended):
     "require_ucv": true,
     "allowed_directories": [
       ".harmony/",
-      "docs/",
+      ".claude/",
       "*.md"
     ],
     "blocked_directories": [

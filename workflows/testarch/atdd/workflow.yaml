@@ -1,45 +1,21 @@
-# Test Architect workflow: atdd
 name: testarch-atdd
-description: "Generate failing acceptance tests before implementation using TDD red-green-refactor cycle"
-author: "BMad"
+description: "Transforme les critères d'acceptation d'une story en tests exécutables avant l'implémentation (cycle RED → GREEN → REFACTOR)"
+author: "Harmony Framework"
+version: "1.0"
 
-# Critical variables from config
 config_source: "{project-root}/.harmony/config.yaml"
-output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
+user_name: "{config_source}:user_name"
 document_output_language: "{config_source}:document_output_language"
-date: system-generated
+sprint_artifacts: "{config_source}:sprint_artifacts"
 
-# Workflow components
 installed_path: "{project-root}/.harmony/workflows/testarch/atdd"
 instructions: "{installed_path}/instructions.md"
 validation: "{installed_path}/checklist.md"
-template: "{installed_path}/atdd-checklist-template.md"
 
-# Variables and inputs
-variables:
-  test_dir: "{project-root}/tests" # Root test directory
+story_file: ""  # Chemin explicite; auto-découverte si vide
+story_id: ""    # ID de la story (ex: STORY-042)
 
-# Output configuration
-default_output_file: "{output_folder}/atdd-checklist-{story_id}.md"
+working_memory: "{project-root}/.harmony/memory/working.json"
 
-# Required tools
-required_tools:
-  - read_file # Read story markdown, framework config
-  - write_file # Create test files, checklist, factory stubs
-  - create_directory # Create test directories
-  - list_files # Find existing fixtures and helpers
-  - search_repo # Search for similar test patterns
-
-tags:
-  - qa
-  - atdd
-  - test-architect
-  - tdd
-  - red-green-refactor
-
-execution_hints:
-  interactive: false # Minimize prompts
-  autonomous: true # Proceed without user input unless blocked
-  iterative: true
+standalone: true

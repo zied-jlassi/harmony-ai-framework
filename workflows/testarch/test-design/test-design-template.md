@@ -1,285 +1,153 @@
-# Test Design: Epic {epic_num} - {epic_title}
+# Plan de Test — {feature-ou-story-id}
 
-**Date:** {date}
-**Author:** {user_name}
-**Status:** Draft / Approved
-
----
-
-## Executive Summary
-
-**Scope:** {design_level} test design for Epic {epic_num}
-
-**Risk Summary:**
-
-- Total risks identified: {total_risks}
-- High-priority risks (≥6): {high_priority_count}
-- Critical categories: {top_categories}
-
-**Coverage Summary:**
-
-- P0 scenarios: {p0_count} ({p0_hours} hours)
-- P1 scenarios: {p1_count} ({p1_hours} hours)
-- P2/P3 scenarios: {p2p3_count} ({p2p3_hours} hours)
-- **Total effort**: {total_hours} hours (~{total_days} days)
+**Date** : {date}
+**Story/Feature** : {story-id} — {titre}
+**Auteur** : {user_name}
+**Version** : 1.0
 
 ---
 
-## Risk Assessment
+## 1. Résumé exécutif
 
-### High-Priority Risks (Score ≥6)
+**Périmètre** : {description courte de ce qui est testé}
 
-| Risk ID | Category | Description   | Probability | Impact | Score | Mitigation   | Owner   | Timeline |
-| ------- | -------- | ------------- | ----------- | ------ | ----- | ------------ | ------- | -------- |
-| R-001   | SEC      | {description} | 2           | 3      | 6     | {mitigation} | {owner} | {date}   |
-| R-002   | PERF     | {description} | 3           | 2      | 6     | {mitigation} | {owner} | {date}   |
+**Objectifs** :
+- Valider que {fonctionnalité principale}
+- Garantir la robustesse face à {cas d'erreur principaux}
+- Assurer les exigences non-fonctionnelles : {NFR listées}
 
-### Medium-Priority Risks (Score 3-4)
-
-| Risk ID | Category | Description   | Probability | Impact | Score | Mitigation   | Owner   |
-| ------- | -------- | ------------- | ----------- | ------ | ----- | ------------ | ------- |
-| R-003   | TECH     | {description} | 2           | 2      | 4     | {mitigation} | {owner} |
-| R-004   | DATA     | {description} | 1           | 3      | 3     | {mitigation} | {owner} |
-
-### Low-Priority Risks (Score 1-2)
-
-| Risk ID | Category | Description   | Probability | Impact | Score | Action  |
-| ------- | -------- | ------------- | ----------- | ------ | ----- | ------- |
-| R-005   | OPS      | {description} | 1           | 2      | 2     | Monitor |
-| R-006   | BUS      | {description} | 1           | 1      | 1     | Monitor |
-
-### Risk Category Legend
-
-- **TECH**: Technical/Architecture (flaws, integration, scalability)
-- **SEC**: Security (access controls, auth, data exposure)
-- **PERF**: Performance (SLA violations, degradation, resource limits)
-- **DATA**: Data Integrity (loss, corruption, inconsistency)
-- **BUS**: Business Impact (UX harm, logic errors, revenue)
-- **OPS**: Operations (deployment, config, monitoring)
+**Risques identifiés** :
+| Risque | Niveau | Mitigation |
+|--------|--------|-----------|
+| {risque 1} | Critique/Élevé/Moyen | {mitigation} |
 
 ---
 
-## Test Coverage Plan
+## 2. Stratégie de test
 
-### P0 (Critical) - Run on every commit
+### Distribution pyramide cible
 
-**Criteria**: Blocks core journey + High risk (≥6) + No workaround
+```
+E2E          ▲  10% — {n} tests — Playwright/Cypress
+Integration  ██  20% — {n} tests — Services, DB, API
+Unit         ████  70% — {n} tests — Fonctions, classes
+```
 
-| Requirement   | Test Level | Risk Link | Test Count | Owner | Notes   |
-| ------------- | ---------- | --------- | ---------- | ----- | ------- |
-| {requirement} | E2E        | R-001     | 3          | QA    | {notes} |
-| {requirement} | API        | R-002     | 5          | QA    | {notes} |
+### Outils
 
-**Total P0**: {p0_count} tests, {p0_hours} hours
+| Type | Outil | Version |
+|------|-------|---------|
+| Unitaires | {Vitest | Jest | pytest | JUnit | go test} | {version} |
+| Intégration | {Vitest + supertest | pytest | Spring Boot Test} | {version} |
+| E2E | {Playwright | Cypress} | {version} |
+| Couverture | {v8/Istanbul | coverage.py | JaCoCo} | {version} |
+| Contrat | {Pact} | {version} |
 
-### P1 (High) - Run on PR to main
+### Seuils de qualité
 
-**Criteria**: Important features + Medium risk (3-4) + Common workflows
-
-| Requirement   | Test Level | Risk Link | Test Count | Owner | Notes   |
-| ------------- | ---------- | --------- | ---------- | ----- | ------- |
-| {requirement} | API        | R-003     | 4          | QA    | {notes} |
-| {requirement} | Component  | -         | 6          | DEV   | {notes} |
-
-**Total P1**: {p1_count} tests, {p1_hours} hours
-
-### P2 (Medium) - Run nightly/weekly
-
-**Criteria**: Secondary features + Low risk (1-2) + Edge cases
-
-| Requirement   | Test Level | Risk Link | Test Count | Owner | Notes   |
-| ------------- | ---------- | --------- | ---------- | ----- | ------- |
-| {requirement} | API        | R-004     | 8          | QA    | {notes} |
-| {requirement} | Unit       | -         | 15         | DEV   | {notes} |
-
-**Total P2**: {p2_count} tests, {p2_hours} hours
-
-### P3 (Low) - Run on-demand
-
-**Criteria**: Nice-to-have + Exploratory + Performance benchmarks
-
-| Requirement   | Test Level | Test Count | Owner | Notes   |
-| ------------- | ---------- | ---------- | ----- | ------- |
-| {requirement} | E2E        | 2          | QA    | {notes} |
-| {requirement} | Unit       | 8          | DEV   | {notes} |
-
-**Total P3**: {p3_count} tests, {p3_hours} hours
+| Métrique | Seuil minimum |
+|----------|--------------|
+| Line coverage | ≥ 80% |
+| Branch coverage | ≥ 80% |
+| Function coverage | ≥ 80% |
+| Mutation score | ≥ 70% (si applicable) |
 
 ---
 
-## Execution Order
+## 3. Catalogue des cas de test
 
-### Smoke Tests (<5 min)
+### TC-001 : {Titre du cas de test}
 
-**Purpose**: Fast feedback, catch build-breaking issues
+**Fonctionnalité** : {feature}
+**Technique** : Partitionnement équivalence | Boundary | Table décision | Transition état
+**Priorité** : Critique | Élevée | Moyenne | Faible
+**Type** : Unit | Integration | E2E | Performance | Security
 
-- [ ] {scenario} (30s)
-- [ ] {scenario} (45s)
-- [ ] {scenario} (1min)
+**Préconditions** :
+- {condition 1}
+- {condition 2}
 
-**Total**: {smoke_count} scenarios
+**Données de test** :
+| Paramètre | Valeur valide | Valeur invalide | Valeur limite |
+|-----------|--------------|-----------------|---------------|
+| {param1} | {valide} | {invalide} | {limite} |
 
-### P0 Tests (<10 min)
+**Étapes** :
+1. {action 1}
+2. {action 2}
+3. {action 3}
 
-**Purpose**: Critical path validation
-
-- [ ] {scenario} (E2E)
-- [ ] {scenario} (API)
-- [ ] {scenario} (API)
-
-**Total**: {p0_count} scenarios
-
-### P1 Tests (<30 min)
-
-**Purpose**: Important feature coverage
-
-- [ ] {scenario} (API)
-- [ ] {scenario} (Component)
-
-**Total**: {p1_count} scenarios
-
-### P2/P3 Tests (<60 min)
-
-**Purpose**: Full regression coverage
-
-- [ ] {scenario} (Unit)
-- [ ] {scenario} (API)
-
-**Total**: {p2p3_count} scenarios
+**Résultat attendu** :
+- {assertion 1}
+- {assertion 2}
 
 ---
 
-## Resource Estimates
+### TC-002 : {Titre du cas d'erreur}
 
-### Test Development Effort
+**Type** : Cas d'erreur / Edge case
+**Lié à** : TC-001
 
-| Priority  | Count             | Hours/Test | Total Hours       | Notes                   |
-| --------- | ----------------- | ---------- | ----------------- | ----------------------- |
-| P0        | {p0_count}        | 2.0        | {p0_hours}        | Complex setup, security |
-| P1        | {p1_count}        | 1.0        | {p1_hours}        | Standard coverage       |
-| P2        | {p2_count}        | 0.5        | {p2_hours}        | Simple scenarios        |
-| P3        | {p3_count}        | 0.25       | {p3_hours}        | Exploratory             |
-| **Total** | **{total_count}** | **-**      | **{total_hours}** | **~{total_days} days**  |
+**Préconditions** : {conditions d'erreur}
 
-### Prerequisites
+**Données de test** : {données invalides ou limites}
 
-**Test Data:**
-
-- {factory_name} factory (faker-based, auto-cleanup)
-- {fixture_name} fixture (setup/teardown)
-
-**Tooling:**
-
-- {tool} for {purpose}
-- {tool} for {purpose}
-
-**Environment:**
-
-- {env_requirement}
-- {env_requirement}
+**Résultat attendu** :
+- Erreur levée : {type d'erreur}
+- Message : {message attendu}
+- Code HTTP : {code si applicable}
 
 ---
 
-## Quality Gate Criteria
-
-### Pass/Fail Thresholds
-
-- **P0 pass rate**: 100% (no exceptions)
-- **P1 pass rate**: ≥95% (waivers required for failures)
-- **P2/P3 pass rate**: ≥90% (informational)
-- **High-risk mitigations**: 100% complete or approved waivers
-
-### Coverage Targets
-
-- **Critical paths**: ≥80%
-- **Security scenarios**: 100%
-- **Business logic**: ≥70%
-- **Edge cases**: ≥50%
-
-### Non-Negotiable Requirements
-
-- [ ] All P0 tests pass
-- [ ] No high-risk (≥6) items unmitigated
-- [ ] Security tests (SEC category) pass 100%
-- [ ] Performance targets met (PERF category)
+*(Répéter pour chaque cas de test)*
 
 ---
 
-## Mitigation Plans
+## 4. Matrice de couverture des exigences
 
-### R-001: {Risk Description} (Score: 6)
+| Exigence | Description | TC couvrants | Couverture |
+|----------|-------------|-------------|-----------|
+| CA-{n} | {description} | TC-001, TC-003 | ✅ |
+| CA-{n} | {description} | TC-002 | ✅ |
+| NFR-{n} | {description} | TC-010 | ✅ |
 
-**Mitigation Strategy:** {detailed_mitigation}
-**Owner:** {owner}
-**Timeline:** {date}
-**Status:** Planned / In Progress / Complete
-**Verification:** {how_to_verify}
-
-### R-002: {Risk Description} (Score: 6)
-
-**Mitigation Strategy:** {detailed_mitigation}
-**Owner:** {owner}
-**Timeline:** {date}
-**Status:** Planned / In Progress / Complete
-**Verification:** {how_to_verify}
+**Taux de couverture** : {n}/{total} exigences = **{pct}%**
 
 ---
 
-## Assumptions and Dependencies
+## 5. Données de test et fixtures
 
-### Assumptions
+### Fixtures requises
 
-1. {assumption}
-2. {assumption}
-3. {assumption}
+```typescript
+// tests/fixtures/{feature}.ts
+export const valid{Entity} = {
+  // données valides complètes
+}
 
-### Dependencies
+export const invalid{Entity}Cases = [
+  { input: null, error: 'ValidationError' },
+  { input: '', error: 'ValidationError' },
+  // ...
+]
+```
 
-1. {dependency} - Required by {date}
-2. {dependency} - Required by {date}
+### Données de seed (si base de données)
 
-### Risks to Plan
-
-- **Risk**: {risk_to_plan}
-  - **Impact**: {impact}
-  - **Contingency**: {contingency}
-
----
-
-## Approval
-
-**Test Design Approved By:**
-
-- [ ] Product Manager: {name} Date: {date}
-- [ ] Tech Lead: {name} Date: {date}
-- [ ] QA Lead: {name} Date: {date}
-
-**Comments:**
+```sql
+-- tests/fixtures/{feature}.sql
+INSERT INTO {table} VALUES (...);
+```
 
 ---
 
----
+## 6. Critères de sortie
+
+- [ ] Tous les cas de test TC-001 à TC-{n} implémentés
+- [ ] Couverture line ≥ 80%, branch ≥ 80%
+- [ ] Aucun test en échec
+- [ ] Tous les critères d'acceptation validés
 
 ---
 
-## Appendix
-
-### Knowledge Base References
-
-- `risk-governance.md` - Risk classification framework
-- `probability-impact.md` - Risk scoring methodology
-- `test-levels-framework.md` - Test level selection
-- `test-priorities-matrix.md` - P0-P3 prioritization
-
-### Related Documents
-
-- PRD: {prd_link}
-- Epic: {epic_link}
-- Architecture: {arch_link}
-- Tech Spec: {tech_spec_link}
-
----
-
-**Generated by**: BMad TEA Agent - Test Architect Module
-**Workflow**: `.harmony/testarch/test-design`
-**Version**: 4.0 (BMad v6)
+*Document généré par Harmony Framework — workflow testarch-test-design*

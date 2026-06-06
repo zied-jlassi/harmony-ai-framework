@@ -1,6 +1,6 @@
 name: create-excalidraw-diagram
 description: "Create system architecture diagrams, ERDs, UML diagrams, or general technical diagrams in Excalidraw format"
-author: "BMad"
+author: "Harmony Framework"
 
 # Config values
 config_source: "{project-root}/.harmony/config.yaml"

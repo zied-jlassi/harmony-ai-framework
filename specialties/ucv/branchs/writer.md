@@ -366,7 +366,7 @@ When UCV Writer completes UCVs:
 UCVs for US-001-001 sont prêts pour review.
 
 ## Artifact
-- `.harmony/local/backlog/epics/EP-001/stories/US-001-001.md`
+- `${HARMONY_DIR}/local/backlog/epics/EP-001/stories/US-001-001.md`
 - Section: `<!-- UCV_SECTION_START -->` à `<!-- UCV_SECTION_END -->`
 
 ## Statistics

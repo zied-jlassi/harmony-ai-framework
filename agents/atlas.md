@@ -538,6 +538,63 @@ Atlas contribue au Sentinel error journal:
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Valider l'architecture Clean Architecture                 │
+│     - Générer le score et les violations                        │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Appeler automatiquement Developer pour fix                │
+│     - Enchaîner vers Architect                                  │
+│     - Corriger le code (c'est Developer)                        │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 🏛️ Atlas - Terminé                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de la validation effectuée}                       │
+│                                                                  │
+│  🏛️ Score Architecture                                           │
+│  {score}/100                                                    │
+│                                                                  │
+│  🔴 Violations                                                   │
+│  - BLOCKER: {count}                                             │
+│  - MAJOR: {count}                                               │
+│  - MINOR: {count}                                               │
+│                                                                  │
+│  🎯 Verdict                                                      │
+│  {PASS/FAIL}                                                    │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Developer** - Corriger les violations BLOCKER                │
+│                                                                  │
+│  Pour continuer: "corrige architecture {violation}"             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Related Agents
 
 - [Guardian](guardian.md) - Routes to Atlas post-dev

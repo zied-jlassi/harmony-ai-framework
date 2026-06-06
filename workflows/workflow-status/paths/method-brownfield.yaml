@@ -1,8 +1,8 @@
-# BMad Method - Brownfield
+# Harmony Method - Brownfield
 # Full product + architecture planning for complex brownfield additions (10-50+ stories typically)
 
-method_name: "BMad Method"
-track: "bmad-method"
+method_name: "Harmony Method"
+track: "harmony-method"
 field_type: "brownfield"
 description: "Complete product and system design for complex brownfield work"
 

@@ -25,7 +25,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 | Agent | Role | Checkpoint |
 |-------|------|------------|
 | **Scrum Master** | Creates story from epic | STORY-XXX.md |
-| **UCV Writer** | Generates use case verifications | STORY-XXX-UCV.md |
+| **UCV Writer** | Generates use case verifications | UCV section in STORY-XXX.md |
 | **User** | Approves UCVs (GATE) | status: APPROVED |
 | **Developer** | Implements each verification | [dev] ✓ |
 | **Tester** | Writes automated tests | [test] ✓ |
@@ -113,8 +113,8 @@ Defines the complete lifecycle of a user story from creation to completion.
 │  │                                      │                       │
 │  │ • Analyze story requirements         │                       │
 │  │ • Write Gherkin scenarios            │                       │
-│  │ • Define verifications               │                       │
-│  │ • Create STORY-XXX-UCV.md           │                       │
+│  │ • Define verifications (V1, V2...)   │                       │
+│  │ • Fill <!-- UCV_SECTION --> in story │                       │
 │  └──────────────────┬──────────────────┘                       │
 │                     │                                           │
 │                     ▼                                           │
@@ -228,7 +228,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 
 **Template:** `templates/story.md`
 
-**Output:** `.harmony/local/backlog/stories/STORY-XXX.md`
+**Output:** `${HARMONY_DIR}/local/backlog/stories/STORY-XXX.md`
 
 ---
 
@@ -247,9 +247,9 @@ Defines the complete lifecycle of a user story from creation to completion.
 - Define specific verifications
 - Include edge cases
 
-**Template:** `templates/ucv.md`
+**Template:** `templates/story.md` (section `<!-- UCV_SECTION_START -->`)
 
-**Output:** `.harmony/local/backlog/stories/STORY-XXX-UCV.md`
+**Output:** UCV section filled in `STORY-XXX.md` (inline, not separate file)
 
 ---
 
@@ -304,7 +304,7 @@ Defines the complete lifecycle of a user story from creation to completion.
 - Application running and accessible
 
 **Activities:**
-- Read STORY-XXX-UCV.md
+- Read UCV section in STORY-XXX.md
 - For each verification:
   - Navigate to the relevant page
   - Execute the Gherkin scenario
@@ -314,8 +314,8 @@ Defines the complete lifecycle of a user story from creation to completion.
   - Document issue if FAIL
 
 **Output:**
-- UCV file with `[qa]` marks
-- Screenshots in `docs/qa/STORY-XXX/`
+- Story file with `[qa]` marks in UCV section
+- Screenshots in `${HARMONY_DIR}/local/docs/qa/STORY-XXX/`
 - QA report
 
 ---
@@ -391,8 +391,7 @@ Coverage: 3/3 = 100% ✅
 
 ### Templates
 
-- [Story Template](../templates/story.md)
-- [UCV Template](../templates/ucv.md)
+- [Story Template](../templates/story.md) - Includes UCV section inline (v2.0)
 
 ### Commands
 

@@ -1,0 +1,20 @@
+{
+  "$schema": "./user-preferences.schema.json",
+  "version": "1.0.0",
+  "user": {
+    "name": null,
+    "skill_level": "intermediate",
+    "communication_language": "en",
+    "document_language": "en"
+  },
+  "guardian": {
+    "mode": "warn",
+    "allowed_skip_phases": false
+  },
+  "agents": {
+    "preferred_personas": true,
+    "verbose_output": false
+  },
+  "learned_habits": [],
+  "shortcuts": {}
+}

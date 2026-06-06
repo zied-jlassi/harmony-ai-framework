@@ -32,9 +32,9 @@ templates:
 
 # Output Paths
 outputs:
-  brief: "docs/briefs/{project_name}-brief.md"
-  stakeholders: "docs/briefs/stakeholders.md"
-  personas: "docs/briefs/personas.md"
+  brief: "${HARMONY_DIR}/local/docs/briefs/{project_name}-brief.md"
+  stakeholders: "${HARMONY_DIR}/local/docs/briefs/stakeholders.md"
+  personas: "${HARMONY_DIR}/local/docs/briefs/personas.md"
 
 # Workflow Chaining
 next_workflow: "planning"
@@ -257,9 +257,9 @@ triggers:
 
 | Output | Location | Status |
 |--------|----------|--------|
-| Product Brief | `docs/briefs/[name]-brief.md` | Required |
-| Stakeholder Analysis | `docs/briefs/stakeholders.md` | Required |
-| User Personas | `docs/briefs/personas.md` | Optional |
+| Product Brief | `${HARMONY_DIR}/local/docs/briefs/[name]-brief.md` | Required |
+| Stakeholder Analysis | `${HARMONY_DIR}/local/docs/briefs/stakeholders.md` | Required |
+| User Personas | `${HARMONY_DIR}/local/docs/briefs/personas.md` | Optional |
 
 ---
 

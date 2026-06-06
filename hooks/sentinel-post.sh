@@ -10,8 +10,8 @@
 set -e
 
 HARMONY_DIR=".harmony"
-ERROR_JOURNAL="${HARMONY_DIR}/memory/error-journal.json"
-CIRCUIT_BREAKER="${HARMONY_DIR}/memory/circuit-breaker.json"
+ERROR_JOURNAL="${HARMONY_DIR}/local/memory/error-journal.json"
+CIRCUIT_BREAKER="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 PATTERNS_REGISTRY="${HARMONY_DIR}/patterns/patterns-registry.yaml"
 TOOL_NAME="${1:-unknown}"
 TOOL_INPUT="${2:-{}}"
@@ -29,7 +29,7 @@ NC='\033[0m'
 
 # Ensure memory directory exists
 ensure_memory_dir() {
-    mkdir -p "${HARMONY_DIR}/memory"
+    mkdir -p "${HARMONY_DIR}/local/memory"
 }
 
 # Initialize error journal if needed

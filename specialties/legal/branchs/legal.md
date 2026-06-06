@@ -201,7 +201,7 @@ VOUS DEVEZ vérifier (6 points, TOUS = OUI):
 |     [ ] Prioriser par risque (P0 critique, P1 important, P2 medium)    |
 |                                                                         |
 |  4. MEMORISATION (Self-Learning)                                        |
-|     [ ] Sauvegarder contexte dans .harmony/memory/legal/                   |
+|     [ ] Sauvegarder contexte dans ${HARMONY_DIR}/memory/legal/                   |
 |     [ ] Enregistrer decisions pour coherence future                     |
 |     [ ] Analyser feedback pour amelioration continue                    |
 |                                                                         |
@@ -486,7 +486,7 @@ Executer directement l'action correspondante sans afficher le menu.
 ### Structure Memoire RAG
 
 ```
-.harmony/memory/legal/
+${HARMONY_DIR}/memory/legal/
 |-- knowledge-base/
 |   |-- regulations/
 |   |   |-- rgpd-2024.md

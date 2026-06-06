@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-sandbox-quarantine",
+  "title": "Harmony Sandbox Quarantine",
+  "description": "Schema for quarantined suspicious data",
+  "type": "object",
+  "required": ["version", "quarantined"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "quarantined": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "data_hash": { "type": "string" },
+          "source": { "type": "string" },
+          "type": { "type": "string" },
+          "reason": { "type": "string" },
+          "threat_level": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "patterns_matched": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "quarantined_at": { "type": "string", "format": "date-time" },
+          "reviewed": { "type": "boolean" },
+          "released": { "type": "boolean" }
+        },
+        "required": ["id", "reason", "quarantined_at"]
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_quarantined": { "type": "integer", "minimum": 0 },
+        "reviewed": { "type": "integer", "minimum": 0 },
+        "released": { "type": "integer", "minimum": 0 },
+        "by_threat_level": { "type": "object" }
+      }
+    }
+  }
+}

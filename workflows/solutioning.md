@@ -229,10 +229,10 @@ triggers:
 
 | Output | Location | Status |
 |--------|----------|--------|
-| Architecture Doc | `docs/architecture/architecture.md` | Required |
-| ADRs | `docs/architecture/adr/ADR-XXX.md` | Required |
-| Stories | `.harmony/local/backlog/stories/STORY-XXX.md` | Required |
-| UCVs | `.harmony/local/backlog/stories/STORY-XXX-UCV.md` | Required |
+| Architecture Doc | `${HARMONY_DIR}/local/docs/architecture/architecture.md` | Required |
+| ADRs | `${HARMONY_DIR}/local/docs/architecture/adr/ADR-XXX.md` | Required |
+| Stories | `${HARMONY_DIR}/local/backlog/stories/STORY-XXX.md` | Required |
+| UCVs | `${HARMONY_DIR}/local/backlog/stories/STORY-XXX-UCV.md` | Required |
 
 ---
 

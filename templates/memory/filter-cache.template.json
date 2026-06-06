@@ -1,0 +1,11 @@
+{
+  "$schema": "./filter-cache.schema.json",
+  "version": "1.0.0",
+  "cache": {},
+  "statistics": {
+    "cache_hits": 0,
+    "cache_misses": 0,
+    "total_tokens_saved": 0,
+    "avg_relevance_score": 0
+  }
+}

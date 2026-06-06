@@ -1,0 +1,11 @@
+{
+  "$schema": "./anomaly-events.schema.json",
+  "version": "1.0.0",
+  "events": [],
+  "baselines": {},
+  "statistics": {
+    "total_anomalies": 0,
+    "resolved_anomalies": 0,
+    "by_type": {}
+  }
+}

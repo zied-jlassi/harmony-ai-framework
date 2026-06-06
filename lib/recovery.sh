@@ -34,10 +34,10 @@ if [[ -z "${HARMONY_DIR:-}" ]]; then
     HARMONY_DIR=".harmony"
 fi
 
-WORKING_MEMORY="${HARMONY_DIR}/memory/working.json"
-ACTION_LOG="${HARMONY_DIR}/memory/.action-log.jsonl"
-CHECKPOINT_FILE="${HARMONY_DIR}/memory/.checkpoint.json"
-BACKUP_DIR="${HARMONY_DIR}/memory/.backups"
+WORKING_MEMORY="${HARMONY_DIR}/local/memory/working.json"
+ACTION_LOG="${HARMONY_DIR}/local/memory/.action-log.jsonl"
+CHECKPOINT_FILE="${HARMONY_DIR}/local/memory/.checkpoint.json"
+BACKUP_DIR="${HARMONY_DIR}/local/memory/.backups"
 
 # Colors
 C_GREEN='\033[0;32m'
@@ -451,6 +451,6 @@ generate_session_summary() {
 
 # Save session summary to handoff file
 save_session_summary() {
-    generate_session_summary > "${HARMONY_DIR}/memory/session-handoff.md"
+    generate_session_summary > "${HARMONY_DIR}/local/memory/session-handoff.md"
     echo -e "${C_GREEN}Session summary saved to session-handoff.md${C_NC}" >&2
 }

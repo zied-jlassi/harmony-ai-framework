@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-audit-journal",
+  "title": "Harmony Audit Journal",
+  "description": "Schema for audit trail with rollback capability",
+  "type": "object",
+  "required": ["version", "entries"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "description": "Current session identifier"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "agent": { "type": "string" },
+          "action": { "type": "string" },
+          "target": { "type": "string" },
+          "rationale": { "type": "string" },
+          "file_changes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "file": { "type": "string" },
+                "before": { "type": "string" },
+                "after": { "type": "string" }
+              }
+            }
+          },
+          "checkpoint_id": { "type": ["string", "null"] }
+        },
+        "required": ["id", "timestamp", "agent", "action"]
+      }
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "type": { "type": "string", "enum": ["auto", "manual"] },
+          "description": { "type": "string" },
+          "entry_count": { "type": "integer" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_entries": { "type": "integer", "minimum": 0 },
+        "total_checkpoints": { "type": "integer", "minimum": 0 },
+        "rollbacks_performed": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

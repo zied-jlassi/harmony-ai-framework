@@ -1,5 +1,17 @@
 # CLAUDE.md
 
+## 🛡️ HARMONY FRAMEWORK (ACTIVE)
+
+> **INSTRUCTIONS**: Read `.harmony/INSTRUCTIONS.md` for all framework protocols (P-010 Agent Announcement, Guardian, Sentinel).
+
+> **CONFIG**: `HARMONY_DIR=.harmony` - All framework files are in `.harmony/`
+
+> **COMMANDS**: `/go` (session start) • `/harmony` (30 commands) • `/harmony status`
+
+> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai-framework --force` to restore.
+
+---
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview

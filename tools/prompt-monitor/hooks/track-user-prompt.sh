@@ -7,11 +7,11 @@
 
 MONITOR_URL="${HARMONY_MONITOR_URL:-http://localhost:8080}"
 
-# Read JSON from stdin
-INPUT=$(cat)
+# Read JSON from stdin with timeout (0.1s) to prevent hanging
+INPUT=$(timeout 0.1 cat 2>/dev/null || echo "{}")
 
-# Extract user prompt
-USER_PROMPT=$(echo "$INPUT" | jq -r '.prompt // ""')
+# Extract user prompt (silence jq errors if input is not valid JSON)
+USER_PROMPT=$(echo "$INPUT" | jq -r '.prompt // ""' 2>/dev/null)
 
 # Skip empty prompts
 if [ -z "$USER_PROMPT" ]; then

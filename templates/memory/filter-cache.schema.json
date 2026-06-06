@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-filter-cache",
+  "title": "Harmony FILCO Filter Cache",
+  "description": "Schema for context filtering cache (FILCO)",
+  "type": "object",
+  "required": ["version", "cache"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "cache": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "query_hash": { "type": "string" },
+          "filtered_context": { "type": "string" },
+          "relevance_scores": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chunk_id": { "type": "string" },
+                "score": { "type": "number" }
+              }
+            }
+          },
+          "tokens_saved": { "type": "integer" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "expires_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "cache_hits": { "type": "integer", "minimum": 0 },
+        "cache_misses": { "type": "integer", "minimum": 0 },
+        "total_tokens_saved": { "type": "integer", "minimum": 0 },
+        "avg_relevance_score": { "type": "number" }
+      }
+    }
+  }
+}

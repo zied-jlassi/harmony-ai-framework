@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "harmony-compliance-proofs",
+  "title": "Harmony Compliance Proofs",
+  "description": "Schema for compliance documentation and proofs",
+  "type": "object",
+  "required": ["version", "proofs"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "proofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["security", "privacy", "quality", "governance", "accessibility"]
+          },
+          "framework": { "type": "string" },
+          "check": { "type": "string" },
+          "status": { "type": "string", "enum": ["passed", "failed", "pending", "waived"] },
+          "evidence": { "type": "string" },
+          "verified_at": { "type": "string", "format": "date-time" },
+          "verified_by": { "type": "string" },
+          "expires_at": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": ["id", "category", "check", "status"]
+      }
+    },
+    "reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sprint_id": { "type": "string" },
+          "generated_at": { "type": "string", "format": "date-time" },
+          "summary": { "type": "object" }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "total_checks": { "type": "integer", "minimum": 0 },
+        "passed_checks": { "type": "integer", "minimum": 0 },
+        "failed_checks": { "type": "integer", "minimum": 0 },
+        "compliance_rate": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  }
+}

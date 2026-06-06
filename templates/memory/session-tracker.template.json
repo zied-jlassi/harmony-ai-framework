@@ -1,0 +1,12 @@
+{
+  "$schema": "./session-tracker.schema.json",
+  "session_start": 0,
+  "message_count": 0,
+  "analysis_mode": false,
+  "analysis_topics": [],
+  "analysis_session_id": null,
+  "last_warning": 0,
+  "last_auto_save": 0,
+  "warnings_shown": 0,
+  "auto_save_count": 0
+}

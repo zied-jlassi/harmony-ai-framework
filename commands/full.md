@@ -1,88 +1,61 @@
-# Harmony Full - Complete Audit
+# Harmony Full - Complete Coherence Audit
 
-> Exhaustive scan of all framework resources (~2-5 min).
-
----
-
-## What It Checks
-
-### 1. Agents Coherence
-
-| Check | Description |
-|-------|-------------|
-| Frontmatter | Valid YAML metadata |
-| Required fields | name, displayName, description |
-| File existence | Referenced files exist |
-| Cross-references | Links valid |
-
-### 2. Profiles Validation
-
-| Check | Description |
-|-------|-------------|
-| Registry sync | profiles-registry.yaml accurate |
-| Dependencies | Required profiles exist |
-| Knowledge files | Valid markdown structure |
-| Orphans | No unused knowledge files |
-
-### 3. Specialties Validation
-
-| Check | Description |
-|-------|-------------|
-| Manifest valid | manifest.yaml structure |
-| Agents complete | All declared agents exist |
-| Patterns valid | Pattern files complete |
-
-### 4. Integrations Check
-
-| Check | Description |
-|-------|-------------|
-| Templates exist | All templates present |
-| Syntax valid | Target IDE syntax correct |
-
-### 5. Memory State
-
-| Check | Description |
-|-------|-------------|
-| Files exist | All memory files present |
-| JSON valid | Parseable structure |
-| Circuit breaker | State consistent |
-
----
-
-## Output
-
-```
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                    HARMONY FULL AUDIT                                          ║
-╠═══════════════════════════════════════════════════════════════════════════════╣
-║                                                                               ║
-║   AGENTS           ████████████████████  100%  ✅ 18/18 valid                 ║
-║   PROFILES         ████████████████░░░░   80%  ⚠️ 16/20 complete              ║
-║   SPECIALTIES      ████████████████████  100%  ✅ 2/2 valid                   ║
-║   INTEGRATIONS     ████████████████████  100%  ✅ 5/5 valid                   ║
-║   MEMORY           ████████████████████  100%  ✅ 4/4 valid                   ║
-║                                                                               ║
-║   OVERALL SCORE: 96%                                                          ║
-║                                                                               ║
-║   Issues Found:                                                               ║
-║   ├── 4 profiles missing knowledge files                                      ║
-║   └── Run: harmony learn --refresh <profile>                                  ║
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-```
+> Exhaustive scan of all 18 framework categories with broken link detection.
 
 ---
 
 ## Usage
 
 ```bash
-harmony full
+/harmony full
 ```
+
+---
+
+## What It Checks (18 Categories)
+
+| # | Category | Description |
+|---|----------|-------------|
+| 1 | COMMANDS | Index, files, orphans |
+| 2 | AGENTS | Frontmatter, required fields, triggers |
+| 3 | SPECIALTIES | Manifests, branches, references |
+| 4 | PROFILES | Registry, categories, knowledge refs |
+| 5 | KNOWLEDGE | Structure, markdown files, orphans |
+| 6 | CONFIG | Required configs, YAML validity |
+| 7 | MEMORY | JSON files, circuit breaker state |
+| 8 | MCP | Server availability |
+| 9 | BIN | Entry point scripts, shell syntax |
+| 10 | HOOKS | Hook scripts, state paths |
+| 11 | INTEGRATIONS | Registry, IDE manifests |
+| 12 | PATTERNS | P-XXX format, registry, case studies |
+| 13 | ROUTING | YAML validity, agent refs, phases |
+| 14 | RULES | R-XXX format, YAML validity |
+| 15 | WORKFLOWS | Structure, cross-references |
+| 16 | ERROR-LIBRARY | JSON schema, ID format |
+| 17 | TIPS | Sequential naming, markdown |
+| 18 | TOOLS | Shell syntax, Docker, deps |
+| - | LINKS | Broken link detection |
+
+---
+
+## Execution
+
+1. **Read template**: `templates/audit/full-audit.template.md`
+2. **Run script**: `lib/harmony-audit.sh` (if available)
+3. **Generate output** following template format
+4. **Calculate score**: (valid / total) per category
+5. **Show recommendations** based on findings
+
+---
+
+## Output Template
+
+See: `templates/audit/full-audit.template.md`
 
 ---
 
 ## See Also
 
-- [Quick Check](quick.md) - Fast validation (~30s)
-- [Fix](fix.md) - Propose corrections
-- [Report](report.md) - Coherence matrix
+- [Quick](quick.md) - Fast validation (~30s)
+- [Fix](fix.md) - Auto-repair issues
+- [Report](report.md) - Export coherence matrix

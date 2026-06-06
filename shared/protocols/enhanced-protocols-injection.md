@@ -1,6 +1,6 @@
 # Enhanced Protocols Injection (v2.0)
 
-> **Usage**: Ce fichier est injecte dans TOUS les agents BMAD
+> **Usage**: Ce fichier est injecte dans TOUS les agents Harmony
 > **Version**: 2.0 - Deep Thinking Enhanced
 > **Status**: OBLIGATOIRE - Ne pas modifier sans validation
 

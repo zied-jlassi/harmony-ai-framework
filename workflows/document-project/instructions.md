@@ -212,7 +212,7 @@ Check status anytime with: `workflow-status`
 **Next Steps:**
 Since no workflow is in progress:
 
-- Refer to the BMM workflow guide if unsure what to do next
+- Refer to the Harmony workflow guide if unsure what to do next
 - Or run `workflow-init` to create a workflow path and get guided next steps
   {{/if}}
   </output>

@@ -96,7 +96,7 @@ Use holistic judgment, not mechanical keyword matching.</action>
       <ask>This looks like a focused feature with multiple components.
 
 **[t] Create tech-spec first** (recommended)
-**[w] Seems bigger than quick-dev** — see what BMad Method recommends (workflow-init)
+**[w] Seems bigger than quick-dev** — see what Harmony Framework recommends (workflow-init)
 **[e] Execute directly**</ask>
 
       <check if="t">
@@ -106,7 +106,7 @@ Use holistic judgment, not mechanical keyword matching.</action>
 
       <check if="w">
         <action>Load and execute {workflow_init}</action>
-        <action>EXIT quick-dev - user has been routed to BMad Method</action>
+        <action>EXIT quick-dev - user has been routed to Harmony Framework</action>
       </check>
 
       <check if="e">
@@ -115,17 +115,17 @@ Use holistic judgment, not mechanical keyword matching.</action>
       </check>
     </check>
 
-    <!-- Level 3+: BMad Method territory, recommend workflow-init -->
+    <!-- Level 3+: Harmony Framework territory, recommend workflow-init -->
     <check if="level 3 or higher">
       <ask>This sounds like platform/system work.
 
-**[w] Start BMad Method** (recommended) (workflow-init)
+**[w] Start Harmony Framework** (recommended) (workflow-init)
 **[t] Create tech-spec** (lighter planning)
 **[e] Execute directly** - feeling lucky</ask>
 
       <check if="w">
         <action>Load and execute {workflow_init}</action>
-        <action>EXIT quick-dev - user has been routed to BMad Method</action>
+        <action>EXIT quick-dev - user has been routed to Harmony Framework</action>
       </check>
 
       <check if="t">

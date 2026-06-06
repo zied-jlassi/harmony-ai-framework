@@ -1,0 +1,11 @@
+{
+  "$schema": "./sandbox-log.schema.json",
+  "version": "1.0.0",
+  "events": [],
+  "statistics": {
+    "total_validations": 0,
+    "passed": 0,
+    "sanitized": 0,
+    "blocked": 0
+  }
+}

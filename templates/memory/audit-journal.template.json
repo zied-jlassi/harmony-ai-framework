@@ -1,0 +1,12 @@
+{
+  "$schema": "./audit-journal.schema.json",
+  "version": "1.0.0",
+  "session_id": null,
+  "entries": [],
+  "checkpoints": [],
+  "statistics": {
+    "total_entries": 0,
+    "total_checkpoints": 0,
+    "rollbacks_performed": 0
+  }
+}

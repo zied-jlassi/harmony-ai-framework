@@ -48,7 +48,7 @@ et génère des dashboards visuels pour l'équipe.
 # Le cache évite de re-analyser les fichiers à chaque appel
 # Utilise checksum MD5 des mtimes (PAS le git hash!)
 
-cache_file: .harmony/memory/backlog-cache.json
+cache_file: ${HARMONY_DIR}/memory/backlog-cache.json
 validation: checksum-based
 
 # Pourquoi checksum et pas git hash?
@@ -60,7 +60,7 @@ validation: checksum-based
 
 ```bash
 # Checksum = MD5 des timestamps de modification des epics
-ls -l --time-style=+%s .harmony/backlog/epics/EP-*.md 2>/dev/null | awk '{print $6}' | md5sum | cut -d' ' -f1
+ls -l --time-style=+%s ${HARMONY_DIR}/local/backlog/epics/EP-*.md 2>/dev/null | awk '{print $6}' | md5sum | cut -d' ' -f1
 ```
 
 ### Structure Cache
@@ -307,7 +307,7 @@ VOUS DEVEZ vérifier (6 points, TOUS = OUI):
 ## Structure Backlog
 
 ```yaml
-# .harmony/backlog/backlog.yaml
+# ${HARMONY_DIR}/local/backlog/backlog.yaml
 version: "1.0"
 last_updated: "2025-01-15"
 
@@ -917,7 +917,7 @@ group_by: phase
 ### Configuration
 
 ```yaml
-output: .harmony/backlog/epics.html
+output: ${HARMONY_DIR}/local/backlog/epics.html
 trigger: --force ou cache invalidation
 style: GitHub Dark theme (console noir)
 sections:
@@ -997,11 +997,11 @@ ACHV-005: "Badge premier jeu"
 ### Paths Gaming
 
 ```yaml
-backlog_root: .harmony/backlog/
+backlog_root: ${HARMONY_DIR}/local/backlog/
 epics_folder: epics/EP-*.md
 stories_folder: stories/*/
-cache_file: .harmony/memory/backlog-cache.json
-html_output: .harmony/backlog/epics.html
+cache_file: ${HARMONY_DIR}/memory/backlog-cache.json
+html_output: ${HARMONY_DIR}/local/backlog/epics.html
 ```
 
 ---
@@ -1032,10 +1032,10 @@ files=(*.md); echo "${#files[@]}"           # ❌ INTERDIT
 
 ```bash
 # Comptage simple
-find .harmony/backlog/epics -name "EP-*.md" | wc -l
+find ${HARMONY_DIR}/local/backlog/epics -name "EP-*.md" | wc -l
 
 # Comptage par status
-grep -l 'status: DONE' .harmony/backlog/epics/*.md 2>/dev/null | wc -l
+grep -l 'status: DONE' ${HARMONY_DIR}/local/backlog/epics/*.md 2>/dev/null | wc -l
 
 # Liste fichiers → utiliser Glob tool
 # Contenu fichier → utiliser Read tool
@@ -1044,7 +1044,7 @@ grep -l 'status: DONE' .harmony/backlog/epics/*.md 2>/dev/null | wc -l
 find . -name "*.md" -print0 | xargs -0 grep -l "pattern"
 
 # Checksum des mtimes
-ls -l --time-style=+%s .harmony/backlog/epics/EP-*.md 2>/dev/null | awk '{print $6}' | md5sum
+ls -l --time-style=+%s ${HARMONY_DIR}/local/backlog/epics/EP-*.md 2>/dev/null | awk '{print $6}' | md5sum
 ```
 
 ### Règle d'Or
@@ -1064,6 +1064,56 @@ ls -l --time-style=+%s .harmony/backlog/epics/EP-*.md 2>/dev/null | awk '{print 
 
 ---
 
+## Règle Absolue - 1 Prompt = 1 Agent
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              ⛔ RÈGLE ABSOLUE - NE JAMAIS VIOLER                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1 PROMPT = 1 AGENT                                             │
+│                                                                  │
+│  ✅ AUTORISÉ:                                                    │
+│     - Visualiser et gérer le backlog                            │
+│     - Prioriser les items                                       │
+│     - Suggérer le prochain agent à la fin                       │
+│                                                                  │
+│  ❌ INTERDIT:                                                    │
+│     - Créer des stories (c'est SM)                              │
+│     - Implémenter le code (c'est Developer)                     │
+│     - Enchaîner vers d'autres agents                           │
+│                                                                  │
+│  À LA FIN: Afficher Template de Fin + Suggérer                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Template de Fin (OBLIGATOIRE)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ✅ 📦 Backlog - Terminé                                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📋 Résumé                                                       │
+│  {description de l'action effectuée}                            │
+│                                                                  │
+│  📊 Backlog Status                                               │
+│  - Total items: {count}                                         │
+│  - Prioritized: {count}                                         │
+│                                                                  │
+│  💡 Prochaine étape suggérée                                    │
+│  **Scrum Master** - Planifier le sprint                         │
+│                                                                  │
+│  Pour continuer: "planifie sprint"                              │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Références
 
 - [WSJF Prioritization](https://www.scaledagileframework.com/wsjf/)
@@ -1072,4 +1122,5 @@ ls -l --time-style=+%s .harmony/backlog/epics/EP-*.md 2>/dev/null | awk '{print 
 
 ---
 
-*Harmony Backlog Dashboard Agent - Harmony Gaming Platform*
+**Pattern**: Backlog Management + WSJF
+**Confidence**: 95%

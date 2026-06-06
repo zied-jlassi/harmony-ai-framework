@@ -17,6 +17,9 @@ branchs:
     description: "Software QA - Unit, integration, system testing"
     condition: "default"
     knowledge:
+      # Methodologies (Harmony+ v1.1.0)
+      - ../../knowledge/methodologies/qa-methodology.md
+      # Testing
       - ../../knowledge/domains/quality/e2e-testing-patterns.md
       - ../../knowledge/shared/patterns/tdd-workflow.md
       - ../../knowledge/shared/patterns/bash-testing-patterns.md
@@ -34,6 +37,9 @@ branchs:
     description: "Web QA - E2E, cross-browser, responsive testing"
     condition: "feature_flags.is_web == true"
     knowledge:
+      # Methodologies (Harmony+ v1.1.0)
+      - ../../knowledge/methodologies/qa-methodology.md
+      # Testing
       - ../../knowledge/domains/quality/playwright-e2e.md
       - ../../knowledge/domains/quality/e2e-testing-patterns.md
       - ../../knowledge/domains/quality/core-web-vitals.md
@@ -91,6 +97,18 @@ knowledge:
     - id: playwright
       file: ../../knowledge/domains/quality/playwright-e2e.md
       keywords: [playwright, browser, automation]
+    - id: test-framework-setup
+      file: ../../knowledge/domains/quality/test-framework-setup.md
+      keywords: [playwright, cypress, jest, vitest, setup, framework]
+    - id: atdd-patterns
+      file: ../../knowledge/domains/quality/atdd-patterns.md
+      keywords: [atdd, tdd, acceptance, test-first, red-green]
+    - id: nfr-assessment
+      file: ../../knowledge/domains/quality/nfr-assessment.md
+      keywords: [nfr, non-functional, performance, security, audit]
+    - id: traceability
+      file: ../../knowledge/domains/quality/traceability-patterns.md
+      keywords: [traceability, coverage, matrix, requirements]
 
   quality-domain:
     - id: core-web-vitals
@@ -99,6 +117,23 @@ knowledge:
       file: ../../knowledge/domains/quality/harmony-test-suite.md
     - id: security-rgpd
       file: ../../knowledge/domains/quality/e2e-security-rgpd.md
+
+  templates:
+    - id: ci-github
+      file: ../../knowledge/templates/ci/github-actions-test.yaml
+      keywords: [ci, github, actions, pipeline]
+    - id: ci-gitlab
+      file: ../../knowledge/templates/ci/gitlab-ci-test.yaml
+      keywords: [ci, gitlab, pipeline]
+    - id: atdd-checklist
+      file: ../../knowledge/templates/quality/atdd-checklist.md
+      keywords: [atdd, checklist, acceptance]
+    - id: traceability-matrix
+      file: ../../knowledge/templates/quality/traceability-matrix.md
+      keywords: [traceability, matrix, coverage]
+    - id: nfr-report
+      file: ../../knowledge/templates/quality/nfr-report.md
+      keywords: [nfr, report, assessment]
 
 # Global patterns
 patterns:

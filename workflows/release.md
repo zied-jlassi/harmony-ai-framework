@@ -243,7 +243,7 @@ triggers:
 |--------|----------|--------|
 | Release Notes | `releases/vX.Y.Z.md` | Required |
 | Changelog | `CHANGELOG.md` | Required |
-| REX Document | `docs/rex/REX-XXX.md` | Required |
+| REX Document | `${HARMONY_DIR}/local/docs/rex/REX-XXX.md` | Required |
 | Velocity Report | Sprint status | Required |
 
 ---

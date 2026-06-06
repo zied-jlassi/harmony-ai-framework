@@ -1,7 +1,7 @@
 # Deep-Dive Documentation Workflow Configuration
 name: "document-project-deep-dive"
 description: "Exhaustive deep-dive documentation of specific project areas"
-author: "BMad"
+author: "Harmony Framework"
 
 # This is a sub-workflow called by document-project/workflow.yaml
 parent_workflow: "{project-root}/.harmony/workflows/document-project/workflow.yaml"

@@ -119,22 +119,33 @@ Phase 4: Implementation
 
 ## Invoking Agents
 
-### Via Slash Commands
+### Via Slash Commands (Skills)
 
 ```bash
-/bmad:bmm:agents:dev STORY-042       # Developer
-/bmad:bmm:agents:architect           # Architect
-/bmad:bmm:agents:sm                  # Scrum Master
-/bmad:bmm:agents:analyst             # Analyst
-/bmad:bmm:agents:tea                 # Tester
+/hf-agent-dev STORY-042       # Developer
+/hf-agent-architect           # Architect
+/hf-agent-sm                  # Scrum Master
+/hf-agent-analyst             # Analyst
+/hf-agent-tester              # Tester
 ```
 
 ### Via Workflows
 
 ```bash
-/bmad:bmm:workflows:dev-story STORY-042
-/bmad:bmm:workflows:create-architecture
-/bmad:bmm:workflows:sprint-planning
+/hf-workflow-dev-story STORY-042
+/hf-workflow-sprint-planning
+```
+
+### Via Natural Language (Guardian Auto-Routing)
+
+Guardian detecte automatiquement l'intent et route vers l'agent approprié:
+
+```
+"develop STORY-042"           → Developer
+"design the architecture"     → Architect
+"plan the sprint"             → Scrum Master
+"analyze requirements"        → Analyst
+"test the login feature"      → Tester
 ```
 
 ---

@@ -1,6 +1,6 @@
 # Infrastructure Security - Docker, CVE, SIEM, WAF, Egress
 
-> Module de l'agent `/bmad:security`
+> Module de l'agent `/hf-agent-security`
 > **Commandes**: `audit-docker`, `audit-infra`, `audit-siem`, `audit-waf`, `audit-egress`
 
 ---

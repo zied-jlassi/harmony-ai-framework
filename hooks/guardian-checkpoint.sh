@@ -10,7 +10,7 @@
 set -e
 
 HARMONY_DIR=".harmony"
-WORKFLOW_STATE="${HARMONY_DIR}/memory/workflow-state.json"
+WORKFLOW_STATE="${HARMONY_DIR}/local/memory/workflow-state.json"
 TOOL_NAME="${1:-unknown}"
 TOOL_INPUT="${2:-{}}"
 
@@ -34,7 +34,6 @@ is_allowed_directory() {
     local allowed_fixed=(
         ".harmony/"
         ".claude/"
-        "docs/"
         "node_modules/"
         ".git/"
     )

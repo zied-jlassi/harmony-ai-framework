@@ -76,6 +76,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
+WHITE='\033[1;37m'
 NC='\033[0m' # No Color
 
 # Default values
@@ -304,8 +305,9 @@ parse_args() {
 # Global variable for detected IDE (used in print_summary)
 _DETECTED_IDE="generic"
 
-# Detect IDE and set memory directory
-detect_ide_and_memory_path() {
+# Detect IDE (for hooks/settings configuration)
+# ADR-010: Memory is always in .harmony/memory/ (IDE-independent)
+detect_ide() {
     local detected_ide="generic"
 
     # Auto-detection based on existing files
@@ -328,46 +330,27 @@ detect_ide_and_memory_path() {
     # Store globally for print_summary
     _DETECTED_IDE="$detected_ide"
 
-    # Set memory directory based on IDE
+    # IDE config directory (for hooks, settings, etc.)
     case "$detected_ide" in
-        claude-code)
-            MEMORY_DIR="$PROJECT_DIR/.claude/memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.claude"
-            ;;
-        cursor)
-            MEMORY_DIR="$PROJECT_DIR/.cursor/harmony-memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.cursor"
-            ;;
-        windsurf)
-            MEMORY_DIR="$PROJECT_DIR/.windsurf/harmony-memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.windsurf"
-            ;;
-        continue)
-            MEMORY_DIR="$PROJECT_DIR/.continue/harmony-memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.continue"
-            ;;
-        cody)
-            MEMORY_DIR="$PROJECT_DIR/.cody/harmony-memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.cody"
-            ;;
-        generic|*)
-            MEMORY_DIR="$PROJECT_DIR/.harmony-local/memory"
-            IDE_CONFIG_DIR="$PROJECT_DIR/.harmony-local"
-            ;;
+        claude-code)  IDE_CONFIG_DIR="$PROJECT_DIR/.claude" ;;
+        cursor)       IDE_CONFIG_DIR="$PROJECT_DIR/.cursor" ;;
+        windsurf)     IDE_CONFIG_DIR="$PROJECT_DIR/.windsurf" ;;
+        continue)     IDE_CONFIG_DIR="$PROJECT_DIR/.continue" ;;
+        cody)         IDE_CONFIG_DIR="$PROJECT_DIR/.cody" ;;
+        generic|*)    IDE_CONFIG_DIR="$PROJECT_DIR/.harmony-local" ;;
     esac
 
     # Debug info (hidden in UI mode - UI boxes show this)
     if [[ "$UI_LIBRARY_LOADED" != true ]]; then
         print_message "$CYAN" "  IDE detected: $detected_ide"
-        print_message "$CYAN" "  Memory path: $MEMORY_DIR"
     fi
 
-    # Save config for Harmony to know where memory is
+    # Save config for Harmony - memory is in .harmony/local/memory/
     mkdir -p "$PROJECT_DIR/.harmony/config"
     cat > "$PROJECT_DIR/.harmony/config/paths.json" << EOF
 {
   "ide": "$detected_ide",
-  "memory_dir": "$MEMORY_DIR",
+  "memory_dir": ".harmony/local/memory",
   "ide_config_dir": "$IDE_CONFIG_DIR",
   "core_dir": "$PROJECT_DIR/.harmony"
 }
@@ -394,24 +377,25 @@ check_prerequisites() {
     # Load runtime info for dependency checks
     _load_runtime_info
 
-    # Check required dependencies: jq and yq
-    local missing_deps=()
+    # Check optional performance dependencies: jq and yq
+    # These are recommended for 10-100x faster JSON/YAML parsing but not required
+    local missing_perf=()
     if [[ -z "$_RUNTIME_JQ" ]]; then
-        missing_deps+=("jq")
+        missing_perf+=("jq")
     fi
     if [[ -z "$_RUNTIME_YQ" ]]; then
-        missing_deps+=("yq")
+        missing_perf+=("yq")
     fi
 
-    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+    if [[ ${#missing_perf[@]} -gt 0 ]]; then
         echo ""
-        print_error "DEPENDANCES MANQUANTES: ${missing_deps[*]}"
+        print_warning "OUTILS PERFORMANCE NON INSTALLES: ${missing_perf[*]}"
         echo ""
-        print_message "$YELLOW" "jq et yq sont OBLIGATOIRES pour Harmony Framework."
-        print_message "$YELLOW" "Ils permettent l'analyse performante des fichiers JSON et YAML."
+        print_message "$YELLOW" "jq et yq sont RECOMMANDES pour des performances optimales."
+        print_message "$YELLOW" "Ils permettent un parsing JSON/YAML 10-100x plus rapide."
         echo ""
-        print_message "$CYAN" "Installation:"
-        for dep in "${missing_deps[@]}"; do
+        print_message "$CYAN" "Installation (optionnel):"
+        for dep in "${missing_perf[@]}"; do
             local install_cmd=$(get_install_cmd "$dep")
             if [[ -n "$install_cmd" ]]; then
                 print_message "$CYAN" "  $dep: $install_cmd"
@@ -423,56 +407,12 @@ check_prerequisites() {
             fi
         done
         echo ""
-        print_message "$YELLOW" "Apres installation, relancez: npx harmony-ai-framework --full"
-        exit 1
+        print_message "$CYAN" "Installation continue sans ces outils..."
     fi
 
-    # Check MCP servers availability (required for cross-session learning)
-    local missing_mcp=()
+    # Note: MCP servers verification is done at ÉCRAN 0 (CLAUDE.md check)
+    # If we reach here, Claude Code is already initialized
 
-    # Check server-memory
-    if ! npx -y @modelcontextprotocol/server-memory --help &>/dev/null 2>&1; then
-        missing_mcp+=("@modelcontextprotocol/server-memory")
-    fi
-
-    # Check server-sequentialthinking
-    if ! npx -y @modelcontextprotocol/server-sequentialthinking --help &>/dev/null 2>&1; then
-        missing_mcp+=("@modelcontextprotocol/server-sequentialthinking")
-    fi
-
-    if [[ ${#missing_mcp[@]} -gt 0 ]]; then
-        echo ""
-        print_warning "MCP SERVERS NON DISPONIBLES: ${missing_mcp[*]}"
-        echo ""
-        print_message "$YELLOW" "Les MCP servers officiels Anthropic sont OBLIGATOIRES pour Harmony."
-        print_message "$YELLOW" "Ils permettent la memoire cross-session et le raisonnement structure."
-        echo ""
-        print_message "$CYAN" "Ces serveurs seront telecharges automatiquement via npx lors de l'utilisation."
-        print_message "$CYAN" "Assurez-vous que Node.js 18+ est installe et que npx fonctionne."
-        echo ""
-        print_message "$CYAN" "Test manuel:"
-        print_message "$CYAN" "  npx -y @modelcontextprotocol/server-memory --help"
-        print_message "$CYAN" "  npx -y @modelcontextprotocol/server-sequentialthinking --help"
-        echo ""
-        print_message "$YELLOW" "Configuration MCP client (Claude Desktop / Cursor / VS Code):"
-        print_message "$CYAN" '  {'
-        print_message "$CYAN" '    "mcpServers": {'
-        print_message "$CYAN" '      "memory": {'
-        print_message "$CYAN" '        "command": "npx",'
-        print_message "$CYAN" '        "args": ["-y", "@modelcontextprotocol/server-memory"]'
-        print_message "$CYAN" '      },'
-        print_message "$CYAN" '      "sequentialthinking": {'
-        print_message "$CYAN" '        "command": "npx",'
-        print_message "$CYAN" '        "args": ["-y", "@modelcontextprotocol/server-sequentialthinking"]'
-        print_message "$CYAN" '      }'
-        print_message "$CYAN" '    }'
-        print_message "$CYAN" '  }'
-        echo ""
-        # Continue anyway - MCP will be downloaded on first use
-        print_message "$YELLOW" "Installation continue... MCP servers seront telecharges lors de l'utilisation."
-    fi
-
-    # Note: print_success is hidden when UI is loaded (ui_show_step handles it)
     print_success "Prerequisites check passed"
 }
 
@@ -553,6 +493,7 @@ copy_framework_files() {
     else
         # Full installation - all files
         # Copy only framework directories (exclude npm artifacts)
+        # ADR-010: memory/ removed - initialize_memory() handles it with merge from templates/
         local dirs_to_copy=(
             "agents"
             "commands"
@@ -564,7 +505,6 @@ copy_framework_files() {
             "knowledge"
             "lib"
             "local"
-            "memory"
             "patterns"
             "profiles"
             "routing"
@@ -579,6 +519,20 @@ copy_framework_files() {
 
         for dir in "${dirs_to_copy[@]}"; do
             if [[ -d "$SCRIPT_DIR/$dir" ]]; then
+                # ADR-007: Protect user data in .harmony/local/ during reinstall
+                # Only preserve if local/memory/ contains actual user data (JSON files)
+                if [[ "$dir" == "local" ]]; then
+                    local has_user_data=false
+                    if [[ -d "$PROJECT_DIR/.harmony/local/memory" ]]; then
+                        if [[ -n "$(find "$PROJECT_DIR/.harmony/local/memory" -name "*.json" 2>/dev/null | head -1)" ]]; then
+                            has_user_data=true
+                        fi
+                    fi
+                    if [[ "$has_user_data" == "true" ]]; then
+                        print_message "$CYAN" "Preserving existing .harmony/local/ (user data detected in memory/)"
+                        continue
+                    fi
+                fi
                 # Use cp -r source/. dest/ to copy contents (not just subdirs)
                 mkdir -p "$PROJECT_DIR/.harmony/$dir"
                 cp -r "$SCRIPT_DIR/$dir/." "$PROJECT_DIR/.harmony/$dir/"
@@ -588,8 +542,9 @@ copy_framework_files() {
         done
 
         # Copy essential files (exclude npm artifacts like package.json, bin/, .npmrc)
+        # ADR-007: INSTRUCTIONS.md and AGENTS.md are now essential for instruction resilience
         local essential_missing=0
-        for file in README.md LICENSE harmony.manifest.json; do
+        for file in README.md LICENSE harmony.manifest.json INSTRUCTIONS.md AGENTS.md; do
             if [[ -f "$SCRIPT_DIR/$file" ]]; then
                 cp "$SCRIPT_DIR/$file" "$PROJECT_DIR/.harmony/"
             else
@@ -698,10 +653,11 @@ configure_hooks() {
 
         mkdir -p "$claude_dir"
 
+        local had_existing=false
         if [[ -f "$settings_file" ]]; then
             # Backup existing settings
             cp "$settings_file" "${settings_file}.backup"
-            print_warning "Existing settings backed up to settings.json.backup"
+            had_existing=true
         fi
 
         # Create settings with hooks configuration
@@ -765,238 +721,232 @@ configure_hooks() {
   }
 }
 EOF
+        # Check if backup is identical to new file (same checksum = no changes)
+        if [[ "$had_existing" == true ]]; then
+            local old_checksum new_checksum
+            old_checksum=$(sha256_cmd "${settings_file}.backup" 2>/dev/null | cut -d' ' -f1)
+            new_checksum=$(sha256_cmd "$settings_file" 2>/dev/null | cut -d' ' -f1)
+
+            if [[ "$old_checksum" == "$new_checksum" ]]; then
+                # Files identical, remove unnecessary backup
+                rm -f "${settings_file}.backup"
+            else
+                print_warning "Existing settings backed up to settings.json.backup"
+            fi
+        fi
         print_success "Claude Code hooks configured"
     else
         print_warning "Hooks not configured. Use --hooks to enable."
     fi
 }
 
-# Initialize memory files (in IDE-specific location for project isolation)
+# Deep merge JSON using jq
+_merge_with_jq() {
+    local template_content="$1"
+    local target_file="$2"
+
+    echo "$template_content" | jq -s --slurpfile existing "$target_file" '
+        # Deep merge: template as base, existing overwrites
+        def deepmerge(a; b):
+            if (a | type) == "object" and (b | type) == "object" then
+                a * b
+            elif (b | type) == "null" then
+                a
+            else
+                b
+            end;
+        deepmerge(.[0]; $existing[0])
+    ' 2>/dev/null
+}
+
+# Deep merge JSON using Node.js (fallback)
+_merge_with_node() {
+    local template_content="$1"
+    local target_file="$2"
+
+    node -e "
+        const template = JSON.parse(process.argv[1]);
+        const existing = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+
+        function deepMerge(base, override) {
+            const result = { ...base };
+            for (const key of Object.keys(override)) {
+                if (override[key] !== null &&
+                    typeof override[key] === 'object' &&
+                    !Array.isArray(override[key]) &&
+                    typeof result[key] === 'object' &&
+                    !Array.isArray(result[key])) {
+                    result[key] = deepMerge(result[key] || {}, override[key]);
+                } else if (override[key] !== null) {
+                    result[key] = override[key];
+                }
+            }
+            return result;
+        }
+
+        console.log(JSON.stringify(deepMerge(template, existing), null, 2));
+    " "$template_content" "$target_file" 2>/dev/null
+}
+
+# Merge memory file: keeps user data, adds new template keys
+# Usage: merge_memory_file <target_file> <template_content>
+# Returns: 0=merged, 1=preserved (merge failed), 2=created
+merge_memory_file() {
+    local target_file="$1"
+    local template_content="$2"
+
+    if [[ -f "$target_file" ]]; then
+        # File exists - merge template with existing (existing values win)
+        local merged=""
+
+        # Try jq first (faster), fallback to Node.js
+        if command -v jq &>/dev/null; then
+            merged=$(_merge_with_jq "$template_content" "$target_file")
+        elif command -v node &>/dev/null; then
+            merged=$(_merge_with_node "$template_content" "$target_file")
+        fi
+
+        # Validate and write merged content
+        if [[ -n "$merged" ]]; then
+            # Validate JSON before writing
+            if echo "$merged" | jq empty 2>/dev/null || node -e "JSON.parse(process.argv[1])" "$merged" 2>/dev/null; then
+                echo "$merged" > "$target_file"
+                return 0  # merged
+            fi
+        fi
+
+        # Merge failed, keep existing file unchanged
+        return 1  # preserved
+    else
+        # File doesn't exist - create from template
+        echo "$template_content" > "$target_file"
+        return 2  # created
+    fi
+}
+
+# Initialize memory files in .harmony/local/memory/ (centralized, user data)
 initialize_memory() {
     print_step "5/6" "Initializing project memory files..."
 
-    # IMPORTANT: Memory files go in IDE-specific location NOT .harmony/memory/
-    # This separates:
-    #   - .harmony/ = Core framework (read-only, shareable, PR-able)
-    #   - $MEMORY_DIR = Project-specific data (local, never committed to Harmony)
-    #
-    # Memory paths by IDE:
-    #   - Claude Code: .claude/memory/
-    #   - Cursor: .cursor/harmony-memory/
-    #   - Windsurf: .windsurf/harmony-memory/
-    #   - Continue: .continue/harmony-memory/
-    #   - Cody: .cody/harmony-memory/
-    #   - Generic: .harmony-local/memory/
+    # ADR-010: Memory files are in .harmony/local/memory/
+    # - User data belongs in local/ (mutable, project-specific)
+    # - Templates are in .harmony/templates/memory/ (read-only, from framework)
+    # - Merge strategy: preserve user data + add new template keys
 
-    local memory_dir="$MEMORY_DIR"
+    local memory_dir="$PROJECT_DIR/.harmony/local/memory"
+    local template_dir="$PROJECT_DIR/.harmony/templates/memory"
+
     mkdir -p "$memory_dir"
 
-    # Initialize workflow state (unified schema v1.0)
-    cat > "$memory_dir/workflow-state.json" << 'EOF'
-{
-  "version": "1.0",
-  "last_updated": null,
-  "harmony": {
-    "version": "1.0.0",
-    "initialized": true,
-    "project_name": null,
-    "language": "en"
-  },
-  "phase": {
-    "current": 1,
-    "name": "Discovery",
-    "started": null,
-    "gates_passed": []
-  },
-  "guardian": {
-    "enabled": true,
-    "mode": "warn",
-    "require_story": true,
-    "require_ucv": true,
-    "allowed_directories": [
-      ".harmony/",
-      ".claude/",
-      "docs/",
-      "*.md",
-      "*.json",
-      "*.yaml"
-    ]
-  },
-  "sentinel": {
-    "enabled": true,
-    "error_memory": true,
-    "pattern_learning": true
-  },
-  "hqvf": {
-    "enabled": true,
-    "require_approval": true,
-    "coverage_target": 100
-  },
-  "active_context": {
-    "current_story": null,
-    "current_sprint": null,
-    "current_epic": null,
-    "active_agent": null,
-    "last_handoff": null
-  },
-  "sprint": {
-    "id": null,
-    "name": null,
-    "start_date": null,
-    "end_date": null,
-    "stories": [],
-    "velocity": 0
-  },
-  "statistics": {
-    "stories_completed": 0,
-    "ucvs_created": 0,
-    "errors_recorded": 0,
-    "patterns_learned": 0
-  }
-}
-EOF
+    local merged_count=0
+    local created_count=0
+    local skipped_count=0
 
-    # Initialize error journal
-    cat > "$memory_dir/error-journal.json" << 'EOF'
-{
-  "version": "1.0.0",
-  "errors": [],
-  "patterns": [],
-  "statistics": {
-    "total_errors": 0,
-    "resolved_errors": 0,
-    "patterns_extracted": 0
-  }
-}
-EOF
+    # Helper to process each memory file with merge
+    process_memory_file() {
+        local filename="$1"
+        local template_file="$template_dir/${filename%.json}.template.json"
+        local target="$memory_dir/$filename"
 
-    # Initialize circuit breaker
-    cat > "$memory_dir/circuit-breaker.json" << 'EOF'
-{
-  "version": "1.0.0",
-  "state": "CLOSED",
-  "consecutive_failures": 0,
-  "max_failures": 3,
-  "last_failure": null,
-  "last_success": null,
-  "history": []
-}
-EOF
+        # Check if template file exists
+        if [[ ! -f "$template_file" ]]; then
+            print_warning "Template not found: $template_file"
+            skipped_count=$((skipped_count + 1))
+            return 0  # Don't fail with set -e, just skip
+        fi
 
-    # Initialize learned patterns
-    cat > "$memory_dir/learned-patterns.json" << 'EOF'
-{
-  "version": "1.0.0",
-  "patterns": [],
-  "anti_patterns": [],
-  "statistics": {
-    "total_patterns": 0,
-    "applied_count": 0,
-    "prevented_errors": 0
-  }
-}
-EOF
+        # Read template content
+        local template_content
+        template_content=$(cat "$template_file")
 
-    # Initialize user preferences
-    cat > "$memory_dir/user-preferences.json" << 'EOF'
-{
-  "version": "1.0.0",
-  "user": {
-    "name": null,
-    "skill_level": "intermediate",
-    "communication_language": "en",
-    "document_language": "en"
-  },
-  "guardian": {
-    "mode": "warn",
-    "allowed_skip_phases": false
-  },
-  "agents": {
-    "preferred_personas": true,
-    "verbose_output": false
-  },
-  "learned_habits": [],
-  "shortcuts": {}
-}
-EOF
+        # Use || true to prevent set -e from triggering on non-zero return codes (1=preserved, 2=created)
+        local result=0
+        merge_memory_file "$target" "$template_content" || result=$?
 
-    # Initialize working memory (sprint/story tracking)
-    cat > "$memory_dir/working.json" << 'EOF'
-{
-  "_meta": {
-    "version": "1.0.0",
-    "description": "Working memory for sprint and story tracking",
-    "last_updated": null,
-    "updated_by": null
-  },
-  "current_sprint": {
-    "id": null,
-    "name": null,
-    "goal": null,
-    "started": null,
-    "ends": null,
-    "velocity_target": 0,
-    "velocity_achieved": 0,
-    "stories": []
-  },
-  "current_story": {
-    "id": null,
-    "title": null,
-    "points": 0,
-    "status": null,
-    "assigned_to": null,
-    "started_at": null,
-    "tasks_completed": 0,
-    "tasks_total": 0
-  },
-  "sprint_history": [],
-  "backlog": {
-    "total_stories": 0,
-    "ready_stories": 0,
-    "blocked_stories": 0
-  },
-  "velocity": {
-    "last_3_sprints": [],
-    "average": 0,
-    "trend": "stable"
-  },
-  "blockers": [],
-  "recent_decisions": [],
-  "next_steps": [],
-  "statistics": {
-    "stories_completed_total": 0,
-    "points_delivered_total": 0,
-    "bugs_found": 0,
-    "tech_debt_ratio": 0
-  },
-  "_checkpoint": {
-    "pending_action": null,
-    "pending_since": null,
-    "recovery_hint": null
-  }
-}
-EOF
+        case $result in
+            0) merged_count=$((merged_count + 1)) ;;   # merged
+            2) created_count=$((created_count + 1)) ;; # created
+            # 1 = preserved (merge failed), counted as merged
+            1) merged_count=$((merged_count + 1)) ;;
+        esac
+    }
 
-    print_success "Memory files initialized"
+    # Process all memory files from templates
+    # Core memory files
+    process_memory_file "workflow-state.json"
+    process_memory_file "error-journal.json"
+    process_memory_file "circuit-breaker.json"
+    process_memory_file "learned-patterns.json"
+    process_memory_file "user-preferences.json"
+    process_memory_file "working.json"
+
+    # Session and tracking
+    process_memory_file "session-tracker.json"
+    process_memory_file "ab-results.json"
+    process_memory_file "maturity-scores.json"
+
+    # Anomaly and audit
+    process_memory_file "anomaly-events.json"
+    process_memory_file "audit-journal.json"
+    process_memory_file "compliance-proofs.json"
+
+    # Confidence and filtering
+    process_memory_file "confidence-history.json"
+    process_memory_file "filter-cache.json"
+
+    # Sandbox
+    process_memory_file "sandbox-quarantine.json"
+    process_memory_file "sandbox-log.json"
+
+    # Network and security
+    process_memory_file "mesh-state.json"
+    process_memory_file "security-log.json"
+
+    # Report what happened
+    if [[ $merged_count -gt 0 ]]; then
+        print_message "$CYAN" "Memory files merged: $merged_count (user data preserved + new fields added)"
+    fi
+    if [[ $created_count -gt 0 ]]; then
+        print_success "Memory files created: $created_count"
+    fi
+    if [[ $skipped_count -gt 0 ]]; then
+        print_warning "Memory files skipped: $skipped_count (templates not found)"
+    fi
+    if [[ $merged_count -eq 0 ]] && [[ $created_count -eq 0 ]] && [[ $skipped_count -eq 0 ]]; then
+        print_success "Memory files initialized"
+    fi
 }
 
-# Initialize autopilot configuration
+# Initialize local configurations
 initialize_autopilot_config() {
-    print_step "5.7/6" "Initializing autopilot configuration..."
+    print_step "5.7/6" "Initializing local configurations..."
 
     local local_dir="$PROJECT_DIR/.harmony/local"
     mkdir -p "$local_dir"
 
-    # Create autopilot-config.json if it doesn't exist
-    local config_file="$local_dir/autopilot-config.json"
-    if [[ ! -f "$config_file" ]]; then
-        # Copy template from framework/local/autopilot-config.json
-        if [[ -f "$SCRIPT_DIR/local/autopilot-config.json" ]]; then
-            cp "$SCRIPT_DIR/local/autopilot-config.json" "$config_file"
-            print_success "Autopilot configuration created at .harmony/local/autopilot-config.json"
-        else
-            # Fallback: create default config inline
-            cat > "$config_file" << 'EOF'
+    # List of config files to copy from framework/local/
+    local config_files=(
+        "autopilot-config.json"
+        "audit-config.json"
+        "confidence-config.json"
+        "sandbox-config.json"
+    )
+
+    for config_name in "${config_files[@]}"; do
+        local config_file="$local_dir/$config_name"
+        if [[ ! -f "$config_file" ]]; then
+            # Copy template from framework/local/
+            if [[ -f "$SCRIPT_DIR/local/$config_name" ]]; then
+                cp "$SCRIPT_DIR/local/$config_name" "$config_file"
+                print_success "Created .harmony/local/$config_name"
+            fi
+        fi
+    done
+
+    # Fallback for autopilot-config.json if template doesn't exist
+    local autopilot_config="$local_dir/autopilot-config.json"
+    if [[ ! -f "$autopilot_config" ]]; then
+        cat > "$autopilot_config" << 'EOF'
 {
   "_comment": "Sprint Autopilot Configuration - Local Override",
   "circuit_breaker": {
@@ -1014,11 +964,10 @@ initialize_autopilot_config() {
   }
 }
 EOF
-            print_success "Autopilot configuration created (default)"
-        fi
-    else
-        print_success "Autopilot configuration already exists"
+        print_success "Autopilot configuration created (default)"
     fi
+
+    print_success "Local configurations initialized"
 }
 
 # Initialize user config with examples
@@ -1125,7 +1074,7 @@ create_slash_commands() {
     #   - Core: /go, /harmony, /sentinel
     #   - Agents: /hf:agent:* (18 agents)
     #   - Workflows: /hf:workflow:* (8 workflows)
-    #   - TestArch: /hf:testarch:* (4 commands)
+    #   - TestArch: /hf:testarch:* (8 commands)
     #   - Diagrams: /hf:diagram:* (4 commands)
     if [[ -x "$SCRIPT_DIR/bin/generate-commands.sh" ]]; then
         "$SCRIPT_DIR/bin/generate-commands.sh" "$commands_dir" > /dev/null 2>&1
@@ -1179,23 +1128,20 @@ create_claude_md() {
 
     print_step "5.6/6" "Configuring CLAUDE.md..."
 
-    # Harmony header block (must be at TOP for Claude to see it first)
+    # Harmony header block - MINIMAL version (ADR-007: Instruction Resilience)
+    # Full instructions are in .harmony/INSTRUCTIONS.md (protected, checksummed)
     # Note: read -r -d '' returns 1 at EOF, so we use || true to prevent set -e exit
     local harmony_header
     read -r -d '' harmony_header << 'HARMONY_HEADER' || true
 ## 🛡️ HARMONY FRAMEWORK (ACTIVE)
 
-> **IMPORTANT**: This project uses the Harmony AI Framework. Read `.harmony/docs/` for full documentation.
+> **INSTRUCTIONS**: Read `.harmony/INSTRUCTIONS.md` for all framework protocols (P-010 Agent Announcement, Guardian, Sentinel).
 
-| Pillar | Role |
-|--------|------|
-| **Guardian** | Intent detection, agent routing, workflow protection |
-| **Sentinel** | Error memory, circuit breaker (3 failures = stop) |
-| **HQVF** | Use Case Verifiables, triple validation (Dev+Test+QA) |
+> **CONFIG**: `HARMONY_DIR=.harmony` - All framework files are in `.harmony/`
 
-**Essential:** `/go` (session start) • `/harmony` (30 commands) • `/harmony quick` (validation)
+> **COMMANDS**: `/go` (session start) • `/harmony` (30 commands) • `/harmony status`
 
-**Data:** `.harmony/` (framework) • `.claude/memory/` (project data)
+> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai-framework --force` to restore.
 
 ---
 
@@ -1582,32 +1528,17 @@ show_onboarding_tips() {
 # Print summary
 print_summary() {
     # Determine startup command based on IDE
-    local start_cmd memory_path
+    # ADR-010: Memory is in .harmony/local/memory/ (user data)
+    local start_cmd
+    local memory_path=".harmony/local/memory/"
+
     case "$_DETECTED_IDE" in
-        claude-code)
-            start_cmd="/init puis /go"
-            memory_path=".claude/memory/"
-            ;;
-        cursor)
-            start_cmd="Ouvrir Cursor et utiliser @harmony"
-            memory_path=".cursor/harmony-memory/"
-            ;;
-        windsurf)
-            start_cmd="Ouvrir Windsurf et utiliser /harmony"
-            memory_path=".windsurf/harmony-memory/"
-            ;;
-        continue)
-            start_cmd="Utiliser l'assistant Harmony dans Continue"
-            memory_path=".continue/harmony-memory/"
-            ;;
-        cody)
-            start_cmd="Utiliser le prompt Harmony dans Cody"
-            memory_path=".cody/harmony-memory/"
-            ;;
-        *)
-            start_cmd="Consulter .harmony/docs/getting-started.md"
-            memory_path=".harmony-local/memory/"
-            ;;
+        claude-code)  start_cmd="/init puis /go" ;;
+        cursor)       start_cmd="Ouvrir Cursor et utiliser @harmony" ;;
+        windsurf)     start_cmd="Ouvrir Windsurf et utiliser /harmony" ;;
+        continue)     start_cmd="Utiliser l'assistant Harmony dans Continue" ;;
+        cody)         start_cmd="Utiliser le prompt Harmony dans Cody" ;;
+        *)            start_cmd="Consulter .harmony/docs/getting-started.md" ;;
     esac
 
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then
@@ -1718,18 +1649,18 @@ show_runtime_status_system_only() {
             ui_box_text "[!] Bun: non installé (+80% TURBO mode)"
         fi
 
-        # jq - REQUIS pour JSON streaming
+        # jq - +50% JSON streaming performance
         if [[ -n "$_RUNTIME_JQ" ]]; then
-            ui_box_text "[✓] jq: $_RUNTIME_JQ (requis - JSON streaming)"
+            ui_box_text "[✓] jq: $_RUNTIME_JQ (+50% - JSON streaming natif)"
         else
-            ui_box_text "[✗] jq: non installé (REQUIS - analyse JSON)"
+            ui_box_text "[!] jq: non installé (+50% JSON parsing)"
         fi
 
-        # yq - REQUIS pour YAML parsing
+        # yq - +40% YAML parsing performance
         if [[ -n "$_RUNTIME_YQ" ]]; then
-            ui_box_text "[✓] yq: $_RUNTIME_YQ (requis - YAML parsing)"
+            ui_box_text "[✓] yq: $_RUNTIME_YQ (+40% - YAML parsing natif)"
         else
-            ui_box_text "[✗] yq: non installé (REQUIS - analyse YAML)"
+            ui_box_text "[!] yq: non installé (+40% YAML parsing)"
         fi
 
         ui_box_line mid
@@ -1751,8 +1682,8 @@ show_runtime_status_system_only() {
         [[ -n "$_RUNTIME_BASH" ]] && print_success "Bash: $_RUNTIME_BASH" || print_warning "Bash: non trouvé"
         [[ -n "$_RUNTIME_NODE" ]] && print_success "Node: $_RUNTIME_NODE" || print_warning "Node: non installé"
         [[ -n "$_RUNTIME_BUN" ]] && print_success "Bun: $_RUNTIME_BUN" || print_warning "Bun: non installé"
-        [[ -n "$_RUNTIME_JQ" ]] && print_success "jq: $_RUNTIME_JQ (REQUIS)" || print_error "jq: non installé (REQUIS)"
-        [[ -n "$_RUNTIME_YQ" ]] && print_success "yq: $_RUNTIME_YQ (REQUIS)" || print_error "yq: non installé (REQUIS)"
+        [[ -n "$_RUNTIME_JQ" ]] && print_success "jq: $_RUNTIME_JQ (+50% JSON)" || print_warning "jq: non installé (+50% JSON)"
+        [[ -n "$_RUNTIME_YQ" ]] && print_success "yq: $_RUNTIME_YQ (+40% YAML)" || print_warning "yq: non installé (+40% YAML)"
     fi
 }
 
@@ -1773,7 +1704,7 @@ show_runtime_status_recommendations() {
         local has_recommendations=false
 
         # Check if any recommendations needed
-        [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" ]] && has_recommendations=true
+        [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" || -z "$_RUNTIME_YQ" ]] && has_recommendations=true
         if [[ "$_RUNTIME_OS" == "linux" ]]; then
             [[ "$has_bubblewrap" == false || "$has_socat" == false ]] && has_recommendations=true
         fi
@@ -1783,22 +1714,14 @@ show_runtime_status_recommendations() {
             ui_box_title "📦 Recommandations"
             ui_box_line mid
 
-            # Required dependencies (BLOCKING)
-            if [[ -z "$_RUNTIME_JQ" || -z "$_RUNTIME_YQ" ]]; then
-                ui_box_text "⚠️  DÉPENDANCES REQUISES:"
-                [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
-                [[ -z "$_RUNTIME_YQ" ]] && ui_box_text "  yq:      $(get_install_cmd yq)"
-                ui_box_text ""
-                ui_box_text "→ jq et yq sont OBLIGATOIRES pour l'analyse de fichiers"
-                ui_box_text "→ Installez-les puis relancez l'installation"
-            fi
-
             # Performance recommendations (optional)
-            if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" ]]; then
+            if [[ -z "$_RUNTIME_NODE" || -z "$_RUNTIME_BUN" || -z "$_RUNTIME_JQ" || -z "$_RUNTIME_YQ" ]]; then
                 ui_box_text ""
                 ui_box_text "Optionnel (performance):"
                 [[ -z "$_RUNTIME_NODE" ]] && ui_box_text "  Node.js: $(get_install_cmd node)"
                 [[ -z "$_RUNTIME_BUN" ]] && ui_box_text "  Bun:     $(get_install_cmd bun)"
+                [[ -z "$_RUNTIME_JQ" ]] && ui_box_text "  jq:      $(get_install_cmd jq)"
+                [[ -z "$_RUNTIME_YQ" ]] && ui_box_text "  yq:      $(get_install_cmd yq)"
             fi
 
             # Security recommendations (Linux sandbox)
@@ -1868,6 +1791,42 @@ main() {
     show_runtime_status_system_only
 
     # =========================================================================
+    # ÉCRAN 2.5: 🔌 MCP Servers (OBLIGATOIRES)
+    # =========================================================================
+    if [[ "$UI_LIBRARY_LOADED" == true ]]; then
+        echo ""
+        ui_box_line top
+        ui_box_title "🔌 MCP Servers (OBLIGATOIRES)"
+        ui_box_line mid
+        ui_box_text "Les MCP servers Anthropic sont requis pour Harmony:"
+        ui_box_text "  • memory: Cross-session learning, Sentinel patterns"
+        ui_box_text "  • sequentialthinking: Structured problem decomposition"
+        ui_box_empty
+        ui_box_text "Configuration à ajouter dans votre client MCP:"
+        ui_box_text '  {'
+        ui_box_text '    "mcpServers": {'
+        ui_box_text '      "memory": {'
+        ui_box_text '        "command": "npx",'
+        ui_box_text '        "args": ["-y", "@modelcontextprotocol/server-memory"]'
+        ui_box_text '      },'
+        ui_box_text '      "sequentialthinking": {'
+        ui_box_text '        "command": "npx",'
+        ui_box_text '        "args": ["-y", "@modelcontextprotocol/server-sequentialthinking"]'
+        ui_box_text '      }'
+        ui_box_text '    }'
+        ui_box_text '  }'
+        ui_box_empty
+        ui_box_line bot
+        ui_continue
+    else
+        echo ""
+        print_message "$WHITE" "🔌 MCP Servers (OBLIGATOIRES)"
+        print_message "$YELLOW" "Les MCP servers Anthropic sont requis pour Harmony."
+        print_message "$CYAN" "Ajoutez dans votre client MCP (Claude Desktop/Cursor/VS Code):"
+        echo '  {"mcpServers": {"memory": {...}, "sequentialthinking": {...}}}'
+    fi
+
+    # =========================================================================
     # ÉCRAN 3: 📦 Recommandations Performance
     # =========================================================================
     show_runtime_status_recommendations
@@ -1876,7 +1835,7 @@ main() {
     # ÉCRAN 4: Prerequisites check
     # =========================================================================
     check_prerequisites
-    detect_ide_and_memory_path
+    detect_ide
     ui_show_step "✓" "Prerequisites check passed" "ok"
     [[ "$UI_LIBRARY_LOADED" == true ]] && ui_continue
 

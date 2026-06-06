@@ -1,0 +1,12 @@
+{
+  "$schema": "./security-log.schema.json",
+  "version": "1.0.0",
+  "events": [],
+  "blocked_operations": [],
+  "statistics": {
+    "total_checks": 0,
+    "allowed": 0,
+    "blocked": 0,
+    "warned": 0
+  }
+}

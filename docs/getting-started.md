@@ -229,10 +229,10 @@ Both → Intent: IMPLEMENT → Developer Agent
 
 - [Installation Guide](installation.md) - Detailed installation options
 - [Core Concepts](concepts.md) - Deep dive into Harmony's architecture
-- [Agents Guide](agents/README.md) - Learn about all available agents
-- [Patterns Reference](patterns/README.md) - Design patterns library
+- [Agents Guide](../agents/INDEX.md) - Learn about all available agents
+- [Patterns Reference](../patterns/INDEX.md) - Design patterns library
 - [Prompt Monitor](../commands/monitor.md) - Track and improve your prompts
-- [Examples](examples/README.md) - Real-world examples
+- [Examples](examples/) - Real-world examples
 
 ### Optional: Enable Prompt Monitor
 

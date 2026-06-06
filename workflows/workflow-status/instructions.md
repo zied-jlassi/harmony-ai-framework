@@ -34,7 +34,7 @@
 </step>
 
 <step n="1" goal="Check for status file">
-<action>Search {output_folder}/ for file: bmm-workflow-status.yaml</action>
+<action>Search {output_folder}/ for file: hf-workflow-status.yaml</action>
 
 <check if="no status file found">
   <output>No workflow status found.</output>
@@ -58,7 +58,7 @@
 </step>
 
 <step n="2" goal="Read and parse status">
-<action>Read bmm-workflow-status.yaml</action>
+<action>Read hf-workflow-status.yaml</action>
 <action>Parse YAML file and extract metadata from comments and fields:</action>
 
 Parse these fields from YAML comments and metadata:
@@ -163,7 +163,7 @@ Your choice:</ask>
 </check>
 
 <check if="choice == 3">
-  <action>Display complete bmm-workflow-status.yaml file contents</action>
+  <action>Display complete hf-workflow-status.yaml file contents</action>
 </check>
 
 <check if="choice == 4">
@@ -197,7 +197,7 @@ Your choice:</ask>
 <!-- ============================================= -->
 
 <step n="10" goal="Validate mode - Check if calling workflow should proceed">
-<action>Read {output_folder}/bmm-workflow-status.yaml if exists</action>
+<action>Read {output_folder}/hf-workflow-status.yaml if exists</action>
 
 <check if="status file not found">
   <template-output>status_exists = false</template-output>
@@ -254,14 +254,14 @@ Your choice:</ask>
     <template-output>suggestion = "This workflow is not part of the defined path for this project"</template-output>
   </check>
 
-<template-output>status_file_path = {{path to bmm-workflow-status.yaml}}</template-output>
+<template-output>status_file_path = {{path to hf-workflow-status.yaml}}</template-output>
 </check>
 
 <action>Return control to calling workflow with all template outputs</action>
 </step>
 
 <step n="20" goal="Data mode - Extract specific information">
-<action>Read {output_folder}/bmm-workflow-status.yaml if exists</action>
+<action>Read {output_folder}/hf-workflow-status.yaml if exists</action>
 
 <check if="status file not found">
   <template-output>status_exists = false</template-output>
@@ -302,14 +302,14 @@ Your choice:</ask>
     <template-output>generated = {{generated}}</template-output>
   </check>
 
-<template-output>status_file_path = {{path to bmm-workflow-status.yaml}}</template-output>
+<template-output>status_file_path = {{path to hf-workflow-status.yaml}}</template-output>
 </check>
 
 <action>Return control to calling workflow with requested data</action>
 </step>
 
 <step n="30" goal="Init-check mode - Simple existence check">
-<action>Check if {output_folder}/bmm-workflow-status.yaml exists</action>
+<action>Check if {output_folder}/hf-workflow-status.yaml exists</action>
 
 <check if="exists">
   <template-output>status_exists = true</template-output>
@@ -325,7 +325,7 @@ Your choice:</ask>
 </step>
 
 <step n="40" goal="Update mode - Centralized status file updates">
-<action>Read {output_folder}/bmm-workflow-status.yaml</action>
+<action>Read {output_folder}/hf-workflow-status.yaml</action>
 
 <check if="status file not found">
   <template-output>success = false</template-output>

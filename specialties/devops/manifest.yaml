@@ -62,6 +62,15 @@ knowledge:
     - url: "https://docs.github.com/en/actions"
       priority: 3
 
+# Test CI Templates (for test automation pipelines)
+templates:
+  - id: ci-test-github
+    file: ../../knowledge/templates/ci/github-actions-test.yaml
+    keywords: [ci, github, actions, test, playwright, e2e]
+  - id: ci-test-gitlab
+    file: ../../knowledge/templates/ci/gitlab-ci-test.yaml
+    keywords: [ci, gitlab, test, playwright, e2e]
+
 # Patterns (references to knowledge domain files)
 patterns:
   - id: docker-compose
@@ -72,3 +81,6 @@ patterns:
   - id: gitops
     file: ../../knowledge/domains/devops/git-advanced-workflows.md
     description: "GitOps deployment workflow"
+  - id: ci-test-pipeline
+    file: ../../knowledge/templates/ci/github-actions-test.yaml
+    description: "Test automation CI pipeline with sharding and burn-in"

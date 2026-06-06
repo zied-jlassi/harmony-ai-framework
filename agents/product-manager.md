@@ -3,7 +3,7 @@ name: "pm"
 displayName: "Product Manager"
 emoji: "📈"
 description: "Product Manager - PRD & Requirements - Planning Phase 2"
-argument-hint: [tâche-planning] [scope-optionnel]
+argument-hint: "[tâche-planning] [scope-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

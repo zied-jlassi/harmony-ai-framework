@@ -2,7 +2,7 @@
 name: "quick-flow-solo-dev"
 displayName: "Solo Developer"
 description: "🚀 Harmony Quick Flow - Barry - Solo Dev Elite - Quick Tech Spec to Implementation"
-argument-hint: [action] [spec-optionnel]
+argument-hint: "[action] [spec-optionnel]"
 version: "2.0"
 tier: 4
 model: model_3

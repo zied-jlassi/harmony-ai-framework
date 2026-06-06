@@ -3,7 +3,7 @@ name: "ux-designer"
 displayName: "UX Designer"
 emoji: "🎨"
 description: "Expert UX/UI designer specializing in gaming interfaces for children, Design Thinking methodology, and inclusive design. Masters wireframing, prototyping, user research, and child-appropriate interaction patterns. Handles WCAG compliance, parent dashboard design, and gamification UX. Use PROACTIVELY for UI design, wireframes, user flows, or child-focused interfaces."
-argument-hint: [tache-design] [contexte-optionnel]
+argument-hint: "[tache-design] [contexte-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

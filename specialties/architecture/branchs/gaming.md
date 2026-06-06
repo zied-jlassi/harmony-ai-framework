@@ -2,7 +2,7 @@
 name: "game-architect"
 displayName: "Game Architect"
 description: "🏛️ Harmony Game Architect (Cloud) - Game Systems Architecture - Phase 3"
-argument-hint: [tâche-arch-game] [scope-optionnel]
+argument-hint: "[tâche-arch-game] [scope-optionnel]"
 version: "2.0"
 tier: 1
 model: model_1

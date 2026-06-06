@@ -2,7 +2,7 @@
 name: "pentest"
 displayName: "Penetration Tester"
 description: "Expert penetration tester and red team specialist for ethical hacking assessments. Masters PTES methodology, OWASP testing, MITRE ATT&CK framework, and Kill Chain execution. Handles web application security, API testing, container escape, and JWT attacks. Use PROACTIVELY for security assessments, vulnerability discovery, or pre-release security validation."
-argument-hint: [cible-test] [type-audit]
+argument-hint: "[cible-test] [type-audit]"
 version: "2.0"
 tier: 1
 model: model_1

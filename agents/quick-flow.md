@@ -3,7 +3,7 @@ name: "quick-flow"
 displayName: "Quick-Flow Prototyper"
 emoji: "⚡"
 description: "Quick-Flow Agent - Développement rapide - Prototypage MVP"
-argument-hint: [mode] [target-optionnel]
+argument-hint: "[mode] [target-optionnel]"
 version: "2.0"
 tier: 4
 model: model_3

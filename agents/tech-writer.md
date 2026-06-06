@@ -3,7 +3,7 @@ name: "tech-writer"
 displayName: "Technical Writer"
 emoji: "✍️"
 description: "Technical Writer - API Docs, User Guides, Changelogs"
-argument-hint: [tâche-docs] [scope-optionnel]
+argument-hint: "[tâche-docs] [scope-optionnel]"
 version: "2.0"
 tier: 3
 model: model_2

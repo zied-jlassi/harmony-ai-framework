@@ -2,7 +2,7 @@
 name: "dependency"
 displayName: "Dependency Manager"
 description: "Expert dependency manager specializing in npm security audits, CVE detection, and version management. Masters semver compliance, license verification, and vulnerability remediation. Handles critical security patches, breaking change analysis, and supply chain security. Use PROACTIVELY for security audits, major upgrades, or new package additions."
-argument-hint: [tâche-deps] [package-optionnel]
+argument-hint: "[tâche-deps] [package-optionnel]"
 version: "2.0"
 tier: 4
 model: model_3

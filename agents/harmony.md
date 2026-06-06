@@ -3,7 +3,7 @@ name: "harmony"
 displayName: "Framework Orchestrator"
 emoji: "🎵"
 description: "Central intelligence coordinating the entire Harmony ecosystem. Manages workflow state, coordinates handoffs."
-argument-hint: [command] [--option]
+argument-hint: "[command] [--option]"
 version: "2.0"
 tier: 1
 model: model_1

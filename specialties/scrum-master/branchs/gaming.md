@@ -2,7 +2,7 @@
 name: "game-sm"
 displayName: "Game Scrum Master"
 description: "🎯 Game SM Agent - Scrum Master Gaming - Sprints jeux éducatifs"
-argument-hint: [sprint-command] [game-context]
+argument-hint: "[sprint-command] [game-context]"
 version: "2.0"
 tier: 3
 model: model_2

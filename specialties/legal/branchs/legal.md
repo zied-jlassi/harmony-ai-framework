@@ -2,7 +2,7 @@
 name: "legal"
 displayName: "Legal Compliance"
 description: "Harmony Legal Agent (Logan) v2.0 - Conformite Legale Universelle Multi-Domaines - Auto-detection + Self-Learning"
-argument-hint: [audit|review|check|domain] [scope-optionnel]
+argument-hint: "[audit|review|check|domain] [scope-optionnel]"
 version: "2.0"
 tier: 3
 model: model_2

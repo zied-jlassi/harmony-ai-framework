@@ -2,7 +2,7 @@
 name: "game-narrative"
 displayName: "Game Narrative Designer"
 description: "Story, dialogue, lore, world-building, quests - Phase 2"
-argument-hint: [tache-narrative] [type-histoire-optionnel]
+argument-hint: "[tache-narrative] [type-histoire-optionnel]"
 version: "1.0"
 tier: 2
 model: inherit

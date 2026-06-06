@@ -3,7 +3,7 @@ name: "review"
 displayName: "Code Reviewer"
 emoji: "👀"
 description: "Expert code reviewer specializing in quality gates, security analysis, and constructive feedback. Masters semantic code analysis, OWASP security patterns, performance optimization, and gaming-specific review. Uses adversarial review technique to challenge code with attack vectors. Use PROACTIVELY for PR reviews, file analysis, or quality assessments."
-argument-hint: [fichier-ou-pr] [scope-optionnel]
+argument-hint: "[fichier-ou-pr] [scope-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

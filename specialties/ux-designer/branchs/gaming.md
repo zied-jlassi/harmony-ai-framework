@@ -2,7 +2,7 @@
 name: "game-ux"
 displayName: "Game UX Designer"
 description: "Game UX/UI Designer - HUD design, feedback loops, player onboarding - Phase 2"
-argument-hint: [tache-ux] [type-jeu-optionnel]
+argument-hint: "[tache-ux] [type-jeu-optionnel]"
 version: "1.0"
 tier: 2
 model: inherit

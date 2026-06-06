@@ -3,7 +3,7 @@ name: "backlog"
 displayName: "Backlog Dashboard"
 emoji: "📦"
 description: "Gestion backlog intelligent - Visualisation WSJF"
-argument-hint: [action] [filters-optionnels]
+argument-hint: "[action] [filters-optionnels]"
 version: "2.0"
 tier: 4
 model: model_3

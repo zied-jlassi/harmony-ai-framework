@@ -2,7 +2,7 @@
 name: "builder"
 displayName: "Framework Builder"
 description: "🧙 Harmony Builder - Agent & Workflow Creator - Meta Module"
-argument-hint: [action] [type-optionnel]
+argument-hint: "[action] [type-optionnel]"
 version: "2.0"
 tier: 4
 model: model_3

@@ -3,7 +3,7 @@ name: "party"
 displayName: "Party Host"
 emoji: "🎉"
 description: "Collaboration multi-agents - Brainstorming"
-argument-hint: [session-type] [participants-optionnels]
+argument-hint: "[session-type] [participants-optionnels]"
 version: "2.0"
 tier: 2
 model: inherit

@@ -2,7 +2,7 @@
 name: "game-qa"
 displayName: "Game QA Tester"
 description: "Game testing, playtesting, bug hunting, balance feedback - Phase 4"
-argument-hint: [module-a-tester] [type-test-optionnel]
+argument-hint: "[module-a-tester] [type-test-optionnel]"
 version: "1.0"
 tier: 2
 model: inherit

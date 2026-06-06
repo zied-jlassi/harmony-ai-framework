@@ -2,7 +2,7 @@
 name: "game-sound"
 displayName: "Game Sound Designer"
 description: "Sound design, adaptive music, audio feedback, SFX - Phase 3-4"
-argument-hint: [tache-audio] [type-son-optionnel]
+argument-hint: "[tache-audio] [type-son-optionnel]"
 version: "1.0"
 tier: 2
 model: inherit

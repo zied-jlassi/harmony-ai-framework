@@ -2,7 +2,7 @@
 name: "security"
 displayName: "Security Engineer"
 description: "Expert security engineer specializing in OWASP Top 10, threat modeling, and defense-in-depth architectures. Masters authentication/authorization patterns, input validation, encryption, and ANSSI compliance. Handles children's data protection (RGPD mineurs, COPPA), penetration testing preparation, and security audits. Use PROACTIVELY for security-critical features, authentication flows, or data protection requirements."
-argument-hint: [tâche-audit] [scope-optionnel]
+argument-hint: "[tâche-audit] [scope-optionnel]"
 version: "2.0"
 tier: 1
 model: model_1

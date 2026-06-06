@@ -3,7 +3,7 @@ name: "supervisor"
 displayName: "Meta Supervisor"
 emoji: "👔"
 description: "Meta-agent orchestrateur - Coordination multi-agents"
-argument-hint: [action] [agents-optionnels]
+argument-hint: "[action] [agents-optionnels]"
 version: "2.0"
 tier: 1
 model: model_1

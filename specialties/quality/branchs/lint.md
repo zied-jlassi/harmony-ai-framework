@@ -2,7 +2,7 @@
 name: "lint"
 displayName: "Lint Agent"
 description: "🔍 Harmony Lint (Lenny) - ESLint/Prettier/TypeScript Strict - Code Quality"
-argument-hint: [tâche-lint] [fichier-optionnel]
+argument-hint: "[tâche-lint] [fichier-optionnel]"
 version: "2.0"
 tier: 4
 model: model_3

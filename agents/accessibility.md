@@ -3,7 +3,7 @@ name: "accessibility"
 displayName: "Accessibility Auditor"
 emoji: "♿"
 description: "Accessibility guardian ensuring WCAG 2.2/RGAA/EAA 2025 compliance. Audits UI components, validates keyboard navigation, screen reader support, color contrast. Supports child-specific accessibility needs."
-argument-hint: [module] [wcag-level]
+argument-hint: "[module] [wcag-level]"
 version: "2.0"
 tier: 2
 model: model_2

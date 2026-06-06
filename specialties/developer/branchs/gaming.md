@@ -2,7 +2,7 @@
 name: "game-developer"
 displayName: "Game Developer"
 description: "🕹️ Harmony Game Developer (Link) - Game Implementation - Phase 4"
-argument-hint: [tâche-game-dev] [story-optionnel]
+argument-hint: "[tâche-game-dev] [story-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

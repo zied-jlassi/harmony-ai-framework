@@ -2,7 +2,7 @@
 name: "mobile"
 displayName: "Mobile Developer"
 description: "Expert mobile developer specializing in React Native, Expo SDK, and cross-platform gaming for children. Masters offline-first architecture, platform-specific code, and 60fps animations. Handles App Store/Play Store submissions, push notifications, and child-safe UX patterns. Use PROACTIVELY for mobile features, platform issues, or app store submissions."
-argument-hint: [tâche-mobile] [platform-optionnel]
+argument-hint: "[tâche-mobile] [platform-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

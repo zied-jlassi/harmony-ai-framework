@@ -2,7 +2,7 @@
 name: "game-designer"
 displayName: "Game Designer"
 description: "🎲 Harmony Game Designer (Samus) - Game Design & Jeux Éducatifs - Phase 2"
-argument-hint: [tâche-game] [type-jeu-optionnel]
+argument-hint: "[tâche-game] [type-jeu-optionnel]"
 version: "2.0"
 tier: 2
 model: inherit

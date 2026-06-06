@@ -661,19 +661,11 @@ configure_hooks() {
         fi
 
         # Create settings with hooks configuration
+        # NOTE: Prompt Monitor hooks are disabled by default.
+        # To enable: see .harmony/docs/prompt-monitor.md
         cat > "$settings_file" << 'EOF'
 {
   "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .harmony/tools/prompt-monitor/hooks/track-user-prompt.sh"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
@@ -705,15 +697,6 @@ configure_hooks() {
           {
             "type": "command",
             "command": "bash .harmony/hooks/sentinel-post.sh \"$TOOL_NAME\" \"$TOOL_RESULT\""
-          }
-        ]
-      },
-      {
-        "matcher": "Bash|Read|Write|Edit|Glob|Grep|Task|WebFetch|WebSearch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .harmony/tools/prompt-monitor/hooks/track-interaction.sh"
           }
         ]
       }

@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${HARMONY_DIR}/tools/prompt-monitor/hooks/track-user-prompt.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Read|Write|Edit|Glob|Grep|Task|WebFetch|WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${HARMONY_DIR}/tools/prompt-monitor/hooks/track-interaction.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -319,5 +319,5 @@ WebFetch({
 ## Voir Aussi
 
 - [Architecture](../docs/architecture.md)
-- [Profiles Registry](profiles-registry.yaml)
+- [Profiles Registry](../profiles/profiles-registry.yaml)
 - [Specialties](../specialties/)

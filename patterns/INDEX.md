@@ -19,7 +19,7 @@ Les patterns Harmony permettent:
 
 | ID | Pattern | Severite | Description |
 |----|---------|----------|-------------|
-| [P-011](P-011-cross-platform.md) | Cross-Platform Guide | - | Guide complet compatibilite Linux/macOS/Windows |
+| [P-011](P-011-bash-cross-platform.md) | Cross-Platform Guide | - | Guide complet compatibilite Linux/macOS/Windows |
 
 ### Architecture & Design
 

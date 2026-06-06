@@ -108,7 +108,7 @@ Severity: critical
 ✨ QUICK FIX:
    Replace ((var++)) with var=$((var + 1))
 
-📖 Documentation: patterns/P-011-cross-platform.md
+📖 Documentation: patterns/P-011-bash-cross-platform.md
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -183,7 +183,7 @@ La solution est affichee **avant meme que l'erreur ne se produise** (PRE-CHECK) 
 ## References
 
 - Pattern: [PAT-BASH-001](../patterns-registry.json)
-- Documentation: [P-011-cross-platform.md](../P-011-cross-platform.md)
+- Documentation: [P-011-bash-cross-platform.md](../P-011-bash-cross-platform.md)
 - Profil Bash: [profiles/languages/bash/](../../profiles/languages/bash/)
 - Index Patterns: [INDEX.md](../INDEX.md)
 

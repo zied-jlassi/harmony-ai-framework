@@ -683,8 +683,8 @@ RECOMMANDE:
 
 ## Related Agents
 
-- [UX Designer](../ux-designer.md) - Design accessible
-- [Developer](../developer.md) - Implementation
+- [UX Designer](ux-designer.md) - Design accessible
+- [Developer](developer.md) - Implementation
 - [UCV-QA](../specialties/ucv/branchs/qa.md) - Validation visuelle
 - [Security](security.md) - Securite
 

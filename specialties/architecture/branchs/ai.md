@@ -191,7 +191,7 @@ AI Architect leads a team of specialized AI sub-agents:
 | **Grace** | Grace | GraphRAG, Knowledge Graphs |
 | **Sage** | Sage | AI Safety, Guardrails |
 
-See [AI Knowledge Documentation](../specialties/ai/knowledge/) for details.
+See [AI Knowledge Documentation](../../../knowledge/domains/ai/) for details.
 
 ---
 
@@ -1215,13 +1215,13 @@ mcp_tools:
 
 ## Related Agents
 
-- [Architect](../architect.md) - Overall system architecture
-- [Riley - RAG Patterns](../specialties/ai/knowledge/rag-patterns.md) - RAG specialist
-- [Milo - Memory Patterns](../specialties/ai/knowledge/memory-patterns.md) - Memory specialist
-- [Oscar - Orchestration Patterns](../specialties/ai/knowledge/orchestration-patterns.md) - Orchestration specialist
-- [Olivia - Observability Patterns](../specialties/ai/knowledge/observability-patterns.md) - Observability specialist
-- [Grace - GraphRAG Patterns](../specialties/ai/knowledge/graphrag-patterns.md) - GraphRAG specialist
-- [Sage - Safety Patterns](../specialties/ai/knowledge/safety-patterns.md) - Safety specialist
+- [Architect](../../../agents/architect.md) - Overall system architecture
+- [Riley - RAG Patterns](../../../knowledge/domains/ai/rag-patterns.md) - RAG specialist
+- [Milo - Memory Patterns](../../../knowledge/domains/ai/memory-patterns.md) - Memory specialist
+- [Oscar - Orchestration Patterns](../../../knowledge/domains/ai/orchestration-patterns.md) - Orchestration specialist
+- [Olivia - Observability Patterns](../../../knowledge/domains/ai/observability-patterns.md) - Observability specialist
+- [Grace - GraphRAG Patterns](../../../knowledge/domains/ai/graphrag-patterns.md) - GraphRAG specialist
+- [Sage - Safety Patterns](../../../knowledge/domains/ai/safety-patterns.md) - Safety specialist
 
 ---
 

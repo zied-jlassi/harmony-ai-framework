@@ -379,4 +379,4 @@ defaults:
 
 - [Config Loader](../lib/config-loader.sh)
 - [Install Script](../bin/install.sh)
-- [P-001 Story Format](./P-001-story-format.md)
+- [P-007 Story Based](./P-007-story-based.md)

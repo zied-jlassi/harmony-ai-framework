@@ -277,7 +277,7 @@ Trigger: `clarifie ma demande`
 ## Related Agents
 
 - [Analyst](analyst.md) - Full analysis with knowledge
-- [Guardian](guardian-protocol.md) - Routes based on clarity
+- [Guardian](guardian.md) - Routes based on clarity
 - [Developer QuickWin](developer-quickwin.md) - Often suggested for quick dev
 
 ---

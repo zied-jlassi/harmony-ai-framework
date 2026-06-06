@@ -1101,8 +1101,8 @@ RGPD Agent: Full RGPD audit (7 principes)
 
 - [Security](security.md) - Securite des donnees
 - [Accessibility](accessibility.md) - Pour la politique de confidentialite
-- [Developer](../developer.md) - Implementation technique
-- [Sentinel](../sentinel.md) - Tracking des erreurs compliance
+- [Developer](developer.md) - Implementation technique
+- [Sentinel](sentinel.md) - Tracking des erreurs compliance
 
 ---
 

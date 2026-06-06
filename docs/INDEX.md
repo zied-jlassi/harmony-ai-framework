@@ -63,6 +63,7 @@ Ces outils sont détectés automatiquement à l'installation. Leur présence am�
 - [Architecture Reference](ARCHITECTURE-REFERENCE.md) - Reference complete architecture
 - [Library Reference](library-reference.md) - **Reference complete des bibliotheques bash** (ARIA, Circuit Breaker, Cost Tracker...)
 - [How It Works](how-it-works.md) - Fonctionnement interne
+- [Instruction Resilience](architecture/instruction-resilience.md) - Separation CLAUDE.md / .harmony, checksums, self-repair
 - [Working Memory](working-memory.md) - Systeme de memoire
 - [UCV Types](ucv-types.md) - **Classification des Use Case Verifiables** (Fonctionnel, Edge Case, Non-fonctionnel)
 - [Context Persistence](context-persistence.md) - Persistance du contexte entre sessions

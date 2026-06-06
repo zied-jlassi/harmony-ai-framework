@@ -1100,9 +1100,9 @@ Security Agent: Self-Consistency 3-path audit
 
 - [Pentest](pentest.md) - Tests actifs de penetration
 - [RGPD](rgpd.md) - Protection des donnees personnelles
-- [Architect](../architect.md) - Architecture securisee
-- [Developer](../developer.md) - Implementation des corrections
-- [Sentinel](../sentinel.md) - Apprentissage des patterns d'erreurs
+- [Architect](architect.md) - Architecture securisee
+- [Developer](developer.md) - Implementation des corrections
+- [Sentinel](sentinel.md) - Apprentissage des patterns d'erreurs
 
 ---
 

@@ -68,7 +68,7 @@ def find_current_session(project_path: Optional[str] = None) -> Optional[Path]:
     if project_path is None:
         project_path = os.getcwd()
 
-    # Claude Code encodes project paths: /home/dev/project -> -home-dev-project
+    # Claude Code encodes project paths: /home/user/project -> -home-user-project
     encoded_path = project_path.replace("/", "-")
     # Keep the leading dash (Claude Code format)
 

@@ -290,8 +290,8 @@ Non-fonctionnel ≥ 20%
 
 ## Références
 
-- [HQVF Overview](./commands.md#ucv)
-- [Story Template](../.harmony/templates/story.md)
+- [HQVF Overview](./commands.md#qualite-hqvf-26-27)
+- [Story Template](../templates/story.md)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)
 

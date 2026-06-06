@@ -248,7 +248,7 @@ triggers:
 ## Related
 
 - [Architect Agent](../agents/architect.md)
-- [AI Architect Agent 🧠](../agents/ai-architect.md)
+- [AI Architect Agent 🧠](../specialties/ai/branchs/ai-systems.md)
 - [Scrum Master](../agents/scrum-master.md)
 - [UCV Writer Agent 📝](../specialties/ucv/branchs/writer.md)
 - [Story Template](../templates/story.md)

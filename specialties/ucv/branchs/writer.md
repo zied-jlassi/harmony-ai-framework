@@ -409,9 +409,9 @@ Après approbation:
 
 ## Related Agents
 
-- [Scrum Master](sm.md) - Creates stories that UCV Writer transforms into UCVs
+- [Scrum Master](../../../agents/scrum-master.md) - Creates stories that UCV Writer transforms into UCVs
 - [UCV Validator ✅](validator.md) - Validates UCV coverage after implementation
-- [Developer](../developer.md) - Implements based on UCVs
-- [Tester](../tester.md) - Tests based on UCVs
-- [Exploratory QA 🔍](exploratory-qa.md) - Validates QA column
+- [Developer](../../../agents/developer.md) - Implements based on UCVs
+- [Tester](../../../agents/tester.md) - Tests based on UCVs
+- [Exploratory QA 🔍](../../../agents/exploratory-qa.md) - Validates QA column
 

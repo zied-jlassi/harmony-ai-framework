@@ -416,6 +416,6 @@ Si vous passez de Claude Code a un autre IDE, certaines fonctionnalites sont per
 - [Concepts](concepts.md) - Philosophie
 - [Getting Started](getting-started.md) - Demarrage
 - [Profiles Registry](../profiles/profiles-registry.yaml)
-- [Gaming Specialty](../specialties/gaming/manifest.yaml)
+- [Gaming Specialty](../specialties/developer/branchs/gaming.md)
 - [/harmony learn](../workflows/harmony-learn.md)
 - [Integrations Registry](../integrations/integrations-registry.yaml)

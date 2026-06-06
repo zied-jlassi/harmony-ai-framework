@@ -403,5 +403,4 @@ show_action_log 50
 ## Related Documentation
 
 - [Scrum Master Agent](../agents/scrum-master.md) - Uses Working Memory
-- [Recovery System](./recovery.md) - Detailed recovery docs
 - [Overrides](./overrides.md) - Configuration options

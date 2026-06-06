@@ -287,7 +287,6 @@ mcp__memory__read_graph()
 
 ## References
 
-- [ADR-MCP-001: Integration Strategy](../research/ADR-MCP-001-INTEGRATION-STRATEGY-20260110.md)
 - [server-memory documentation](https://github.com/modelcontextprotocol/servers/tree/main/src/memory)
 - [Sentinel Agent](../agents/sentinel.md)
 - [Pattern P-016: Error Journal](../patterns/P-016-error-journal.md)

@@ -14,12 +14,12 @@ Six specialized sub-agents, each an expert in a specific domain of AI/LLM archit
 
 | Agent | Specialty | File |
 |-------|-----------|------|
-| **RAG Architect** | RAG Pipelines, Vector DBs, Embeddings, Chunking | [rag-architect.md](rag-architect.md) |
-| **Memory Architect** | Memory Systems, Context Engineering, Cognitive Architecture | [memory-architect.md](memory-architect.md) |
-| **Orchestration Architect** | Multi-Agent Orchestration, Supervisor, Handoff | [orchestration-architect.md](orchestration-architect.md) |
-| **Observability Architect** | Observability, Tracing, Evaluation, Cost Monitoring | [observability-architect.md](observability-architect.md) |
-| **GraphRAG Architect** | GraphRAG, Knowledge Graphs, Entity Extraction | [graphrag-architect.md](graphrag-architect.md) |
-| **Safety Architect** | AI Safety, Guardrails, Hallucination Prevention | [safety-architect.md](safety-architect.md) |
+| **RAG Architect** | RAG Pipelines, Vector DBs, Embeddings, Chunking | [rag-patterns.md](rag-patterns.md) |
+| **Memory Architect** | Memory Systems, Context Engineering, Cognitive Architecture | [memory-patterns.md](memory-patterns.md) |
+| **Orchestration Architect** | Multi-Agent Orchestration, Supervisor, Handoff | [orchestration-patterns.md](orchestration-patterns.md) |
+| **Observability Architect** | Observability, Tracing, Evaluation, Cost Monitoring | [observability-patterns.md](observability-patterns.md) |
+| **GraphRAG Architect** | GraphRAG, Knowledge Graphs, Entity Extraction | [graphrag-patterns.md](graphrag-patterns.md) |
+| **Safety Architect** | AI Safety, Guardrails, Hallucination Prevention | [safety-patterns.md](safety-patterns.md) |
 
 ---
 

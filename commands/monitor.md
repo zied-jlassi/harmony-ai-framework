@@ -160,4 +160,4 @@ The monitor automatically configures a Claude Code hook that captures all tool i
 ## See Also
 
 - [/harmony costs](costs.md) - API cost tracking
-- [Patterns](../patterns/P-014-react-respond.md) - Prompt patterns
+- [Patterns](../patterns/cognitive/react.md) - ReAct prompt pattern

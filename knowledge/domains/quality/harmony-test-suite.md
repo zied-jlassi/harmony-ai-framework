@@ -1,7 +1,7 @@
 # Harmony Framework Test Suite
 
 > Documentation complète du système de tests Harmony.
-> Pour patterns bash universels, voir: `shared/patterns/bash-testing-patterns.md`
+> Pour patterns bash universels, voir: `../../shared/patterns/bash-testing-patterns.md`
 
 ## Quick Start
 
@@ -268,9 +268,7 @@ harmony init /tmp/ci-project
 
 ## Liens
 
-- [README.md](../../../tests/e2e/scripts/README.md) - Documentation utilisateur
-- [KNOWLEDGE.md](../../../tests/e2e/scripts/KNOWLEDGE.md) - Base complète
-- [bash-testing-patterns.md](../shared/patterns/bash-testing-patterns.md) - Patterns universels
+- [bash-testing-patterns.md](../../shared/patterns/bash-testing-patterns.md) - Patterns universels
 
 ---
 

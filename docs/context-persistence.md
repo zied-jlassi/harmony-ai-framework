@@ -285,10 +285,9 @@ Le systeme de persistance de contexte est couvert par des tests unitaires (24 as
 
 - `jq` installe (manipulation JSON)
 - Permissions d'ecriture dans le repertoire de test
-- Framework Harmony present dans `/home/dev/projects/claude/harmony-framework/framework`
+- Framework Harmony present dans le repertoire du projet (`.harmony/`)
 
 ## References
 
-- [ADR-AI-004: Analyse MCP Context Persistence](../../../research/ADR-AI-004-context-persistence-mcp-analysis-20260111-1430.md)
 - [Official server-memory](https://github.com/modelcontextprotocol/servers/tree/main/src/memory)
 - [mcp-memory-keeper](https://github.com/mkreyman/mcp-memory-keeper) (complementaire)

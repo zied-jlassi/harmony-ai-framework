@@ -1229,7 +1229,7 @@ Alex: WCAG + RGAA audit with assistive tech
 - [Exploratory QA 🔍](../../../agents/exploratory-qa.md) - Accessibility in QA sessions
 - [Developer](../../../agents/developer.md) - Accessible implementation
 - [UX Designer](../../../agents/ux-designer.md) - Accessible design
-- [Security](security.md) - CAPTCHA alternatives
+- [Security](../../../agents/security.md) - CAPTCHA alternatives
 
 ---
 

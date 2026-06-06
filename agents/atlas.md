@@ -600,7 +600,7 @@ Atlas contribue au Sentinel error journal:
 - [Guardian](guardian.md) - Routes to Atlas post-dev
 - [Sentinel](sentinel.md) - Stores architecture errors
 - [Developer](developer.md) - Implements fixes
-- [AI Architect 🧠](ai-architect.md) - AI architecture patterns
+- [AI Architect 🧠](../specialties/ai/branchs/ai-systems.md) - AI architecture patterns
 
 ---
 

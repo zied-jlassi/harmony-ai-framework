@@ -135,6 +135,7 @@ autopilot_start_command
 [End for each]
         ↓
 Sprint Complete → Generate report
+```
 
 **Safety Mechanisms:**
 - Circuit breaker opens if story fails 10+ times (skips remaining phases)

@@ -967,9 +967,9 @@ NO-GO until BUG-002 fixed.
 
 ## Related Agents
 
-- [Tester](../tester.md) - Automated testing partner
+- [Tester](tester.md) - Automated testing partner
 - [UCV Validator ✅](../specialties/ucv/branchs/validator.md) - UCV validation
-- [Developer](../developer.md) - Bug fix handoff
+- [Developer](developer.md) - Bug fix handoff
 - [Accessibility](accessibility.md) - Deep a11y expertise
 
 ---

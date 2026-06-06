@@ -247,7 +247,7 @@ Progress: {X}%
 
 ## Related
 
-- Brief: [hotel-reservation-brief.md](../briefs/hotel-reservation-brief.md)
+- Brief: [{brief_reference}]({brief_file})
 - PRD: [{prd_reference}](../prd/{prd_file})
 - Architecture: [{arch_reference}](../architecture/{arch_file})
 

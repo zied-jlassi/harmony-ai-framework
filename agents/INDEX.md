@@ -56,7 +56,7 @@ Les agents Harmony sont organises en 4 categories:
 | **UCV QA** | [qa.md](../specialties/ucv/branchs/qa.md) | Validation UCV en browser | `/hf:agent:ucv-qa STORY-XXX` |
 | **UCV Validator** | [validator.md](../specialties/ucv/branchs/validator.md) | Verification 100% coverage | `/hf:agent:ucv-validator STORY-XXX` |
 | **Exploratory QA** | [exploratory-qa.md](exploratory-qa.md) | QA Exploratoire | `/hf:agent:exploratory-qa [module]` |
-| **AI Architect** | [ai-architect.md](ai-architect.md) | AI/LLM Systems | `/hf:agent:ai-architect` |
+| **AI Architect** | [ai-systems.md](../specialties/ai/branchs/ai-systems.md) | AI/LLM Systems | `/hf:agent:ai-architect` |
 
 ### AI Knowledge Domains
 
@@ -64,12 +64,12 @@ Les agents Harmony sont organises en 4 categories:
 
 | # | Domain | Fichier | Description |
 |---|--------|---------|-------------|
-| 1 | RAG Patterns | [rag-patterns.md](../specialties/ai/knowledge/rag-patterns.md) | Pipelines RAG, Vector DBs, Embeddings, Chunking |
-| 2 | Memory Patterns | [memory-patterns.md](../specialties/ai/knowledge/memory-patterns.md) | 3-Tier Memory, Mem0, Context Engineering |
-| 3 | Orchestration | [orchestration-patterns.md](../specialties/ai/knowledge/orchestration-patterns.md) | Multi-Agent, Supervisor, Handoff, HOAF |
-| 4 | Safety Patterns | [safety-patterns.md](../specialties/ai/knowledge/safety-patterns.md) | Guardrails, Hallucination, Prompt Injection |
-| 5 | Observability | [observability-patterns.md](../specialties/ai/knowledge/observability-patterns.md) | Tracing, LangSmith, Evaluation, Metrics |
-| 6 | GraphRAG | [graphrag-patterns.md](../specialties/ai/knowledge/graphrag-patterns.md) | Knowledge Graphs, Neo4j, Entity Extraction |
+| 1 | RAG Patterns | [rag-patterns.md](../knowledge/domains/ai/rag-patterns.md) | Pipelines RAG, Vector DBs, Embeddings, Chunking |
+| 2 | Memory Patterns | [memory-patterns.md](../knowledge/domains/ai/memory-patterns.md) | 3-Tier Memory, Mem0, Context Engineering |
+| 3 | Orchestration | [orchestration-patterns.md](../knowledge/domains/ai/orchestration-patterns.md) | Multi-Agent, Supervisor, Handoff, HOAF |
+| 4 | Safety Patterns | [safety-patterns.md](../knowledge/domains/ai/safety-patterns.md) | Guardrails, Hallucination, Prompt Injection |
+| 5 | Observability | [observability-patterns.md](../knowledge/domains/ai/observability-patterns.md) | Tracing, LangSmith, Evaluation, Metrics |
+| 6 | GraphRAG | [graphrag-patterns.md](../knowledge/domains/ai/graphrag-patterns.md) | Knowledge Graphs, Neo4j, Entity Extraction |
 
 **Accès**: `/hf:agent:ai-architect` → Menu interactif avec sélection des domaines
 
@@ -152,5 +152,5 @@ Les agents Harmony sont organises en 4 categories:
 
 - [INDEX-REFERENCE](../docs/INDEX-REFERENCE.md) - Reference rapide complete
 - [Routing](../routing/INDEX.md) - Detection et routage
-- [Workflows](../workflows/INDEX.md) - Workflows disponibles
-- [Specialties](../specialties/INDEX.md) - Domaines metier
+- [Workflows](../workflows/README.md) - Workflows disponibles
+- [Specialties](../specialties/README.md) - Domaines metier

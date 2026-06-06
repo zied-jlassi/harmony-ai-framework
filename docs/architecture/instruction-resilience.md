@@ -1,58 +1,40 @@
-# ADR-007: Instruction Resilience Architecture
+# Instruction Resilience Architecture
 
-> **Status**: Accepted
-> **Date**: 2026-01-18
-> **Deciders**: Framework Team
+Harmony separates its critical instructions from the user-owned `CLAUDE.md` so that
+framework protocols keep working even if `CLAUDE.md` is edited, truncated, or hit by a
+merge conflict. This document explains the architecture and why it is designed this way.
+
+> Decision record: this architecture is archived as an ADR in the internal `research/`
+> folder. This page is the public, as-built description.
 
 ---
 
 ## Context
 
-### The Problem
+When Harmony is installed, it needs critical instructions to be reliably available:
 
-When Harmony Framework is installed, it injects a header section into `CLAUDE.md` containing critical instructions for:
 - Agent announcement protocol (P-010)
 - Guardian routing
 - Sentinel error handling
 - Security boundaries
 
-**However, this approach has critical flaws:**
+Injecting all of this directly into `CLAUDE.md` is fragile:
 
-1. **Fragility**: If the user modifies `CLAUDE.md`, framework behavior breaks
-2. **Update conflicts**: Framework updates may corrupt user content
-3. **No fallback**: If header is damaged, all protocol enforcement fails
-4. **Merge conflicts**: Git conflicts when multiple tools modify `CLAUDE.md`
-5. **No protection**: Instructions can be accidentally deleted
+1. **Fragility**: if the user edits `CLAUDE.md`, framework behavior can break
+2. **Update conflicts**: framework updates may corrupt user content
+3. **No fallback**: if the header is damaged, all protocol enforcement fails
+4. **Merge conflicts**: git conflicts when multiple tools modify `CLAUDE.md`
+5. **No protection**: instructions can be accidentally deleted
 
-### Evidence of the Problem
-
-```
-User observation:
-"c'est l'architect qui travaille?"
-"Oui, je travaille en mode Architect pour créer les ADRs"
-"il y a eu un handoff?"
-"Non, pas de handoff formel"
-
-Expected behavior (P-010):
-● 🏗️ Architect Agent : Je suis l'Architect, expert en conception...
-[Then work begins]
-
-Actual behavior:
-Claude casually claims "mode Architect" without formal announcement
-```
-
-The P-010 Agent Announcement protocol was not followed because instructions in `CLAUDE.md` may have been:
-- Modified by user
-- Truncated during update
-- Not properly loaded
+If the P-010 announcement protocol is not followed, it is usually because instructions in
+`CLAUDE.md` were modified, truncated during an update, or not properly loaded.
 
 ---
 
-## Decision
+## Architecture
 
-### Separate Instructions from CLAUDE.md
-
-Adopt a **hierarchical, resilient instruction architecture**:
+Harmony adopts a **hierarchical, resilient instruction architecture**: a minimal pointer in
+`CLAUDE.md`, with the real instructions living under `.harmony/`.
 
 ```
 BEFORE (Fragile):
@@ -102,6 +84,7 @@ AFTER (Resilient):
 ### 2. Full Instructions in .harmony/INSTRUCTIONS.md
 
 Contains all critical protocols:
+
 - P-010 Agent Announcement (MANDATORY)
 - Guardian Protocol (intent detection, routing)
 - Sentinel System (error memory, circuit breaker)
@@ -140,37 +123,36 @@ sha256sum INSTRUCTIONS.md AGENTS.md > checksums.sha256
 
 ### Positive
 
-1. **CLAUDE.md safe to modify**: Users can add their own content freely
-2. **Updates don't conflict**: Framework updates only touch `.harmony/`
-3. **Fallback guaranteed**: Instructions always available in `.harmony/`
-4. **Multi-tool support**: Works with Cursor, Codex, Copilot via AGENTS.md
-5. **Version controlled**: Instructions versioned with framework
-6. **Checksum protected**: Detect tampering or corruption
+1. **CLAUDE.md safe to modify**: users can add their own content freely
+2. **Updates don't conflict**: framework updates only touch `.harmony/`
+3. **Fallback guaranteed**: instructions always available in `.harmony/`
+4. **Multi-tool support**: works with Cursor, Codex, Copilot via AGENTS.md
+5. **Version controlled**: instructions versioned with framework
+6. **Checksum protected**: detect tampering or corruption
 
 ### Negative
 
 1. **Extra file to load**: Claude must read `.harmony/INSTRUCTIONS.md`
-2. **Migration needed**: Existing installations need update
+2. **Migration needed**: existing installations need an update
 
 ### Neutral
 
-1. **Hierarchical loading**: Matches industry patterns (OpenAI, Anthropic)
+1. **Hierarchical loading**: matches industry patterns (OpenAI, Anthropic)
 
 ---
 
-## Research Sources
+## Sources
 
 | Source | Pattern | Relevance |
 |--------|---------|-----------|
 | [Anthropic Blog](https://claude.com/blog/using-claude-md-files) | "Break up into separate files and reference them" | Direct recommendation |
 | [Anthropic Engineering](https://www.anthropic.com/engineering/claude-code-best-practices) | Hierarchical loading, `.local.md` variants | Best practice |
 | [OpenAI Codex](https://github.com/letta-ai/agent-file) | `AGENTS.md` with fallback chain | Multi-tool compat |
-| [0xdevalias Gist](https://gist.github.com/0xdevalias/f40bc5a6f84c4c5ad862e314894b2fa6) | AI agent rule files patterns | Industry survey |
 
 ---
 
 ## Related
 
-- [P-010 Agent Announcement](../patterns/P-010-agent-announcement.md)
-- [Guardian Protocol](../agents/guardian.md)
-- [Installation Script](../bin/install.sh)
+- [P-010 Agent Announcement](../../patterns/P-010-agent-announcement.md)
+- [Guardian Protocol](../../agents/guardian.md)
+- [Installation Script](../../bin/install.sh)

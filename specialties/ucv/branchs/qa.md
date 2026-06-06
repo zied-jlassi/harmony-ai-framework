@@ -486,9 +486,9 @@ TESTER completes → [test] ✓
 
 - [UCV Writer](writer.md) - Creates UCVs
 - [UCV Validator](validator.md) - Final validation gate
-- [Exploratory QA](exploratory-qa.md) - Free exploration testing
-- [Tester](../tester.md) - Automated tests
-- [Developer](../developer.md) - Implementation
+- [Exploratory QA](../../../agents/exploratory-qa.md) - Free exploration testing
+- [Tester](../../../agents/tester.md) - Automated tests
+- [Developer](../../../agents/developer.md) - Implementation
 
 ---
 

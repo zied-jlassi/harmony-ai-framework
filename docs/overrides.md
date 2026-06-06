@@ -366,5 +366,4 @@ resolve_hook "rules-enforcer"
 ## Related
 
 - [Installation Guide](installation.md)
-- [Configuration Reference](configuration.md)
-- [Hooks Documentation](hooks.md)
+- [Natural Language Config](natural-language-config.md)

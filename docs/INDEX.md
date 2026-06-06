@@ -77,9 +77,10 @@ Ces outils sont détectés automatiquement à l'installation. Leur présence am�
 - [Documentation Guidelines](DOCUMENTATION-GUIDELINES.md) - Standards de documentation
 - [README Technique](README-technical.md) - Details techniques
 
-### Enterprise
+### Enterprise & Consulting
 
-- [Enterprise Features](enterprise.md) - Plans et options enterprise
+- [Enterprise & AI Consulting](enterprise.md) - Intégration sécurisée, sandboxing, agents spécialisés, optimisation LLM
+- [Security Guards](security-guards.md) - Protection supply-chain + anti-injection LLM
 
 ---
 

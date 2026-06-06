@@ -1,0 +1,10 @@
+{
+  "supply_chain_guard": {
+    "enabled": true,
+    "mode": "block"
+  },
+  "llm_output_sanitizer": {
+    "enabled": true,
+    "mode": "external-only"
+  }
+}

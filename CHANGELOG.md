@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.0] - 2026-06-06
+## [1.3] - 2026-06-06
+
+### Added
+- **Security Guards** — deux hooks de protection activables via switch :
+  - `supply-chain-guard` (PreToolUse/Bash) : vérifie les installations de packages (npm/pip/composer/cargo/gem/go/npx) contre vulnérabilités, typosquatting (liste enrichie incidents 2026), sources non-officielles, période de quarantaine des packages récents, lock files manquants
+  - `llm-output-sanitizer` (PostToolUse/Bash,WebFetch,WebSearch) : filtre le contenu externe (injection de prompt, exfiltration, secrets, stéganographie Unicode) — 2 modes : `external-only` (défaut) et `strict` (+ Read + Semgrep)
+- **Vérification des serveurs MCP** : blocage des installs MCP sans version pinnée + scan des `.mcp.json` non-pinnés (protection auto-update vers version vulnérable)
+- **Slash command** `/hf:security:guards` (status/on/off/mode) + override env `HARMONY_GUARDS=off`
+- **`lib/security-guards.sh`** : engine du switch (config persistée dans `local/security-guards.json`)
+- **`docs/security-guards.md`** : documentation complète + section dédiée dans le README
+- **Tests** : `validate-security-guards.sh` (9 tests), `validate-testarch.sh`, `validate-bash-syntax.sh`
+
+### Changed
+- **README** : section Security Guards (défense en profondeur, scripts à maintenir à jour), intégration testimonials, suppression des liens Discord
+- **LICENSE** : email de contact commercial mis à jour
+- **`docs/enterprise.md`** retravaillé en page **AI Consulting** : intégration sécurisée multi-environnement (WSL2, sandboxing Firecracker/gVisor, on-premise air-gapped), gestion optimale des LLM, workflows avancés et agents spécialisés par domaine, sécurité des données en priorité
+
+## [1.2] - 2026-06-06
 
 ### Added
 - **TestArch — 8 workflows de test complets** (100% originaux Harmony)
@@ -52,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `idna` 3.11 → 3.15, `python-dotenv` 1.2.1 → 1.2.2, `filelock` 3.20.1 → 3.20.3
 - **`torch==2.9.1+cpu`** → `torch==2.9.1` : version installable via PyPI standard
 
-## [2.0] - 2026-06-04
+## [1.1] - 2026-06-04
 
 ### Security
 - **Retrait des modules pentest offensifs** pour usage public sécurisé

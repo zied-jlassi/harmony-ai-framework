@@ -688,6 +688,15 @@ configure_hooks() {
             "command": "bash .harmony/hooks/sentinel-pre.sh \"$TOOL_NAME\" \"$TOOL_INPUT\""
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harmony/hooks/supply-chain-guard.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -697,6 +706,15 @@ configure_hooks() {
           {
             "type": "command",
             "command": "bash .harmony/hooks/sentinel-post.sh \"$TOOL_NAME\" \"$TOOL_RESULT\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|WebFetch|WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .harmony/hooks/llm-output-sanitizer.sh"
           }
         ]
       }

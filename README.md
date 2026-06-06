@@ -9,9 +9,8 @@
 [![npm version](https://img.shields.io/npm/v/harmony-ai-framework.svg?style=for-the-badge)](https://www.npmjs.com/package/harmony-ai-framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/harmony-ai-framework/framework?style=for-the-badge)](https://github.com/harmony-ai-framework/framework/stargazers)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?style=for-the-badge&logo=discord)](https://discord.gg/harmony-ai)
 
-[📚 Documentation](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md) • [🚀 Quick Start](#-quick-start) • [💬 Discord](https://discord.gg/harmony-ai)
+[📚 Documentation](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md) • [🚀 Quick Start](#-quick-start)
 
 ---
 
@@ -245,6 +244,28 @@
 | ✅ Quality Gates | ❌ "It works" = done | ✅ Triple validation (DEV+TEST+QA) |
 | 💾 Context Persistence | ❌ Lost between sessions | ✅ 3-tier memory |
 | 📈 Pattern Learning | ❌ No learning | ✅ Gets smarter over time |
+| 🛡️ Security Guards | ❌ Blind trust | ✅ Supply-chain + injection filtering |
+
+---
+
+## 🛡️ Security Guards
+
+Harmony ships with two optional protection hooks that screen what enters and what gets installed:
+
+| Guard | Protects against |
+|-------|------------------|
+| **supply-chain-guard** | Vulnerable / typosquatted packages, unpinned MCP servers, recently-published packages (cooling period), missing lock files, unofficial sources |
+| **llm-output-sanitizer** | Prompt injection, data exfiltration, hidden Unicode, leaked secrets — in any **external** content (WebFetch, fetched URLs, external LLM responses) |
+
+```bash
+/hf:security:guards status     # See current state
+/hf:security:guards off        # Disable all (zero perf impact)
+/hf:security:guards mode llm-sanitizer strict   # Maximum coverage
+```
+
+> ⚠️ **Defense-in-depth, not a silver bullet.** These guards aim to **minimize the maximum number of injection and supply-chain attacks** — they do not guarantee 100% protection. Detection is pattern-based, so the scripts **must be kept up to date** as new attack techniques emerge. Always combine them with human review of generated code and installed dependencies.
+
+📖 [Security Guards documentation →](docs/security-guards.md)
 
 ---
 
@@ -377,6 +398,19 @@ npx harmony-ai-framework --full
 
 ---
 
+## 💬 Testimonials
+
+> *"Harmony eliminated 90% of our recurring bugs. The Sentinel system is a game-changer."*
+> — **Senior Developer, Fortune 500**
+
+> *"HQVF transformed how we define quality. No more 'it works on my machine'."*
+> — **QA Lead, SaaS Startup**
+
+> *"Guardian routing saved us hours of context-switching confusion."*
+> — **Tech Lead, AI Consulting**
+
+---
+
 ## 💰 ROI for Your Team
 
 ```
@@ -443,7 +477,6 @@ npx harmony-ai-framework --full
 
 | 💬 Channel | Link |
 |------------|------|
-| Discord | [Join 500+ developers](https://discord.gg/harmony-ai) |
 | Issues | [Report bugs](https://github.com/harmony-ai-framework/framework/issues) |
 | Discussions | [Ideas & help](https://github.com/harmony-ai-framework/framework/discussions) |
 
@@ -455,11 +488,24 @@ MIT - Use it anywhere, contribute back if you can.
 
 ---
 
+## 🏢 Enterprise & AI Consulting
+
+Need to deploy Harmony in production with **data security as top priority**? We offer paid consulting for:
+
+- 🔒 **Secure multi-environment integration** — WSL2, sandboxing (Firecracker/gVisor), on-premise air-gapped, cloud
+- 🧠 **Optimal LLM management & performance** — model-agnostic routing, cost optimization, self-hosting
+- 🤖 **Custom advanced workflows & domain-specialized agents**
+- 🛡️ **Data security hardening** — default-deny egress, credential stripping, compliance
+
+📬 [Details & contact →](docs/enterprise.md)
+
+---
+
 <div align="center">
 
 ### 🛡️ Stop repeating bugs. Start building right.
 
-[Get Started](docs/getting-started.md) • [Documentation](docs/INDEX.md) • [Discord](https://discord.gg/harmony-ai)
+[Get Started](docs/getting-started.md) • [Documentation](docs/INDEX.md)
 
 ⭐ **Star us if Harmony saves you time!**
 

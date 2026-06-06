@@ -257,6 +257,17 @@ Args: $ARGUMENTS
 EOF
 echo "  ✅ sentinel.md"
 
+# /hf:security:guards command
+cat > "$TARGET_DIR/hf-security-guards.md" << 'EOF'
+---
+name: "/hf:security:guards"
+description: "Security Guards - enable/disable supply-chain & LLM injection protection"
+---
+Read `${HARMONY_DIR}/commands/security-guards.md`
+Args: $ARGUMENTS
+EOF
+echo "  ✅ hf-security-guards.md"
+
 # ============================================================
 # Generate Agent Commands (/hf:agent:*)
 # ============================================================

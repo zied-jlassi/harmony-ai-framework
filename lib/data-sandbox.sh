@@ -23,7 +23,9 @@
 #
 # =============================================================================
 
-set -euo pipefail
+# NOTE: this file is a LIBRARY (meant to be sourced). Do NOT enable
+# `set -euo pipefail` at top level — it leaks into the caller's shell and breaks
+# unrelated code. Strict mode is applied only to the direct-execution self-test.
 
 # -----------------------------------------------------------------------------
 # LOAD GUARD
@@ -210,6 +212,14 @@ _sandbox_record_validation() {
               "reason": $reason
             }]' \
             "$SANDBOX_LOG" > "$tmp_file" && mv "$tmp_file" "$SANDBOX_LOG"
+
+        # ADR-010: mirror to the unified flat LLM-layer log (human-readable view,
+        # parallel to app-layer local/logs/security/security.log)
+        local llm_log="${HARMONY_DIR}/local/logs/security/llm-security.log"
+        if mkdir -p "$(dirname "$llm_log")" 2>/dev/null; then
+            printf '[%s] [BLOCKED] [data-sandbox] %s: %s\n' \
+                "$ts" "$input_type" "${reason:0:300}" >> "$llm_log"
+        fi
     fi
 }
 
@@ -708,8 +718,9 @@ EOF
     [[ $failed -eq 0 ]]
 }
 
-# Run self-test if called with --test
+# Run self-test if called with --test (strict mode only here, not when sourced)
 if [[ "${1:-}" == "--test" ]]; then
+    set -euo pipefail
     _data_sandbox_self_test
     exit $?
 fi

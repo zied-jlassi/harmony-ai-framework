@@ -24,7 +24,10 @@
 #
 # =============================================================================
 
-set -euo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # -----------------------------------------------------------------------------
 # CONFIGURATION
@@ -56,11 +59,13 @@ MAX_BACKUPS=10
 # INITIALIZATION
 # -----------------------------------------------------------------------------
 
-# Ensure backup directory exists
-mkdir -p "$BACKUP_DIR"
-
-# Touch action log if not exists
-[[ -f "$ACTION_LOG" ]] || touch "$ACTION_LOG"
+# Lazy init: create dirs/files ONLY when a write operation runs, never at source
+# time (sourcing a library must have no side effects — would pollute the cwd when
+# HARMONY_DIR is unset). Called by the checkpoint/backup writers below.
+_recovery_init() {
+    mkdir -p "$BACKUP_DIR"
+    [[ -f "$ACTION_LOG" ]] || touch "$ACTION_LOG"
+}
 
 # -----------------------------------------------------------------------------
 # CHECKPOINTING
@@ -74,6 +79,7 @@ checkpoint_before() {
     now=$(date -Iseconds)
 
     # Log the action
+    _recovery_init
     echo "{\"time\":\"$now\",\"type\":\"start\",\"action\":\"$action\",\"status\":\"pending\"}" >> "$ACTION_LOG"
 
     # Create checkpoint
@@ -98,6 +104,7 @@ checkpoint_after() {
     now=$(date -Iseconds)
 
     # Log completion
+    _recovery_init
     echo "{\"time\":\"$now\",\"type\":\"end\",\"result\":\"$result\",\"status\":\"completed\"}" >> "$ACTION_LOG"
 
     # Clear pending checkpoint
@@ -119,6 +126,7 @@ checkpoint_failed() {
     now=$(date -Iseconds)
 
     # Log failure
+    _recovery_init
     echo "{\"time\":\"$now\",\"type\":\"error\",\"error\":\"$error\",\"status\":\"failed\"}" >> "$ACTION_LOG"
 
     # Mark checkpoint as failed but don't clear it (for recovery)
@@ -160,6 +168,7 @@ create_backup() {
         return 1
     fi
 
+    _recovery_init
     local backup_file="${BACKUP_DIR}/working_${timestamp}_${type}.json"
     cp "$WORKING_MEMORY" "$backup_file"
 

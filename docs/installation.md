@@ -200,7 +200,7 @@ Before any action, check:
 4. Route to the appropriate agent
 
 > **Note**: Memory files are stored in IDE-specific locations:
-> - Claude Code: `.claude/memory/`
+> - Claude Code: `.harmony/local/memory/`
 > - Cursor: `.cursor/harmony-memory/`
 > - See `.harmony/config/paths.json` for configured path
 
@@ -289,7 +289,7 @@ your-project/
 ```
 
 > **Architecture Note**: Core framework (`.harmony/`) is read-only and can be shared/committed.
-> Project-specific memory goes in IDE-specific locations (`.claude/memory/` for Claude Code).
+> Project-specific memory goes in IDE-specific locations (`.harmony/local/memory/` for Claude Code).
 
 ---
 
@@ -345,7 +345,7 @@ module.exports = {
 
   // Memory (path is auto-configured per IDE, see .harmony/config/paths.json)
   memory: {
-    // path: auto-detected based on IDE (Claude: .claude/memory/, Cursor: .cursor/harmony-memory/)
+    // path: auto-detected based on IDE (Claude: .harmony/local/memory/, Cursor: .cursor/harmony-memory/)
     compress: true,
     retention: {
       errors: 90,          // Days to keep errors
@@ -383,7 +383,7 @@ Expected output:
 ✅ Harmony Framework v1.0.0
 ✅ Node.js v20.10.0 (>=18.0.0 required)
 ✅ Configuration: .harmony/config/harmony.config.js
-✅ Memory directory: .claude/memory/  (IDE-specific)
+✅ Memory directory: .harmony/local/memory/  (IDE-specific)
 ✅ Hooks installed: 3/3
 ✅ Agents available: 10 core, 4 specialists, 4 compliance
 ✅ Patterns loaded: 8

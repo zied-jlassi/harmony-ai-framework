@@ -35,7 +35,8 @@ set -euo pipefail
 # -----------------------------------------------------------------------------
 
 readonly HARMONY_DIR="${HARMONY_DIR:-.harmony}"
-readonly LOG_FILE="${HARMONY_DIR}/local/memory/.security.log"
+# ADR-010: logs live in local/logs/ (not local/memory/ which is state). App-layer security log.
+readonly LOG_FILE="${HARMONY_DIR}/local/logs/security/security.log"
 readonly DEBUG="${HARMONY_HOOK_DEBUG:-0}"
 
 # Paramètres d'entrée Claude Code
@@ -184,6 +185,15 @@ DANGEROUS_PATTERNS=(
     'echo\s+.*>\s*/etc/'
     '>\s*/etc/passwd'
     '>\s*/etc/shadow'
+
+    # ═══════════════════════════════════════════════════════════
+    # INJECTION / EXÉCUTION ARBITRAIRE (combos malveillants - faible faux-positif)
+    # ═══════════════════════════════════════════════════════════
+    'base64\s+(-d|-D|--decode)\b.*\|\s*(ba)?sh'        # decode-then-execute
+    'eval\s+["\047]?\$\((curl|wget)'                    # fetch-then-eval
+    '(ba)?sh\s+<\(\s*(curl|wget)'                       # process-sub download to shell
+    '(source|\.)\s+<\(\s*(curl|wget)'                  # source remote
+    '(curl|wget)\s+.*\|\s*(python[0-9]?|perl|ruby|node)\b'  # download piped to interpreter
 )
 
 # -----------------------------------------------------------------------------

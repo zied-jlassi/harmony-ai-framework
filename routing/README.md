@@ -154,7 +154,7 @@ Pour projets multi-modules (frontend, backend, mobile...) :
 
 - `is_responsive: true` par défaut pour `has_ui: true`
 - Si code non-responsive détecté → Warning
-- Désactiver via `.claude/memory/project-config.json`:
+- Désactiver via `.harmony/local/memory/project-config.json`:
   ```json
   { "is_responsive": false }
   ```

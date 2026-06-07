@@ -60,7 +60,7 @@ context:
 
   # Load active story if available
   - type: file
-    path: ".claude/memory/workflow-state.json"
+    path: ".harmony/local/memory/workflow-state.json"
 
 capabilities:
   - tool_use

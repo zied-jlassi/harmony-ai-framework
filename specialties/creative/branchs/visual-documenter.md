@@ -505,7 +505,7 @@ curl http://localhost:3001/health  # Should return 200
 
 ## 📚 Lectures Obligatoires
 
-1. `/.harmony/patterns/architecture-patterns.md`
+1. `/.harmony/knowledge/shared/patterns/architecture-patterns.md`
 2. `/${HARMONY_DIR}/local/docs/games/prd/game-design.md`
 3. `/CLAUDE.md` (instructions projet)
 
@@ -540,7 +540,7 @@ Emojis par domaine:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)

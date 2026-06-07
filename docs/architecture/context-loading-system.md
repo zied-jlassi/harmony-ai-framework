@@ -73,7 +73,7 @@
 │  ┌────────────────────────────────────────────────────────────────────────────┐ │
 │  │  STEP 5: CONTEXT INJECTION (memory-injector.sh)               ❌ TODO      │ │
 │  │  ─────────────────────────────────────────────────────────────────────────│ │
-│  │  Write to .harmony/memory/working.json:                                    │ │
+│  │  Write to .harmony/local/memory/working.json:                                    │ │
 │  │  {                                                                         │ │
 │  │    "active_agent": "developer",                                            │ │
 │  │    "active_branch": "gaming",                                              │ │

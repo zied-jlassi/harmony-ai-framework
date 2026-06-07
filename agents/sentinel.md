@@ -163,7 +163,7 @@ Before risky operations, Sentinel checks the error journal:
 # Check for similar past errors
 SIMILAR_ERRORS=$(jq --arg file "$TARGET_FILE" \
   '[.errors[] | select(.context.file == $file)]' \
-  .claude/memory/error-journal.json)
+  .harmony/local/memory/error-journal.json)
 
 if [[ $(echo "$SIMILAR_ERRORS" | jq length) -gt 0 ]]; then
     echo "⚠️ SENTINEL WARNING"
@@ -195,7 +195,7 @@ if [[ "$EXIT_CODE" != "0" ]]; then
     record_error "$TOOL_NAME" "$TOOL_INPUT" "$TOOL_OUTPUT"
 
     # Check circuit breaker
-    FAILURES=$(jq '.circuit_breaker.consecutive_failures' .claude/memory/circuit-breaker.json)
+    FAILURES=$(jq '.circuit_breaker.consecutive_failures' .harmony/local/memory/circuit-breaker.json)
 
     if [[ $FAILURES -ge 3 ]]; then
         trigger_circuit_open
@@ -212,7 +212,7 @@ fi
 
 ### Error Journal
 
-`.claude/memory/error-journal.json`
+`.harmony/local/memory/error-journal.json`
 
 ```json
 {
@@ -247,7 +247,7 @@ fi
 
 ### Circuit Breaker State
 
-`.claude/memory/circuit-breaker.json`
+`.harmony/local/memory/circuit-breaker.json`
 
 ```json
 {
@@ -272,7 +272,7 @@ fi
 
 ### Learned Patterns
 
-`.claude/memory/learned-patterns.json`
+`.harmony/local/memory/learned-patterns.json`
 
 ```json
 {

@@ -73,7 +73,7 @@ Run `/harmony` to see all 30 commands with descriptions.
 
 ## Before Starting Work
 
-1. Check `.claude/memory/workflow-state.json` for current phase (1-5)
+1. Check `.harmony/local/memory/workflow-state.json` for current phase (1-5)
 2. Verify a story exists before coding (Guardian enforced)
 3. Run `/harmony quick` after changes
 
@@ -81,7 +81,7 @@ Run `/harmony` to see all 30 commands with descriptions.
 
 | Rule | Description |
 |------|-------------|
-| **No code without story** | Guardian blocks unauthorized changes |
+| **No code without story** | Guardian warns by default (set mode to `block` to enforce) |
 | **UCV required** | Stories need Use Case Verifications |
 | **Circuit breaker** | 3 failures = OPEN, needs reset |
 
@@ -90,7 +90,7 @@ Run `/harmony` to see all 30 commands with descriptions.
 | Path | Content |
 |------|---------|
 | `.harmony/` | Framework (read-only) |
-| `.claude/memory/` | Project data (runtime) |
+| `.harmony/local/memory/` | Project data (runtime) |
 
 {{#if TECH_PROFILES}}
 ## Tech Stack

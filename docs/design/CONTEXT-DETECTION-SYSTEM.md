@@ -1026,7 +1026,7 @@ auto_detection:
 ```yaml
 metrics:
   track_auto_detection_usage: true
-  log_file: ".harmony/memory/routing-metrics.log"
+  log_file: ".harmony/local/memory/routing-metrics.log"
 
   targets:
     keyword_match_rate: 0.70      # 70% devrait matcher direct

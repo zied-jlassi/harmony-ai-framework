@@ -114,7 +114,7 @@ bash .harmony/hooks/token-monitor.sh help       # Show help
 | File | Description | Auto-created |
 |------|-------------|--------------|
 | `.harmony/hooks/token-monitor.sh` | Monitoring script | No (in framework) |
-| `.claude/memory/token-usage.json` | Live session counter | Yes (on first use) |
+| `.harmony/local/memory/token-usage.json` | Live session counter | Yes (on first use) |
 | `.harmony/local/logs/tokens-YYYY-MM-DD.json` | Daily history logs | Yes (on first use) |
 | `.harmony/local/logs/token-report-*.md` | Exported reports | Yes (on export) |
 

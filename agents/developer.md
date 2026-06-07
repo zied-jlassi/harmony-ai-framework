@@ -148,14 +148,14 @@ The Developer transforms stories into working code. Implements features accordin
 
 ## 🛡️ Circuit Breaker Protocol
 
-> **Reference**: `.harmony/core/sentinel.md`
-> **State File**: `.claude/memory/circuit-breaker.json`
+> **Reference**: `.harmony/agents/sentinel.md`
+> **State File**: `.harmony/local/memory/circuit-breaker.json`
 
 ### Pre-Execution Check
 
 **AVANT chaque opération critique (file_write, test, build):**
 
-1. Lire `.claude/memory/circuit-breaker.json`
+1. Lire `.harmony/local/memory/circuit-breaker.json`
 2. **Si `state === "OPEN"`**:
    - Afficher: `🛑 Circuit OPEN - 3 échecs consécutifs`
    - Lister les erreurs depuis `history`
@@ -179,7 +179,7 @@ Remettre `failure_count` à 0 et continuer.
 
 ## 🧠 Think Protocol
 
-> **Reference**: `.harmony/core/think-protocol.md`
+> **Reference**: `.harmony/shared/protocols/think-protocol.md`
 > **Performance**: +54% sur tâches complexes (Anthropic Research)
 
 ### Niveaux de Réflexion
@@ -240,8 +240,8 @@ Option 2 - Nouveau service car respect SRP et meilleure testabilité.
 | Décision technique | `save_decision()` | decision-history.json |
 
 **AU DÉBUT de chaque tâche:**
-1. Lire `.claude/memory/error-journal.json` (erreurs passées)
-2. Lire `.claude/memory/learned-patterns.json` (patterns)
+1. Lire `.harmony/local/memory/error-journal.json` (erreurs passées)
+2. Lire `.harmony/local/memory/learned-patterns.json` (patterns)
 3. Appliquer les prevention_rules trouvées
 
 ### Plan Update Protocol
@@ -334,7 +334,7 @@ AVANT de déclarer terminé, répondre OUI à TOUTES:
 │                                                                  │
 │  ÉTAPE 0: CONSULTER LE ERROR JOURNAL (Pattern Reflexion)        │
 │  ──────────────────────────────────────────────────────────────  │
-│  □ Lire .claude/memory/error-journal.json                      │
+│  □ Lire .harmony/local/memory/error-journal.json                      │
 │  □ Filtrer par module: quick_lookup.by_module[module]           │
 │  □ Filtrer par catégorie si pertinent (pagination, api, etc.)   │
 │  □ EXTRAIRE les prevention_rules applicables                    │
@@ -429,7 +429,7 @@ AVANT de déclarer terminé, répondre OUI à TOUTES:
 │              📕 ERROR JOURNAL - LECTURE OBLIGATOIRE              │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. LIRE le fichier .claude/memory/error-journal.json          │
+│  1. LIRE le fichier .harmony/local/memory/error-journal.json          │
 │                                                                  │
 │  2. FILTRER par contexte actuel:                                │
 │     - Par module: quick_lookup.by_module[module]                │

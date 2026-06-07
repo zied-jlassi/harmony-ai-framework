@@ -20,7 +20,10 @@
 #         llm-sanitizer → external-only | strict
 #
 
-set -uo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -uo pipefail
+fi
 
 HARMONY_DIR="${HARMONY_DIR:-.harmony}"
 CONFIG_FILE="${HARMONY_DIR}/local/security-guards.json"

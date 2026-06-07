@@ -2,7 +2,10 @@
 # harmony-audit.sh - Full coherence audit for Harmony Framework
 # Usage: ./harmony-audit.sh [target_dir]
 
-set -euo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # Colors
 RED='\033[0;31m'

@@ -638,8 +638,8 @@ Scenario: Family access
 ## Mémoire
 
 **Avant de commencer:**
-1. Lis `${HARMONY_DIR}/memory/working.json` pour le contexte actuel
-2. Lis `${HARMONY_DIR}/memory/long_term.json` pour les décisions passées
+1. Lis `${HARMONY_DIR}/local/memory/working.json` pour le contexte actuel
+2. Lis `${HARMONY_DIR}/local/memory/long_term.json` pour les décisions passées
 
 **Après completion:**
 1. Met à jour `.harmony/metrics/dashboard.json` avec les stats
@@ -654,7 +654,7 @@ Scenario: Family access
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -702,9 +702,9 @@ Scenario: Family access
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | PRD créé | `${HARMONY_DIR}/local/docs/prd/` | "📝 PRD sauvegardé: {name}" |
-| JTBD analysé | `${HARMONY_DIR}/memory/jtbd-insights.json` | "🎯 JTBD: {job}" |
-| Priorisation faite | `${HARMONY_DIR}/memory/prioritization.json` | "📊 Priorisation: {decision}" |
-| OKR défini | `${HARMONY_DIR}/memory/okrs.json` | "🎯 OKR: {objective}" |
+| JTBD analysé | `${HARMONY_DIR}/local/memory/jtbd-insights.json` | "🎯 JTBD: {job}" |
+| Priorisation faite | `${HARMONY_DIR}/local/memory/prioritization.json` | "📊 Priorisation: {decision}" |
+| OKR défini | `${HARMONY_DIR}/local/memory/okrs.json` | "🎯 OKR: {objective}" |
 
 ### Plan Update Protocol
 

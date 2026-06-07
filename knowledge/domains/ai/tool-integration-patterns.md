@@ -722,7 +722,7 @@ harmony_tools:
   memory_tools:
     - name: "query_error_journal"
       description: "Search error-journal for similar issues"
-      location: .claude/memory/error-journal.json
+      location: .harmony/local/memory/error-journal.json
 
     - name: "log_error"
       description: "Add new error to error-journal"

@@ -379,11 +379,11 @@
 │                 "JIT Loading - Load only what's needed"                      │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│   Installed in: .harmony/memory/                                            │
+│   Installed in: .harmony/local/memory/                                            │
 │                                                                             │
 │   ┌─────────────────────────────────────────────────────────────┐          │
 │   │  TIER 1: WORKING MEMORY (Hot - Always Loaded)               │          │
-│   │  Location: .harmony/memory/working.json                      │          │
+│   │  Location: .harmony/local/memory/working.json                      │          │
 │   │  • Current sprint state, Active story                       │          │
 │   │  • Current phase (PLANNING/DEV/TEST/REVIEW)                 │          │
 │   │  • Session context, Recent errors (last 10)                 │          │
@@ -391,7 +391,7 @@
 │                               ▼                                             │
 │   ┌─────────────────────────────────────────────────────────────┐          │
 │   │  TIER 2: SESSION MEMORY (Warm - Loaded on Demand)           │          │
-│   │  Location: .harmony/memory/                                  │          │
+│   │  Location: .harmony/local/memory/                                  │          │
 │   │  • circuit-breaker.json, error-journal.json                 │          │
 │   │  • sprint-history.json, story-cache.json                    │          │
 │   └───────────────────────────┬─────────────────────────────────┘          │
@@ -614,24 +614,24 @@ Patterns: Applied for solutions
 "Learn. Protect. Deliver."
 ```
 
-### Différence avec BMAD
+### Ce que Harmony apporte
 
-| Aspect | BMAD | Harmony |
-|--------|------|---------|
-| **Focus** | Workflow orchestration | Quality + Memory |
-| **Mémoire** | Aucune persistante | Sentinel (error-journal, patterns) |
-| **Protection** | Aucune | Guardian (intent routing, circuit breaker) |
-| **Qualité** | Tests classiques | HQVF (UCVs obligatoires) |
-| **Agents** | Personas avec noms | Descriptifs fonctionnels |
+Harmony se concentre sur la **qualité**, la **mémoire** et la **protection** — des couches complémentaires à toute orchestration de workflow :
 
-### Coexistence BMAD + Harmony
+| Capacité | Apport Harmony |
+|----------|----------------|
+| **Focus** | Quality + Memory + Protection |
+| **Mémoire** | Sentinel (error-journal, patterns appris, cross-session) |
+| **Protection** | Guardian (intent routing, circuit breaker) |
+| **Qualité** | HQVF (UCVs obligatoires, triple validation) |
+| **Agents** | Descriptifs fonctionnels (routage natif par capacité) |
 
-```
-BMAD → Orchestration des workflows (Discovery → Release)
-Harmony → Qualité + Mémoire + Protection
+### Complémentarité avec un orchestrateur de workflow
 
-Résultat combiné: 97% completion stories (benchmark interne)
-```
+Harmony s'intègre à un framework d'orchestration externe (Discovery → Release) :
+les deux sont **complémentaires** — l'orchestration pilote le flux, Harmony ajoute
+qualité, mémoire et garde-fous. L'objectif est le partage d'information, pas la
+substitution.
 
 ---
 
@@ -894,7 +894,7 @@ Write .harmony/local/overrides/agents/developer.md
 ### Sentinel (Mémoire persistante)
 
 ```
-.claude/memory/
+.harmony/local/memory/
 ├── error-journal.json       # Journal des erreurs avec patterns
 ├── circuit-breaker.json     # État protection (3 retries max)
 ├── learned-patterns.json    # Patterns appris et validés

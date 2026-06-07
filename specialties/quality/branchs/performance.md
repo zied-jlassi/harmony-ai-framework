@@ -623,7 +623,7 @@ MONITORING:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -671,10 +671,10 @@ MONITORING:
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Bottleneck trouvé | `${HARMONY_DIR}/memory/perf-issues.json` | "⚡ Bottleneck: {component}" |
-| Optimization appliquée | `${HARMONY_DIR}/memory/perf-fixes.json` | "✅ Fix: {description}" |
-| Baseline établie | `${HARMONY_DIR}/memory/perf-baselines.json` | "📊 Baseline: {endpoint}" |
-| Regression détectée | `${HARMONY_DIR}/memory/perf-regressions.json` | "⚠️ Regression: {component}" |
+| Bottleneck trouvé | `${HARMONY_DIR}/local/memory/perf-issues.json` | "⚡ Bottleneck: {component}" |
+| Optimization appliquée | `${HARMONY_DIR}/local/memory/perf-fixes.json` | "✅ Fix: {description}" |
+| Baseline établie | `${HARMONY_DIR}/local/memory/perf-baselines.json` | "📊 Baseline: {endpoint}" |
+| Regression détectée | `${HARMONY_DIR}/local/memory/perf-regressions.json` | "⚠️ Regression: {component}" |
 
 ### Plan Update Protocol
 

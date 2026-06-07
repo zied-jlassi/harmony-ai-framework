@@ -91,7 +91,7 @@ These files are NEVER overwritten during upgrade:
 |------|-------------|
 | `.harmony/local/` | Local overrides |
 | `.harmony/config/overrides.yaml` | Project config |
-| `.claude/memory/` | Memory files |
+| `.harmony/local/memory/` | Memory files |
 | `CLAUDE.md` | Project instructions |
 
 ---

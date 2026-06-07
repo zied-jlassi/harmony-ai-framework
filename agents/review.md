@@ -785,7 +785,7 @@ useEffect(() => {
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -834,10 +834,10 @@ useEffect(() => {
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Review complétée | `${HARMONY_DIR}/memory/reviews.json` | "👀 Review: {PR/file}" |
-| Vulnérabilité trouvée | `${HARMONY_DIR}/memory/vulnerabilities.json` | "🔒 Vuln: {type}" |
-| Pattern anti identifié | `${HARMONY_DIR}/memory/anti-patterns.json` | "⚠️ Anti-pattern: {name}" |
-| Good pattern noté | `${HARMONY_DIR}/memory/good-patterns.json` | "✅ Good pattern: {name}" |
+| Review complétée | `${HARMONY_DIR}/local/memory/reviews.json` | "👀 Review: {PR/file}" |
+| Vulnérabilité trouvée | `${HARMONY_DIR}/local/memory/vulnerabilities.json` | "🔒 Vuln: {type}" |
+| Pattern anti identifié | `${HARMONY_DIR}/local/memory/anti-patterns.json` | "⚠️ Anti-pattern: {name}" |
+| Good pattern noté | `${HARMONY_DIR}/local/memory/good-patterns.json` | "✅ Good pattern: {name}" |
 
 ### Plan Update Protocol
 

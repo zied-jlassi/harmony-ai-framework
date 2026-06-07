@@ -257,7 +257,7 @@ transitions:
 # HANDOFF STORAGE
 # ═══════════════════════════════════════════════════════════════════
 storage:
-  location: ".claude/memory/handoffs/"
+  location: ".harmony/local/memory/handoffs/"
   format: json
   retention_days: 30
 

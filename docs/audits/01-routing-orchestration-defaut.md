@@ -204,7 +204,7 @@ preload_context "creer systeme auth" "developer"
   │   └─ Charge knowledge/domains/security/*.md, etc.
   │
   ├─ inject_context_to_memory
-  │   └─ Ecrit dans .harmony/memory/working.json
+  │   └─ Ecrit dans .harmony/local/memory/working.json
   │
   └─ display_context_summary
       └─ Affiche le resume pour l'utilisateur

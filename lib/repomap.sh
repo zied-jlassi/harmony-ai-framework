@@ -16,7 +16,10 @@
 #   - get_symbols            : Extract symbols from file
 # ============================================================================
 
-set -euo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # ============================================================================
 # CONFIGURATION

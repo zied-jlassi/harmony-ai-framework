@@ -275,7 +275,7 @@ loading:
 ### Lecture (Input)
 
 ```json
-// .claude/memory/workflow-state.json
+// .harmony/local/memory/workflow-state.json
 {
   "active_context": {
     "current_intent": "TEST",
@@ -287,7 +287,7 @@ loading:
 ### Ecriture (Output)
 
 ```json
-// .claude/memory/workflow-state.json (apres loading)
+// .harmony/local/memory/workflow-state.json (apres loading)
 {
   "active_context": {
     "current_intent": "TEST",
@@ -322,7 +322,7 @@ loading:
 | `hooks/profile-loader.sh` | Main loader script |
 | `profiles/{cat}/{name}/manifest.yaml` | Profile configuration |
 | `profiles/{cat}/{name}/knowledge/{section}/*.md` | Knowledge files |
-| `.claude/memory/workflow-state.json` | State (read intent, write sections) |
+| `.harmony/local/memory/workflow-state.json` | State (read intent, write sections) |
 
 ---
 

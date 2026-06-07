@@ -481,7 +481,7 @@ autopilot_story_command STORY-001 --verbose
 autopilot_story_command STORY-002 --verbose
 
 # Check results
-cat ${HARMONY_DIR}/memory/working.json | jq '.current_story'
+cat ${HARMONY_DIR}/local/memory/working.json | jq '.current_story'
 
 # If successful, launch full sprint
 autopilot_start_command --sprint SPRINT-005
@@ -746,7 +746,7 @@ Tapez le numero de votre choix (1-10):
 +-------------------------------------------------------------------+
 |                                                                   |
 |  AVANT CHAQUE OPERATION CRITIQUE:                                |
-|  1. Consulter `.claude/memory/circuit-breaker.json`              |
+|  1. Consulter `.harmony/local/memory/circuit-breaker.json`              |
 |  2. SI `state === "OPEN"`:                                       |
 |     -> Afficher: "Circuit OPEN - 3 echecs consecutifs"           |
 |     -> Lister les erreurs depuis `history`                       |
@@ -1075,7 +1075,7 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 
 ### Working Memory Protocol (CENTRAL - OBLIGATOIRE)
 
-> **Fichier central**: `.claude/memory/working.json`
+> **Fichier central**: `.harmony/local/memory/working.json`
 > **Libs**: `.harmony/lib/sprint-tracker.sh`, `.harmony/lib/recovery.sh`
 
 **VOUS DEVEZ maintenir `working.json` a jour a CHAQUE action:**
@@ -1150,7 +1150,7 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 
 **AU DEBUT DE CHAQUE SESSION:**
 
-1. **Lire** `.claude/memory/working.json`
+1. **Lire** `.harmony/local/memory/working.json`
 2. **Verifier** si `_checkpoint.pending_action` existe (crash detecte)
 3. **Afficher** le resume de l'etat actuel
 4. **Proposer** de continuer ou corriger
@@ -1159,7 +1159,7 @@ STORY-004 (Polish)          STORY-005 (E2E Tests)
 
 1. **Mettre a jour** working.json immediatement
 2. **Creer backup** tous les 5 actions (automatique)
-3. **Logger** l'action dans `.claude/memory/.action-log.jsonl`
+3. **Logger** l'action dans `.harmony/local/memory/.action-log.jsonl`
 
 ### Plan Update Protocol
 

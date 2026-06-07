@@ -213,7 +213,7 @@ Tapez le numero de votre choix (1-10):
 +-------------------------------------------------------------------+
 |                                                                   |
 |  AVANT CHAQUE TEST MAJEUR:                                       |
-|  1. Consulter `.claude/memory/error-journal.json`                |
+|  1. Consulter `.harmony/local/memory/error-journal.json`                |
 |  2. Chercher: category = "test"                                  |
 |  3. Verifier patterns d'echecs passes                            |
 |                                                                   |
@@ -420,9 +420,9 @@ AVANT d'ajouter un test:
 | Evenement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | Test ecrit | Plan/Story | "Test: {testName}" |
-| Coverage gap identifie | `.claude/memory/test-gaps.json` | "Gap: {area}" |
-| Flaky test resolu | `.claude/memory/flaky-fixes.json` | "Flaky fix: {test}" |
-| Pattern test appris | `.claude/memory/test-patterns.json` | "Pattern: {name}" |
+| Coverage gap identifie | `.harmony/local/memory/test-gaps.json` | "Gap: {area}" |
+| Flaky test resolu | `.harmony/local/memory/flaky-fixes.json` | "Flaky fix: {test}" |
+| Pattern test appris | `.harmony/local/memory/test-patterns.json` | "Pattern: {name}" |
 
 ### Plan Update Protocol
 

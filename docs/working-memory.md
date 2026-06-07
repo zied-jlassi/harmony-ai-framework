@@ -10,7 +10,7 @@ Memory files are stored in **IDE-specific locations**, NOT in `.harmony/`:
 
 | IDE | Memory Location |
 |-----|-----------------|
-| Claude Code | `.claude/memory/` |
+| Claude Code | `.harmony/local/memory/` |
 | Cursor | `.cursor/harmony-memory/` |
 | Windsurf | `.windsurf/harmony-memory/` |
 | Continue | `.continue/harmony-memory/` |
@@ -37,8 +37,8 @@ The path is configured in `.harmony/config/paths.json` during installation.
 |  .harmony/lib/recovery.sh         ← Crash recovery               |
 |                                                                   |
 |  Example (Claude Code):                                           |
-|  .claude/memory/working.json                                      |
-|  .claude/memory/.action-log.jsonl                                 |
+|  .harmony/local/memory/working.json                                      |
+|  .harmony/local/memory/.action-log.jsonl                                 |
 +-------------------------------------------------------------------+
 ```
 
@@ -286,7 +286,7 @@ If issues are found, you'll see recovery options.
 
 At the start of each session, the AI should:
 
-1. **Read** `${MEMORY_DIR}/working.json` (e.g., `.claude/memory/working.json`)
+1. **Read** `${MEMORY_DIR}/working.json` (e.g., `.harmony/local/memory/working.json`)
 2. **Check** for incomplete actions
 3. **Display** current state summary
 4. **Continue** from where the last session left off
@@ -373,7 +373,7 @@ working_memory:
 
 ```bash
 # Check if valid JSON (use your IDE's memory path)
-jq empty .claude/memory/working.json  # Claude Code example
+jq empty .harmony/local/memory/working.json  # Claude Code example
 
 # If corrupted, recover from backup
 list_backups

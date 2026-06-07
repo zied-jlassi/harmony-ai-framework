@@ -118,7 +118,7 @@ feature_mapping:
     cody: "prompts"
 
   sentinel_memory:
-    claude-code: ".claude/memory/*.json"
+    claude-code: ".harmony/local/memory/*.json"
     cursor: "built-in memories (manual)"
     windsurf: "auto-generated memories"
     continue: "not supported"

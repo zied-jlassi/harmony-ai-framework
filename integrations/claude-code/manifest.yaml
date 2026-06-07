@@ -27,7 +27,7 @@ capabilities:
 
   memory:
     supported: true
-    location: ".claude/memory/"
+    location: ".harmony/local/memory/"
     files:
       - "workflow-state.json"    # Guardian state
       - "circuit-breaker.json"   # Sentinel state
@@ -79,7 +79,7 @@ file_structure:
     - "post-tool-use.sh"    # Sentinel learning
     - "*.sh"                # Custom hooks
 
-  ".claude/memory/":
+  ".harmony/local/memory/":
     - "workflow-state.json"
     - "circuit-breaker.json"
     - "error-journal.json"
@@ -103,7 +103,7 @@ harmony_mapping:
       3. workflow-state.json for state
 
   sentinel:
-    target: ".claude/memory/ + hooks"
+    target: ".harmony/local/memory/ + hooks"
     implementation: |
       1. Post-tool hook for error detection
       2. circuit-breaker.json for state
@@ -169,6 +169,6 @@ installation:
     Files created:
     - CLAUDE.md (project rules)
     - .claude/hooks/ (Guardian + Sentinel)
-    - .claude/memory/ (persistent state)
+    - .harmony/local/memory/ (persistent state)
 
     Test with: claude "test harmony"

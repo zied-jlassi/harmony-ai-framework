@@ -1,0 +1,20 @@
+{
+  "id": "BASH-006",
+  "title": "set -euo pipefail at top level of a SOURCED library leaks into the caller",
+  "category": "bash",
+  "severity": "high",
+  "version": "1.0.0",
+  "error": "A sourced lib enables `set -e`/`set -u` globally; the caller's shell inherits it and unrelated code starts failing (e.g. unbound vars, conditionals aborting, pattern loops returning wrong results).",
+  "cause": "`set -euo pipefail` placed at the top level of a file that is meant to be `source`d applies to the SOURCING shell, not just the library. set -e is also unreliable inside functions/subshells. Observed in lib/data-sandbox.sh where it silently broke its own injection detection.",
+  "solution": "Libraries (sourced files) must NOT enable strict mode at top level. Handle errors explicitly with return codes (`|| return 1`). If the file also runs directly (self-test/CLI), enable `set -euo pipefail` ONLY inside the direct-execution guard.",
+  "example_bad": "#!/bin/bash\nset -euo pipefail        # top of a sourced lib -> leaks to caller\nmy_func() { ... }",
+  "example_good": "#!/bin/bash\n# library: no top-level strict mode\nmy_func() { ...; return 0; }\nif [[ \"${1:-}\" == \"--test\" ]]; then\n    set -euo pipefail     # strict only when executed directly\n    _self_test; exit $?\nfi",
+  "tags": ["set-e", "nounset", "pipefail", "sourced-library", "scope-leak", "strict-mode"],
+  "discovered": "2026-06-07",
+  "source": "harmony-framework lib/data-sandbox.sh (broke prompt-injection detection)",
+  "detection": "grep -lE '^set -[eu]|^set -euo' lib/*.sh on files that are sourced elsewhere; guard test: source the lib in a clean shell and assert $- gained no 'e'/'u'.",
+  "references": [
+    "https://mywiki.wooledge.org/BashFAQ/105",
+    "https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html"
+  ]
+}

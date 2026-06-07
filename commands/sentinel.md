@@ -21,7 +21,7 @@
 ## Memory Files
 
 ```
-${MEMORY_DIR}/              # IDE-specific (e.g., .claude/memory/)
+${MEMORY_DIR}/              # IDE-specific (e.g., .harmony/local/memory/)
 ├── error-journal.json      # All errors with solutions
 ├── circuit-breaker.json    # Circuit state (CLOSED/OPEN)
 ├── learned-patterns.json   # Validated patterns

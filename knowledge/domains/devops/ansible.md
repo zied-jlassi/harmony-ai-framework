@@ -151,5 +151,5 @@ molecule converge
 
 ## References
 
-- OVH Server: `.claude/memory/OVH_SERVER.md`
+- OVH Server: `.harmony/local/memory/OVH_SERVER.md`
 - Vault password: Never in git

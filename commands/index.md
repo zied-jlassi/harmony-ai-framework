@@ -119,7 +119,7 @@ Select a mode by entering its number or command (e.g., 2 or harmony quick)
 
 ## Command Mapping
 
-> **Note:** This table lists **37 command entries** mapping to **30 command files**. Some entries are **variants** (subcommands with flags) that share the same documentation file. Variants are indicated by suffixes like `-update`, `-usage`, `-learn`, etc.
+> **Note:** This table lists **36 command entries** mapping to **29 command files**. Some entries are **variants** (subcommands with flags) that share the same documentation file. Variants are indicated by suffixes like `-update`, `-usage`, `-learn`, etc.
 
 | # | Command | Syntax | File |
 |---|---------|--------|------|
@@ -159,8 +159,7 @@ Select a mode by entering its number or command (e.g., 2 or harmony quick)
 | 33 | coverage | `harmony coverage` | [coverage.md](coverage.md) |
 | 34 | matrix | `harmony matrix` | [matrix.md](matrix.md) |
 | 35 | test-book | `harmony test-book` | [test-book.md](test-book.md) |
-| 36 | costs | `harmony costs` | [costs.md](costs.md) |
-| 37 | monitor | `harmony monitor` | [monitor.md](monitor.md) |
+| 36 | monitor | `harmony monitor` | [monitor.md](monitor.md) |
 
 ---
 
@@ -171,20 +170,20 @@ The menu header displays dynamic values read from memory files:
 | Placeholder | Source | Default |
 |-------------|--------|---------|
 | `{project_name}` | `.harmony/project.yaml` → name | "Unnamed Project" |
-| `{phase_number}` | `.claude/memory/workflow-state.json` → phase.current | 1 |
-| `{phase_name}` | `.claude/memory/workflow-state.json` → phase.name | "Discovery" |
+| `{phase_number}` | `.harmony/local/memory/workflow-state.json` → phase.current | 1 |
+| `{phase_name}` | `.harmony/local/memory/workflow-state.json` → phase.name | "Discovery" |
 | `{phase_status}` | Derived from phase progress | "Not started" |
-| `{cb_state}` | `.claude/memory/circuit-breaker.json` → state | "CLOSED" |
-| `{failures}` | `.claude/memory/circuit-breaker.json` → consecutive_failures | 0 |
-| `{guardian}` | `.claude/memory/workflow-state.json` → guardian.mode | "WARN mode" |
-| `{guardian_status}` | `.claude/memory/workflow-state.json` → guardian.enabled | "Active" |
-| `{sentinel}` | `.claude/memory/circuit-breaker.json` → state | "CLOSED" |
-| `{sentinel_failures}` | `.claude/memory/circuit-breaker.json` → consecutive_failures | "0 failures" |
-| `{hqvf}` | `.claude/memory/workflow-state.json` → hqvf.enabled | "Enabled" |
-| `{hqvf_approval}` | `.claude/memory/workflow-state.json` → hqvf.require_approval | "Requires approval" |
-| `{sprint}` | `.claude/memory/workflow-state.json` → active_context.current_sprint | "None" |
+| `{cb_state}` | `.harmony/local/memory/circuit-breaker.json` → state | "CLOSED" |
+| `{failures}` | `.harmony/local/memory/circuit-breaker.json` → consecutive_failures | 0 |
+| `{guardian}` | `.harmony/local/memory/workflow-state.json` → guardian.mode | "WARN mode" |
+| `{guardian_status}` | `.harmony/local/memory/workflow-state.json` → guardian.enabled | "Active" |
+| `{sentinel}` | `.harmony/local/memory/circuit-breaker.json` → state | "CLOSED" |
+| `{sentinel_failures}` | `.harmony/local/memory/circuit-breaker.json` → consecutive_failures | "0 failures" |
+| `{hqvf}` | `.harmony/local/memory/workflow-state.json` → hqvf.enabled | "Enabled" |
+| `{hqvf_approval}` | `.harmony/local/memory/workflow-state.json` → hqvf.require_approval | "Requires approval" |
+| `{sprint}` | `.harmony/local/memory/workflow-state.json` → active_context.current_sprint | "None" |
 | `{sprint_status}` | Derived from sprint data | "--" |
-| `{story}` | `.claude/memory/workflow-state.json` → active_context.current_story | "None" |
+| `{story}` | `.harmony/local/memory/workflow-state.json` → active_context.current_story | "None" |
 | `{story_status}` | Derived from story file | "--" |
 
 ---

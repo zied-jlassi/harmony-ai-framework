@@ -107,19 +107,37 @@ DESIGN:
 
 ## 3. SENTINEL SYSTEM
 
-### Circuit Breaker
+### Circuit Breakers — two distinct layers (do not confuse)
 
-- **Max failures per story**: 10
-- **Max failures per phase**: 5
+Harmony uses **two independent** failure mechanisms:
+
+1. **Sentinel breaker (global)** — opens after **3 consecutive failures**.
+   Configured by `max_failures: 3` in `${HARMONY_DIR}/local/memory/circuit-breaker.json` (rule R-003).
+   Forces diagnosis before continuing.
+2. **Sprint Autopilot limits (per story)** — **10 failures / story**, **5 / phase**.
+   Configured in `${HARMONY_DIR}/local/autopilot-config.json`. On reaching them the story is escalated.
+
 - **State**: CLOSED → OPEN → HALF_OPEN → CLOSED
 
 ### Error Memory
 
-Errors are logged to `${HARMONY_DIR}/memory/error-journal.json` for learning.
+Errors are logged to `${HARMONY_DIR}/local/memory/error-journal.json` for learning.
+
+### Bug Resolution Protocol — Regression-First (P-025, MANDATORY)
+
+On **any** captured error, BEFORE modifying the implementation (any language):
+
+1. **Reproduce** — write a test that FAILS because of the reported bug (RED). Do not touch the code yet.
+2. **Confirm red** — run it; it must fail for the expected reason (proves the cause).
+3. **Fix** — change code minimally until the test passes (GREEN).
+4. **Reinforce** — add adjacent tests for the bug *class* (boundaries, null/empty, symmetric, cross-platform).
+5. **Learn** — record it in `error-journal.json` (and `error-library/` if reusable), linking the regression test.
+
+> A fix submitted without a prior failing test is not accepted. See [P-025](../patterns/P-025-regression-first-bugfix.md).
 
 ### Escalation
 
-After 10 failures, story is marked `NEEDS_ESCALATION` and human intervention required.
+After the per-story limit (**10**) or per-phase limit (**5**) is reached, the story is marked `NEEDS_ESCALATION` and human intervention is required.
 
 ---
 
@@ -203,22 +221,28 @@ TODO → IN_PROGRESS → IN_REVIEW → TESTING → DONE
 
 ---
 
-## 7. FILE STRUCTURE
+## 7. FILE STRUCTURE — TWO ZONES (ADR-010)
+
+> **RULE (ADR-010): mutable state ALWAYS lives in `local/`; the rest of `${HARMONY_DIR}/` is read-only framework base, overwritten on every update.**
+> Never read/write memory under `${HARMONY_DIR}/memory/` (base) — it does not exist. All memory is `${HARMONY_DIR}/local/memory/`. Seeds come from `templates/memory/*.template.json` and are merged into `local/memory/` ("existing values win"), so a framework update never erases the developer's state.
 
 ```
 ${HARMONY_DIR}/
-├── INSTRUCTIONS.md      ← This file (protected)
-├── memory/
-│   ├── working.json     ← Current state
-│   ├── circuit-breaker.json
-│   └── error-journal.json
-├── local/
-│   ├── backlog/         ← Stories, epics
-│   └── docs/            ← Project documentation
-│       ├── briefs/
-│       ├── prd/
-│       └── architecture/
-└── docs/                ← Framework docs (read-only)
+├── INSTRUCTIONS.md      ← This file (protected, read-only)
+├── agents/ lib/ ...     ← Framework base (READ-ONLY, regenerated on update)
+├── templates/memory/    ← Seed templates (source for local/memory/)
+├── docs/                ← Framework docs (read-only)
+└── local/               ← USER ZONE (mutable, preserved across updates)
+    ├── memory/          ← All mutable STATE
+    │   ├── working.json         ← Current sprint/story state
+    │   ├── circuit-breaker.json
+    │   └── error-journal.json
+    ├── logs/            ← Append-only LOGS (not state)
+    │   └── security/
+    │       ├── security.log       ← app/workstation (rules-enforcer, supply-chain)
+    │       └── llm-security.log   ← LLM layer (output-sanitizer, data-sandbox)
+    ├── backlog/         ← Stories, epics
+    └── docs/            ← Project documentation (briefs/, prd/, architecture/)
 ```
 
 ---
@@ -240,3 +264,4 @@ If behavior seems broken:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0.0 | 2026-01-18 | Initial separated instructions (ADR-007) |
+| 1.1.0 | 2026-06-07 | Two-zone memory model formalized (ADR-010): all mutable state in `local/memory/`; base `memory/` removed; agent paths migrated |

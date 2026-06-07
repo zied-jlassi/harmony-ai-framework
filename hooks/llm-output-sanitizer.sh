@@ -88,13 +88,23 @@ is_external_source || exit 0
 BLOCKED=0
 WARNED=0
 
+# ADR-010: LLM-layer security log (separate from app-layer local/logs/security/security.log)
+LLM_LOG="${HARMONY_DIR}/local/logs/security/llm-security.log"
+log_llm() {  # $1=level (BLOCKED|WARNING) $2=message
+    mkdir -p "$(dirname "$LLM_LOG")" 2>/dev/null || return 0
+    printf '[%s] [%s] [%s] %s\n' \
+        "$(date '+%Y-%m-%d %H:%M:%S')" "$1" "${TOOL_NAME:-?}" "${2:0:300}" >> "$LLM_LOG"
+}
+
 warn()  {
     WARNED=1
     echo -e "${ORANGE}${BOLD}[LOS-WARN]${NC}  $*" >&2
+    log_llm "WARNING" "$*"
 }
 block() {
     BLOCKED=1
     echo -e "${RED}${BOLD}[LOS-BLOCK]${NC} $*" >&2
+    log_llm "BLOCKED" "$*"
 }
 info()  { echo -e "${CYAN}[LOS]${NC} $*" >&2; }
 

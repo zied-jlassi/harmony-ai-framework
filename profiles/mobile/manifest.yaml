@@ -18,7 +18,7 @@ profile_category:
 #
 # Pour projets legacy non-responsive:
 # - User peut désactiver via warning prompt
-# - Ou manuellement dans .claude/memory/project-config.json
+# - Ou manuellement dans .harmony/local/memory/project-config.json
 #
 responsive:
   default: true
@@ -40,7 +40,7 @@ responsive:
   # Warning → User choisit [1] Fix ou [2] Disable
   on_disable:
     set: "is_responsive: false"
-    file: ".claude/memory/project-config.json"
+    file: ".harmony/local/memory/project-config.json"
 
 # ═══════════════════════════════════════════════════════════════════
 # MOBILE APP DETECTION

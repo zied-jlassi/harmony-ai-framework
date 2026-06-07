@@ -351,7 +351,7 @@ module.exports = {
 
   // Memory settings
   memory: {
-    path: '.harmony/memory',
+    path: '.harmony/local/memory',
     persistErrors: true,
     persistPatterns: true,
   },

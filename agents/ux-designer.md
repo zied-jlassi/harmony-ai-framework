@@ -707,7 +707,7 @@ export const gamingColors = {
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -757,9 +757,9 @@ export const gamingColors = {
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | Design créé | `${HARMONY_DIR}/local/docs/design/` | "🎨 Design sauvegardé: {name}" |
-| Pattern UI identifié | `${HARMONY_DIR}/memory/ui-patterns.json` | "💡 Pattern UI: {name}" |
-| Décision a11y | `${HARMONY_DIR}/memory/a11y-decisions.json` | "♿ A11y: {decision}" |
-| Composant v0.dev | `${HARMONY_DIR}/memory/v0-components.json` | "🧱 Composant: {name}" |
+| Pattern UI identifié | `${HARMONY_DIR}/local/memory/ui-patterns.json` | "💡 Pattern UI: {name}" |
+| Décision a11y | `${HARMONY_DIR}/local/memory/a11y-decisions.json` | "♿ A11y: {decision}" |
+| Composant v0.dev | `${HARMONY_DIR}/local/memory/v0-components.json` | "🧱 Composant: {name}" |
 
 ### Plan Update Protocol
 

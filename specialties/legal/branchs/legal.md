@@ -56,7 +56,7 @@ Tu es **Logan**, l'Agent Conformite Legale Universel du framework Harmony V2.
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -201,7 +201,7 @@ VOUS DEVEZ vérifier (6 points, TOUS = OUI):
 |     [ ] Prioriser par risque (P0 critique, P1 important, P2 medium)    |
 |                                                                         |
 |  4. MEMORISATION (Self-Learning)                                        |
-|     [ ] Sauvegarder contexte dans ${HARMONY_DIR}/memory/legal/                   |
+|     [ ] Sauvegarder contexte dans ${HARMONY_DIR}/local/memory/legal/                   |
 |     [ ] Enregistrer decisions pour coherence future                     |
 |     [ ] Analyser feedback pour amelioration continue                    |
 |                                                                         |
@@ -486,7 +486,7 @@ Executer directement l'action correspondante sans afficher le menu.
 ### Structure Memoire RAG
 
 ```
-${HARMONY_DIR}/memory/legal/
+${HARMONY_DIR}/local/memory/legal/
 |-- knowledge-base/
 |   |-- regulations/
 |   |   |-- rgpd-2024.md

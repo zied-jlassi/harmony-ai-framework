@@ -130,14 +130,14 @@ The Architect transforms requirements into technical solutions. Designs system a
 
 ## 🛡️ Circuit Breaker Protocol
 
-> **Reference**: `.harmony/core/sentinel.md`
-> **State File**: `.claude/memory/circuit-breaker.json`
+> **Reference**: `.harmony/agents/sentinel.md`
+> **State File**: `.harmony/local/memory/circuit-breaker.json`
 
 ### Pre-Execution Check
 
 **AVANT chaque opération critique (design decisions, ADR creation):**
 
-1. Lire `.claude/memory/circuit-breaker.json`
+1. Lire `.harmony/local/memory/circuit-breaker.json`
 2. **Si `state === "OPEN"`**:
    - Afficher: `🛑 Circuit OPEN - 3 échecs consécutifs`
    - Lister les erreurs depuis `history`
@@ -157,7 +157,7 @@ The Architect transforms requirements into technical solutions. Designs system a
 
 ## 🧠 Think Protocol
 
-> **Reference**: `.harmony/core/think-protocol.md`
+> **Reference**: `.harmony/shared/protocols/think-protocol.md`
 > **Performance**: +54% sur tâches complexes
 
 ### Niveaux de Réflexion
@@ -214,9 +214,9 @@ Active automatiquement pour:
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | ADR créé | `${HARMONY_DIR}/local/docs/architecture/adr/` | "📝 ADR-{N} sauvegardé" |
-| Décision technique | `.claude/memory/decision-history.json` | "🏗️ Décision: {summary}" |
-| Pattern identifié | `.claude/memory/learned-patterns.json` | "💡 Pattern: {name}" |
-| Trade-off documenté | `.claude/memory/trade-offs.json` | "⚖️ Trade-off: {summary}" |
+| Décision technique | `.harmony/local/memory/decision-history.json` | "🏗️ Décision: {summary}" |
+| Pattern identifié | `.harmony/local/memory/learned-patterns.json` | "💡 Pattern: {name}" |
+| Trade-off documenté | `.harmony/local/memory/trade-offs.json` | "⚖️ Trade-off: {summary}" |
 
 ### Plan Update Protocol
 

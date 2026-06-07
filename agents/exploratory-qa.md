@@ -223,7 +223,7 @@ Tapez le numero de votre choix (1-9):
 +-------------------------------------------------------------------+
 |                                                                   |
 |  AVANT CHAQUE SESSION:                                           |
-|  1. Consulter `.claude/memory/circuit-breaker.json`              |
+|  1. Consulter `.harmony/local/memory/circuit-breaker.json`              |
 |  2. SI `state === "OPEN"`: Diagnostic requis                     |
 |  3. SI application inaccessible: Documenter et notifier          |
 |                                                                   |
@@ -704,10 +704,10 @@ Exploratory QA marks `qa: true` when:
 
 | Evenement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Bug trouve | `.claude/memory/bugs-found.json` | "Bug: {severity}" |
-| Session completee | `.claude/memory/qa-sessions.json` | "Session: {charter}" |
-| Pattern UX note | `.claude/memory/ux-patterns.json` | "UX: {observation}" |
-| Edge case identifie | `.claude/memory/edge-cases.json` | "Edge: {description}" |
+| Bug trouve | `.harmony/local/memory/bugs-found.json` | "Bug: {severity}" |
+| Session completee | `.harmony/local/memory/qa-sessions.json` | "Session: {charter}" |
+| Pattern UX note | `.harmony/local/memory/ux-patterns.json` | "UX: {observation}" |
+| Edge case identifie | `.harmony/local/memory/edge-cases.json` | "Edge: {description}" |
 
 ### Plan Update Protocol
 

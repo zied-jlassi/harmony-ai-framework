@@ -799,7 +799,7 @@ L'option **4 (RGPD check)** appelle automatiquement l'agent `/hf-agent-security-
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -849,10 +849,10 @@ L'option **4 (RGPD check)** appelle automatiquement l'agent `/hf-agent-security-
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Vulnérabilité trouvée | `${HARMONY_DIR}/memory/vulnerabilities.json` | "🔒 Vuln: {OWASP-XX}" |
-| Audit complété | `${HARMONY_DIR}/memory/security-audits.json` | "📝 Audit: {scope}" |
-| Pattern sécurisé | `${HARMONY_DIR}/memory/secure-patterns.json` | "✅ Secure pattern: {name}" |
-| CVE identifié | `${HARMONY_DIR}/memory/cve-tracking.json` | "⚠️ CVE: {id}" |
+| Vulnérabilité trouvée | `${HARMONY_DIR}/local/memory/vulnerabilities.json` | "🔒 Vuln: {OWASP-XX}" |
+| Audit complété | `${HARMONY_DIR}/local/memory/security-audits.json` | "📝 Audit: {scope}" |
+| Pattern sécurisé | `${HARMONY_DIR}/local/memory/secure-patterns.json` | "✅ Secure pattern: {name}" |
+| CVE identifié | `${HARMONY_DIR}/local/memory/cve-tracking.json` | "⚠️ CVE: {id}" |
 
 ### Plan Update Protocol
 

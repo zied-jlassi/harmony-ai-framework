@@ -11,7 +11,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![GitHub stars](https://img.shields.io/github/stars/zied-jlassi/harmony-ai-framework?style=for-the-badge)](https://github.com/zied-jlassi/harmony-ai-framework/stargazers)
 
-[🚀 Quick Start](#-quick-start) • [📚 Docs](docs/INDEX.md) • [🧠 How it works](docs/how-it-works.md) • [🧩 Patterns](patterns/INDEX.md)
+[🚀 Quick Start](#-quick-start) • [🧠 How It Works](docs/how-it-works.md) • [📚 Docs](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md)
 
 </div>
 
@@ -76,13 +76,13 @@ npx harmony-ai --full
 ║                    🔄 THE SELF-IMPROVING LOOP                                 ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║      ┌─────────┐         ┌─────────┐         ┌─────────┐                     ║
-║      │   AI    │ ──────► │ HARMONY │ ──────► │   AI    │                     ║
-║      │  Makes  │         │ Learns  │         │ Better  │                     ║
-║      │ Mistake │         │ Pattern │         │  Next   │                     ║
-║      └─────────┘         └─────────┘         └─────────┘                     ║
+║      ┌─────────┐         ┌─────────┐         ┌─────────┐                      ║
+║      │   AI    │ ──────► │ HARMONY │ ──────► │   AI    │                      ║
+║      │  Makes  │         │ Learns  │         │ Better  │                      ║
+║      │ Mistake │         │ Pattern │         │  Next   │                      ║
+║      └─────────┘         └─────────┘         └─────────┘                      ║
 ║                                                                               ║
-║   💡 Feed the framework with errors → It feeds you with solutions            ║
+║   💡 Feed the framework with errors → It feeds you with solutions             ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -115,7 +115,7 @@ loading are all detailed here 👉 **[docs/how-it-works.md](docs/how-it-works.md
 
 🎯 **Auto-detection**: profiles & specialties activate from your project context — and
 they're **portable** (not tied to Harmony, not IDE-locked).
-👉 [IDE support, profiles & specialties →](docs/how-it-works.md#-works-everywhere)
+👉 [IDE support, profiles & specialties →](docs/how-it-works.md#4--runs-everywhere)
 
 ---
 
@@ -187,7 +187,9 @@ experience-based estimates — live in **[docs/enterprise.md](docs/enterprise.md
 
 ## 📄 License
 
-MIT — Use it anywhere, contribute back if you can.
+Released under the [MIT License](LICENSE) — SPDX: `MIT`.
+
+© 2025 Harmony AI Team. Use it anywhere — contribute back if you can.
 
 ## 🏢 Enterprise & AI Consulting
 

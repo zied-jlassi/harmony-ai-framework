@@ -1,16 +1,39 @@
 # How Harmony Works
 
-> Technical explanation of Harmony's three pillars in action.
+> A guided tour of what Harmony actually does — from a single request to a
+> self-improving project that never repeats its mistakes.
+
+Harmony works as a **loop**. On every request it routes the right agent
+(**Guardian**), remembers every error it has seen (**Sentinel**), and proves the
+result instead of assuming it (**HQVF**). Then it *learns* from what you did — so
+the next session starts smarter, loads less, and avoids past bugs.
+
+This page walks through each piece, with the diagrams that show it in action.
+
+## On this page
+
+- [1 · The Three Pillars](#1--the-three-pillars) — routing, error memory, quality gates
+- [2 · The Self-Improving Engine](#2--the-self-improving-engine) — how your work becomes knowledge
+- [3 · Working Without Losing Context](#3--working-without-losing-context) — UCVs & JIT loading
+- [4 · Runs Everywhere](#4--runs-everywhere) — IDEs, stacks, profiles, specialties
+- [5 · Harmony vs Other Frameworks](#5--harmony-vs-other-frameworks)
+- [6 · Architecture: Core vs Local](#6--architecture-core-vs-local)
 
 ---
 
-## 1. Guardian Protocol - Intelligent Routing
+## 1 · The Three Pillars
+
+The foundation. Three systems that fire on every request.
+
+### Guardian — intelligent routing
+
+Detects intent and sends the work to the right agent, with the right context.
 
 ```
 User: "develop the scoring system"
          ↓
 ┌─────────────────────────────────┐
-│    GUARDIAN INTENT DETECTION     │
+│    GUARDIAN INTENT DETECTION    │
 ├─────────────────────────────────┤
 │  Keywords: "develop", "scoring" │
 │  Intent: IMPLEMENT              │
@@ -23,13 +46,14 @@ User: "develop the scoring system"
   [Developer: Developer activated]
 ```
 
----
+### Sentinel — error memory
 
-## 2. Sentinel System - Error Memory
+Remembers every failure, stops runaway loops with a circuit breaker, and turns
+bugs into reusable patterns.
 
 ```
 ┌─────────────────────────────────────────┐
-│         CIRCUIT BREAKER STATE            │
+│         CIRCUIT BREAKER STATE           │
 ├─────────────────────────────────────────┤
 │  State: 🟢 CLOSED                       │
 │  Failures: 0/3                          │
@@ -44,11 +68,14 @@ User: "develop the scoring system"
 └─────────────────────────────────────────┘
 ```
 
-**Result**: -82% recurring bugs.
+> *(Example dashboard state.)*
 
----
+**Result**: recurring bugs drop sharply — the same error isn't repeated twice.
 
-## 3. HQVF - Quality Verification
+### HQVF — quality verification
+
+Every use case is broken into verifiable checks, each validated three times
+(DEV + TEST + QA). 100% coverage = done. No "it works on my machine".
 
 ```yaml
 # STORY-042-UCV.md
@@ -68,11 +95,15 @@ use_cases:
 coverage: 100% → Story DONE ✓
 ```
 
-**Result**: Zero "works on my machine".
+**Result**: a definition of "done" you can prove, not assume.
 
 ---
 
-## 🧠 Knowledge Flow
+## 2 · The Self-Improving Engine
+
+The pillars do the work; this is what makes Harmony get *better* over time.
+
+### Knowledge flow
 
 Harmony turns everything you do into reusable knowledge:
 
@@ -83,9 +114,9 @@ Harmony turns everything you do into reusable knowledge:
 | 🏢 Team decisions | ADRs stored | Consistent architecture |
 | 🎯 Project rules | Profiles activated | Auto-enforced |
 
----
+### Your style + your errors = your framework
 
-## 🎭 Your Style + Your Errors = Your Framework
+Harmony lives in *your* project, learns *your* patterns, adapts to *your* style.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -94,29 +125,29 @@ Harmony turns everything you do into reusable knowledge:
 ║                                                                               ║
 ║   🧠 LOCAL AI ARCHITECTURE                                                    ║
 ║   ────────────────────────                                                    ║
-║   Harmony lives in YOUR project, learns YOUR patterns, adapts to YOUR style  ║
+║   Harmony lives in YOUR project, learns YOUR patterns, adapts to YOUR style   ║
 ║                                                                               ║
-║   ┌─────────────────────────────────────────────────────────────────────┐    ║
-║   │                                                                     │    ║
-║   │   👨‍💻 Your coding style    →  Profiles auto-generated              │    ║
-║   │   ❌ Your errors          →  Patterns auto-created                 │    ║
-║   │   ✅ Your fixes           →  Solutions auto-documented             │    ║
-║   │   🎯 Your context         →  AI reacts appropriately               │    ║
-║   │                                                                     │    ║
-║   │   Every developer has a UNIQUE perspective.                        │    ║
-║   │   Every mistake is a LEARNING opportunity.                         │    ║
-║   │   Every fix enriches the COLLECTIVE knowledge.                     │    ║
-║   │                                                                     │    ║
-║   └─────────────────────────────────────────────────────────────────────┘    ║
+║   ┌─────────────────────────────────────────────────────────────────────┐     ║
+║   │                                                                     │     ║
+║   │   👨‍💻 Your coding style    →  Profiles auto-generated                │     ║
+║   │   ❌ Your errors          →  Patterns auto-created                  │     ║
+║   │   ✅ Your fixes           →  Solutions auto-documented              │     ║
+║   │   🎯 Your context         →  AI reacts appropriately                │     ║
+║   │                                                                     │     ║
+║   │   Every developer has a UNIQUE perspective.                         │     ║
+║   │   Every mistake is a LEARNING opportunity.                          │     ║
+║   │   Every fix enriches the COLLECTIVE knowledge.                      │     ║
+║   │                                                                     │     ║
+║   └─────────────────────────────────────────────────────────────────────┘     ║
 ║                                                                               ║
-║   💡 No senior needed. No documentation to write. Just code naturally.       ║
+║   💡 No senior needed. No documentation to write. Just code naturally.        ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
----
+### The contribution cycle
 
-## 🔄 The Contribution Cycle
+A bug you fix can become a pattern others reuse — from your terminal to the world.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -126,23 +157,23 @@ Harmony turns everything you do into reusable knowledge:
 ║       ┌───────────────┐                                                       ║
 ║       │   YOU CODE    │                                                       ║
 ║       │   YOUR WAY    │                                                       ║
-║       └───────┬───────┘                                                       ║
+║       └───────────────┘                                                       ║
 ║               │                                                               ║
 ║               ▼                                                               ║
-║       ┌───────────────┐     ┌───────────────┐     ┌───────────────┐          ║
-║       │  ❌ Error     │────►│  🛡️ Harmony   │────►│  📦 Pattern   │          ║
-║       │   Happens     │     │    Learns     │     │   Created     │          ║
-║       └───────────────┘     └───────────────┘     └───────┬───────┘          ║
+║       ┌───────────────┐     ┌───────────────┐     ┌───────────────┐           ║
+║       │  ❌ Error     │────►│  🛡️ Harmony   │────►│  📦 Pattern   │           ║
+║       │   Happens     │     │    Learns     │     │   Created     │           ║
+║       └───────────────┘     └───────────────┘     └───────┬───────┘           ║
 ║                                                           │                   ║
 ║               ┌───────────────────────────────────────────┘                   ║
 ║               │                                                               ║
 ║               ▼                                                               ║
-║       ┌───────────────┐     ┌───────────────┐     ┌───────────────┐          ║
-║       │  📤 Export    │────►│  🌍 Community │────►│  🚀 Published │          ║
-║       │   Pattern     │     │    Reviews    │     │   to npm      │          ║
-║       └───────────────┘     └───────────────┘     └───────────────┘          ║
+║       ┌───────────────┐     ┌───────────────┐     ┌───────────────┐           ║
+║       │  📤 Export    │────►│  🌍 Community │────►│  🚀 Published │           ║
+║       │   Pattern     │     │    Reviews    │     │   to npm      │           ║
+║       └───────────────┘     └───────────────┘     └───────────────┘           ║
 ║                                                                               ║
-║   🎯 Result: Your unique experience helps thousands of developers            ║
+║   🎯 Result: Your unique experience helps thousands of developers             ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -159,7 +190,15 @@ Harmony turns everything you do into reusable knowledge:
 
 ---
 
-## 🔄 Continuous Work, Zero Context Loss
+## 3 · Working Without Losing Context
+
+How Harmony lets you work for days without re-explaining everything — while
+keeping token usage low.
+
+### Zero context loss (UCVs)
+
+Use Case Verifiables checkpoint your progress so any session can resume exactly
+where the last one stopped.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -170,23 +209,23 @@ Harmony turns everything you do into reusable knowledge:
 ║   ─────────────────                 ──────────────────                        ║
 ║   Session 1: Starts fresh           Session 1: Creates UCVs                   ║
 ║   Session 2: Lost context           Session 2: Resumes from V-003-2           ║
-║   Session 3: Re-explain everything  Session 3: Knows exactly where we were   ║
+║   Session 3: Re-explain everything  Session 3: Knows exactly where we were    ║
 ║                                                                               ║
-║   ┌─────────────────────────────────────────────────────────────────────┐    ║
-║   │                     📋 USE CASE VERIFIABLES                         │    ║
-║   ├─────────────────────────────────────────────────────────────────────┤    ║
-║   │                                                                     │    ║
-║   │   UC-001: Login Form                                                │    ║
-║   │   ├── V-001-1: Email validation ✅ DEV ✅ TEST ✅ QA               │    ║
-║   │   ├── V-001-2: Password strength ✅ DEV ✅ TEST ⏳ QA              │    ║
-║   │   └── V-001-3: Remember me      ⏳ DEV                             │    ║
-║   │                                                                     │    ║
-║   │   📍 Context: "Resume from V-001-3, Remember me checkbox"          │    ║
-║   │   🎯 AI knows: What's done, what's pending, what's next            │    ║
-║   │                                                                     │    ║
-║   └─────────────────────────────────────────────────────────────────────┘    ║
+║   ┌─────────────────────────────────────────────────────────────────────┐     ║
+║   │                     📋 USE CASE VERIFIABLES                         │     ║
+║   ├─────────────────────────────────────────────────────────────────────┤     ║
+║   │                                                                     │     ║
+║   │   UC-001: Login Form                                                │     ║
+║   │   ├── V-001-1: Email validation ✅ DEV ✅ TEST ✅ QA                │     ║
+║   │   ├── V-001-2: Password strength ✅ DEV ✅ TEST ⏳ QA               │     ║
+║   │   └── V-001-3: Remember me      ⏳ DEV                              │     ║
+║   │                                                                     │     ║
+║   │   📍 Context: "Resume from V-001-3, Remember me checkbox"           │     ║
+║   │   🎯 AI knows: What's done, what's pending, what's next             │     ║
+║   │                                                                     │     ║
+║   └─────────────────────────────────────────────────────────────────────┘     ║
 ║                                                                               ║
-║   💡 Chain work across sessions, days, or weeks - NOTHING is lost.           ║
+║   💡 Chain work across sessions, days, or weeks - NOTHING is lost.            ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -198,13 +237,14 @@ Harmony turns everything you do into reusable knowledge:
 | 🤷 Subjective "done" | ✅ 100% verifiable coverage |
 | 😤 "Works on my machine" | ✅ Triple validation (DEV+TEST+QA) |
 
----
+### JIT context loading
 
-## ⚡ JIT Context Loading
+Instead of loading everything every session, Harmony loads **only what the
+current request needs** — keeping prompts small and cheap.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                    ⚡ JIT CONTEXT LOADING                                      ║
+║                    ⚡ JIT CONTEXT LOADING                                     ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
 ║   Traditional:              Harmony:                                          ║
@@ -213,18 +253,18 @@ Harmony turns everything you do into reusable knowledge:
 ║   Every session             When needed                                       ║
 ║   ~50K tokens               ~5K tokens                                        ║
 ║                                                                               ║
-║   ┌─────────────────────────────────────────────────────────────────────┐    ║
-║   │  User: "fix the login bug"                                          │    ║
-║   │                    ↓                                                 │    ║
-║   │  Harmony detects: Intent=FIX, Module=Auth, File=login.ts            │    ║
-║   │                    ↓                                                 │    ║
-║   │  Loads ONLY:                                                        │    ║
-║   │  ├── 🔐 Auth patterns (2K tokens)                                   │    ║
-║   │  ├── 🐛 Past login errors (1K tokens)                               │    ║
-║   │  └── 📄 login.ts context (2K tokens)                                │    ║
-║   │                    ↓                                                 │    ║
-║   │  Total: 5K tokens instead of 50K = 90% savings                      │    ║
-║   └─────────────────────────────────────────────────────────────────────┘    ║
+║   ┌─────────────────────────────────────────────────────────────────────┐     ║
+║   │  User: "fix the login bug"                                          │     ║
+║   │                    ↓                                                │     ║
+║   │  Harmony detects: Intent=FIX, Module=Auth, File=login.ts            │     ║
+║   │                    ↓                                                │     ║
+║   │  Loads ONLY:                                                        │     ║
+║   │  ├── 🔐 Auth patterns (2K tokens)                                   │     ║
+║   │  ├── 🐛 Past login errors (1K tokens)                               │     ║
+║   │  └── 📄 login.ts context (2K tokens)                                │     ║
+║   │                    ↓                                                │     ║
+║   │  Total: 5K tokens instead of 50K = 90% savings                      │     ║
+║   └─────────────────────────────────────────────────────────────────────┘     ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -239,14 +279,17 @@ Harmony turns everything you do into reusable knowledge:
 
 ---
 
-## 🔌 Works Everywhere
+## 4 · Runs Everywhere
+
+Harmony adapts to your IDE, your stack and your team size — and the knowledge it
+builds is portable.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                         🔄 ADAPTS TO YOUR WORLD                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   🔌 ANY IDE              🛠️ ANY STACK             🏢 ANY TEAM SIZE          ║
+║   🔌 ANY IDE              🛠️ ANY STACK             🏢 ANY TEAM SIZE           ║
 ║   ─────────              ───────────              ──────────────              ║
 ║   Claude Code            TypeScript               Solo dev                    ║
 ║   Cursor                 Python                   Startup (5)                 ║
@@ -254,12 +297,12 @@ Harmony turns everything you do into reusable knowledge:
 ║   Continue               React, Vue               Enterprise (500+)           ║
 ║   Cody                   Node, Django             Remote teams                ║
 ║                                                                               ║
-║   🎯 AUTO-DETECTION: Profiles activate based on your project context         ║
+║   🎯 AUTO-DETECTION: Profiles activate based on your project context          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### IDE Support
+### IDE support
 
 | IDE | Status | Features |
 |-----|:------:|----------|
@@ -269,7 +312,7 @@ Harmony turns everything you do into reusable knowledge:
 | 🟠 **Continue** | 🟡 Good | Assistants, Context |
 | 🔴 **Cody** | 🟠 Partial | Prompts |
 
-### Tech Stack Profiles (Framework-Agnostic)
+### Tech stack profiles (framework-agnostic)
 
 Profiles & specialties are **portable knowledge** — not tied to Harmony, not
 framework-specific, not IDE-locked. They travel with you across projects and editors.
@@ -283,7 +326,7 @@ framework-specific, not IDE-locked. They travel with you across projects and edi
 | 🐳 Docker | `Dockerfile` | Multi-stage, security |
 | 🗄️ Prisma | `schema.prisma` | Migrations, relations |
 
-### Specialties (Domain Knowledge)
+### Specialties (domain knowledge)
 
 | Specialty | Focus Areas | Portable? |
 |-----------|-------------|:---------:|
@@ -296,7 +339,7 @@ framework-specific, not IDE-locked. They travel with you across projects and edi
 
 ---
 
-## Feature Comparison
+## 5 · Harmony vs Other Frameworks
 
 | Feature | LangChain | CrewAI | AutoGen | Semantic Kernel | **Harmony** |
 |---------|:---------:|:------:|:-------:|:---------------:|:-----------:|
@@ -315,15 +358,15 @@ framework-specific, not IDE-locked. They travel with you across projects and edi
 
 ---
 
-## Architecture: Core vs Local
+## 6 · Architecture: Core vs Local
 
-> **Key principle**: Separate framework (shareable) from project data (local).
+> **Key principle**: separate the framework (shareable) from project data (local).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    ARCHITECTURE HARMONY                          │
+│                    ARCHITECTURE HARMONY                         │
 ├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
+│                                                                 │
 │   .harmony/                    CORE FRAMEWORK (Read-Only)       │
 │   ├── agents/                  Agent definitions                │
 │   ├── workflows/               Workflow definitions             │
@@ -331,21 +374,21 @@ framework-specific, not IDE-locked. They travel with you across projects and edi
 │   ├── patterns/                Documented patterns              │
 │   ├── rules/                   Framework rules                  │
 │   └── docs/                    Documentation                    │
-│                                                                  │
+│                                                                 │
 │   .claude/                     PROJECT DATA (Local)             │
 │   ├── memory/                  ← Project-specific data          │
 │   │   ├── working.json         Sprint/Story tracking            │
 │   │   ├── workflow-state.json  Workflow state                   │
 │   │   ├── error-journal.json   Project errors                   │
 │   │   └── learned-patterns.json Discovered patterns             │
-│   ├── commands/                                                  │
+│   ├── commands/                                                 │
 │   │   └── harmony.md           /harmony skill                   │
 │   └── settings.json            Hooks configuration              │
-│                                                                  │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Why This Separation?
+### Why this separation?
 
 | Aspect | Benefit |
 |--------|---------|

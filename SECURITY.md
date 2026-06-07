@@ -16,10 +16,9 @@ does, its limits, and how to report a vulnerability.
 
 **Please do not open a public issue for security vulnerabilities.**
 
-- Preferred: open a private report via **GitHub Security Advisories**
+- Open a private report via **GitHub Security Advisories**
   ("Security" tab → *Report a vulnerability*) on
   [zied-jlassi/harmony-ai-framework](https://github.com/zied-jlassi/harmony-ai-framework/security/advisories).
-- Or email **zied.jlassi.dev@gmail.com** with subject `SECURITY: <summary>`.
 
 Please include: affected version, reproduction steps, impact, and any logs from
 `.harmony/local/logs/security/`.

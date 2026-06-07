@@ -80,12 +80,12 @@ Déploiement de Harmony et de vos agents IA sur l'infrastructure de votre choix,
 ║                                                                               ║
 ║   ⏱️ TEMPS GAGNÉ                    💵 RÉDUCTION DES COÛTS                    ║
 ║   ─────────────                    ─────────────────────                      ║
-║   ~10 min/bug → moins d'1 min      Moins de temps passé à re-déboguer        ║
+║   ~10 min/bug → moins d'1 min      Moins de temps passé à re-déboguer         ║
 ║   sur les bugs déjà rencontrés     les mêmes erreurs                          ║
 ║                                                                               ║
 ║   🎯 QUALITÉ                        🧠 EFFICACITÉ TOKENS                      ║
 ║   ─────────                         ──────────────────                        ║
-║   Forte baisse des bugs récurrents  Moins de tokens grâce au JIT loading     ║
+║   Forte baisse des bugs récurrents  Moins de tokens grâce au JIT loading      ║
 ║   Fini le « works on my machine »   (on ne charge que le nécessaire)          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
@@ -107,19 +107,19 @@ session. Ordres de grandeur observés sur nos propres projets :
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│              RÉPARTITION DU TEMPS (illustratif)                  │
+│              RÉPARTITION DU TEMPS (illustratif)                 │
 ├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   SANS HARMONY             AVEC HARMONY                          │
+│                                                                 │
+│   SANS HARMONY             AVEC HARMONY                         │
 │   ┌────────────────┐       ┌────────────────┐                   │
-│   │ 🔧 Débogage    │ 40%   │ 🔧 Débogage    │ 10%              │
-│   │ 🔄 Reprises    │ 25%   │ 🔄 Reprises    │  5%              │
-│   │ 💻 Code        │ 35%   │ 💻 Code        │ 85%              │
+│   │ 🔧 Débogage    │ 40%   │ 🔧 Débogage    │ 10%               │
+│   │ 🔄 Reprises    │ 25%   │ 🔄 Reprises    │  5%               │
+│   │ 💻 Code        │ 35%   │ 💻 Code        │ 85%               │
 │   └────────────────┘       └────────────────┘                   │
-│                                                                  │
+│                                                                 │
 │   Idée : moins de temps perdu à re-déboguer = plus de temps     │
 │   sur le code qui crée de la valeur.                            │
-│                                                                  │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

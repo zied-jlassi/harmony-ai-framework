@@ -8,6 +8,10 @@
 
 [![npm version](https://img.shields.io/npm/v/harmony-ai.svg?style=for-the-badge)](https://www.npmjs.com/package/harmony-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+[![Bun](https://img.shields.io/badge/Bun-1.0%2B-000000?style=for-the-badge&logo=bun&logoColor=white)](https://bun.sh)
+[![jq](https://img.shields.io/badge/jq-1.6%2B-2E7BCF?style=for-the-badge)](https://jqlang.github.io/jq/)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
 [![GitHub stars](https://img.shields.io/github/stars/zied-jlassi/harmony-ai-framework?style=for-the-badge)](https://github.com/zied-jlassi/harmony-ai-framework/stargazers)
 
 [📚 Documentation](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md) • [🚀 Quick Start](#-quick-start)
@@ -271,22 +275,33 @@ Harmony ships with two optional protection hooks that screen what enters and wha
 
 ## 📋 Prerequisites
 
-Before installing Harmony, ensure you have these **mandatory dependencies**:
+Before installing Harmony, ensure you have these **required dependencies**:
 
-| Tool | Purpose | Install |
-|------|---------|---------|
-| **Node.js** | Runtime (npx) | [nodejs.org](https://nodejs.org/) |
-| **jq** | JSON processing | `sudo apt install jq` / `brew install jq` |
-| **yq** | YAML processing | `sudo apt install yq` / `brew install yq` |
+| Tool | Version | Purpose | Install |
+|------|---------|---------|---------|
+| **Node.js** | **v18+** | Runtime (npx) | [nodejs.org](https://nodejs.org/) |
+| **Bash** | **4.0+** | Shell runtime (uses associative arrays) | builtin · macOS: `brew install bash` |
+| **jq** | **1.6+** | JSON processing | `sudo apt install jq` / `brew install jq` |
+| **yq** | **v4+** (mikefarah) | YAML processing | `sudo apt install yq` / `brew install yq` |
+
+**Optional** (performance & features):
+
+| Tool | Version | Purpose | Install |
+|------|---------|---------|---------|
+| **Bun** | latest | Faster runtime — auto-detected when present | `curl -fsSL https://bun.sh/install \| bash` |
+| **Python** | **3.8+** | Prompt Monitor, model tools | `sudo apt install python3 python3-pip` |
 
 ```bash
 # Verify installation
-node --version    # v18+ recommended
+node --version    # v18+
+bash --version    # 4.0+   (macOS default is 3.2 → brew install bash)
 jq --version      # 1.6+
-yq --version      # any version
+yq --version      # v4+    (mikefarah/yq)
+bun --version     # optional
+python3 --version # optional (3.8+)
 ```
 
-> ⚠️ **Why jq and yq?** Harmony uses these tools for high-performance configuration parsing and YAML/JSON manipulation. Without them, installation will fail.
+> ⚠️ **Why jq and yq?** Harmony uses these tools for high-performance configuration parsing and YAML/JSON manipulation. **jq is required** for installation; **yq** is required for YAML config parsing.
 
 ---
 

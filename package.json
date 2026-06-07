@@ -1,6 +1,6 @@
 {
   "name": "harmony-ai",
-  "version": "0.1.3",
+  "version": "1.4.0",
   "description": "Self-improving AI development framework with memory, agents, and quality verification. Learn. Protect. Deliver.",
   "author": "Harmony AI Team",
   "license": "MIT",
@@ -45,7 +45,6 @@
     "integrations/",
     "lib/",
     "local/",
-    "memory/",
     "patterns/",
     "profiles/",
     "routing/",
@@ -61,7 +60,8 @@
     "INSTRUCTIONS.md",
     "AGENTS.md",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "SECURITY.md"
   ],
   "engines": {
     "node": ">=18.0.0"

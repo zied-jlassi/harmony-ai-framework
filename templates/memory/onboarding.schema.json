@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Onboarding state",
+  "description": "Tracks which onboarding tips the user has already seen (so reinstalls/updates do not re-show them).",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "string" },
+    "os": { "type": ["string", "null"] },
+    "tips_seen": {
+      "type": "object",
+      "description": "Map of tip key -> seen (true once shown).",
+      "properties": {
+        "welcome": { "type": "boolean" },
+        "sandbox": { "type": "boolean" },
+        "go": { "type": "boolean" },
+        "harmony": { "type": "boolean" },
+        "sentinel": { "type": "boolean" },
+        "agents": { "type": "boolean" },
+        "profiles": { "type": "boolean" },
+        "routellm": { "type": "boolean" }
+      },
+      "additionalProperties": { "type": "boolean" }
+    }
+  },
+  "required": ["version", "tips_seen"]
+}

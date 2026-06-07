@@ -1,13 +1,15 @@
 {
-  "version": "1.0",
+  "$schema": "./onboarding.schema.json",
+  "version": "1.0.0",
   "os": null,
   "tips_seen": {
     "welcome": false,
+    "sandbox": false,
     "go": false,
     "harmony": false,
     "sentinel": false,
     "agents": false,
     "profiles": false,
-    "sandbox": false
+    "routellm": false
   }
 }

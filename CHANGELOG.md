@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4] - 2026-06-07
+
+### Added
+- **Architecture mémoire à deux zones (ADR-010)** : tout l'état mutable vit sous `.harmony/local/` ; la base `.harmony/` reste read-only et régénérable. Seeds depuis `templates/memory/`, merge additif (les valeurs existantes gagnent) → une mise à jour ne détruit plus l'état du projet.
+- **Logs sécurité à deux couches** dans `.harmony/local/logs/security/` : `security.log` (app/poste-dev : commandes dangereuses, injection shell, supply-chain) et `llm-security.log` (couche LLM : prompt-injection, exfiltration, stéganographie, data-sandbox). `supply-chain-guard` et `llm-output-sanitizer` persistent désormais leurs détections.
+- **Patterns anti-injection shell** (rules-enforcer) : `base64 -d | bash`, `eval $(curl …)`, `bash <(curl …)`, `source <(curl …)`, `curl … | python/perl/ruby/node` (faible taux de faux positifs).
+- **Pattern P-025 — Regression-First Bug Resolution** : sur tout bug, écrire d'abord un test qui le reproduit (RED), corriger (GREEN), renforcer, apprendre (Sentinel). Ancré dans `INSTRUCTIONS.md` (valable pour tout LLM).
+- **Error-library BASH-006** : `set -euo pipefail` dans une lib sourcée fuit dans l'appelant.
+- **Onboarding `tips_seen` complété** : le suivi des tips vus (template + état planifiés mais jamais câblés) est désormais fonctionnel — les tips déjà vus ne sont plus re-affichés aux réinstallations/mises à jour, et l'ajout d'un nouveau tip n'affiche que celui-ci (flag `routellm` ajouté).
+- **Doc** : `docs/memory-architecture.md` + `knowledge/gaming-edtech-patterns.md`.
+
+### Changed
+- **Migration des chemins mémoire** : `.claude/memory/` et la base `memory/` unifiés vers `.harmony/local/memory/` à travers agents, specialties, hooks, libs et docs.
+- **Durcissement des libs (BASH-006)** : `set -euo pipefail` ne fuit plus des bibliothèques sourcées (strict mode gardé en exécution directe uniquement) ; `recovery.sh` n'a plus d'effet de bord au chargement.
+- **Install minimal** : sème désormais `local/memory/` depuis les templates (plus de seeds pollués) ; le dossier base vestigial `.harmony/memory/` n'est plus créé.
+
+### Fixed
+- **Références d'agents cassées** réparées (`core/sentinel.md`, `core/think-protocol.md`, `shared/protocols/…`, workflows diagrams, `core/config.yaml`) — l'agent scrum-master lit enfin le bon `working.json`.
+
+### Removed
+- **Module cost-tracker** (suivi de coût géré nativement) : `lib/cost-tracker.sh`, commande `/costs`, références associées.
+
 ## [1.3] - 2026-06-06
 
 ### Added

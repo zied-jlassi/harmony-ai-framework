@@ -195,7 +195,7 @@ ef1bb8c39974b40bc05ee41b2e7824f3486a65fd728a29b070cc9394eda2dcbf  ./error-librar
 8e80c5bde4fd557281117337e681cc10626c9b7bd827bf5a7841db9fea246651  ./error-library/schema/error.schema.json
 11a5b1cdd16468edf2543140c79b38962e84aeec8186dc0849748fd835bd63fe  ./error-library/SYNC-PROCEDURE.md
 fd34f9a5c0250df963baf4af26f6f578fb5a28ad80130c3e9b6bafbe9ff83851  ./error-library/tools/sync-mcp.sh
-1e1d3d6166770da66dc193553aee411f0707a41dd390b80b8d0644bbe5a88896  ./harmony.manifest.json
+4369bb433c975b8aab49eede33a50d5ee50fd9d916176e0e264aadca0ade6382  ./harmony.manifest.json
 afe7ca04e0f9d64d56f89b96bf086d4927a1700831c6b3f5684cc7a3f86d6887  ./hooks/aria-detect.sh
 3a3a22d8250737de56ff3f509ba4d4059ded69f422a5f37d72e78857a3a0e687  ./hooks/compacting-warning.sh
 768fc0838370825efa1d560ff75c9eb649978b1e9a0670597b810b4535fbe897  ./hooks/guardian-checkpoint.sh
@@ -447,7 +447,7 @@ c37cc1a54bcb4a6e28f08852d34d514c21a2cc59138b9d79695a44914da8ffba  ./profiles/sty
 bc2e6980ba5e9c28199b2a0176bcb049e426c80cc6175959f526af46c2bd5b38  ./profiles/styling/css/manifest.yaml
 878df8bac28caee0a72bac61d0e40e3f27258cf0910785eaf9c643533be873ab  ./profiles/styling/sass/manifest.yaml
 fb42f9a3e5673df249cef7583623b2cd65902d141e3ee042c0d372e82f7968dd  ./profiles/styling/tailwind/manifest.yaml
-8dfe9d2a305b3e1506e325097b04b6a9f5431bf21438fdda916fc5800babc583  ./README.md
+e7fc7b4a2cf71a16f4e9c1772a0ed9f5d57e5a22ba514bac6ab7483b654daacb  ./README.md
 510d57eb288dac723fff9108b2a83ff6c63595f306a39b07c2070a6512358d40  ./routing/contextual-routing.yaml
 cd4f6a90364ae38c66a8414b8071eedda50ea71cd7fc588c2fcfd153cac650b6  ./routing/detection-patterns.yaml
 2b3cfb6a7df736f931a76c9bd0dbf70b6e12fcea532acf5eb34ceff0cde2b4f1  ./routing/disambiguation-prompt.yaml
@@ -863,3 +863,6 @@ de15c820ebac668a96f092f19e8c9594bc823e148899212dcbe8684f0f700085  ./workflows/wo
 1f0796c7134aac4c3dc57ff183dd91c292c4d66a68821114ffc788377bcfc70b  ./docs/memory-architecture.md
 1c205be6d60fa3b6bcfa8663a78650ab42444e2241d748730adb331f26ab28ec  ./error-library/errors/bash/BASH-006.json
 f4fa9f3580a6aa80b32ad8a47a14637436554997c98fcb20cfa85089be4983b8  ./patterns/P-025-regression-first-bugfix.md
+1e8530335dbefe18794c4656a0d0aa866b6cc75ff837d6d4eddac832b8943889  ./templates/memory/onboarding.template.json
+ea877c4db2ed0192b5889ed12d621366313050924de32a765d2d80235b39e631  ./templates/memory/onboarding.schema.json
+f5f0c99450ba46c2fc73a38e77020c2e55f625be4e5c6f295adbc752048b1ce3  ./SECURITY.md

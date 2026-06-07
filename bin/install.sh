@@ -886,6 +886,7 @@ initialize_memory() {
     process_memory_file "learned-patterns.json"
     process_memory_file "user-preferences.json"
     process_memory_file "working.json"
+    process_memory_file "onboarding.json"
 
     # Session and tracking
     process_memory_file "session-tracker.json"
@@ -1444,17 +1445,61 @@ show_tip() {
     fi
 }
 
-# Show all onboarding tips
+# Onboarding state helpers (tips_seen tracking — seeded by initialize_memory)
+# Without jq, tracking is skipped and all tips are shown (graceful fallback).
+ONBOARDING_STATE() { echo "$PROJECT_DIR/.harmony/local/memory/onboarding.json"; }
+_tip_seen() {  # $1=key
+    command -v jq &>/dev/null || return 1
+    local sf; sf="$(ONBOARDING_STATE)"
+    [[ -f "$sf" ]] || return 1
+    [[ "$(jq -r --arg k "$1" '.tips_seen[$k] // false' "$sf" 2>/dev/null)" == "true" ]]
+}
+_mark_tip_seen() {  # $1=key
+    command -v jq &>/dev/null || return 0
+    local sf; sf="$(ONBOARDING_STATE)"
+    [[ -f "$sf" ]] || return 0
+    local tmp; tmp=$(mktemp)
+    if jq --arg k "$1" '.tips_seen[$k] = true' "$sf" > "$tmp" 2>/dev/null; then
+        mv "$tmp" "$sf"
+    else
+        rm -f "$tmp"
+    fi
+}
+
+# Show onboarding tips that the user has not seen yet (skips on reinstall/update)
 show_onboarding_tips() {
     local tips_dir="$SCRIPT_DIR/tips"
-    local tip_total=8
-    local tip_num=0
 
     # Check if tips directory exists
     if [[ ! -d "$tips_dir" ]]; then
         print_warning "Tips directory not found. Skipping onboarding."
         return
     fi
+
+    # Tip catalogue: key|file|title  (sandbox title is OS-dependent)
+    local sandbox_title="Sandbox Claude Code (Recommandé)"
+    [[ "$OSTYPE" == "linux-gnu"* ]] || sandbox_title="Sandbox (Linux uniquement)"
+    local -a tips=(
+        "welcome|01-welcome.md|Bienvenue dans Harmony"
+        "sandbox|07-sandbox.md|$sandbox_title"
+        "go|02-go.md|Commande /go"
+        "harmony|03-harmony.md|Menu /harmony"
+        "sentinel|04-sentinel.md|Protection Sentinel"
+        "agents|05-agents.md|Invoquer les agents"
+        "profiles|06-profiles.md|Votre boîte à outils"
+        "routellm|08-routellm.md|Detection automatique (RouteLLM)"
+    )
+
+    # Keep only tips not yet seen
+    local -a unseen=()
+    local entry
+    for entry in "${tips[@]}"; do
+        _tip_seen "${entry%%|*}" || unseen+=("$entry")
+    done
+
+    # Nothing new to show → don't re-spam on reinstall/update
+    [[ ${#unseen[@]} -eq 0 ]] && return
+    local tip_total=${#unseen[@]}
 
     # Intro with centered UI
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then
@@ -1479,41 +1524,14 @@ show_onboarding_tips() {
         fi
     fi
 
-    # Tip 1: Welcome
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/01-welcome.md" $tip_num $tip_total "Bienvenue dans Harmony"
-
-    # Tip 2: Sandbox (Linux only)
-    tip_num=$((tip_num + 1))
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        show_tip "$tips_dir/07-sandbox.md" $tip_num $tip_total "Sandbox Claude Code (Recommandé)"
-    else
-        show_tip "$tips_dir/07-sandbox.md" $tip_num $tip_total "Sandbox (Linux uniquement)"
-    fi
-
-    # Tip 3: /go
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/02-go.md" $tip_num $tip_total "Commande /go"
-
-    # Tip 4: /harmony
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/03-harmony.md" $tip_num $tip_total "Menu /harmony"
-
-    # Tip 5: Sentinel
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/04-sentinel.md" $tip_num $tip_total "Protection Sentinel"
-
-    # Tip 6: Agents
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/05-agents.md" $tip_num $tip_total "Invoquer les agents"
-
-    # Tip 7: Profiles
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/06-profiles.md" $tip_num $tip_total "Votre boîte à outils"
-
-    # Tip 8: RouteLLM (Auto-detection)
-    tip_num=$((tip_num + 1))
-    show_tip "$tips_dir/08-routellm.md" $tip_num $tip_total "Detection automatique (RouteLLM)"
+    # Show each unseen tip, then mark it seen
+    local tip_num=0 key file title rest
+    for entry in "${unseen[@]}"; do
+        key="${entry%%|*}"; rest="${entry#*|}"; file="${rest%%|*}"; title="${rest#*|}"
+        tip_num=$((tip_num + 1))
+        show_tip "$tips_dir/$file" "$tip_num" "$tip_total" "$title"
+        _mark_tip_seen "$key"
+    done
 
     # Conclusion with centered UI
     if [[ "$UI_LIBRARY_LOADED" == true ]]; then

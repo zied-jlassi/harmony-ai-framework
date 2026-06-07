@@ -64,16 +64,78 @@ Déploiement de Harmony et de vos agents IA sur l'infrastructure de votre choix,
 
 ---
 
-## 💬 Témoignages
+## 📈 Impact estimé (basé sur notre expérience)
 
-> *"Harmony eliminated 90% of our recurring bugs. The Sentinel system is a game-changer."*
-> — **Senior Developer, Fortune 500**
+> ⚠️ **Ce sont des estimations issues de notre propre expérience** en développant et en
+> « dogfoodant » Harmony — pas des chiffres audités. Les résultats varient selon les
+> équipes, les projets et les pratiques. À lire comme des ordres de grandeur, pas comme
+> des garanties.
 
-> *"HQVF transformed how we define quality. No more 'it works on my machine'."*
-> — **QA Lead, SaaS Startup**
+### Ce que nous avons observé
 
-> *"Guardian routing saved us hours of context-switching confusion."*
-> — **Tech Lead, AI Consulting**
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    💰 IMPACT ESTIMÉ (ordres de grandeur)                      ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   ⏱️ TEMPS GAGNÉ                    💵 RÉDUCTION DES COÛTS                    ║
+║   ─────────────                    ─────────────────────                      ║
+║   ~10 min/bug → moins d'1 min      Moins de temps passé à re-déboguer        ║
+║   sur les bugs déjà rencontrés     les mêmes erreurs                          ║
+║                                                                               ║
+║   🎯 QUALITÉ                        🧠 EFFICACITÉ TOKENS                      ║
+║   ─────────                         ──────────────────                        ║
+║   Forte baisse des bugs récurrents  Moins de tokens grâce au JIT loading     ║
+║   Fini le « works on my machine »   (on ne charge que le nécessaire)          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Économies de tokens (estimées)
+
+Le JIT loading ne charge que le contexte nécessaire au lieu de tout recharger à chaque
+session. Ordres de grandeur observés sur nos propres projets :
+
+| Levier | Sans Harmony | Avec Harmony | Économie estimée |
+|--------|:------------:|:------------:|:----------------:|
+| 🔄 Rechargement de contexte | Chaque session | Mis en cache | **~-60%** |
+| 📚 Docs complètes dans le prompt | Toujours chargées | JIT loading | **~-45%** |
+| 🤖 Prompts d'agents | Tous les agents | Seulement le nécessaire | **~-35%** |
+| 🧠 Contexte d'erreurs | Ré-expliqué à chaque fois | Appris | **~-50%** |
+
+### Allocation du temps développeur (illustratif)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              RÉPARTITION DU TEMPS (illustratif)                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   SANS HARMONY             AVEC HARMONY                          │
+│   ┌────────────────┐       ┌────────────────┐                   │
+│   │ 🔧 Débogage    │ 40%   │ 🔧 Débogage    │ 10%              │
+│   │ 🔄 Reprises    │ 25%   │ 🔄 Reprises    │  5%              │
+│   │ 💻 Code        │ 35%   │ 💻 Code        │ 85%              │
+│   └────────────────┘       └────────────────┘                   │
+│                                                                  │
+│   Idée : moins de temps perdu à re-déboguer = plus de temps     │
+│   sur le code qui crée de la valeur.                            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+> Ces graphiques illustrent la **dynamique** que nous visons (moins de re-débogage, plus
+> de code utile), pas une mesure garantie sur votre contexte.
+
+---
+
+## 💬 Notre expérience en dogfooding
+
+> *Observations issues du développement de Harmony avec Harmony — votre expérience peut différer.*
+
+- **Forte baisse des bugs récurrents** une fois que Sentinel a commencé à mémoriser les erreurs passées.
+- **Temps de débogage sur les problèmes connus** passé de ~10 min à moins d'une minute.
+- **Le « works on my machine »** a disparu grâce à la triple validation (DEV+TEST+QA).
+- **La confusion entre agents** a disparu avec le routing automatique de Guardian.
 
 ---
 

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-06-07
+
+### Changed
+- **README allégé** : recentré sur les trois piliers (routing, mémoire d'erreurs, quality gates) au lieu de la seule mémoire d'erreurs ; Quick Start remonté ; onglet « How It Works » ; témoignages reformulés en retour d'expérience à la première personne ; ~527 → ~210 lignes. Le contenu retiré n'est pas perdu — il est déplacé dans des pages docs liées.
+- **`docs/how-it-works.md`** : ajout d'une intro + sommaire et regroupement en 6 parties numérotées ; accueille les schémas déplacés depuis le README (self-improving engine, UCV/zéro perte de contexte, JIT loading, runs-everywhere) + tableaux IDE/profils/spécialités.
+- **`docs/enterprise.md`** : ROI / économies de tokens / productivité déplacés ici sous « Impact estimé (basé sur notre expérience) », clairement étiquetés comme estimations issues du vécu (et non des chiffres audités).
+- **`SECURITY.md`** : signalement des vulnérabilités via GitHub Security Advisories uniquement.
+
+### Fixed
+- **Boîtes ASCII mal alignées (« zigzag »)** dans le README et les docs : un emoji occupe 2 colonnes d'affichage mais 1 caractère, ce qui faisait dériver le bord droit (`║`/`│`) ligne par ligne. Chaque ligne est re-paddée à une largeur d'affichage constante (emoji = 2 colonnes) pour aligner tous les bords (rendu GitHub/terminal).
+
 ## [1.4] - 2026-06-07
 
 ### Added

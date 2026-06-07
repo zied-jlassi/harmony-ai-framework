@@ -223,10 +223,10 @@ framework/profiles/
 
 | Fichier | Description |
 |---------|-------------|
-| `.claude/memory/error-journal.json` | Journal erreurs |
-| `.claude/memory/circuit-breaker.json` | Protection 3 retries |
-| `.claude/memory/learned-patterns.json` | Patterns appris |
-| `.claude/memory/workflow-state.json` | Etat workflow |
+| `.harmony/local/memory/error-journal.json` | Journal erreurs |
+| `.harmony/local/memory/circuit-breaker.json` | Protection 3 retries |
+| `.harmony/local/memory/learned-patterns.json` | Patterns appris |
+| `.harmony/local/memory/workflow-state.json` | Etat workflow |
 
 ---
 

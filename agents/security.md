@@ -861,7 +861,7 @@ Verifications de securite dans les UCVs:
 
 ```
 AVANT AUDIT:
-1. Consulter .claude/memory/error-journal.json
+1. Consulter .harmony/local/memory/error-journal.json
 2. Chercher: category = "security"
 3. Identifier patterns de vulnerabilites passes
 4. Appliquer lessons learned

@@ -24,7 +24,7 @@ Le Context Discovery garantit que le développeur comprend:
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  ÉTAPE 0: CONSULTER LE ERROR JOURNAL                            │
-│  □ Lire .claude/memory/error-journal.json                       │
+│  □ Lire .harmony/local/memory/error-journal.json                       │
 │  □ Filtrer par module: quick_lookup.by_module[module]           │
 │  □ EXTRAIRE les prevention_rules applicables                    │
 │  □ NOTER les validation_checklist[] à appliquer                 │

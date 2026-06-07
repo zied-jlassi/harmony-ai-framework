@@ -53,7 +53,7 @@ tiers:
     description: "Persistent, survives sessions"
     max_items: 1000
     retention: "indefinite"
-    location: "${MEMORY_DIR}/"  # IDE-specific (e.g., .claude/memory/)
+    location: "${MEMORY_DIR}/"  # IDE-specific (e.g., .harmony/local/memory/)
 
     includes:
       - error_journal

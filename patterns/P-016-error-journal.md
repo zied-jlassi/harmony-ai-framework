@@ -15,7 +15,7 @@ Apprendre des erreurs passées pour ne pas les répéter.
 
 **OBLIGATOIRE avant chaque tâche:**
 
-1. **LIRE** `.claude/memory/error-journal.json`
+1. **LIRE** `.harmony/local/memory/error-journal.json`
 2. **FILTRER** par contexte actuel:
    - Par module: `quick_lookup.by_module[module]`
    - Par catégorie: `quick_lookup.by_category[type]`
@@ -158,7 +158,7 @@ Developer termine implémentation
 ## Intégration
 
 - **Pattern parent**: P-015 (Context Discovery)
-- **Fichier**: `.claude/memory/error-journal.json`
+- **Fichier**: `.harmony/local/memory/error-journal.json`
 - **Lecture**: Étape 0 du Context Discovery
 - **Écriture**: Après chaque bug fix
 - **Validation**: Atlas AVANT handoff (obligatoire)

@@ -146,7 +146,7 @@ Expert penetration tester with comprehensive knowledge of offensive security and
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)

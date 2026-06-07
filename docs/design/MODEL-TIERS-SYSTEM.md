@@ -230,7 +230,7 @@ Le systeme track:
 | Reduction cout | > 50% |
 | Latence router | < 500ms |
 
-Log: `.harmony/memory/model-metrics.log`
+Log: `.harmony/local/memory/model-metrics.log`
 
 ## FAQ
 

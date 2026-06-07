@@ -283,7 +283,7 @@ npm run test:watch
 
 **Template:** `templates/handoff.md`
 
-**Location:** `${MEMORY_DIR}/session-handoff.md` (e.g., `.claude/memory/`)
+**Location:** `${MEMORY_DIR}/session-handoff.md` (e.g., `.harmony/local/memory/`)
 
 **Also save dated version:** `${MEMORY_DIR}/handoffs/YYYY-MM-DD-HHMMSS.md`
 
@@ -296,13 +296,13 @@ When resuming a session:
 1. **Read handoff document:**
    ```bash
    # Use your IDE's memory path (configured in .harmony/config/paths.json)
-   cat .claude/memory/session-handoff.md  # Claude Code example
+   cat .harmony/local/memory/session-handoff.md  # Claude Code example
    ```
 
 2. **Check memory state:**
    ```bash
-   cat .claude/memory/workflow-state.json   # Claude Code example
-   cat .claude/memory/circuit-breaker.json
+   cat .harmony/local/memory/workflow-state.json   # Claude Code example
+   cat .harmony/local/memory/circuit-breaker.json
    ```
 
 3. **Review in-progress files:**

@@ -2,7 +2,7 @@
 
 > **Pattern**: Persistance d'etat entre sessions
 > **Usage**: TOUS les agents - CENTRAL et OBLIGATOIRE
-> **Fichier**: `.claude/memory/working.json`
+> **Fichier**: `.harmony/local/memory/working.json`
 
 ---
 
@@ -129,7 +129,7 @@ Si une session crash, l'agent suivant sait exactement ou reprendre.
 **AU DEBUT DE CHAQUE SESSION:**
 
 ```
-1. LIRE `.claude/memory/working.json`
+1. LIRE `.harmony/local/memory/working.json`
 2. VERIFIER si `_checkpoint.pending_action` existe (crash detecte)
 3. AFFICHER le resume de l'etat actuel
 4. PROPOSER de continuer ou corriger
@@ -140,7 +140,7 @@ Si une session crash, l'agent suivant sait exactement ou reprendre.
 ```
 1. METTRE A JOUR working.json immediatement
 2. CREER backup tous les 5 actions (automatique)
-3. LOGGER l'action dans `.claude/memory/.action-log.jsonl`
+3. LOGGER l'action dans `.harmony/local/memory/.action-log.jsonl`
 ```
 
 ---
@@ -184,7 +184,7 @@ Si une session crash, l'agent suivant sait exactement ou reprendre.
 ## Integration
 
 - **Utilise par**: TOUS les agents
-- **Fichier**: `.claude/memory/working.json`
-- **Backup**: `.claude/memory/working.backup.json`
-- **Log**: `.claude/memory/.action-log.jsonl`
+- **Fichier**: `.harmony/local/memory/working.json`
+- **Backup**: `.harmony/local/memory/working.backup.json`
+- **Log**: `.harmony/local/memory/.action-log.jsonl`
 - **Resilience**: Crash-proof, context preservation

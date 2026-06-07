@@ -268,12 +268,12 @@ This updates your config to use new key names while preserving values.
 .harmony-local/
 
 # Memory files (IDE-specific locations)
-.claude/memory/*.json          # Claude Code
+.harmony/local/memory/*.json          # Claude Code
 .cursor/harmony-memory/*.json  # Cursor
 .windsurf/harmony-memory/*.json # Windsurf
 
 # Security logs
-.claude/memory/.security.log
+.harmony/local/memory/.security.log
 
 # KEEP in git:
 # .harmony/config/overrides.yaml  (team configuration)

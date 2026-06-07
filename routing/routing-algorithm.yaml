@@ -247,6 +247,6 @@ logging:
     - final_decision
 
   output:
-    file: ".claude/memory/routing-log.json"
+    file: ".harmony/local/memory/routing-log.json"
     max_entries: 1000
     retention_days: 30

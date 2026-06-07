@@ -746,7 +746,7 @@ Cet agent est appelé automatiquement par `/hf-agent-security` lors de:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -793,10 +793,10 @@ Cet agent est appelé automatiquement par `/hf-agent-security` lors de:
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Audit RGPD complété | `${HARMONY_DIR}/memory/rgpd-audits.json` | "⚖️ Audit: {scope}" |
-| Risque identifié | `${HARMONY_DIR}/memory/rgpd-risks.json` | "⚠️ Risque: {description}" |
+| Audit RGPD complété | `${HARMONY_DIR}/local/memory/rgpd-audits.json` | "⚖️ Audit: {scope}" |
+| Risque identifié | `${HARMONY_DIR}/local/memory/rgpd-risks.json` | "⚠️ Risque: {description}" |
 | DPIA créée | `${HARMONY_DIR}/local/docs/rgpd/dpia/` | "📋 DPIA: {traitement}" |
-| Non-conformité | `${HARMONY_DIR}/memory/rgpd-issues.json` | "🔴 Non-conforme: {description}" |
+| Non-conformité | `${HARMONY_DIR}/local/memory/rgpd-issues.json` | "🔴 Non-conforme: {description}" |
 
 ### Plan Update Protocol
 

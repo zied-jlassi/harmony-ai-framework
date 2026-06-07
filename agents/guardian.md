@@ -126,7 +126,7 @@ Routes to the appropriate agent based on intent:
 │          → Priority: profiles > knowledge > patterns            │
 │                                                                  │
 │  STEP 4: Injection (Immutable)                                  │
-│          → Write to ${HARMONY_DIR}/memory/working.json                │
+│          → Write to ${HARMONY_DIR}/local/memory/working.json                │
 │          → State locked (no re-injection)                       │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
@@ -322,7 +322,7 @@ The Guardian can be enforced via hooks:
 #!/bin/bash
 # .harmony/hooks/guardian-checkpoint.sh
 
-WORKFLOW_STATE=".claude/memory/workflow-state.json"
+WORKFLOW_STATE=".harmony/local/memory/workflow-state.json"
 
 # Read current state
 GUARDIAN_ENABLED=$(jq -r '.guardian.enabled // true' "$WORKFLOW_STATE")

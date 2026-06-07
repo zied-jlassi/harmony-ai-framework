@@ -78,13 +78,21 @@ else
 fi
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
-warn()  { echo -e "${ORANGE}${BOLD}[SCG-WARN]${NC} $*" >&2; }
+# ADR-010: supply chain is an app/workstation concern → app-layer security log.
+SEC_LOG="${HARMONY_DIR}/local/logs/security/security.log"
+log_sec() {  # $1=level $2=message
+    mkdir -p "$(dirname "$SEC_LOG")" 2>/dev/null || return 0
+    printf '[%s] [%s] [SUPPLY] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" "${2:0:300}" >> "$SEC_LOG"
+}
+warn()  { echo -e "${ORANGE}${BOLD}[SCG-WARN]${NC} $*" >&2; log_sec "WARNING" "$*"; }
 block() {
     if [[ "$SCG_MODE" == "warn" ]]; then
         echo -e "${ORANGE}${BOLD}[SCG-WARN]${NC} (mode warn) $*" >&2
+        log_sec "WARNING" "$*"
         return 0
     fi
     echo -e "${RED}${BOLD}[SCG-BLOCK]${NC} $*" >&2
+    log_sec "BLOCKED" "$*"
     echo '{"decision":"block","reason":"'"$*"'"}'
     exit 2
 }

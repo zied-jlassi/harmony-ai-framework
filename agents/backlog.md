@@ -48,7 +48,7 @@ et génère des dashboards visuels pour l'équipe.
 # Le cache évite de re-analyser les fichiers à chaque appel
 # Utilise checksum MD5 des mtimes (PAS le git hash!)
 
-cache_file: ${HARMONY_DIR}/memory/backlog-cache.json
+cache_file: ${HARMONY_DIR}/local/memory/backlog-cache.json
 validation: checksum-based
 
 # Pourquoi checksum et pas git hash?
@@ -167,7 +167,7 @@ ls -l --time-style=+%s ${HARMONY_DIR}/local/backlog/epics/EP-*.md 2>/dev/null | 
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -1000,7 +1000,7 @@ ACHV-005: "Badge premier jeu"
 backlog_root: ${HARMONY_DIR}/local/backlog/
 epics_folder: epics/EP-*.md
 stories_folder: stories/*/
-cache_file: ${HARMONY_DIR}/memory/backlog-cache.json
+cache_file: ${HARMONY_DIR}/local/memory/backlog-cache.json
 html_output: ${HARMONY_DIR}/local/backlog/epics.html
 ```
 

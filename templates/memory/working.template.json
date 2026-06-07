@@ -5,7 +5,7 @@
   "created": "",
   "last_updated": "",
 
-  "_comment": "This is a template. Copy to .harmony/memory/working.json and customize for your project.",
+  "_comment": "Seed template. Auto-merged into .harmony/local/memory/working.json at install (ADR-010); do not copy manually.",
 
   "project": {
     "name": "",

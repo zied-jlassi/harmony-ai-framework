@@ -1,7 +1,7 @@
 {
   "category": "bash",
   "description": "Bash/Shell scripting errors and solutions",
-  "count": 5,
+  "count": 6,
   "errors": [
     {
       "id": "BASH-001",
@@ -27,6 +27,11 @@
       "id": "BASH-005",
       "title": "Function returns exit code, not string",
       "severity": "medium"
+    },
+    {
+      "id": "BASH-006",
+      "title": "set -euo pipefail in a sourced library leaks into the caller",
+      "severity": "high"
     }
   ]
 }

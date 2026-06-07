@@ -46,9 +46,9 @@ Included:
   ✅ Active specialties: gaming, quality
 
 Full export (--full):
-  ✅ .claude/memory/workflow-state.json
-  ✅ .claude/memory/error-journal.json
-  ✅ .claude/memory/learned-patterns.json
+  ✅ .harmony/local/memory/workflow-state.json
+  ✅ .harmony/local/memory/error-journal.json
+  ✅ .harmony/local/memory/learned-patterns.json
 
 Created: harmony-export-2025-12-30.tar.gz
 
@@ -126,7 +126,7 @@ tar -xzf harmony-export-2025-12-30.tar.gz
 cp harmony-export-2025-12-30/config/* .harmony/config/
 
 # Apply memory (optional)
-cp harmony-export-2025-12-30/memory/* .claude/memory/
+cp harmony-export-2025-12-30/memory/* .harmony/local/memory/
 ```
 
 ---

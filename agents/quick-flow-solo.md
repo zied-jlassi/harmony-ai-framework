@@ -501,7 +501,7 @@ Pour démarrer: `/harmony:party [sujet]`
 ```
 Charger automatiquement si existant:
 1. .harmony/project-context.md - Standards et conventions Gaming
-2. ${HARMONY_DIR}/memory/working.json - État session
+2. ${HARMONY_DIR}/local/memory/working.json - État session
 3. .harmony/tech-specs/ - Tech specs existantes
 ```
 
@@ -529,7 +529,7 @@ Charger automatiquement si existant:
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -577,9 +577,9 @@ Charger automatiquement si existant:
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
 | Tech spec créée | `.harmony/tech-specs/` | "📝 Tech spec: {name}" |
-| Story complétée | `${HARMONY_DIR}/memory/completed-stories.json` | "✅ Story: {ID}" |
-| Pattern appris | `${HARMONY_DIR}/memory/dev-patterns.json` | "💡 Pattern: {name}" |
-| Décision technique | `${HARMONY_DIR}/memory/tech-decisions.json` | "🔧 Decision: {summary}" |
+| Story complétée | `${HARMONY_DIR}/local/memory/completed-stories.json` | "✅ Story: {ID}" |
+| Pattern appris | `${HARMONY_DIR}/local/memory/dev-patterns.json` | "💡 Pattern: {name}" |
+| Décision technique | `${HARMONY_DIR}/local/memory/tech-decisions.json` | "🔧 Decision: {summary}" |
 
 ### Plan Update Protocol
 

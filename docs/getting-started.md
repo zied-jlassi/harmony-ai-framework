@@ -53,7 +53,7 @@ Harmony Framework requires these official MCP servers for cross-session learning
 mkdir my-project && cd my-project
 
 # Install Harmony
-npm install harmony-ai-framework
+npm install harmony-ai
 
 # Initialize Harmony in your project
 npx harmony init

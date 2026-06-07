@@ -593,7 +593,7 @@ state_tracking:
 
   # Fichier principal d'état du workflow
   workflow_state:
-    file: ".claude/memory/workflow-state.json"
+    file: ".harmony/local/memory/workflow-state.json"
     update_on:
       - story_status_change    # 🔴→🟡→🟢
       - task_status_change     # T1,T2,T3 status
@@ -631,7 +631,7 @@ state_tracking:
 
   # Circuit breaker status
   circuit_breaker:
-    file: ".claude/memory/circuit-breaker.json"
+    file: ".harmony/local/memory/circuit-breaker.json"
     update_on:
       - test_failure
       - validation_failure
@@ -747,7 +747,7 @@ state_update_triggers:
 ai_index_queries:
 
   current_context: |
-    READ: .claude/memory/workflow-state.json
+    READ: .harmony/local/memory/workflow-state.json
     RETURN: active_context, progress, last_action
 
   epic_status: |
@@ -766,7 +766,7 @@ ai_index_queries:
     RETURN: coverage percentage
 
   circuit_breaker_status: |
-    READ: .claude/memory/circuit-breaker.json
+    READ: .harmony/local/memory/circuit-breaker.json
     RETURN: state, consecutive_failures
 
 # =============================================================================

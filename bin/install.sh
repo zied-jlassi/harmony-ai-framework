@@ -202,16 +202,16 @@ INSTALLATION METHODS:
 
   Method 1: NPM (Recommended)
   ─────────────────────────────
-  npm install harmony-ai-framework
-  npx harmony-init [options]
+  npm install harmony-ai
+  npx harmony-ai [options]
 
   Method 2: Direct Script
   ─────────────────────────────
   # If already in a project with Harmony installed:
-  ./node_modules/harmony-ai-framework/bin/install.sh [options]
+  ./node_modules/harmony-ai/bin/install.sh [options]
 
   # Or clone the repo:
-  git clone https://github.com/harmony-ai-framework/framework
+  git clone https://github.com/zied-jlassi/harmony-ai-framework
   ./harmony-framework/bin/install.sh --project-dir /your/project
 
 OPTIONS:
@@ -228,30 +228,30 @@ OPTIONS:
 EXAMPLES:
 
   # Full installation with hooks (recommended)
-  npx harmony-init --full
+  npx harmony-ai --full
 
   # Full installation for Cursor IDE
-  npx harmony-init --full --ide cursor
+  npx harmony-ai --full --ide cursor
 
   # Full installation WITHOUT hooks
-  npx harmony-init --full --no-hooks
+  npx harmony-ai --full --no-hooks
 
   # Minimal installation (core files only, no hooks)
-  npx harmony-init --minimal
+  npx harmony-ai --minimal
 
   # Force reinstall
-  npx harmony-init --full --force
+  npx harmony-ai --full --force
 
 AFTER INSTALLATION:
 
   .harmony/             Core framework (read-only)
-  .claude/memory/       Project data (Claude Code)
+  .harmony/local/memory/       Project data (Claude Code)
   .harmony/agents/      Agent definitions
   .harmony/workflows/   Workflow definitions
 
 DOCUMENTATION:
 
-  https://github.com/harmony-ai-framework/framework
+  https://github.com/zied-jlassi/harmony-ai-framework
 
 EOF
 }
@@ -306,7 +306,7 @@ parse_args() {
 _DETECTED_IDE="generic"
 
 # Detect IDE (for hooks/settings configuration)
-# ADR-010: Memory is always in .harmony/memory/ (IDE-independent)
+# ADR-010: Memory (mutable state) lives in .harmony/local/memory/ (IDE-independent)
 detect_ide() {
     local detected_ide="generic"
 
@@ -425,7 +425,6 @@ create_directory_structure() {
         ".harmony/agents"
         ".harmony/docs"
         ".harmony/hooks"
-        ".harmony/memory"
         ".harmony/patterns"
         ".harmony/rules"
         ".harmony/templates"
@@ -456,6 +455,7 @@ create_directory_structure() {
         ".harmony/local/docs/prd"
         ".harmony/local/docs/architecture"
         ".harmony/local/logs"
+        ".harmony/local/logs/security"
         # Sprint Autopilot configuration and state
         ".harmony/local/autopilot"
         # Override directories (team customizations - committed)
@@ -483,9 +483,6 @@ copy_framework_files() {
             "LICENSE"
             "agents/guardian.md"
             "agents/sentinel.md"
-            "memory/workflow-state.json"
-            "memory/error-journal.json"
-            "memory/circuit-breaker.json"
             "hooks/guardian-checkpoint.sh"
             "hooks/sentinel-pre.sh"
             "hooks/sentinel-post.sh"
@@ -635,6 +632,15 @@ copy_framework_files() {
             cp "$src" "$dst"
         fi
     done
+
+    # ADR-010: memory seeds come from templates/memory/ only.
+    # initialize_memory() reads .harmony/templates/memory/*.template.json and
+    # merges into .harmony/local/memory/ (mutable user zone). Copy the templates
+    # here so minimal installs get a clean local/memory/ (never the framework base).
+    if [[ -d "$SCRIPT_DIR/templates/memory" ]]; then
+        mkdir -p "$PROJECT_DIR/.harmony/templates/memory"
+        cp -r "$SCRIPT_DIR/templates/memory/." "$PROJECT_DIR/.harmony/templates/memory/"
+    fi
 
     print_success "Framework files copied (${INSTALL_MODE} mode)"
 }
@@ -1142,7 +1148,7 @@ create_claude_md() {
 
 > **COMMANDS**: `/go` (session start) • `/harmony` (30 commands) • `/harmony status`
 
-> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai-framework --force` to restore.
+> **READ-ONLY**: This section is auto-generated. Reinstall with `npx harmony-ai --force` to restore.
 
 ---
 
@@ -1305,9 +1311,9 @@ Uses the **Harmony AI Framework** with:
 
 ## Before Starting Work
 
-1. Check \`.claude/memory/workflow-state.json\` for current phase (1-5)
-2. Check \`.claude/memory/working.json\` for active story and blockers
-3. Check \`.claude/memory/circuit-breaker.json\` - if OPEN, run \`/harmony sentinel --reset\` (option 18)
+1. Check \`.harmony/local/memory/workflow-state.json\` for current phase (1-5)
+2. Check \`.harmony/local/memory/working.json\` for active story and blockers
+3. Check \`.harmony/local/memory/circuit-breaker.json\` - if OPEN, run \`/harmony sentinel --reset\` (option 18)
 
 ## Workflow Rules (Must Follow)
 
@@ -1381,7 +1387,7 @@ use_case:
 |-------|----------|
 | Circuit breaker OPEN | \`/harmony sentinel --reset\` (option 18) after analysis |
 | Wrong agent activated | Use explicit keywords from Agent Routing table |
-| Missing context | Check \`.claude/memory/working.json\` for active story |
+| Missing context | Check \`.harmony/local/memory/working.json\` for active story |
 CLAUDE_MD_EOF
 
     print_success "Created CLAUDE.md with Harmony instructions"

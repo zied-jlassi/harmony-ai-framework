@@ -61,7 +61,8 @@ Ces outils sont détectés automatiquement à l'installation. Leur présence am�
 
 - [Architecture](architecture.md) - Architecture du framework
 - [Architecture Reference](ARCHITECTURE-REFERENCE.md) - Reference complete architecture
-- [Library Reference](library-reference.md) - **Reference complete des bibliotheques bash** (ARIA, Circuit Breaker, Cost Tracker...)
+- [Memory Architecture](memory-architecture.md) - **Modele memoire deux zones** (base read-only / `local/` mutable, ADR-010)
+- [Library Reference](library-reference.md) - **Reference complete des bibliotheques bash** (ARIA, Circuit Breaker...)
 - [How It Works](how-it-works.md) - Fonctionnement interne
 - [Instruction Resilience](architecture/instruction-resilience.md) - Separation CLAUDE.md / .harmony, checksums, self-repair
 - [Working Memory](working-memory.md) - Systeme de memoire
@@ -280,8 +281,8 @@ harmony-framework/
 
 ## Liens Externes
 
-- [GitHub Repository](https://github.com/harmony-ai-framework/framework)
-- [Issues & Support](https://github.com/harmony-ai-framework/framework/issues)
+- [GitHub Repository](https://github.com/zied-jlassi/harmony-ai-framework)
+- [Issues & Support](https://github.com/zied-jlassi/harmony-ai-framework/issues)
 
 ---
 

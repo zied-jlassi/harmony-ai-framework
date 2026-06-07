@@ -1270,7 +1270,7 @@ CHECKLIST PLAY STORE (Enfants)
 
 ## 🧠 ENHANCED PROTOCOLS (v2.0) - OBLIGATOIRE
 
-> **Source**: `.harmony/shared/enhanced-protocols-injection.md`
+> **Source**: `.harmony/shared/protocols/enhanced-protocols-injection.md`
 > **Status**: OBLIGATOIRE - Toutes les sections ci-dessous doivent être suivies
 
 ### Thinking Output Protocol (CRITIQUE)
@@ -1319,10 +1319,10 @@ CHECKLIST PLAY STORE (Enfants)
 
 | Événement | Fichier Cible | Message Output |
 |-----------|---------------|----------------|
-| Pattern mobile | `${HARMONY_DIR}/memory/mobile-patterns.json` | "📱 Pattern: {name}" |
-| Platform-specific code | `${HARMONY_DIR}/memory/platform-code.json` | "🔧 Platform: {iOS/Android}" |
-| Offline strategy | `${HARMONY_DIR}/memory/offline-strategies.json` | "📴 Offline: {strategy}" |
-| Store submission | `${HARMONY_DIR}/memory/store-submissions.json` | "🚀 Submitted: {store}" |
+| Pattern mobile | `${HARMONY_DIR}/local/memory/mobile-patterns.json` | "📱 Pattern: {name}" |
+| Platform-specific code | `${HARMONY_DIR}/local/memory/platform-code.json` | "🔧 Platform: {iOS/Android}" |
+| Offline strategy | `${HARMONY_DIR}/local/memory/offline-strategies.json` | "📴 Offline: {strategy}" |
+| Store submission | `${HARMONY_DIR}/local/memory/store-submissions.json` | "🚀 Submitted: {store}" |
 
 ### Plan Update Protocol
 

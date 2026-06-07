@@ -20,7 +20,10 @@
 #
 # =============================================================================
 
-set -euo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # Don't re-source if already loaded
 if [[ "${PROFILE_LOADER_LOADED:-}" == "true" ]]; then

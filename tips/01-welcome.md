@@ -26,7 +26,7 @@ Enrichissez le framework :
 - Proposez des **agents** spécialisés
 
 ```
-github.com/harmony-ai-framework/framework
+github.com/zied-jlassi/harmony-ai-framework
 ```
 
 > Ce tip ne s'affichera plus. Bon développement !

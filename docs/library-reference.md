@@ -13,7 +13,6 @@ Harmony Framework includes powerful bash libraries that provide the core functio
 | [ARIA Detector](#aria-detector) | `lib/aria-detector.sh` | Automatic intent and context detection |
 | [Context Preloader](#context-preloader) | `lib/context-preloader.sh` | Safe context loading with state machine |
 | [Sprint Tracker](#sprint-tracker) | `lib/sprint-tracker.sh` | Sprint, story, and pipeline management |
-| [Cost Tracker](#cost-tracker) | `lib/cost-tracker.sh` | API cost tracking with multi-currency |
 | [Config Loader](#config-loader) | `lib/config-loader.sh` | Configuration loading with lazy caching |
 | [Assistant Toolkit](#assistant-toolkit) | `lib/assistant-toolkit.sh` | Unified toolkit orchestrator |
 
@@ -348,82 +347,6 @@ Monitor sprint health:
 ```bash
 get_sprint_health
 # Returns: {"total": 10, "done": 3, "escalated": 2, "healthy": true}
-```
-
----
-
-## Cost Tracker
-
-> API cost tracking with multi-currency support.
-
-**File:** `lib/cost-tracker.sh`
-
-### Model Pricing
-
-Pricing per 1K tokens (January 2026):
-
-| Model | Input | Output |
-|-------|-------|--------|
-| claude-sonnet-4 / sonnet | $0.003 | $0.015 |
-| claude-opus-4 / opus | $0.015 | $0.075 |
-| claude-haiku / haiku | $0.00025 | $0.00125 |
-
-### Key Functions
-
-```bash
-# Initialize cost tracking
-init_cost_tracking
-
-# Track API usage
-track_usage "sonnet" 1000 500 "developer"
-# Args: model, input_tokens, output_tokens, agent
-
-# Get session cost
-cost=$(get_session_cost)  # → "0.0234"
-
-# Get costs by agent
-costs=$(get_agent_costs)  # → {"developer": 0.02, "tester": 0.01}
-
-# Get specific agent cost
-dev_cost=$(get_agent_cost "developer")
-```
-
-### Multi-Currency Support
-
-```bash
-# Get preferred currency from config
-currency=$(get_preferred_currency)  # → "EUR" or "USD"
-
-# Format cost with currency
-formatted=$(format_cost 0.05 "EUR")  # → "0.0460 €"
-
-# Format in both currencies
-dual=$(format_cost_dual 0.05)  # → "$0.0500 (0.0460 €)"
-
-# Get EUR exchange rate (cached daily)
-rate=$(get_eur_rate)  # → "0.92"
-
-# Convert USD to EUR
-eur=$(usd_to_eur 1.00)  # → "0.92"
-```
-
-### Configuration
-
-Set preferred currency in `.harmony/local/autopilot-config.json`:
-
-```json
-{
-  "cost_tracking": {
-    "currency": "EUR"
-  }
-}
-```
-
-Or in `.harmony/local/config/overrides.yaml`:
-
-```yaml
-cost_tracking:
-  currency: EUR
 ```
 
 ---

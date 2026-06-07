@@ -435,7 +435,7 @@ responsive:
   on_disable:
     sets:
       is_responsive: false
-    storage: ".claude/memory/project-config.json"
+    storage: ".harmony/local/memory/project-config.json"
 
   # Viewports for responsive testing
   viewports:
@@ -445,7 +445,7 @@ responsive:
 # CONTEXT STATE
 # ═══════════════════════════════════════════════════════════════════
 state:
-  storage: ".claude/memory/context-state.json"
+  storage: ".harmony/local/memory/context-state.json"
 
   tracked:
     - detected_contexts

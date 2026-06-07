@@ -203,8 +203,8 @@ hooks:
 # MEMORY STATE
 # ═══════════════════════════════════════════════════════════════════
 memory:
-  state_file: ".claude/memory/routing-state.json"
-  log_file: ".claude/memory/routing-log.json"
+  state_file: ".harmony/local/memory/routing-state.json"
+  log_file: ".harmony/local/memory/routing-log.json"
 
   tracked:
     - current_agent

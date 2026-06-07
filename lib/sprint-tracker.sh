@@ -26,7 +26,10 @@
 #
 # =============================================================================
 
-set -euo pipefail
+# Strict mode only when executed directly, not when sourced (error BASH-006)
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]]; then
+    set -euo pipefail
+fi
 
 # -----------------------------------------------------------------------------
 # CONFIGURATION
@@ -1564,7 +1567,7 @@ on_circuit_breaker_open() {
     local phase="${2:-unknown}"
     local last_error="${3:-No error details captured}"
     local circuit_breaker_file="${HARMONY_DIR}/local/memory/circuit-breaker.json"
-    # ADR-010: Memory centralized in .harmony/memory/
+    # ADR-010: Memory (mutable state) lives in .harmony/local/memory/
     local error_journal="${HARMONY_DIR}/local/memory/error-journal.json"
 
     if [[ -z "$story_id" ]]; then

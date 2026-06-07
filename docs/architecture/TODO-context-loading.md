@@ -258,7 +258,7 @@ inject_context_to_memory() {
     local flags="$5"
     local triggered="$6"
 
-    local memory_file="${HARMONY_DIR}/memory/working.json"
+    local memory_file="${HARMONY_DIR}/local/memory/working.json"
 
     # Build JSON
     cat > "$memory_file" << EOF
@@ -277,7 +277,7 @@ EOF
 
 # Display context summary
 display_context_summary() {
-    local memory_file="${HARMONY_DIR}/memory/working.json"
+    local memory_file="${HARMONY_DIR}/local/memory/working.json"
 
     if [[ -f "$memory_file" ]]; then
         echo "╔════════════════════════════════════════════════════════════════╗"
@@ -315,7 +315,7 @@ AFTER routing to an agent, BEFORE execution:
    ```
 
 2. **Verify context loaded**
-   - Check .harmony/memory/working.json exists
+   - Check .harmony/local/memory/working.json exists
    - Verify context_loaded == true
 
 3. **Display summary**
@@ -424,7 +424,7 @@ test_full_context_flow() {
     # Verify
     assert_contains "$result" "mobile"
     assert_contains "$result" "has_auth"
-    assert_file_exists ".harmony/memory/working.json"
+    assert_file_exists ".harmony/local/memory/working.json"
 }
 ```
 

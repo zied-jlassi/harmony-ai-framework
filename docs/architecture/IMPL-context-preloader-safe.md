@@ -458,7 +458,7 @@ _inject_context() {
     local loaded="$1"
     local classification="$PRELOADER_CLASSIFICATION_CACHE"
 
-    local memory_dir="${HARMONY_DIR}/memory"
+    local memory_dir="${HARMONY_DIR}/local/memory"
     local working_file="${memory_dir}/working.json"
 
     mkdir -p "$memory_dir"
@@ -482,7 +482,7 @@ EOF
 # =============================================================================
 
 _lock_context() {
-    local working_file="${HARMONY_DIR}/memory/working.json"
+    local working_file="${HARMONY_DIR}/local/memory/working.json"
 
     if [[ -f "$working_file" ]]; then
         # Update state to LOCKED
@@ -501,7 +501,7 @@ _lock_context() {
 # =============================================================================
 
 _display_summary() {
-    local working_file="${HARMONY_DIR}/memory/working.json"
+    local working_file="${HARMONY_DIR}/local/memory/working.json"
 
     if [[ -f "$working_file" ]]; then
         echo ""
@@ -629,7 +629,7 @@ AVANT d'exécuter l'agent sélectionné:
    - Si erreur → afficher message, ne pas exécuter agent
 
 4. **Contexte disponible**
-   - Agent peut lire ${HARMONY_DIR}/memory/working.json
+   - Agent peut lire ${HARMONY_DIR}/local/memory/working.json
    - Contexte est IMMUTABLE (lecture seule)
    - Agent NE PEUT PAS rappeler preload_context
 ```

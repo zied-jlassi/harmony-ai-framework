@@ -1,35 +1,37 @@
-# UCV Types - Guide de Classification
+# UCV Types - Classification Guide
 
-> **"Chaque type de vérification a un rôle précis dans la qualité."**
+> **🌐 Language:** English · [Français](fr/ucv-types.md)
+
+> **"Each verification type plays a precise role in quality."**
 
 ---
 
-## Vue d'ensemble
+## Overview
 
-Les UCVs (Use Case Verifiables) sont classifiés en **3 types** pour garantir une couverture complète :
+UCVs (Use Case Verifiables) are classified into **3 types** to guarantee complete coverage:
 
-| Type | Code | Description | Priorité typique |
+| Type | Code | Description | Typical priority |
 |------|------|-------------|------------------|
-| **Fonctionnel** | `F` | Happy path, comportement nominal | P0 - Critique |
-| **Edge Case** | `E` | Cas limites, erreurs, exceptions | P1 - Important |
-| **Non-fonctionnel** | `N` | Performance, sécurité, accessibilité | P1/P2 |
+| **Functional** | `F` | Happy path, nominal behavior | P0 - Critical |
+| **Edge Case** | `E` | Boundary cases, errors, exceptions | P1 - Important |
+| **Non-functional** | `N` | Performance, security, accessibility | P1/P2 |
 
 ---
 
-## Type 1 : Fonctionnel (F)
+## Type 1: Functional (F)
 
-### Définition
+### Definition
 
-Vérifie que la fonctionnalité **fonctionne comme attendu** dans des conditions normales.
+Verifies that the feature **works as expected** under normal conditions.
 
-### Caractéristiques
+### Characteristics
 
-- ✅ Happy path (chemin nominal)
-- ✅ Données valides
-- ✅ Utilisateur autorisé
-- ✅ Système en état normal
+- ✅ Happy path (nominal flow)
+- ✅ Valid data
+- ✅ Authorized user
+- ✅ System in normal state
 
-### Exemples
+### Examples
 
 ```gherkin
 # V1: Connexion réussie (Fonctionnel)
@@ -48,30 +50,30 @@ Then le produit apparaît dans la liste
 And un toast "Produit créé" s'affiche
 ```
 
-### Couverture minimale
+### Minimum coverage
 
-| Story Type | UCVs Fonctionnels requis |
+| Story Type | Required Functional UCVs |
 |------------|--------------------------|
 | Simple (1-3 pts) | 1-2 |
-| Moyenne (5 pts) | 2-3 |
-| Complexe (8+ pts) | 3-5 |
+| Medium (5 pts) | 2-3 |
+| Complex (8+ pts) | 3-5 |
 
 ---
 
-## Type 2 : Edge Case (E)
+## Type 2: Edge Case (E)
 
-### Définition
+### Definition
 
-Vérifie le comportement aux **limites** et lors de **conditions anormales**.
+Verifies behavior at **boundaries** and under **abnormal conditions**.
 
-### Caractéristiques
+### Characteristics
 
-- ⚠️ Données invalides ou manquantes
-- ⚠️ Cas limites (min, max, vide, null)
-- ⚠️ Erreurs utilisateur
-- ⚠️ États inattendus
+- ⚠️ Invalid or missing data
+- ⚠️ Boundary cases (min, max, empty, null)
+- ⚠️ User errors
+- ⚠️ Unexpected states
 
-### Exemples
+### Examples
 
 ```gherkin
 # V3: Email invalide (Edge Case)
@@ -99,34 +101,34 @@ Then le bouton "Ajouter" est désactivé
 And le message "Rupture de stock" s'affiche
 ```
 
-### Cas typiques à couvrir
+### Typical cases to cover
 
-| Catégorie | Exemples |
+| Category | Examples |
 |-----------|----------|
-| **Validation** | Email invalide, champ vide, format incorrect |
-| **Limites** | Min/max, 0, négatif, overflow |
-| **Permissions** | Non autorisé, session expirée |
-| **Réseau** | Timeout, erreur serveur, offline |
-| **Concurrence** | Double clic, soumission multiple |
+| **Validation** | Invalid email, empty field, incorrect format |
+| **Boundaries** | Min/max, 0, negative, overflow |
+| **Permissions** | Unauthorized, expired session |
+| **Network** | Timeout, server error, offline |
+| **Concurrency** | Double click, multiple submission |
 
 ---
 
-## Type 3 : Non-fonctionnel (N)
+## Type 3: Non-functional (N)
 
-### Définition
+### Definition
 
-Vérifie les **qualités système** : performance, sécurité, accessibilité, UX.
+Verifies **system qualities**: performance, security, accessibility, UX.
 
-### Sous-catégories
+### Sub-categories
 
-| Sous-type | Code | Focus |
+| Sub-type | Code | Focus |
 |-----------|------|-------|
-| Performance | `N-PERF` | Temps réponse, charge |
-| Sécurité | `N-SEC` | OWASP, injections, XSS |
-| Accessibilité | `N-A11Y` | WCAG 2.1 AA |
+| Performance | `N-PERF` | Response time, load |
+| Security | `N-SEC` | OWASP, injections, XSS |
+| Accessibility | `N-A11Y` | WCAG 2.1 AA |
 | UX | `N-UX` | Responsive, feedback |
 
-### Exemples
+### Examples
 
 ```gherkin
 # V6: Performance API (Non-fonctionnel)
@@ -153,30 +155,30 @@ And tous les champs ont des labels
 And le contraste est >= 4.5:1
 ```
 
-### Critères mesurables
+### Measurable criteria
 
-| Catégorie | Métrique | Cible typique |
+| Category | Metric | Typical target |
 |-----------|----------|---------------|
-| **Performance** | Temps réponse API | < 200ms |
+| **Performance** | API response time | < 200ms |
 | **Performance** | LCP (Largest Contentful Paint) | < 2.5s |
-| **Sécurité** | Vulnérabilités OWASP | 0 critique |
-| **Accessibilité** | Score Lighthouse | > 90 |
-| **Accessibilité** | Violations axe-core | 0 |
+| **Security** | OWASP vulnerabilities | 0 critical |
+| **Accessibility** | Lighthouse score | > 90 |
+| **Accessibility** | axe-core violations | 0 |
 
 ---
 
 ## Nomenclature
 
-### Format identifiant
+### Identifier format
 
 ```
 V{numéro}: {titre}
 ```
 
-- **V1, V2, V3...** : Numérotation séquentielle
-- Le **Type** est indiqué dans les métadonnées, pas dans l'identifiant
+- **V1, V2, V3...** : Sequential numbering
+- The **Type** is indicated in the metadata, not in the identifier
 
-### Dans la table résumé
+### In the summary table
 
 ```markdown
 | UCV | Titre | Type | DEV | TEST | QA | Status |
@@ -186,7 +188,7 @@ V{numéro}: {titre}
 | **V3** | Temps réponse < 200ms | Non-fonctionnel | ☐ | ☐ | ☐ | 0% |
 ```
 
-### Dans le détail UCV
+### In the UCV detail
 
 ```markdown
 <!-- UCV_V1_START -->
@@ -203,17 +205,17 @@ V{numéro}: {titre}
 
 ---
 
-## Couverture recommandée
+## Recommended coverage
 
-### Par story
+### Per story
 
-| Points | Fonctionnel | Edge Case | Non-fonct. | Total |
+| Points | Functional | Edge Case | Non-func. | Total |
 |--------|-------------|-----------|------------|-------|
 | 1-2 | 1 | 1 | 0-1 | 2-3 |
 | 3-5 | 2 | 2 | 1 | 5 |
 | 8+ | 3+ | 3+ | 2+ | 8+ |
 
-### Règle générale
+### General rule
 
 ```
 Fonctionnel ≥ 40%
@@ -223,28 +225,28 @@ Non-fonctionnel ≥ 20%
 
 ---
 
-## Priorités
+## Priorities
 
-| Priorité | Quand l'utiliser | Conséquence si échec |
+| Priority | When to use it | Consequence if failed |
 |----------|------------------|----------------------|
-| **P0 - Critique** | Bloque l'usage principal | Story non livrable |
-| **P1 - Important** | Impacte l'expérience | Bug à corriger |
-| **P2 - Mineur** | Amélioration | Peut être différé |
+| **P0 - Critical** | Blocks the main usage | Story not deliverable |
+| **P1 - Important** | Impacts the experience | Bug to fix |
+| **P2 - Minor** | Improvement | Can be deferred |
 
-### Mapping type → priorité (par défaut)
+### Type → priority mapping (default)
 
-| Type | Priorité par défaut |
+| Type | Default priority |
 |------|---------------------|
-| Fonctionnel (happy path) | P0 |
-| Edge Case (erreur critique) | P0/P1 |
-| Edge Case (erreur mineure) | P1/P2 |
-| Non-fonctionnel (sécurité) | P0 |
-| Non-fonctionnel (perf) | P1 |
-| Non-fonctionnel (a11y) | P1/P2 |
+| Functional (happy path) | P0 |
+| Edge Case (critical error) | P0/P1 |
+| Edge Case (minor error) | P1/P2 |
+| Non-functional (security) | P0 |
+| Non-functional (perf) | P1 |
+| Non-functional (a11y) | P1/P2 |
 
 ---
 
-## Workflow de création
+## Creation workflow
 
 ```
 1. Story reçue
@@ -262,33 +264,33 @@ Non-fonctionnel ≥ 20%
 
 ---
 
-## Exemples complets
+## Complete examples
 
-### Story: "Formulaire de contact"
+### Story: "Contact form"
 
-| UCV | Titre | Type | Priorité |
+| UCV | Title | Type | Priority |
 |-----|-------|------|----------|
-| V1 | Envoi message réussi | Fonctionnel | P0 |
-| V2 | Confirmation email reçu | Fonctionnel | P0 |
-| V3 | Email invalide rejeté | Edge Case | P1 |
-| V4 | Champs requis validés | Edge Case | P1 |
-| V5 | Protection spam (captcha) | Non-fonct. (Sec) | P1 |
-| V6 | Accessible clavier | Non-fonct. (A11Y) | P1 |
+| V1 | Message sent successfully | Functional | P0 |
+| V2 | Confirmation email received | Functional | P0 |
+| V3 | Invalid email rejected | Edge Case | P1 |
+| V4 | Required fields validated | Edge Case | P1 |
+| V5 | Spam protection (captcha) | Non-func. (Sec) | P1 |
+| V6 | Keyboard accessible | Non-func. (A11Y) | P1 |
 
-### Story: "API REST /users"
+### Story: "REST API /users"
 
-| UCV | Titre | Type | Priorité |
+| UCV | Title | Type | Priority |
 |-----|-------|------|----------|
-| V1 | GET /users retourne liste | Fonctionnel | P0 |
-| V2 | POST /users crée utilisateur | Fonctionnel | P0 |
-| V3 | 404 si utilisateur inexistant | Edge Case | P1 |
-| V4 | 401 si non authentifié | Edge Case | P0 |
-| V5 | Injection SQL bloquée | Non-fonct. (Sec) | P0 |
-| V6 | Réponse < 200ms | Non-fonct. (Perf) | P1 |
+| V1 | GET /users returns list | Functional | P0 |
+| V2 | POST /users creates user | Functional | P0 |
+| V3 | 404 if user does not exist | Edge Case | P1 |
+| V4 | 401 if not authenticated | Edge Case | P0 |
+| V5 | SQL injection blocked | Non-func. (Sec) | P0 |
+| V6 | Response < 200ms | Non-func. (Perf) | P1 |
 
 ---
 
-## Références
+## References
 
 - [HQVF Overview](./commands.md#qualite-hqvf-26-27)
 - [Story Template](../templates/story.md)
@@ -297,4 +299,4 @@ Non-fonctionnel ≥ 20%
 
 ---
 
-*Documentation Harmony Framework v2.0 - UCV Types*
+*Harmony Framework Documentation v2.0 - UCV Types*

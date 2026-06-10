@@ -1,0 +1,20 @@
+name: test-architect-automate
+description: "Analyse la couverture de code et génère les tests manquants (unit, integration) pour atteindre les seuils de qualité"
+author: "Harmony Framework"
+version: "1.0"
+
+config_source: "{project-root}/.harmony/config.yaml"
+communication_language: "{config_source}:communication_language"
+user_name: "{config_source}:user_name"
+document_output_language: "{config_source}:document_output_language"
+
+installed_path: "{project-root}/.harmony/workflows/test-architect/automate"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+
+# scope: all | changed | path/to/module
+scope: "changed"
+coverage_threshold: 80  # Seuil minimum en %
+target_types: "unit,integration"  # Types de tests à générer
+
+standalone: true

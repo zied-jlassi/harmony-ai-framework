@@ -1,5 +1,7 @@
 # Harmony Commands Reference
 
+> **🌐 Language:** English · [Français](fr/commands.md)
+
 > Complete reference for all 35 Harmony commands.
 
 ---
@@ -19,122 +21,122 @@
 
 | Command | Description |
 |---------|-------------|
-| `/harmony full` | Audit complet (~2-5 min) |
-| `/harmony quick` | Check rapide (~30s) |
-| `/harmony duplicates` | Detection duplicats |
-| `/harmony fix` | Proposer corrections |
-| `/harmony fix --apply` | Appliquer avec confirmation |
+| `/harmony full` | Full audit (~2-5 min) |
+| `/harmony quick` | Quick check (~30s) |
+| `/harmony duplicates` | Duplicate detection |
+| `/harmony fix` | Propose fixes |
+| `/harmony fix --apply` | Apply with confirmation |
 | `/harmony watch` | Pre-commit hook |
-| `/harmony watch --install` | Installer hook |
-| `/harmony watch --status` | Status hook |
+| `/harmony watch --install` | Install hook |
+| `/harmony watch --status` | Hook status |
 
-### Rapports (6-7)
-
-| Command | Description |
-|---------|-------------|
-| `/harmony report` | Matrice coherence |
-| `/harmony report --verbose` | Details par categorie |
-| `/harmony tokens` | Cout tokens par agent |
-| `/harmony tokens --breakdown` | Details par agent |
-| `/harmony tokens --optimize` | Suggestions optimisation |
-
-### Validation Specifique (8-10)
+### Reports (6-7)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony pipeline` | Coherence pipeline config vs docs |
-| `/harmony pipeline --verbose` | Details complets |
-| `/harmony pipeline --fix` | Proposer corrections |
-| `/harmony hooks` | Validation hooks Claude |
-| `/harmony hooks --install` | Installer hooks par defaut |
-| `/harmony hooks --status` | Status hooks |
-| `/harmony patterns` | Validation patterns |
-| `/harmony patterns --fix` | Proposer corrections |
+| `/harmony report` | Coherence matrix |
+| `/harmony report --verbose` | Details by category |
+| `/harmony tokens` | Token cost per agent |
+| `/harmony tokens --breakdown` | Details per agent |
+| `/harmony tokens --optimize` | Optimization suggestions |
 
-### Synchronisation (11-12)
+### Specific Validation (8-10)
+
+| Command | Description |
+|---------|-------------|
+| `/harmony pipeline` | Pipeline config vs docs coherence |
+| `/harmony pipeline --verbose` | Full details |
+| `/harmony pipeline --fix` | Propose fixes |
+| `/harmony hooks` | Claude hooks validation |
+| `/harmony hooks --install` | Install default hooks |
+| `/harmony hooks --status` | Hooks status |
+| `/harmony patterns` | Patterns validation |
+| `/harmony patterns --fix` | Propose fixes |
+
+### Synchronization (11-12)
 
 | Command | Description |
 |---------|-------------|
 | `/harmony memory` | Sync MCP <-> CLAUDE.md |
-| `/harmony memory --diff` | Afficher differences |
-| `/harmony claude` | Validation config Claude Code |
-| `/harmony claude --update` | MAJ regles (GADER pattern) |
-| `/harmony claude --fix` | Proposer corrections |
+| `/harmony memory --diff` | Show differences |
+| `/harmony claude` | Claude Code config validation |
+| `/harmony claude --update` | Update rules (GADER pattern) |
+| `/harmony claude --fix` | Propose fixes |
 
-### Regles Application (13-15)
+### Rules Enforcement (13-15)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony rules` | Audit regles |
-| `/harmony rules --usage` | Usage dans le code |
-| `/harmony rules --report` | Rapport conformite |
+| `/harmony rules` | Rules audit |
+| `/harmony rules --usage` | Usage in the code |
+| `/harmony rules --report` | Compliance report |
 
 ### Harmony Sentinel (16-20)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony sentinel` | Dashboard health (defaut) |
-| `/harmony sentinel --status` | Alias pour status |
-| `/harmony sentinel --learn` | Documenter erreur |
-| `/harmony sentinel --reset` | Reinitialiser Circuit Breaker |
-| `/harmony sentinel --check` | Verification complete |
-| `/harmony sentinel --report` | Rapport detaille |
+| `/harmony sentinel` | Health dashboard (default) |
+| `/harmony sentinel --status` | Alias for status |
+| `/harmony sentinel --learn` | Document an error |
+| `/harmony sentinel --reset` | Reset the Circuit Breaker |
+| `/harmony sentinel --check` | Full verification |
+| `/harmony sentinel --report` | Detailed report |
 
 ### Knowledge & Profiles (21-23)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony learn <url>` | Apprendre depuis URL |
-| `/harmony profiles` | Lister profiles |
-| `/harmony profiles --active` | Afficher actifs |
-| `/harmony profiles --add <name>` | Activer profile |
-| `/harmony profiles --remove <name>` | Desactiver profile |
-| `/harmony specialties` | Lister specialties |
-| `/harmony specialties --active` | Afficher actives |
-| `/harmony specialties --add <name>` | Activer specialty |
-| `/harmony specialties --remove <name>` | Desactiver specialty |
+| `/harmony learn <url>` | Learn from a URL |
+| `/harmony profiles` | List profiles |
+| `/harmony profiles --active` | Show active |
+| `/harmony profiles --add <name>` | Activate a profile |
+| `/harmony profiles --remove <name>` | Deactivate a profile |
+| `/harmony specialties` | List specialties |
+| `/harmony specialties --active` | Show active |
+| `/harmony specialties --add <name>` | Activate a specialty |
+| `/harmony specialties --remove <name>` | Deactivate a specialty |
 
 ### Integrations (24-25)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony install <ide>` | Deployer vers IDE |
-| `/harmony install --status` | Afficher integrations |
+| `/harmony install <ide>` | Deploy to an IDE |
+| `/harmony install --status` | Show integrations |
 
-### Qualite HQVF (26-27)
+### HQVF Quality (26-27)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony ucv <story>` | Creer UCVs |
-| `/harmony ucv --validate <story>` | Verifier couverture |
+| `/harmony ucv <story>` | Create UCVs |
+| `/harmony ucv --validate <story>` | Verify coverage |
 
 ### Framework (28-30)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony init` | Initialiser Harmony |
-| `/harmony upgrade` | Mettre a jour framework |
-| `/harmony upgrade --check` | Verifier updates |
-| `/harmony export` | Exporter configuration |
-| `/harmony export --full` | Export complet avec memory |
+| `/harmony init` | Initialize Harmony |
+| `/harmony upgrade` | Update the framework |
+| `/harmony upgrade --check` | Check for updates |
+| `/harmony export` | Export configuration |
+| `/harmony export --full` | Full export with memory |
 
 ### Session & Config (31-35)
 
 | Command | Description |
 |---------|-------------|
-| `/harmony go` | Session kickoff - initialise le contexte |
-| `/harmony config` | **Configuration en langage naturel** |
-| `/harmony config show` | Afficher config actuelle |
-| `/harmony config reset` | Reinitialiser config |
-| `/harmony coverage` | Rapport couverture UCV |
-| `/harmony coverage <epic>` | Couverture pour un Epic |
-| `/harmony matrix` | Generer cahier de charge |
-| `/harmony matrix <epic>` | Cahier de charge pour un Epic |
-| `/harmony test-book` | Generer cahier de test |
-| `/harmony test-book <epic>` | Cahier de test pour un Epic |
+| `/harmony go` | Session kickoff - initializes context |
+| `/harmony config` | **Natural-language configuration** |
+| `/harmony config show` | Show current config |
+| `/harmony config reset` | Reset config |
+| `/harmony coverage` | UCV coverage report |
+| `/harmony coverage <epic>` | Coverage for an Epic |
+| `/harmony matrix` | Generate a requirements spec |
+| `/harmony matrix <epic>` | Requirements spec for an Epic |
+| `/harmony test-book` | Generate a test book |
+| `/harmony test-book <epic>` | Test book for an Epic |
 
-> **Nouveau**: `/harmony config` permet de configurer Harmony en **langage naturel**.
-> Voir [Natural Language Config](natural-language-config.md) pour les details.
+> **New**: `/harmony config` lets you configure Harmony in **natural language**.
+> See [Natural Language Config](natural-language-config.md) for details.
 
 ---
 
@@ -176,17 +178,17 @@
 /harmony ucv --validate STORY-042
 ```
 
-### Configuration en Langage Naturel
+### Natural-Language Configuration
 
 ```bash
-# Ouvrir l'assistant config
+# Open the config assistant
 /harmony config
 
-# Exemples de phrases:
-"Bloquer DROP DATABASE sur la production"
-"Docker obligatoire avec prefix myapp"
-"5 echecs max avant circuit breaker"
-"Desactiver l'agent pentest"
+# Example phrases:
+"Block DROP DATABASE on production"
+"Docker required with prefix myapp"
+"5 max failures before circuit breaker"
+"Disable the pentest agent"
 ```
 
-> Voir [Natural Language Config](natural-language-config.md) pour plus d'exemples.
+> See [Natural Language Config](natural-language-config.md) for more examples.

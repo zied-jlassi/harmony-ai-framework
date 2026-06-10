@@ -1,22 +1,24 @@
-# Prompt Monitor — Guide d'activation
+# Prompt Monitor — Activation Guide
 
-> **Désactivé par défaut.** Le Prompt Monitor est un outil optionnel — il doit être activé explicitement.
+> **🌐 Language:** English · [Français](fr/prompt-monitor.md)
+
+> **Disabled by default.** The Prompt Monitor is an optional tool — it must be enabled explicitly.
 >
-> `${HARMONY_DIR}` désigne le répertoire d'installation Harmony (défaut : `.harmony`).
-> Si tu as personnalisé ce chemin, remplace `.harmony` par ta valeur dans tous les exemples ci-dessous.
+> `${HARMONY_DIR}` is the Harmony install directory (default: `.harmony`).
+> If you customized this path, replace `.harmony` with your value in all examples below.
 
-## Ce que fait le Prompt Monitor
+## What the Prompt Monitor does
 
-- Analyse la clarté et la qualité de chaque prompt soumis à Claude
-- Trace les interactions outils (Bash, Edit, Write, Read, WebFetch...)
-- Fournit un tableau de bord web avec statistiques et tendances
-- Génère des suggestions pour améliorer tes prompts au fil du temps
+- Analyzes the clarity and quality of every prompt submitted to Claude
+- Traces tool interactions (Bash, Edit, Write, Read, WebFetch...)
+- Provides a web dashboard with statistics and trends
+- Generates suggestions to improve your prompts over time
 
-Toutes les données restent **locales** dans `${HARMONY_DIR}/local/` — rien n'est envoyé à l'extérieur.
+All data stays **local** in `${HARMONY_DIR}/local/` — nothing is sent outside.
 
 ---
 
-## Prérequis
+## Prerequisites
 
 ```bash
 pip3 install -r ${HARMONY_DIR}/tools/prompt-monitor/requirements.txt
@@ -26,46 +28,46 @@ pip3 install -r ${HARMONY_DIR}/tools/prompt-monitor/requirements.txt
 
 ## Activation
 
-Les hooks du Prompt Monitor sont isolés dans un fichier dédié (`settings-addon.json`) pour ne pas mélanger avec les hooks Harmony principaux dans `settings.json`.
+The Prompt Monitor hooks are isolated in a dedicated file (`settings-addon.json`) so as not to mix with the main Harmony hooks in `settings.json`.
 
-### Étape 1 — Activer les hooks
+### Step 1 — Enable the hooks
 
-**Cas A — `.claude/settings.local.json` n'existe pas encore :**
+**Case A — `.claude/settings.local.json` does not exist yet:**
 
 ```bash
-# Copier directement le fichier dédié
+# Copy the dedicated file directly
 cp ${HARMONY_DIR}/tools/prompt-monitor/settings-addon.json .claude/settings.local.json
 
-# Remplacer ${HARMONY_DIR} par le chemin réel
+# Replace ${HARMONY_DIR} with the real path
 sed -i 's|\${HARMONY_DIR}|.harmony|g' .claude/settings.local.json
 ```
 
-**Cas B — `.claude/settings.local.json` existe déjà :**
+**Case B — `.claude/settings.local.json` already exists:**
 
-> ⚠️ **Fusionner, ne pas remplacer.** Copier le fichier existant écraserait ta configuration.
-> Ouvrir `${HARMONY_DIR}/tools/prompt-monitor/settings-addon.json` et **ajouter uniquement les blocs manquants** dans ton `.claude/settings.local.json` existant :
+> ⚠️ **Merge, do not replace.** Copying over the existing file would overwrite your configuration.
+> Open `${HARMONY_DIR}/tools/prompt-monitor/settings-addon.json` and **add only the missing blocks** to your existing `.claude/settings.local.json`:
 >
-> - Ajouter le bloc `UserPromptSubmit` s'il n'existe pas déjà
-> - Ajouter l'entrée `track-interaction.sh` dans `PostToolUse` si le matcher `Bash|Read|Write|...` n'est pas déjà présent
+> - Add the `UserPromptSubmit` block if it does not already exist
+> - Add the `track-interaction.sh` entry in `PostToolUse` if the `Bash|Read|Write|...` matcher is not already present
 >
-> Ne jamais dupliquer un bloc `UserPromptSubmit` ou `PostToolUse` existant.
+> Never duplicate an existing `UserPromptSubmit` or `PostToolUse` block.
 
-Claude Code charge `.claude/settings.local.json` et **merge** automatiquement ses hooks avec ceux de `.claude/settings.json` — les hooks Harmony principaux restent intacts.
+Claude Code loads `.claude/settings.local.json` and automatically **merges** its hooks with those in `.claude/settings.json` — the main Harmony hooks stay intact.
 
-### Étape 2 — Lancer le serveur
+### Step 2 — Start the server
 
 ```bash
-# Démarrer (port 8081 par défaut)
+# Start (port 8081 by default)
 python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py start
 
-# Avec un port personnalisé
+# With a custom port
 python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py start --port 9000
 
-# Vérifier le statut
+# Check status
 python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py status
 ```
 
-### Étape 3 — Ouvrir le tableau de bord
+### Step 3 — Open the dashboard
 
 ```
 http://localhost:8081
@@ -73,7 +75,7 @@ http://localhost:8081
 
 ---
 
-## Contenu de settings-addon.json
+## Contents of settings-addon.json
 
 ```json
 {
@@ -101,45 +103,45 @@ http://localhost:8081
 
 ---
 
-## Commandes disponibles
+## Available commands
 
 ```bash
-python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py start    # Démarrer le serveur
-python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stop     # Arrêter le serveur
-python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py status   # Voir le statut et le PID
-python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stats    # Statistiques en CLI
-python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py reset    # Réinitialiser les données
+python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py start    # Start the server
+python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stop     # Stop the server
+python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py status   # See status and PID
+python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stats    # Statistics in the CLI
+python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py reset    # Reset the data
 ```
 
 ---
 
-## Désactivation
+## Deactivation
 
-**Cas A — `.claude/settings.local.json` ne contient que les hooks prompt-monitor :**
+**Case A — `.claude/settings.local.json` only contains the prompt-monitor hooks:**
 
 ```bash
 rm .claude/settings.local.json
 python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stop
 ```
 
-**Cas B — `.claude/settings.local.json` contient d'autres configurations :**
+**Case B — `.claude/settings.local.json` contains other configurations:**
 
-Supprimer uniquement les deux blocs ajoutés :
-- Le bloc `UserPromptSubmit` contenant `track-user-prompt.sh`
-- L'entrée `track-interaction.sh` dans `PostToolUse`
+Remove only the two added blocks:
+- The `UserPromptSubmit` block containing `track-user-prompt.sh`
+- The `track-interaction.sh` entry in `PostToolUse`
 
-Puis arrêter le serveur :
+Then stop the server:
 ```bash
 python3 ${HARMONY_DIR}/tools/prompt-monitor/cli.py stop
 ```
 
 ---
 
-## Données collectées
+## Data collected
 
-| Emplacement | Contenu |
-|-------------|---------|
-| `${HARMONY_DIR}/local/logs/` | Logs bruts des interactions |
-| `${HARMONY_DIR}/local/metrics/` | Métriques agrégées par session |
+| Location | Contents |
+|----------|----------|
+| `${HARMONY_DIR}/local/logs/` | Raw interaction logs |
+| `${HARMONY_DIR}/local/metrics/` | Aggregated metrics per session |
 
-Aucune donnée ne quitte ta machine.
+No data leaves your machine.

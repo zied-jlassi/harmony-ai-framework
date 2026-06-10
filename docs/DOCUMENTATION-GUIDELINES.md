@@ -1,68 +1,70 @@
 # Harmony Documentation Guidelines
 
-## Regles pour les Exemples
+> **🌐 Language:** English · [Français](fr/DOCUMENTATION-GUIDELINES.md)
 
-### Secret Professionnel
+## Rules for Examples
 
-> **REGLE ABSOLUE**: Ne JAMAIS utiliser le contexte du projet utilisateur dans les exemples de documentation.
+### Professional Secrecy
 
-| Interdit | Autorise |
-|----------|----------|
-| Projet reel de l'utilisateur | Exemples generiques |
-| Noms de projets clients | "fashion-store", "my-app" |
-| Contexte metier specifique | E-commerce, SaaS, Blog |
-| Donnees reelles | Donnees fictives |
+> **ABSOLUTE RULE**: NEVER use the user's project context in documentation examples.
 
-### Contextes d'Exemples Autorises
+| Forbidden | Allowed |
+|-----------|---------|
+| The user's real project | Generic examples |
+| Client project names | "fashion-store", "my-app" |
+| Specific business context | E-commerce, SaaS, Blog |
+| Real data | Fictitious data |
 
-Utiliser ces contextes generiques pour les exemples:
+### Allowed Example Contexts
 
-| Contexte | Description | Exemple Nom |
-|----------|-------------|-------------|
-| e-commerce | Boutique en ligne | "fashion-store", "tech-shop" |
-| saas | Application SaaS | "project-manager", "crm-app" |
+Use these generic contexts for examples:
+
+| Context | Description | Example Name |
+|---------|-------------|--------------|
+| e-commerce | Online store | "fashion-store", "tech-shop" |
+| saas | SaaS application | "project-manager", "crm-app" |
 | blog | Blog/CMS | "my-blog", "news-portal" |
-| social | Reseau social | "social-app", "community" |
-| fintech | Application financiere | "expense-tracker", "budget-app" |
-| health | Application sante | "fitness-app", "wellness" |
+| social | Social network | "social-app", "community" |
+| fintech | Financial application | "expense-tracker", "budget-app" |
+| health | Health application | "fitness-app", "wellness" |
 
-### Donnees Fictives
+### Fictitious Data
 
-Toujours utiliser des donnees fictives:
+Always use fictitious data:
 
 ```yaml
-# BON
+# GOOD
 project:
   name: "fashion-store"
   domain: "e-commerce"
 
-# MAUVAIS - projet reel
+# BAD - real project
 project:
-  name: "client-project"  # Interdit!
-  domain: "confidentiel"
+  name: "client-project"  # Forbidden!
+  domain: "confidential"
 ```
 
-### Noms de Personnes
+### Personal Names
 
-Utiliser des prenoms generiques:
-- Alex, Jordan, Security Agent, Taylor (neutres)
-- Marie, Jean, Pierre (francophones)
-- John, Jane, Scrum Master (anglophones)
+Use generic first names:
+- Alex, Jordan, Security Agent, Taylor (neutral)
+- Marie, Jean, Pierre (French)
+- John, Jane, Scrum Master (English)
 
-## Raisons
+## Rationale
 
-1. **Confidentialite**: Les projets utilisateurs sont confidentiels
-2. **Neutralite**: Les exemples doivent etre universels
-3. **Reutilisabilite**: Documentation utilisable par tous
-4. **Professionnalisme**: Respect du secret professionnel
+1. **Confidentiality**: User projects are confidential
+2. **Neutrality**: Examples must be universal
+3. **Reusability**: Documentation usable by everyone
+4. **Professionalism**: Respecting professional secrecy
 
 ## Verification
 
-Avant de publier de la documentation:
+Before publishing documentation:
 
 ```
-□ Aucun nom de projet reel
-□ Aucun contexte metier specifique client
-□ Donnees 100% fictives
-□ Noms de personnes generiques
+□ No real project name
+□ No specific client business context
+□ 100% fictitious data
+□ Generic personal names
 ```

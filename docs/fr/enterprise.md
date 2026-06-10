@@ -1,0 +1,154 @@
+# Harmony Enterprise & AI Consulting
+
+> **🌐 Langue :** [English](../enterprise.md) · Français
+
+> Pour les équipes qui veulent déployer Harmony en production — avec la **sécurité des données en priorité absolue**, sur n'importe quelle infrastructure, et tirer le maximum de performance de leurs LLM.
+
+Harmony est open source et gratuit. Ce qui suit est une **offre de conseil payante** pour les organisations qui veulent aller plus loin : intégration sur mesure, durcissement sécurité, agents spécialisés par domaine, et optimisation des performances LLM.
+
+---
+
+## 🎯 Ce que couvre le consulting
+
+### 1. Intégration sécurisée multi-environnement
+
+Déploiement de Harmony et de vos agents IA sur l'infrastructure de votre choix, avec isolation adaptée au niveau de sensibilité des données :
+
+| Environnement | Approche d'isolation |
+|---------------|---------------------|
+| **Linux / macOS (poste dev)** | Sandboxing natif + Security Guards Harmony (supply-chain, anti-injection) |
+| **Windows** | Exécution via **WSL2** (isolation du host, credential stripping) |
+| **Cloud (AWS/GCP/Azure)** | microVMs (Firecracker), gVisor, ou Kata Containers selon la charge |
+| **On-premise / régulé** | Déploiement **air-gapped**, default-deny egress, données jamais exposées au LLM |
+| **Multi-tenant** | Isolation syscall-level (gVisor) ou V8 Isolates pour les tâches légères |
+
+> L'isolation est devenue **le nouveau périmètre de sécurité** pour les charges agentiques. En 2026, 1 brèche IA sur 8 est liée à un système agentique — l'isolation n'est plus optionnelle.
+
+### 2. Sécurité des données — priorité n°1
+
+- **Default-deny egress** : vos agents ne peuvent pas exfiltrer de données ni scanner le réseau interne
+- **Credential stripping** : les secrets ne sont jamais exposés au code généré par le LLM
+- **Cross-session isolation** : étanchéité entre les sessions et les contextes
+- **Supply-chain hardening** : vérification des packages, MCP pinnés + hash, période de quarantaine
+- **Anti-injection** : filtrage du contenu externe (WebFetch, URLs, LLM tiers) avant qu'il n'entre dans le contexte
+- **Conformité** : RGPD, gouvernance execution-time qui applique les règles quel que soit le modèle
+
+### 3. Gestion optimale des LLM & performance
+
+- **Architecture model-agnostic** : pas de vendor lock-in, bascule entre modèles selon le coût/la tâche
+- **Routing intelligent** : le bon modèle pour la bonne tâche (tiers de modèles, RouteLLM)
+- **Optimisation des coûts** : réduction de la consommation de tokens via le JIT loading Harmony
+- **Benchmarking** : mesure des performances réelles sur vos cas d'usage
+- **Self-hosting** : déploiement de modèles open-source sur votre cloud ou bare-metal
+
+### 4. Workflows avancés & agents spécialisés sur mesure
+
+- Création de **workflows métier avancés** adaptés à votre domaine
+- Développement d'**agents spécialisés par domaine** (finance, santé, juridique, gaming, industrie...)
+- Branches d'expertise dédiées avec leur knowledge base
+- Intégration aux systèmes existants (ERP, CRM, CI/CD, data pipelines)
+- Orchestration multi-agents pour les processus complexes
+
+---
+
+## 🛡️ Notre principe directeur
+
+> **La sécurité des données passe avant la fonctionnalité.** Chaque intégration est conçue pour que vos données sensibles restent sous votre contrôle — chiffrées, isolées, et jamais transmises à un tiers sans votre accord explicite.
+
+---
+
+## 📈 Pour qui ?
+
+- Équipes qui veulent **industrialiser** l'usage des LLM sans compromettre la sécurité
+- Organisations en environnement **régulé** (données personnelles, financières, médicales)
+- Startups qui veulent un **socle agentique robuste** dès le départ
+- Entreprises qui veulent des **agents IA spécialisés** dans leur métier
+
+---
+
+## 📈 Impact estimé (basé sur notre expérience)
+
+> ⚠️ **Ce sont des estimations issues de notre propre expérience** en développant et en
+> « dogfoodant » Harmony — pas des chiffres audités. Les résultats varient selon les
+> équipes, les projets et les pratiques. À lire comme des ordres de grandeur, pas comme
+> des garanties.
+
+### Ce que nous avons observé
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    💰 IMPACT ESTIMÉ (ordres de grandeur)                      ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║   ⏱️ TEMPS GAGNÉ                    💵 RÉDUCTION DES COÛTS                    ║
+║   ─────────────                    ─────────────────────                      ║
+║   ~10 min/bug → moins d'1 min      Moins de temps passé à re-déboguer         ║
+║   sur les bugs déjà rencontrés     les mêmes erreurs                          ║
+║                                                                               ║
+║   🎯 QUALITÉ                        🧠 EFFICACITÉ TOKENS                      ║
+║   ─────────                         ──────────────────                        ║
+║   Forte baisse des bugs récurrents  Moins de tokens grâce au JIT loading      ║
+║   Fini le « works on my machine »   (on ne charge que le nécessaire)          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+### Économies de tokens (estimées)
+
+Le JIT loading ne charge que le contexte nécessaire au lieu de tout recharger à chaque
+session. Ordres de grandeur observés sur nos propres projets :
+
+| Levier | Sans Harmony | Avec Harmony | Économie estimée |
+|--------|:------------:|:------------:|:----------------:|
+| 🔄 Rechargement de contexte | Chaque session | Mis en cache | **~-60%** |
+| 📚 Docs complètes dans le prompt | Toujours chargées | JIT loading | **~-45%** |
+| 🤖 Prompts d'agents | Tous les agents | Seulement le nécessaire | **~-35%** |
+| 🧠 Contexte d'erreurs | Ré-expliqué à chaque fois | Appris | **~-50%** |
+
+### Allocation du temps développeur (illustratif)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              RÉPARTITION DU TEMPS (illustratif)                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   SANS HARMONY             AVEC HARMONY                         │
+│   ┌────────────────┐       ┌────────────────┐                   │
+│   │ 🔧 Débogage    │ 40%   │ 🔧 Débogage    │ 10%               │
+│   │ 🔄 Reprises    │ 25%   │ 🔄 Reprises    │  5%               │
+│   │ 💻 Code        │ 35%   │ 💻 Code        │ 85%               │
+│   └────────────────┘       └────────────────┘                   │
+│                                                                 │
+│   Idée : moins de temps perdu à re-déboguer = plus de temps     │
+│   sur le code qui crée de la valeur.                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+> Ces graphiques illustrent la **dynamique** que nous visons (moins de re-débogage, plus
+> de code utile), pas une mesure garantie sur votre contexte.
+
+---
+
+## 💬 Notre expérience en dogfooding
+
+> *Observations issues du développement de Harmony avec Harmony — votre expérience peut différer.*
+
+- **Forte baisse des bugs récurrents** une fois que Sentinel a commencé à mémoriser les erreurs passées.
+- **Temps de débogage sur les problèmes connus** passé de ~10 min à moins d'une minute.
+- **Le « works on my machine »** a disparu grâce à la triple validation (DEV+TEST+QA).
+- **La confusion entre agents** a disparu avec le routing automatique de Guardian.
+
+---
+
+## 📬 Contact
+
+Pour une intégration sur mesure, un audit de sécurité, ou la création d'agents/workflows spécialisés :
+
+**zied.jlassi.dev@gmail.com**
+
+*Premier échange gratuit pour cadrer votre besoin et évaluer la faisabilité.*
+
+---
+
+*Harmony Framework reste 100% open source (MIT). Le consulting est un service optionnel pour les organisations qui veulent un accompagnement expert.*

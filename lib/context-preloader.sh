@@ -717,18 +717,96 @@ _get_cache_file() {
 # Variable cache for within same shell (optimization)
 PRELOADER_CLASSIFICATION_CACHE=""
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Router resolution (config-driven — never hardcodes the model)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Which MODEL classifies intent. Source of truth (in order):
+#   routing-rules.yaml auto_detection.router_model
+#   (project override: .harmony/config.yaml → llm.router.model)
+#   → model-manager get_model_for_task("summarize") → "haiku" (last resort).
+_resolve_router_model() {
+    local m="" rr="${SCRIPT_DIR}/../config/routing-rules.yaml"
+    # Project override first: .harmony/config.yaml → llm.router.model
+    local proj="${HARMONY_DIR:-.harmony}/config.yaml"
+    if [[ -z "$m" && -f "$proj" ]]; then
+        m=$(grep -E '^\s*model:' "$proj" 2>/dev/null | head -1 | sed -E 's/.*model:\s*"?([^"#]+)"?.*/\1/' | tr -d '[:space:]')
+    fi
+    # routing-rules.yaml auto_detection.router_model — try mikefarah yq, then a
+    # robust grep fallback (the bundled yq is often python-yq where `yq eval` fails).
+    if [[ -z "$m" && -f "$rr" ]]; then
+        m=$(yq eval '.auto_detection.router_model // ""' "$rr" 2>/dev/null)
+        case "$m" in ""|usage:*|*"null"*) m="" ;; esac
+        if [[ -z "$m" ]]; then
+            m=$(grep -E '^\s*router_model:' "$rr" 2>/dev/null | head -1 | sed -E 's/.*router_model:\s*"?([^"#]+)"?.*/\1/' | tr -d '[:space:]')
+        fi
+    fi
+    # model-manager weak/summarize tier
+    if [[ -z "$m" ]]; then
+        if [[ -f "${SCRIPT_DIR}/model-manager.sh" ]] && ! type get_model_for_task &>/dev/null; then
+            source "${SCRIPT_DIR}/model-manager.sh" 2>/dev/null || true
+        fi
+        type get_model_for_task &>/dev/null && m=$(get_model_for_task "summarize" 2>/dev/null)
+    fi
+    [[ -z "$m" ]] && m="haiku"
+    echo "$m"
+}
+
+# Which PATH executes the classification. Priority (user-confirmed):
+#   CLAUDECODE (native Task tool, NO key) > API key (curl) > pattern (Stage 1).
+# Override: HARMONY_ROUTER_MODE = auto|claude-code|api|pattern
+_resolve_router_path() {
+    case "${HARMONY_ROUTER_MODE:-auto}" in
+        claude-code) echo "claude-code"; return ;;
+        api)         echo "api"; return ;;
+        pattern)     echo "pattern"; return ;;
+    esac
+    if [[ "${CLAUDECODE:-}" == "1" ]]; then echo "claude-code"; return; fi
+    if [[ -n "${ANTHROPIC_API_KEY:-}${OPENAI_API_KEY:-}${GROQ_API_KEY:-}${AZURE_OPENAI_API_KEY:-}${MISTRAL_API_KEY:-}" ]]; then
+        echo "api"; return
+    fi
+    echo "pattern"
+}
+
+# Claude Code native classification: bash cannot call the Task tool, so return
+# pattern flags NOW (context still loads) PLUS an explicit directive telling the
+# orchestrator it may refine intent via Task(model=<router_model>). Not a silent
+# mock — it carries the config-resolved model and a stage2 signal.
+_native_classification() {
+    local request="$1" model
+    model=$(_resolve_router_model)
+    _mock_classification "$request" | jq -c --arg m "$model" \
+        '. + {source:"claude-code-native",
+              stage2_directive:{needed:true, router_model:$m,
+                note:"Orchestrator may refine via Task(model=router_model) per guardian.md Step 4"}}'
+}
+
+# Classify a request → JSON {primary_intent, context_flags, suggested_agent,
+# triggered_agents, confidence, ...}. Optional 2nd arg = pre-computed
+# classification (the orchestrator's Task-router result) which short-circuits.
 _classify_request() {
     local user_request="$1"
+    local provided="${2:-}"
     local cache_file
     cache_file=$(_get_cache_file)
 
-    # Check variable cache first (same shell optimization)
+    # Orchestrator-provided classification (from its Task router call) wins
+    if [[ -n "$provided" ]] && echo "$provided" | jq -e '.primary_intent' >/dev/null 2>&1; then
+        PRELOADER_CLASSIFICATION_CACHE="$provided"
+        # Persist the file cache ONLY inside a real install. Never create a
+        # stray .harmony/ tree when run outside one (repo/dev/wrong CWD).
+        [[ -d "$(dirname "$cache_file")" ]] && echo "$provided" > "$cache_file"
+        echo "$provided"
+        return 0
+    fi
+
+    # Variable cache (same shell)
     if [[ -n "$PRELOADER_CLASSIFICATION_CACHE" ]]; then
         echo "$PRELOADER_CLASSIFICATION_CACHE"
         return 0
     fi
 
-    # Check file cache (survives subshells)
+    # File cache (survives subshells)
     if [[ -f "$cache_file" ]]; then
         local cached
         cached=$(cat "$cache_file" 2>/dev/null)
@@ -739,25 +817,25 @@ _classify_request() {
         fi
     fi
 
-    # Build classification prompt from routing-rules.yaml
-    local prompt
-    prompt=$(get_config "auto_detection.classification_prompt" "" 2>/dev/null || echo "")
-    prompt="${prompt//\{user_input\}/$user_request}"
-
-    # Call Haiku (or mock in test mode)
-    local result
+    # Dispatch by resolved path (CLAUDECODE > API key > pattern)
+    local result path
     if [[ "${PRELOADER_MOCK_MODE:-}" == "true" ]]; then
         result=$(_mock_classification "$user_request")
     else
-        result=$(_call_haiku "$prompt")
+        path=$(_resolve_router_path)
+        echo "[ARIA] Router path: $path (model=$(_resolve_router_model))" >&2
+        case "$path" in
+            api)         result=$(_call_llm_classification "$user_request" "[]") ;;
+            claude-code) result=$(_native_classification "$user_request") ;;
+            *)           result=$(_mock_classification "$user_request") ;;
+        esac
     fi
 
     # Validate and cache (both variable and file)
     if echo "$result" | jq -e '.primary_intent' > /dev/null 2>&1; then
         PRELOADER_CLASSIFICATION_CACHE="$result"
-        # Write to file cache
-        mkdir -p "$(dirname "$cache_file")" 2>/dev/null
-        echo "$result" > "$cache_file"
+        # Persist only inside a real install (never create a stray .harmony/).
+        [[ -d "$(dirname "$cache_file")" ]] && echo "$result" > "$cache_file"
         echo "$result"
     else
         echo '{"primary_intent":"IMPLEMENT","context_flags":[],"suggested_agent":"developer","triggered_agents":[],"confidence":0.5}'
@@ -833,10 +911,14 @@ _mock_classification() {
 }
 
 _call_haiku() {
+    # Legacy entry point. Classification now flows through _classify_request's
+    # path dispatch (api → curl, claude-code → native directive, pattern → Stage 1).
+    # Kept for backward compatibility; resolves via the same config-driven path.
     local prompt="$1"
-    # TODO: Implement actual Haiku API call via Claude Code Task tool
-    # For now, return mock based on prompt content
-    _mock_classification "$prompt"
+    case "$(_resolve_router_path)" in
+        api) _call_llm_classification "$prompt" "[]" ;;
+        *)   _mock_classification "$prompt" ;;
+    esac
 }
 
 # =============================================================================
@@ -1185,7 +1267,12 @@ _inject_context() {
     local memory_dir="${harmony_dir}/local/memory"
     local working_file="${memory_dir}/working.json"
 
-    mkdir -p "$memory_dir"
+    # Inject ONLY inside a real install. Never create a stray .harmony/ tree
+    # when the preloader is run outside one (repo/dev/wrong CWD).
+    if [[ ! -d "$memory_dir" ]]; then
+        echo "[PRELOADER] memory dir not found ($memory_dir) — not an install; skipping injection" >&2
+        return 0
+    fi
 
     # Build final context using jq for proper JSON
     local timestamp
@@ -1244,16 +1331,30 @@ display_context_summary() {
     local working_file="${harmony_dir}/local/memory/working.json"
 
     if [[ -f "$working_file" ]]; then
+        local agent intent flags triggered kcount tokens
+        agent=$(jq -r '.classification.suggested_agent // "N/A"' "$working_file" 2>/dev/null)
+        intent=$(jq -r '.classification.primary_intent // "N/A"' "$working_file" 2>/dev/null)
+        flags=$(jq -r '(.classification.context_flags // []) | join(",")' "$working_file" 2>/dev/null)
+        triggered=$(jq -r '(.classification.triggered_agents // []) | map("+"+.) | join(",")' "$working_file" 2>/dev/null)
+        kcount=$(jq -r '(.loaded.knowledge_files // []) | length' "$working_file" 2>/dev/null || echo 0)
+        tokens=$(jq -r '.loaded.tokens_used // 0' "$working_file" 2>/dev/null)
+        [[ -z "$flags" ]] && flags="none"
+
+        # Compact one-line summary (visible proof the context was loaded)
+        echo "📥 Context: agent=${agent} · intent=${intent} · flags=[${flags}]${triggered:+ → ${triggered}} · ${kcount} knowledge · ~${tokens}/${PRELOADER_MAX_TOKENS} tokens"
+
+        # Detailed box (debug-friendly)
         echo ""
         echo "========================================================================"
         echo "                        CONTEXT LOADED                                  "
         echo "========================================================================"
-        echo ""
-        echo "Agent:    $(jq -r '.classification.suggested_agent // "N/A"' "$working_file")"
-        echo "Intent:   $(jq -r '.classification.primary_intent // "N/A"' "$working_file")"
-        echo "Flags:    $(jq -r '.classification.context_flags | join(", ")' "$working_file" 2>/dev/null || echo "none")"
-        echo "Tokens:   $(jq -r '.loaded.tokens_used // 0' "$working_file") / $PRELOADER_MAX_TOKENS"
-        echo ""
+        echo "Agent:     ${agent}"
+        echo "Intent:    ${intent}"
+        echo "Flags:     ${flags}"
+        echo "Triggered: ${triggered:-none}"
+        echo "Knowledge: ${kcount} file(s)"
+        echo "Tokens:    ${tokens} / ${PRELOADER_MAX_TOKENS}"
+        echo "========================================================================"
     fi
 }
 
@@ -1264,6 +1365,7 @@ display_context_summary() {
 preload_context() {
     local user_request="$1"
     local selected_agent="${2:-}"
+    local provided_flags="${3:-}"   # optional: orchestrator's Task-router result
 
     # Already locked? Return early
     if [[ "$PRELOADER_CURRENT_STATE" == "LOCKED" ]]; then
@@ -1274,7 +1376,10 @@ preload_context() {
     # PHASE 1: Classify
     _transition "CLASSIFYING" || return 1
     local classification
-    classification=$(_classify_request "$user_request")
+    classification=$(_classify_request "$user_request" "$provided_flags")
+    # _classify_request runs in a subshell ($(...)) so its cache assignment is lost
+    # here; propagate it to the parent shell so _inject_context can read it.
+    PRELOADER_CLASSIFICATION_CACHE="$classification"
 
     # PHASE 2: Resolve
     _transition "RESOLVING" || return 1

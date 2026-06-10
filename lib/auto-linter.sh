@@ -2,7 +2,7 @@
 # ============================================================================
 # auto-linter.sh - Automatic Linting and Code Quality for Harmony Framework
 # ============================================================================
-# Inspired by Aider's lint-on-save and auto-fix capabilities
+# Lint-on-save and auto-fix for the Harmony developer workflow.
 # Provides language detection, linting, and integration with circuit breaker
 #
 # Usage: source auto-linter.sh

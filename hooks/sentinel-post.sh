@@ -4,7 +4,7 @@
 # Records operation results and updates circuit breaker
 #
 # Usage: Called by AI assistant after operations
-# Arguments: $1 = tool_name, $2 = tool_input, $3 = tool_output, $4 = exit_code
+# Input: Claude Code hook JSON on stdin (.tool_name, .tool_input, .tool_response)
 #
 
 set -e
@@ -13,10 +13,22 @@ HARMONY_DIR=".harmony"
 ERROR_JOURNAL="${HARMONY_DIR}/local/memory/error-journal.json"
 CIRCUIT_BREAKER="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 PATTERNS_REGISTRY="${HARMONY_DIR}/patterns/patterns-registry.yaml"
-TOOL_NAME="${1:-unknown}"
-TOOL_INPUT="${2:-{}}"
-TOOL_OUTPUT="${3:-}"
-EXIT_CODE="${4:-0}"
+# Claude Code hook contract: PostToolUse data arrives as JSON on stdin
+# (.tool_name / .tool_input / .tool_response). There is no exit-code field, so
+# success/failure is derived from .tool_response (an explicit error/stderr marks
+# a failure; otherwise the existing output heuristic in main() applies).
+INPUT=$(cat 2>/dev/null || true)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")
+TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null || echo '{}')
+TOOL_OUTPUT=$(echo "$INPUT" | jq -r '(.tool_response.output? // .tool_response.stdout? // .tool_response? // "")' 2>/dev/null || echo "")
+_TOOL_ERROR=$(echo "$INPUT" | jq -r '(.tool_response.error? // .tool_response.stderr? // "")' 2>/dev/null || echo "")
+if [[ -n "$_TOOL_ERROR" ]]; then
+    EXIT_CODE=1
+    TOOL_OUTPUT="${TOOL_OUTPUT}
+${_TOOL_ERROR}"
+else
+    EXIT_CODE=0
+fi
 
 # Colors
 RED='\033[0;31m'

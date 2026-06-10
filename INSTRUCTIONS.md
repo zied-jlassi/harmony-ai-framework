@@ -44,9 +44,17 @@ Step 1 - Intent Detection:
 Step 2 - Agent Routing:
   DESIGN → Architect Agent
 
-Step 3 - Announcement (MANDATORY):
+Step 2.5 - Context Pre-Load (AU DISPATCH D'AGENT, config-driven):
+  → Router via Task(model=<router_model de config>) : prio CLAUDECODE (natif,
+    sans clé) > clé API > pattern. Mappe le prompt → flags/intent/agents canoniques.
+  → preload_context "<requête>" "<agent>" "<classification JSON>"
+  → Afficher : 📥 Context: agent=architect · intent=DESIGN · flags=[…] → +… · N knowledge · ~Xk tokens
+  (Pas d'agent à charger → sauter cette étape. Détail : agents/guardian.md Step 4.)
+
+Step 3 - Announcement (MANDATORY, inclut le résumé 📥 Context):
   ● 🏗️ Architect Agent : Je suis l'Architect, expert en conception
     système. Je transforme vos besoins en architectures robustes.
+    📥 Context: agent=architect · intent=DESIGN · flags=[…] · N knowledge
 
 Step 4 - Begin Work:
   [Create ADRs...]

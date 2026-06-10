@@ -13,6 +13,8 @@
 
 [🚀 Quick Start](#-quick-start) • [🧠 How It Works](docs/how-it-works.md) • [📚 Docs](docs/INDEX.md) • [🧩 Patterns](patterns/INDEX.md)
 
+**🌐 Language:** English · [Français](docs/fr/README.md)
+
 </div>
 
 ---
@@ -121,16 +123,21 @@ they're **portable** (not tied to Harmony, not IDE-locked).
 
 ## 🛡️ Security Guards
 
-Two optional hooks that screen what enters and what gets installed:
+Guards that screen what runs, what enters, and what gets installed — and **say so
+out loud** when they fire:
 
-| Guard | Protects against |
-|-------|------------------|
-| **supply-chain-guard** | Vulnerable / typosquatted packages, unpinned MCP servers, cooling-period packages, missing lock files |
-| **llm-output-sanitizer** | Prompt injection, data exfiltration, hidden Unicode, leaked secrets in **external** content |
+| Guard | Default | Protects against |
+|-------|:-------:|------------------|
+| **rules-enforcer** | ✅ on | Destructive commands (`rm -rf /`, `DROP DATABASE`, fork bombs), shell-injection (`curl \| bash`), secrets written to files |
+| **supply-chain-guard** | ✅ on | Vulnerable / typosquatted packages, unpinned MCP servers, cooling-period packages, missing lock files |
+| **llm-output-sanitizer** | ✅ on | Prompt injection, data exfiltration, hidden Unicode, leaked secrets in **external** content |
+
+Each pass prints visible proof (`🛡️ Rules: clean — no interdiction`); a block stops
+the action with its reason. Silence it anytime with `HARMONY_HOOK_UI=off`.
 
 ```bash
 /hf:security:guards status     # See current state
-/hf:security:guards off        # Disable all (zero perf impact)
+/hf:security:guards off        # Disable supply-chain + sanitizer (zero perf impact)
 ```
 
 > ⚠️ **Defense-in-depth, not a silver bullet.** Pattern-based detection — keep it updated

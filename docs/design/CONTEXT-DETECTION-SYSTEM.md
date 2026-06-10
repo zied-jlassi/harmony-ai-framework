@@ -1,24 +1,26 @@
 # Harmony Context Detection System
 
+> **🌐 Language:** English · [Français](../fr/design/CONTEXT-DETECTION-SYSTEM.md)
+
 > **Version**: 1.0.0
 > **Status**: Design Phase
 > **Author**: Harmony Framework Team
 > **Date**: 2025-01-01
 
-## Vue d'Ensemble
+## Overview
 
-Le Context Detection System est un sous-systeme intelligent de Harmony qui:
+The Context Detection System is an intelligent Harmony subsystem that:
 
-1. **Detecte** automatiquement le contexte projet (gaming, education, e-commerce...)
-2. **Configure** les specialties/knowledge/profiles pertinents
-3. **Surveille** en continu pendant TOUT le cycle de vie (analyse -> conception -> dev -> deploy)
-4. **Informe** l'utilisateur des activations et gaps de conformite
-5. **Memorise** les decisions utilisateur (acceptations ET refus)
-6. **Responsabilise** l'utilisateur en tracant ses choix
+1. **Detects** the project context automatically (gaming, education, e-commerce...)
+2. **Configures** the relevant specialties/knowledge/profiles
+3. **Monitors** continuously throughout the ENTIRE lifecycle (analysis -> design -> dev -> deploy)
+4. **Informs** the user of activations and compliance gaps
+5. **Remembers** user decisions (acceptances AND refusals)
+6. **Holds the user accountable** by tracking their choices
 
-## Probleme Resolu
+## Problem Solved
 
-### Avant (Sans Context Detection)
+### Before (Without Context Detection)
 ```
 Developpeur: "Implemente un formulaire utilisateur"
 Claude: *code le formulaire*
@@ -27,7 +29,7 @@ Claude: *code le formulaire*
 Raison: Pas de consentement, pas de droit a l'effacement
 ```
 
-### Apres (Avec Context Detection)
+### After (With Context Detection)
 ```
 Utilisateur: "On va creer une plateforme gaming backend + frontend"
 
@@ -47,9 +49,9 @@ ANALYST (Analyst) + ARIA:
 > Voulez-vous activer ces configurations? [Oui/Personnaliser]
 ```
 
-## Principe Cle: Detection des l'Analyse
+## Key Principle: Detection From the Analysis Phase
 
-> **REGLE D'OR**: Detecter au plus tot = economiser au maximum
+> **GOLDEN RULE**: Detect as early as possible = save the most
 
 ```
 COUT DES ERREURS PAR PHASE
@@ -65,7 +67,7 @@ Production      │ 1000x        │ Hotfix urgent, amende, reputation
 DONC: Detection des l'ANALYSE, avant meme les Epics!
 ```
 
-## Points d'Intervention (CYCLE COMPLET)
+## Intervention Points (FULL CYCLE)
 
 ```
 CYCLE DE VIE PROJET AVEC CONTEXT DETECTION
@@ -93,11 +95,11 @@ PHASE 4: DEPLOIEMENT
 └── Post-deploy → Rapport audit
 ```
 
-## Gestion des Refus Utilisateur
+## Handling User Refusals
 
-### Principe de Responsabilisation
+### Accountability Principle
 
-> **L'utilisateur peut refuser, mais son refus est trace et il reste responsable**
+> **The user may refuse, but the refusal is tracked and they remain accountable**
 
 ```
 WORKFLOW DE REFUS
@@ -125,7 +127,7 @@ WORKFLOW DE REFUS
     Ou editez: .harmony/project.yaml"
 ```
 
-### Configuration des Rappels
+### Reminder Configuration
 
 ```yaml
 # .harmony/project.yaml - Section rappels
@@ -153,7 +155,7 @@ reminder_policy:
     max_reminders: 3
 ```
 
-### Escalade des Rappels
+### Reminder Escalation
 
 ```
 ESCALADE DES RAPPELS
@@ -181,7 +183,7 @@ Si "Ignorer pour tous les agents":
    - Fichier: .harmony/project.yaml section dismissed_recommendations"
 ```
 
-### Integration UCV (UCV Writer)
+### UCV Integration (UCV Writer)
 
 ```
 CREATION UCV AVEC CONTEXT DETECTION
@@ -216,7 +218,7 @@ Si "Continuer sans":
        user_acknowledged: true
 ```
 
-### Format Dismissed Recommendations
+### Dismissed Recommendations Format
 
 ```yaml
 # .harmony/project.yaml
@@ -259,7 +261,7 @@ dismissed_recommendations:
     # ... meme structure
 ```
 
-## Commandes de Reactivation
+## Reactivation Commands
 
 ```bash
 # Voir tous les refus
@@ -283,9 +285,9 @@ dismissed_recommendations:
 /harmony context --show-config
 ```
 
-## Integration Phase Analyse
+## Analysis Phase Integration
 
-### Scenario Type
+### Typical Scenario
 
 ```
 Utilisateur: "On va creer une plateforme de jeux educatifs pour
@@ -328,7 +330,7 @@ Voulez-vous:
 
 ## Architecture
 
-### Composants Principaux
+### Main Components
 
 ```
 +-------------------+     +-------------------+     +-------------------+
@@ -343,7 +345,7 @@ Voulez-vous:
 +-------------------+     +-------------------+     +-------------------+
 ```
 
-## Configuration Projet Complete
+## Complete Project Configuration
 
 ```yaml
 # .harmony/project.yaml - Configuration complete
@@ -412,34 +414,34 @@ stories_without_compliance:
     acknowledged_at: "2025-01-02T14:00:00Z"
 ```
 
-## Regles de Detection
+## Detection Rules
 
-### Contexte Metier
+### Business Context
 
-| Pattern Detecte | Contexte | Specialties Auto |
+| Pattern Detected | Context | Auto Specialties |
 |-----------------|----------|------------------|
 | player, score, level | gaming | gaming |
 | student, teacher, course | education | education |
 | product, cart, checkout | e-commerce | commerce |
 | tenant, subscription | saas | multi-tenant |
 
-### Audiences Speciales
+### Special Audiences
 
-| Pattern Detecte | Audience | Conformite Auto |
+| Pattern Detected | Audience | Auto Compliance |
 |-----------------|----------|-----------------|
-| enfant, child, kid | children | COPPA, RGPD renforce |
-| senior, elderly | elderly | Accessibilite renforcee |
+| enfant, child, kid | children | COPPA, reinforced GDPR |
+| senior, elderly | elderly | Reinforced accessibility |
 
-### Conformite Requise
+### Required Compliance
 
-| Pattern Detecte | Niveau | Actions |
+| Pattern Detected | Level | Actions |
 |-----------------|--------|---------|
-| email, phone, address | MOYEN | RGPD |
-| birthDate, age | ELEVE | RGPD + Age verification |
-| credit_card, cvv | CRITIQUE | PCI-DSS |
-| form, input, button | STANDARD | Accessibilite |
+| email, phone, address | MEDIUM | GDPR |
+| birthDate, age | HIGH | GDPR + Age verification |
+| credit_card, cvv | CRITICAL | PCI-DSS |
+| form, input, button | STANDARD | Accessibility |
 
-## Skill `/harmony context`
+## `/harmony context` Skill
 
 ```bash
 # Voir config actuelle
@@ -460,23 +462,23 @@ stories_without_compliance:
 /harmony accessibility --activate
 ```
 
-## Avantages
+## Benefits
 
-| Avantage | Description |
+| Benefit | Description |
 |----------|-------------|
-| Detection ultra-precoce | Des la phase Analyse |
-| Responsabilisation | Refus traces, utilisateur responsable |
-| Rappels intelligents | Escalade puis silence si tout refuse |
-| Reactivation facile | Commandes claires, fichier editable |
-| Integration UCV | Conformite dans les criteres d'acceptation |
-| Tracabilite complete | Tout documente dans project.yaml |
+| Ultra-early detection | From the Analysis phase |
+| Accountability | Refusals tracked, user accountable |
+| Smart reminders | Escalation then silence if all refused |
+| Easy reactivation | Clear commands, editable file |
+| UCV integration | Compliance in the acceptance criteria |
+| Full traceability | Everything documented in project.yaml |
 
-## Scenario Reel: Cas d'Usage Complet
+## Real Scenario: Complete Use Case
 
-> **Contexte**: Alex developpe une boutique en ligne de vetements.
-> Voici le deroulement reel sur plusieurs semaines.
+> **Context**: Alex is building an online clothing store.
+> Here is the actual progression over several weeks.
 
-### Semaine 1 - Phase Analyse
+### Week 1 - Analysis Phase
 
 ```
 Alex: "On va creer une boutique e-commerce pour vendre des vetements,
@@ -523,7 +525,7 @@ Decisions enregistrees.
 - Vous serez rappele lors des prochaines phases.
 ```
 
-### Semaine 2 - Creation Epic "Gestion Clients"
+### Week 2 - Creating the "Customer Management" Epic
 
 ```
 Alex: "/harmony:workflows:create-epics-stories"
@@ -557,7 +559,7 @@ OK. Rappel programme pour la phase Architecture.
 (Rappel 1/5 effectue pour RGPD)
 ```
 
-### Semaine 2 - Architecture
+### Week 2 - Architecture
 
 ```
 Alex: "/harmony:agents:architect"
@@ -617,7 +619,7 @@ Vous etes responsable de la conformite.
 (RGPD: Rappel 2/5, PCI-DSS: Rappel 1/5)
 ```
 
-### Semaine 3 - Creation Stories Checkout
+### Week 3 - Creating the Checkout Stories
 
 ```
 Alex: "/harmony:workflows:create-story"
@@ -668,7 +670,7 @@ Pour reactiver a tout moment:
 Plus de rappels automatiques.
 ```
 
-### Semaine 4 - Creation UCV
+### Week 4 - UCV Creation
 
 ```
 Alex: "/harmony:sub-agents:ucv-writer STORY-089"
@@ -702,7 +704,7 @@ Manquants:
 └── UCV: Message securite donnees
 ```
 
-### Semaine 8 - Audit Pre-Lancement
+### Week 8 - Pre-Launch Audit
 
 ```
 Alex: "On va bientot lancer! Peut-on faire un audit de conformite?"
@@ -745,7 +747,7 @@ Alex: "OK, activons RGPD au moins..."
 /harmony context --enable gdpr
 ```
 
-### Semaine 8 - Reactivation RGPD
+### Week 8 - GDPR Reactivation
 
 ```
 Alex: "/harmony gdpr --activate"
@@ -798,7 +800,7 @@ RGPD reactive avec succes!
 Configuration mise a jour dans .harmony/project.yaml
 ```
 
-### Fichier project.yaml Final
+### Final project.yaml File
 
 ```yaml
 # .harmony/project.yaml apres reactivation partielle
@@ -865,34 +867,34 @@ stories_without_compliance:
 
 ---
 
-## Prochaines Etapes
+## Next Steps
 
-1. [ ] Implementer l'agent ARIA
-2. [ ] Enrichir Analyst avec detection contexte
-3. [ ] Creer systeme de rappels par agent
-4. [ ] Integrer dans UCV Writer (UCV Writer)
-5. [ ] Creer skill /harmony context
-6. [ ] Creer agents de reactivation (/harmony gdpr, etc.)
-7. [ ] Tests et documentation
+1. [ ] Implement the ARIA agent
+2. [ ] Enrich Analyst with context detection
+3. [ ] Build a per-agent reminder system
+4. [ ] Integrate into UCV Writer (UCV Writer)
+5. [ ] Create the /harmony context skill
+6. [ ] Create reactivation agents (/harmony gdpr, etc.)
+7. [ ] Tests and documentation
 
 ## Conclusion
 
-Le Context Detection System transforme Harmony en **systeme de gouvernance projet intelligent** qui:
-- Detecte le contexte des la premiere interaction
-- Propose les bonnes configurations
-- Respecte les choix utilisateur (meme les refus)
-- Trace tout pour responsabilisation
-- Permet la reactivation a tout moment
+The Context Detection System turns Harmony into an **intelligent project governance system** that:
+- Detects the context from the very first interaction
+- Proposes the right configurations
+- Respects user choices (even refusals)
+- Tracks everything for accountability
+- Allows reactivation at any time
 
 ---
 
 ## INTENT AUTO-DETECTION (RouteLLM Pattern)
 
-### Probleme
+### Problem
 
-> **Les nouveaux utilisateurs ne connaissent pas les mots-cles declencheurs**
+> **New users do not know the trigger keywords**
 
-Exemple:
+Example:
 ```
 Utilisateur novice: "J'aimerais bien organiser le code source"
 
@@ -909,7 +911,7 @@ AVEC RouteLLM:
 
 > **Source**: [LMSYS Blog](https://lmsys.org/blog/2024-07-01-routellm/) | [GitHub](https://github.com/lm-sys/RouteLLM)
 
-**Principe**: Utiliser un petit modele (Haiku) comme "router" pour classifier les requetes utilisateur avant de les envoyer au bon agent.
+**Principle**: Use a small model (Haiku) as a "router" to classify user requests before sending them to the right agent.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -948,7 +950,7 @@ AVEC RouteLLM:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Configuration dans routing-rules.yaml
+### Configuration in routing-rules.yaml
 
 ```yaml
 auto_detection:
@@ -985,24 +987,24 @@ auto_detection:
     fallback_on_error: "general-purpose"
 ```
 
-### Mapping Intent → Agent
+### Intent → Agent Mapping
 
 | Intent | Agent | Description |
 |--------|-------|-------------|
-| ANALYZE | analyst | Analyse besoins, requirements |
+| ANALYZE | analyst | Needs analysis, requirements |
 | DESIGN | architect | Architecture, ADRs, patterns |
 | PLAN | scrum-master | Stories, sprints, backlog |
 | IMPLEMENT | developer | Code, features, refactoring |
 | TEST | tester | Tests, coverage, validation |
 | REVIEW | review | Code review, PR |
 | DOCUMENT | tech-writer | Documentation, README |
-| FIX | developer | Bugs, corrections |
+| FIX | developer | Bugs, fixes |
 | DEPLOY | devops | CI/CD, infrastructure |
-| EXPLORE_QA | exploratory-qa | Tests exploratoires, QA |
+| EXPLORE_QA | exploratory-qa | Exploratory tests, QA |
 
-### Exemples d'Auto-Detection
+### Auto-Detection Examples
 
-| Input Utilisateur | Keywords Match? | Haiku Analysis | Result |
+| User Input | Keywords Match? | Haiku Analysis | Result |
 |-------------------|-----------------|----------------|--------|
 | "implemente le login" | ✅ "implemente" → dev | N/A | developer |
 | "j'aimerais organiser le code" | ❌ | Intent: REFACTOR → dev | developer |
@@ -1011,17 +1013,17 @@ auto_detection:
 | "peut-on ameliorer ça?" | ❌ | Intent: REFACTOR → dev | developer |
 | "verifie si c'est correct" | ❌ | Intent: REVIEW → review | review |
 
-### Avantages du Pattern RouteLLM
+### Benefits of the RouteLLM Pattern
 
-| Avantage | Description |
+| Benefit | Description |
 |----------|-------------|
-| **UX amelioree** | Nouveaux utilisateurs guides automatiquement |
-| **Cout minimal** | Haiku: ~$0.00025/call, cache 30 min |
-| **Latence faible** | 150 tokens max, reponse < 500ms |
-| **Fallback gracieux** | Toujours une action (meme si demander clarification) |
-| **Apprentissage** | Logs permettent d'ameliorer les keywords |
+| **Improved UX** | New users are guided automatically |
+| **Minimal cost** | Haiku: ~$0.00025/call, 30 min cache |
+| **Low latency** | 150 tokens max, response < 500ms |
+| **Graceful fallback** | Always an action (even if asking for clarification) |
+| **Learning** | Logs allow improving the keywords |
 
-### Metriques a Suivre
+### Metrics to Track
 
 ```yaml
 metrics:
@@ -1036,8 +1038,8 @@ metrics:
 
 ### Implementation (TODO)
 
-1. [ ] Ajouter section `auto_detection` dans `routing-rules.yaml`
-2. [ ] Implementer appel Haiku dans Guardian Protocol
-3. [ ] Creer cache pour requetes similaires
-4. [ ] Logger les decisions pour amelioration continue
-5. [ ] Tests avec utilisateurs novices
+1. [ ] Add the `auto_detection` section to `routing-rules.yaml`
+2. [ ] Implement the Haiku call in the Guardian Protocol
+3. [ ] Create a cache for similar queries
+4. [ ] Log decisions for continuous improvement
+5. [ ] Tests with novice users

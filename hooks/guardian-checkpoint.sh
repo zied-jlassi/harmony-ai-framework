@@ -4,15 +4,23 @@
 # Enforces story-based development in Harmony Framework
 #
 # Usage: Called by AI assistant before code modifications
-# Arguments: $1 = tool_name, $2 = tool_input (JSON)
+# Input: Claude Code hook JSON on stdin (.tool_name, .tool_input)
 #
 
 set -e
 
 HARMONY_DIR=".harmony"
 WORKFLOW_STATE="${HARMONY_DIR}/local/memory/workflow-state.json"
-TOOL_NAME="${1:-unknown}"
-TOOL_INPUT="${2:-{}}"
+
+# Claude Code hook contract: event data arrives as JSON on stdin
+# (.tool_name / .tool_input), not via positional args or $TOOL_INPUT env.
+INPUT=$(cat 2>/dev/null || true)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")
+TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null || echo '{}')
+
+# Visible-status helper (proof the guard triggered)
+[[ -f "${HARMONY_DIR}/lib/hook-ui.sh" ]] && source "${HARMONY_DIR}/lib/hook-ui.sh"
+type hook_status &>/dev/null || hook_status() { :; }
 
 # Colors for output
 RED='\033[0;31m'
@@ -209,16 +217,21 @@ main() {
     if check_active_story; then
         local story
         story=$(get_active_story)
-        print_success "$story"
+        print_success "$story" >&2
+        hook_status "🛡️ Guardian: story ${story} active"
         exit 0
     fi
 
     # No active story - handle based on mode
-    if [[ "$mode" == "block" ]]; then
-        print_violation "Code modification without active story"
-        exit 1
+    # "strict" is the canonical blocking mode (schema enum off|warn|strict);
+    # "block" kept for backward compatibility. Exit 2 = block per hook contract,
+    # with the reason on stderr so Claude Code surfaces it.
+    if [[ "$mode" == "block" || "$mode" == "strict" ]]; then
+        print_violation "Code modification without active story" >&2
+        exit 2
     else
-        print_warning "No active story detected.\n\nRECOMMENDATION:\nCreate a story before implementing:\n  \"create story for [your feature]\""
+        print_warning "No active story detected.\n\nRECOMMENDATION:\nCreate a story before implementing:\n  \"create story for [your feature]\"" >&2
+        hook_status "🛡️ Guardian: ⚠️ no active story (warn mode)"
         exit 0
     fi
 }

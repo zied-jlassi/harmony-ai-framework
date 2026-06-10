@@ -4,7 +4,7 @@
 # Checks error history before risky operations
 #
 # Usage: Called by AI assistant before operations
-# Arguments: $1 = tool_name, $2 = tool_input (JSON)
+# Input: Claude Code hook JSON on stdin (.tool_name, .tool_input)
 #
 
 set -e
@@ -13,8 +13,16 @@ HARMONY_DIR=".harmony"
 ERROR_JOURNAL="${HARMONY_DIR}/local/memory/error-journal.json"
 CIRCUIT_BREAKER="${HARMONY_DIR}/local/memory/circuit-breaker.json"
 LEARNED_PATTERNS="${HARMONY_DIR}/local/memory/learned-patterns.json"
-TOOL_NAME="${1:-unknown}"
-TOOL_INPUT="${2:-{}}"
+
+# Claude Code hook contract: event data arrives as JSON on stdin.
+INPUT=$(cat 2>/dev/null || true)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")
+TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null || echo '{}')
+
+# Visible-status helper (proof the guard triggered)
+[[ -f "${HARMONY_DIR}/lib/hook-ui.sh" ]] && source "${HARMONY_DIR}/lib/hook-ui.sh"
+type hook_status &>/dev/null || hook_status() { :; }
+type hook_debug  &>/dev/null || hook_debug()  { printf '%b\n' "$*" >&2; }
 
 # Colors
 RED='\033[0;31m'
@@ -218,40 +226,36 @@ main() {
     local failures
     failures=$(get_failures)
 
-    # If circuit is OPEN, block
+    # If circuit is OPEN, block (exit 2 per hook contract; reason on stderr).
     if [[ "$state" == "OPEN" ]]; then
-        print_circuit_warning "$state" "$failures"
-        exit 1
+        print_circuit_warning "$state" "$failures" >&2
+        exit 2
     fi
 
-    # If circuit has failures, warn
-    if [[ "$failures" -gt 0 ]]; then
-        print_circuit_warning "$state" "$failures"
-    fi
+    # All decorative/debug output → stderr (keeps stdout JSON-clean for systemMessage)
+    {
+        if [[ "$failures" -gt 0 ]]; then
+            print_circuit_warning "$state" "$failures"
+        fi
 
-    # Get context
-    local file_path
-    file_path=$(get_file_path)
+        local file_path command errors patterns
+        file_path=$(get_file_path)
+        command=$(get_command)
+        errors=$(find_similar_errors "$file_path" "$command")
+        patterns=$(find_relevant_patterns "$file_path" "$command")
 
-    local command
-    command=$(get_command)
+        if [[ -n "$errors" ]] || [[ -n "$patterns" ]]; then
+            print_error_history "$errors" "$patterns"
+        fi
+        if [[ -n "$file_path" ]]; then
+            detect_bash_context "$file_path"
+        fi
+    } >&2
 
-    # Find and display relevant history
-    local errors
-    errors=$(find_similar_errors "$file_path" "$command")
-
-    local patterns
-    patterns=$(find_relevant_patterns "$file_path" "$command")
-
-    if [[ -n "$errors" ]] || [[ -n "$patterns" ]]; then
-        print_error_history "$errors" "$patterns"
-    fi
-
-    # Detect bash context and show pitfalls
-    if [[ -n "$file_path" ]]; then
-        detect_bash_context "$file_path"
-    fi
-
+    # User-visible proof: circuit status on EVERY run (stdout JSON systemMessage)
+    local mark=""
+    [[ "$failures" -gt 0 ]] && mark=" ⚠️"
+    hook_status "🧠 Sentinel: circuit ${state} (${failures}/3 failures)${mark}"
     exit 0
 }
 

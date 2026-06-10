@@ -1,39 +1,41 @@
-# Configuration en Langage Naturel
+# Natural Language Configuration
 
-> **Commande**: `/harmony config`
+> **🌐 Language:** English · [Français](fr/natural-language-config.md)
 
-Configurez Harmony en parlant normalement, sans éditer de fichiers YAML.
+> **Command**: `/harmony config`
+
+Configure Harmony by talking normally, without editing YAML files.
 
 ---
 
-## Principe
+## Principle
 
 ```
-Vous dites                          →  Harmony génère
+You say                             →  Harmony generates
 ────────────────────────────────────────────────────────────────
-"Bloquer DROP DATABASE"             →  rules_enforcer.add_dangerous_patterns
-"Utiliser Docker"                   →  docker.required: true
-"Désactiver le circuit breaker"     →  sentinel.circuit_breaker.enabled: false
+"Block DROP DATABASE"               →  rules_enforcer.add_dangerous_patterns
+"Use Docker"                        →  docker.required: true
+"Disable the circuit breaker"       →  sentinel.circuit_breaker.enabled: false
 ```
 
 ---
 
-## Exemples d'utilisation
+## Usage examples
 
-### Sécurité & Règles
+### Security & Rules
 
 ```
-"Je veux bloquer DROP DATABASE sur ma base production"
+"I want to block DROP DATABASE on my production database"
 ```
 ```yaml
-# Résultat dans .harmony/local/config/overrides.yaml
+# Result in .harmony/local/config/overrides.yaml
 rules_enforcer:
   add_dangerous_patterns:
     - 'DROP DATABASE.*production'
 ```
 
 ```
-"Bloquer rm -rf sur le dossier /data"
+"Block rm -rf on the /data folder"
 ```
 ```yaml
 rules_enforcer:
@@ -42,7 +44,7 @@ rules_enforcer:
 ```
 
 ```
-"Ajouter un warning pour les commandes sudo"
+"Add a warning for sudo commands"
 ```
 ```yaml
 rules_enforcer:
@@ -55,7 +57,7 @@ rules_enforcer:
 ### Docker
 
 ```
-"Mon projet utilise Docker avec le préfixe myapp"
+"My project uses Docker with the prefix myapp"
 ```
 ```yaml
 docker:
@@ -64,7 +66,7 @@ docker:
 ```
 
 ```
-"Désactiver Docker pour ce projet"
+"Disable Docker for this project"
 ```
 ```yaml
 docker:
@@ -73,10 +75,10 @@ docker:
 
 ---
 
-### Guardian (Vérification Stories)
+### Guardian (Story checking)
 
 ```
-"Désactiver la vérification des stories pour le dossier scripts/"
+"Disable story checking for the scripts/ folder"
 ```
 ```yaml
 guardian:
@@ -85,7 +87,7 @@ guardian:
 ```
 
 ```
-"Exclure les fichiers .test.ts de la vérification"
+"Exclude .test.ts files from checking"
 ```
 ```yaml
 guardian:
@@ -94,15 +96,15 @@ guardian:
 ```
 
 ```
-"Passer Guardian en mode blocage"
+"Switch Guardian to block mode"
 ```
 ```yaml
 guardian:
-  mode: "block"  # au lieu de "warn"
+  mode: "block"  # instead of "warn"
 ```
 
 ```
-"Désactiver Guardian complètement"
+"Disable Guardian completely"
 ```
 ```yaml
 guardian:
@@ -114,7 +116,7 @@ guardian:
 ### Sentinel (Circuit Breaker)
 
 ```
-"5 échecs maximum avant circuit breaker"
+"5 maximum failures before circuit breaker"
 ```
 ```yaml
 sentinel:
@@ -123,7 +125,7 @@ sentinel:
 ```
 
 ```
-"10 minutes de cooldown après circuit breaker"
+"10 minutes cooldown after circuit breaker"
 ```
 ```yaml
 sentinel:
@@ -132,7 +134,7 @@ sentinel:
 ```
 
 ```
-"Désactiver le circuit breaker"
+"Disable the circuit breaker"
 ```
 ```yaml
 sentinel:
@@ -145,7 +147,7 @@ sentinel:
 ### Agents
 
 ```
-"Désactiver l'agent pentest"
+"Disable the pentest agent"
 ```
 ```yaml
 agents:
@@ -154,7 +156,7 @@ agents:
 ```
 
 ```
-"Alias qa pour exploratory-qa"
+"Alias qa for exploratory-qa"
 ```
 ```yaml
 agents:
@@ -163,7 +165,7 @@ agents:
 ```
 
 ```
-"Alias luna pour l'agent tester"
+"Alias luna for the tester agent"
 ```
 ```yaml
 agents:
@@ -173,18 +175,18 @@ agents:
 
 ---
 
-### Projet
+### Project
 
 ```
-"Le projet s'appelle MonApp"
+"The project is called MyApp"
 ```
 ```yaml
 project:
-  name: "MonApp"
+  name: "MyApp"
 ```
 
 ```
-"Je préfère les réponses en français"
+"I prefer responses in French"
 ```
 ```yaml
 project:
@@ -193,63 +195,63 @@ project:
 
 ---
 
-## Mapping Complet
+## Complete Mapping
 
-| Vous dites | Clé YAML | Valeur |
-|------------|----------|--------|
-| "bloquer X" | `rules_enforcer.add_dangerous_patterns` | `["X"]` |
-| "warning pour X" | `rules_enforcer.add_warning_patterns` | `["X"]` |
-| "autoriser X" | `rules_enforcer.add_allowed_patterns` | `["X"]` |
-| "Docker obligatoire" | `docker.required` | `true` |
-| "préfixe X" | `docker.container_prefix` | `"X"` |
-| "désactiver Guardian" | `guardian.enabled` | `false` |
-| "mode blocage" | `guardian.mode` | `"block"` |
-| "exclure dossier X" | `guardian.add_allowed_directories` | `["X"]` |
-| "exclure extension X" | `guardian.add_allowed_extensions` | `["X"]` |
-| "X échecs max" | `sentinel.circuit_breaker.max_failures` | `X` |
+| You say | YAML key | Value |
+|---------|----------|-------|
+| "block X" | `rules_enforcer.add_dangerous_patterns` | `["X"]` |
+| "warning for X" | `rules_enforcer.add_warning_patterns` | `["X"]` |
+| "allow X" | `rules_enforcer.add_allowed_patterns` | `["X"]` |
+| "Docker required" | `docker.required` | `true` |
+| "prefix X" | `docker.container_prefix` | `"X"` |
+| "disable Guardian" | `guardian.enabled` | `false` |
+| "block mode" | `guardian.mode` | `"block"` |
+| "exclude folder X" | `guardian.add_allowed_directories` | `["X"]` |
+| "exclude extension X" | `guardian.add_allowed_extensions` | `["X"]` |
+| "X max failures" | `sentinel.circuit_breaker.max_failures` | `X` |
 | "X minutes cooldown" | `sentinel.circuit_breaker.cooldown_minutes` | `X` |
-| "désactiver agent X" | `agents.disabled` | `["X"]` |
+| "disable agent X" | `agents.disabled` | `["X"]` |
 | "alias X = Y" | `agents.aliases` | `{ "X": "Y" }` |
-| "projet s'appelle X" | `project.name` | `"X"` |
-| "langue X" | `project.language` | `"X"` |
+| "project is called X" | `project.name` | `"X"` |
+| "language X" | `project.language` | `"X"` |
 
 ---
 
-## Commandes Spéciales
+## Special Commands
 
-| Commande | Action |
-|----------|--------|
-| `/harmony config show` | Afficher la config actuelle |
-| `/harmony config reset` | Réinitialiser (avec backup) |
-| `/harmony config lang fr` | Changer la langue |
-| `/harmony config help` | Afficher l'aide |
+| Command | Action |
+|---------|--------|
+| `/harmony config show` | Show the current config |
+| `/harmony config reset` | Reset (with backup) |
+| `/harmony config lang fr` | Change the language |
+| `/harmony config help` | Show help |
 
 ---
 
-## Fichier Généré
+## Generated File
 
-Toutes les configurations utilisateur sont sauvegardées dans:
+All user configurations are saved in:
 
 ```
 .harmony/local/config/overrides.yaml
 ```
 
-Ce fichier est:
-- **Local** à votre machine (dans `.harmony/local/`)
-- **Préservé** lors des mises à jour du framework
-- **Ignoré par git** (données personnelles)
-- **Mergé** avec les valeurs par défaut
+This file is:
+- **Local** to your machine (in `.harmony/local/`)
+- **Preserved** across framework updates
+- **Ignored by git** (personal data)
+- **Merged** with the default values
 
-> **Note**: Le dossier `.harmony/local/` contient toutes vos données personnelles et n'est jamais versionné.
+> **Note**: The `.harmony/local/` folder contains all your personal data and is never versioned.
 
 ---
 
-## Détection de Langue
+## Language Detection
 
-La commande répond dans votre langue:
+The command answers in your language:
 
 ```
-Vous: "Bloquer les suppressions de base"
+You: "Bloquer les suppressions de base"
 Harmony: ✅ Configuration mise à jour !
 
 You: "Block database deletions"
@@ -258,28 +260,28 @@ Harmony: ✅ Configuration updated!
 
 ---
 
-## Exemple de Session Complète
+## Full Session Example
 
 ```
-Vous: /harmony config
+You: /harmony config
 
-Harmony: 👋 Bonjour ! Je suis l'assistant de configuration Harmony.
-         Décrivez ce que vous voulez configurer en langage naturel.
+Harmony: 👋 Hello! I'm the Harmony configuration assistant.
+         Describe what you want to configure in natural language.
 
-Vous: Je veux que Docker soit obligatoire avec le préfixe "webapp",
-      et bloquer toute commande DROP sur la prod.
+You: I want Docker to be required with the prefix "webapp",
+     and block any DROP command on prod.
 
-Harmony: 📝 J'ai compris que vous voulez:
-         - Docker obligatoire avec préfixe "webapp"
-         - Bloquer les commandes DROP sur la production
+Harmony: 📝 I understood that you want:
+         - Docker required with prefix "webapp"
+         - Block DROP commands on production
 
-         C'est bien ça ?
+         Is that right?
 
-Vous: Oui
+You: Yes
 
-Harmony: ✅ Configuration mise à jour !
+Harmony: ✅ Configuration updated!
 
-         Fichier: .harmony/local/config/overrides.yaml
+         File: .harmony/local/config/overrides.yaml
 
          docker:
            required: true
@@ -292,9 +294,9 @@ Harmony: ✅ Configuration mise à jour !
 
 ---
 
-## Voir Aussi
+## See Also
 
-- [Configuration Reference](overrides.md) - Format YAML détaillé
-- [Commands Reference](commands.md) - Toutes les commandes
-- [Guardian Protocol](../agents/guardian.md) - Vérification des stories
+- [Configuration Reference](overrides.md) - Detailed YAML format
+- [Commands Reference](commands.md) - All commands
+- [Guardian Protocol](../agents/guardian.md) - Story checking
 - [Sentinel System](../agents/sentinel.md) - Circuit breaker

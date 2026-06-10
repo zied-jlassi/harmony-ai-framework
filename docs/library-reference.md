@@ -1,5 +1,7 @@
 # Library Reference
 
+> **🌐 Language:** English · [Français](fr/library-reference.md)
+
 > Complete reference for all Harmony Framework bash libraries.
 
 ---
@@ -347,6 +349,47 @@ Monitor sprint health:
 ```bash
 get_sprint_health
 # Returns: {"total": 10, "done": 3, "escalated": 2, "healthy": true}
+```
+
+### Loop Control (autopilot safety)
+
+Functions that keep long autopilot loops safe: error filtering, stuck-loop detection, confidence scoring and graceful circuit-breaker recovery.
+
+```bash
+# Visual dashboard of circuit-breaker state (CLOSED / OPEN / HALF_OPEN)
+show_circuit_status "STORY-001"
+
+# Two-stage error filtering (avoids JSON/log false positives)
+count_real_errors "$output"
+
+# Detect a stuck loop across multiple iterations of output history
+detect_stuck_loop "$output_history"
+
+# Confidence score 0-100 that a story is actually complete
+analyze_response_confidence "$response"
+
+# Move an OPEN circuit breaker to HALF_OPEN for a controlled retry
+transition_to_half_open "STORY-001"
+
+# Should execution halt now? (combines CB state + stuck + confidence)
+should_halt_execution "STORY-001"
+```
+
+---
+
+## Date Utils
+
+> Cross-platform date/time helpers (macOS BSD / Linux GNU). See pattern `P-011-bash-cross-platform`.
+
+**File:** `lib/date_utils.sh`
+
+```bash
+get_iso_timestamp        # → YYYY-MM-DDTHH:MM:SS+00:00
+get_epoch_timestamp      # → Unix seconds
+get_basic_timestamp      # → YYYY-MM-DD HH:MM:SS
+get_next_hour_time       # → ISO timestamp rounded to next hour
+get_time_diff_seconds "$t1" "$t2"   # → diff in seconds between two timestamps
+format_duration 3723     # → "1h 2m 3s" (human readable)
 ```
 
 ---

@@ -106,14 +106,34 @@ Routes to the appropriate agent based on intent:
 
 ### 4. Context Pre-Loading (Loop-Safe)
 
-**OBLIGATOIRE**: Après le routing, Guardian charge le contexte pertinent en mémoire de travail.
+**OBLIGATOIRE — UNIQUEMENT au dispatch d'un agent** (charger un agent = remplir son
+contexte). Pas d'agent à charger (réponse triviale, « oui », clarification) → **rien**.
+
+**Modèle de routage (RouteLLM, config-driven)** — jamais codé en dur : vient de
+`config/routing-rules.yaml → auto_detection.router_model` (override projet
+`.harmony/config.yaml → llm.router.model`). **Priorité du path d'exécution :**
+
+1. **`CLAUDECODE=1` → natif Claude Code** : lancer `Task(model=<router_model>)` avec le
+   `classification_prompt` (mapping prompt libre → vocabulaire canonique flags/intent/
+   agents). **Aucune clé API requise.** ← priorité.
+2. **Clé API présente** → appel API direct (CLI/standalone).
+3. **Sinon** → fallback pattern Stage-1. Override : `HARMONY_ROUTER_MODE=auto|claude-code|api|pattern`.
+
+**À chaque dispatch d'agent :**
+1. Router via `Task(model=<router_model>)` → `{primary_intent, context_flags,
+   suggested_agent, triggered_agents, confidence}`.
+2. `preload_context "<requête>" "<agent>" "<classification JSON>"`.
+3. **Afficher le résumé visible** (`display_context_summary`) et le reprendre dans
+   l'annonce d'agent (P-010) :
+   `📥 Context: agent=developer · intent=IMPLEMENT · flags=[has_auth] → +security,+rgpd · 3 knowledge · ~Xk tokens`
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                 CONTEXT PRE-LOADING (LOOP-SAFE)                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  STEP 1: Classification (One-Shot Haiku)                        │
+│  STEP 1: Classification (Router via Task model=router_model)    │
+│          → CLAUDECODE > API key > pattern ; model from config   │
 │          → Classify request, detect context flags               │
 │          → Result cached (no re-classification)                 │
 │                                                                  │

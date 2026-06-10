@@ -1,5 +1,7 @@
 # Harmony Framework - Override System
 
+> **🌐 Language:** English · [Français](fr/overrides.md)
+
 > **Customize Harmony for your project without modifying framework files.**
 
 ---
@@ -326,7 +328,7 @@ fi
 2. **Use `local/` for personal preferences** - Add to `.gitignore`
 3. **Never modify `.harmony/` files** - They'll be overwritten
 4. **Always provide fallbacks** - For backward compatibility
-5. **Test after framework updates** - Run `npx harmony doctor`
+5. **Test after framework updates** - Run `/harmony quick` inside your assistant
 
 ---
 
@@ -346,8 +348,9 @@ get_config "docker.required" "not-found"
 ### Hook not using overrides?
 
 ```bash
-# Enable debug mode
-HARMONY_HOOK_DEBUG=1 .harmony/hooks/rules-enforcer.sh Bash '{"command":"npm install"}'
+# Enable debug mode (hook reads Claude Code JSON on stdin)
+echo '{"tool_name":"Bash","tool_input":{"command":"npm install"}}' \
+  | HARMONY_HOOK_DEBUG=1 .harmony/hooks/rules-enforcer.sh
 ```
 
 ### Local override not taking effect?

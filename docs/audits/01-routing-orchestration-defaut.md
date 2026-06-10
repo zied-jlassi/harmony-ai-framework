@@ -1,19 +1,21 @@
-# AUDIT-001: Orchestration Routing - Deux Boucles Manquantes
+# AUDIT-001: Orchestration Routing - Two Missing Loops
+
+> **🌐 Language:** English · [Français](../fr/audits/01-routing-orchestration-defaut.md)
 
 **Date**: 2026-01-07
-**Statut**: CORRIGE
-**Severite**: CRITIQUE
-**Impact**: Le systeme de routing ne charge pas le contexte automatiquement
+**Status**: FIXED
+**Severity**: CRITICAL
+**Impact**: The routing system does not load context automatically
 
 ---
 
-## Resume du Defaut
+## Defect Summary
 
-Le framework Harmony definit un systeme complet de detection automatique dans `routing-rules.yaml` mais **aucun composant ne l'execute**. Resultat: les agents travaillent "a l'aveugle" sans contexte enrichi.
+The Harmony framework defines a complete automatic detection system in `routing-rules.yaml` but **no component executes it**. Result: agents work "blindly" without enriched context.
 
 ---
 
-## Les Deux Boucles Manquantes
+## The Two Missing Loops
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -44,9 +46,9 @@ Le framework Harmony definit un systeme complet de detection automatique dans `r
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Boucle 1: Classification Haiku (NON EXECUTEE)
+### Loop 1: Haiku Classification (NOT EXECUTED)
 
-**Configuration dans routing-rules.yaml (lignes 33-80):**
+**Configuration in routing-rules.yaml (lines 33-80):**
 ```yaml
 auto_detection:
   enabled: true
@@ -69,11 +71,11 @@ auto_detection:
     JSON: {"primary_intent":"...", "context_flags":[...], ...}
 ```
 
-**Probleme**: Haiku n'est JAMAIS appele pour classifier la demande.
+**Problem**: Haiku is NEVER called to classify the request.
 
-### Boucle 2: Context Flag Triggers (NON EXECUTEE)
+### Loop 2: Context Flag Triggers (NOT EXECUTED)
 
-**Configuration dans routing-rules.yaml (lignes 96-141):**
+**Configuration in routing-rules.yaml (lines 96-141):**
 ```yaml
 context_flag_triggers:
   has_auth:
@@ -92,11 +94,11 @@ context_flag_triggers:
     message: "🔒 Securite critique - Audit obligatoire"
 ```
 
-**Probleme**: Meme si les flags etaient detectes, aucun code ne charge les agents/knowledge correspondants.
+**Problem**: Even if the flags were detected, no code loads the corresponding agents/knowledge.
 
 ---
 
-## Ce Qui Aurait Du Se Passer
+## What Should Have Happened
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -151,45 +153,45 @@ context_flag_triggers:
 
 ---
 
-## Analyse du Defaut
+## Defect Analysis
 
-| Composant | Defini dans Config? | Execute? |
+| Component | Defined in Config? | Executed? |
 |-----------|---------------------|----------|
-| auto_detection.enabled | ✅ `true` | ❌ Non appele |
-| router_model: "haiku" | ✅ Configure | ❌ Jamais invoque |
-| classification_prompt | ✅ Complet | ❌ Non utilise |
-| context_flag_triggers | ✅ 9 triggers | ❌ Non lu |
-| knowledge paths | ✅ Dans manifests | ❌ Non charge |
-| agent cross-loading | ✅ Defini | ❌ Non fait |
+| auto_detection.enabled | ✅ `true` | ❌ Not called |
+| router_model: "haiku" | ✅ Configured | ❌ Never invoked |
+| classification_prompt | ✅ Complete | ❌ Not used |
+| context_flag_triggers | ✅ 9 triggers | ❌ Not read |
+| knowledge paths | ✅ In manifests | ❌ Not loaded |
+| agent cross-loading | ✅ Defined | ❌ Not done |
 
-### Pattern Documents mais Non Implementes
+### Patterns Documented but Not Implemented
 
-| Pattern | Fichier | Description | Status |
+| Pattern | File | Description | Status |
 |---------|---------|-------------|--------|
-| P-003 | `patterns/P-003-jit-context.md` | JIT Loading pattern | ❌ Non implemente |
-| P-015 | `patterns/P-015-context-discovery.md` | Context Discovery protocol | ❌ Manuel seulement |
+| P-003 | `patterns/P-003-jit-context.md` | JIT Loading pattern | ❌ Not implemented |
+| P-015 | `patterns/P-015-context-discovery.md` | Context Discovery protocol | ❌ Manual only |
 
 ---
 
-## Correctif Implemente
+## Implemented Fix
 
-### Nouveau Fichier: `lib/context-preloader.sh`
+### New File: `lib/context-preloader.sh`
 
-**Objectif**: Charger automatiquement le contexte AVANT l'execution d'un agent.
+**Objective**: Automatically load context BEFORE an agent executes.
 
-**Fonctions principales**:
+**Main functions**:
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `preload_context()` | Orchestrateur principal |
-| `classify_with_haiku()` | Appeler Haiku pour classification |
-| `parse_classification_result()` | Parser la reponse JSON |
-| `load_triggered_agents()` | Charger les agents declenches |
-| `load_knowledge_for_flags()` | Charger le knowledge par flag |
-| `inject_context_to_memory()` | Ecrire dans working.json |
-| `display_context_summary()` | Afficher le resume |
+| `preload_context()` | Main orchestrator |
+| `classify_with_haiku()` | Call Haiku for classification |
+| `parse_classification_result()` | Parse the JSON response |
+| `load_triggered_agents()` | Load the triggered agents |
+| `load_knowledge_for_flags()` | Load knowledge per flag |
+| `inject_context_to_memory()` | Write into working.json |
+| `display_context_summary()` | Display the summary |
 
-**Flow d'execution**:
+**Execution flow**:
 
 ```bash
 preload_context "creer systeme auth" "developer"
@@ -210,9 +212,9 @@ preload_context "creer systeme auth" "developer"
       └─ Affiche le resume pour l'utilisateur
 ```
 
-### Modification: `agents/guardian.md`
+### Change: `agents/guardian.md`
 
-Ajout d'une section "Context Pre-Loading" apres le routing:
+Added a "Context Pre-Loading" section after routing:
 
 ```
 1. Intent Detection     ← Existant
@@ -222,53 +224,53 @@ Ajout d'une section "Context Pre-Loading" apres le routing:
 5. Agent Announcement   ← Existant (enrichi)
 ```
 
-### Modification: `lib/config-loader.sh`
+### Change: `lib/config-loader.sh`
 
-Ajout des fonctions:
-- `get_routing_rules()`: Lire routing-rules.yaml
-- `get_context_flag_triggers()`: Lire les triggers par flag
-- `get_knowledge_paths_for_flag()`: Mapper flag → knowledge
+Added functions:
+- `get_routing_rules()`: Read routing-rules.yaml
+- `get_context_flag_triggers()`: Read the triggers per flag
+- `get_knowledge_paths_for_flag()`: Map flag → knowledge
 
 ---
 
-## Fichiers Crees/Modifies
+## Files Created/Modified
 
-### Nouveaux Fichiers
+### New Files
 
-| Fichier | Description |
+| File | Description |
 |---------|-------------|
-| `framework/docs/audits/01-routing-orchestration-defaut.md` | Ce document |
+| `framework/docs/audits/01-routing-orchestration-defaut.md` | This document |
 
-### Fichiers Modifies
+### Modified Files
 
-| Fichier | Modification |
+| File | Change |
 |---------|--------------|
-| `framework/lib/config-loader.sh` | Cache de branches + resolve_agent ameliore |
+| `framework/lib/config-loader.sh` | Branch cache + improved resolve_agent |
 
-### Details des Modifications
+### Change Details
 
-#### `config-loader.sh` - Lignes ajoutees/modifiees
+#### `config-loader.sh` - Lines added/modified
 
-**Nouvelles variables (ligne 45-48):**
+**New variables (lines 45-48):**
 ```bash
 # Branch cache for specialty resolution (built once, O(1) lookup)
 declare -A BRANCH_CACHE
 BRANCH_CACHE_BUILT=false
 ```
 
-**Nouvelles fonctions (lignes 167-214):**
-- `build_branch_cache()` - Construit le cache au premier appel
-- `get_branch_cache_count()` - Debug: nombre d'entries
-- `list_branch_cache()` - Debug: liste toutes les branches
+**New functions (lines 167-214):**
+- `build_branch_cache()` - Builds the cache on first call
+- `get_branch_cache_count()` - Debug: number of entries
+- `list_branch_cache()` - Debug: list all branches
 
-**Fonction modifiee `resolve_agent()` (lignes 368-431):**
-1. Verifie le cache de branches en premier (O(1))
-2. Supporte le pattern `{specialty}-{branch}` automatiquement
-3. Fallback vers agents/ et patterns/cognitive/
+**Modified function `resolve_agent()` (lines 368-431):**
+1. Checks the branch cache first (O(1))
+2. Supports the `{specialty}-{branch}` pattern automatically
+3. Falls back to agents/ and patterns/cognitive/
 
-### Resolution des Agents Manquants
+### Resolution of Missing Agents
 
-| Agent Reference | Avant | Apres |
+| Agent Reference | Before | After |
 |-----------------|-------|-------|
 | `ucv-writer` | ❌ NOT FOUND | ✅ `specialties/ucv/branchs/writer.md` |
 | `ucv-qa` | ❌ NOT FOUND | ✅ `specialties/ucv/branchs/qa.md` |
@@ -276,11 +278,11 @@ BRANCH_CACHE_BUILT=false
 | `developer-web` | ❌ NOT FOUND | ✅ `specialties/developer/branchs/web.md` |
 | `security-auditor` | ❌ NOT FOUND | ✅ `specialties/security/branchs/auditor.md` |
 
-**50 branches auto-decouvertes** par le cache.
+**50 branches auto-discovered** by the cache.
 
-### Fichiers a Inclure dans le Package
+### Files to Include in the Package
 
-Deja inclus automatiquement car `lib/*.sh` est copie par `install.sh`:
+Already included automatically since `lib/*.sh` is copied by `install.sh`:
 
 ```bash
 # Modifie (sera copie automatiquement)
@@ -292,11 +294,11 @@ framework/docs/audits/01-routing-orchestration-defaut.md
 
 ---
 
-## Integration avec l'Installation
+## Integration with the Installation
 
-Le script `bin/install.sh` copie deja `lib/*.sh`. Le nouveau fichier `context-preloader.sh` sera automatiquement inclus.
+The `bin/install.sh` script already copies `lib/*.sh`. The new file `context-preloader.sh` will be included automatically.
 
-Pour verifier apres installation:
+To verify after installation:
 
 ```bash
 # Verifier que le preloader est installe
@@ -309,9 +311,9 @@ preload_context "test auth" "developer" --dry-run
 
 ---
 
-## Tests de Validation
+## Validation Tests
 
-Ajouter dans `tests/e2e/scripts/test.sh`:
+Add to `tests/e2e/scripts/test.sh`:
 
 ```bash
 test_context_preloader() {
@@ -335,40 +337,40 @@ test_context_preloader() {
 
 ---
 
-## Resume
+## Summary
 
-| Avant | Apres |
+| Before | After |
 |-------|-------|
-| Guardian route → Agent execute sans contexte | Guardian route → Preloader charge → Agent execute avec contexte |
-| Haiku non appele | Haiku classifie la demande |
-| Triggers non lus | Triggers declenchent le chargement |
-| Knowledge non charge | Knowledge injecte automatiquement |
-| P-003/P-015 documentes seulement | P-003/P-015 implementes |
+| Guardian routes → Agent executes without context | Guardian routes → Preloader loads → Agent executes with context |
+| Haiku not called | Haiku classifies the request |
+| Triggers not read | Triggers drive the loading |
+| Knowledge not loaded | Knowledge injected automatically |
+| P-003/P-015 documented only | P-003/P-015 implemented |
 
 ---
 
-## Prochaines Etapes
+## Next Steps
 
-1. ✅ Document d'audit cree
-2. ✅ Modifier `config-loader.sh` - Cache de branches + resolve_agent
-3. ✅ Resolution automatique des agents manquants (ucv-*, developer-*, etc.)
-4. ⏳ Implementer `context-preloader.sh` (Haiku classification + knowledge loading)
-5. ⏳ Modifier `guardian.md` pour integrer le pre-loader
-6. ⏳ Ajouter tests dans `test.sh`
-7. ⏳ Publier nouvelle version
+1. ✅ Audit document created
+2. ✅ Modify `config-loader.sh` - Branch cache + resolve_agent
+3. ✅ Automatic resolution of missing agents (ucv-*, developer-*, etc.)
+4. ⏳ Implement `context-preloader.sh` (Haiku classification + knowledge loading)
+5. ⏳ Modify `guardian.md` to integrate the pre-loader
+6. ⏳ Add tests to `test.sh`
+7. ⏳ Publish new version
 
-## Agents Restants a Creer
+## Remaining Agents to Create
 
-Ces agents sont references dans `routing-rules.yaml` mais n'ont pas de specialty/branch:
+These agents are referenced in `routing-rules.yaml` but have no specialty/branch:
 
 | Agent | Solution |
 |-------|----------|
-| `legal` | ✅ CORRIGE - Specialty renommee: `specialties/legal/branchs/legal.md` (fallback same-name) |
-| `devops` | Utiliser `specialties/devops/branchs/devops.md` ✅ (fallback same-name) |
-| `i18n` | Utiliser `specialties/i18n/branchs/i18n.md` ✅ (fallback same-name) |
-| `lint` | Utiliser `specialties/quality/branchs/lint.md` ✅ (via branch cache) |
-| `dependency` | Utiliser `specialties/quality/branchs/dependency.md` ✅ (via branch cache) |
-| `accessibility` | Utiliser `specialties/accessibility/branchs/accessibility.md` ✅ (fallback same-name) |
+| `legal` | ✅ FIXED - Specialty renamed: `specialties/legal/branchs/legal.md` (fallback same-name) |
+| `devops` | Use `specialties/devops/branchs/devops.md` ✅ (fallback same-name) |
+| `i18n` | Use `specialties/i18n/branchs/i18n.md` ✅ (fallback same-name) |
+| `lint` | Use `specialties/quality/branchs/lint.md` ✅ (via branch cache) |
+| `dependency` | Use `specialties/quality/branchs/dependency.md` ✅ (via branch cache) |
+| `accessibility` | Use `specialties/accessibility/branchs/accessibility.md` ✅ (fallback same-name) |
 
-**Note**: La specialty `compliance` a ete renommee en `legal` pour que le fallback fonctionne:
+**Note**: The `compliance` specialty was renamed to `legal` so the fallback works:
 `legal` → `specialties/legal/branchs/legal.md` (auto-resolution)

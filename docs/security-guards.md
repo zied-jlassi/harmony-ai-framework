@@ -1,112 +1,167 @@
 # Security Guards — Harmony Framework
 
-Deux hooks de protection automatiques, activables/désactivables via switch, conçus pour **zéro impact perf** quand désactivés.
+> **🌐 Language:** English · [Français](fr/security-guards.md)
 
-> `${HARMONY_DIR}` = répertoire d'installation Harmony (défaut : `.harmony`).
+A protection layer that runs **automatically** on every action, designed for
+**zero perf impact** when a guard is inactive. `rules-enforcer` is **active by
+default** (`--full` install); the supply-chain / external-content guards toggle on
+and off via a switch.
+
+> `${HARMONY_DIR}` = Harmony install directory (default: `.harmony`).
 
 ---
 
-## Vue d'ensemble
+## Overview
 
-| Guard | Type de hook | Rôle |
-|-------|-------------|------|
-| **supply-chain-guard** | PreToolUse (Bash) | Vérifie les installations de packages avant exécution |
-| **llm-output-sanitizer** | PostToolUse (Bash, WebFetch, WebSearch) | Filtre le contenu externe entrant dans le contexte |
+| Guard | Hook type | Default | Role |
+|-------|-----------|:-------:|------|
+| **rules-enforcer** | PreToolUse (Edit, Write, Bash) | ✅ active | Blocks destructive commands and shell injection before execution |
+| **supply-chain-guard** | PreToolUse (Bash) | ✅ active | Screens package installs before execution |
+| **llm-output-sanitizer** | PostToolUse (Bash, WebFetch, WebSearch) | ✅ active | Filters external content entering the context |
+
+> **Hook contract (Claude Code).** Each guard reads tool data as **JSON on stdin**
+> (`tool_name`, `tool_input`, `tool_response`) and **blocks with `exit 2`** (the
+> reason goes to stderr, surfaced to the assistant). On pass, it emits visible
+> proof (see [What you see](#what-you-see)).
+
+> ℹ️ Full hook reference (all 11, stdin/exit-2 contract, visibility, default vs
+> optional): **[hooks.md](hooks.md)**. Exact `settings.json` block:
+> [installation.md](installation.md#for-claude-code). Every `HARMONY_*` knob:
+> [configuration.md](configuration.md).
+
+---
+
+## 0. rules-enforcer
+
+Intercepts **every** `Edit` / `Write` / `Bash` operation and blocks dangerous
+patterns **before** they run:
+
+| Category | Blocked examples (exit 2) |
+|----------|---------------------------|
+| File destruction | `rm -rf /`, `rm -rf ~`, `rm -rf *` |
+| Destructive SQL | `DROP DATABASE`, `DROP TABLE`, `TRUNCATE` |
+| Dangerous permissions | `chmod 777 /`, `chmod -R 777` |
+| Pipe-to-interpreter | `curl … \| bash`, `wget … \| sh`, `bash <(curl …)`, `eval $(curl …)` |
+| Fork bomb / disk | `:(){ :\|:& };:`, `dd if=/dev/zero`, `> /dev/sda` |
+| Secrets in content | private keys, API keys, tokens written to a file |
+
+Modes: `block` (default, exit 2) or `warn`. Project overrides (patterns to
+add/disable, Docker exceptions): see [overrides.md](overrides.md).
 
 ---
 
 ## 1. supply-chain-guard
 
-Intercepte les commandes d'installation (`npm`, `pip`, `composer`, `cargo`, `gem`, `go`, `apt`, `brew`, `npx`) et applique 6 couches de vérification :
+Intercepts install commands (`npm`, `pip`, `composer`, `cargo`, `gem`, `go`, `apt`, `brew`, `npx`) and applies 6 verification layers:
 
-| Couche | Vérification |
-|--------|-------------|
-| 1 | Patterns dangereux : URLs non-officielles, archives locales, post-install chaîné, HTTP non-sécurisé |
-| 2 | **Typosquatting** : noms proches de packages populaires (liste enrichie incidents 2026 : OpenSearch, ElasticSearch, Kubernetes...) |
-| 3 | **Audit local** : `npm audit`, `pip-audit`/`safety`, `composer audit`, `cargo audit` |
-| 4 | **Période de quarantaine** : alerte si un package a été publié il y a moins de N jours (défaut 14) — un package récent est un vecteur supply chain |
-| 5 | **Lock file** : alerte si install sans `package-lock.json` / `requirements.txt` pinné |
-| 6 | **Serveurs MCP** : bloque les installs MCP sans version pinnée + hash (`npx -y @modelcontextprotocol/server-*`) |
+| Layer | Check |
+|-------|-------|
+| 1 | Dangerous patterns: non-official URLs, local archives, chained post-install, insecure HTTP |
+| 2 | **Typosquatting**: names close to popular packages (list enriched with 2026 incidents: OpenSearch, ElasticSearch, Kubernetes...) |
+| 3 | **Local audit**: `npm audit`, `pip-audit`/`safety`, `composer audit`, `cargo audit` |
+| 4 | **Cooling period**: warns if a package was published less than N days ago (default 14) — a recent package is a supply-chain vector |
+| 5 | **Lock file**: warns on install without a pinned `package-lock.json` / `requirements.txt` |
+| 6 | **MCP servers**: blocks MCP installs without a pinned version + hash (`npx -y @modelcontextprotocol/server-*`) |
 
-### Pourquoi la vérification MCP ?
+### Why the MCP check?
 
-Les serveurs MCP installés via `npx -y @modelcontextprotocol/server-xxx` tirent toujours la **dernière version sans pin ni hash**. Une version compromise serait auto-installée silencieusement.
+MCP servers installed via `npx -y @modelcontextprotocol/server-xxx` always pull the **latest version, unpinned and without a hash**. A compromised version would be auto-installed silently.
 
 ```bash
-# ❌ BLOQUÉ — version non pinnée
+# ❌ BLOCKED — unpinned version
 npx -y @modelcontextprotocol/server-memory
 
-# ✅ AUTORISÉ — version pinnée
+# ✅ ALLOWED — pinned version
 npx @modelcontextprotocol/server-memory@2025.1.0
 ```
 
-Le guard scanne aussi `.mcp.json`, `.claude/mcp.json`, `.cursor/mcp.json` pour détecter les serveurs configurés sans version pinnée.
+The guard also scans `.mcp.json`, `.claude/mcp.json`, `.cursor/mcp.json` to detect servers configured without a pinned version.
 
 ### Modes
 
-- `block` (défaut) : bloque la commande dangereuse (exit 2)
-- `warn` : alerte seulement, laisse passer
+- `block` (default): blocks the dangerous command (exit 2)
+- `warn`: warns only, lets it through
 
-### Variables d'environnement
+### Environment variables
 
-| Variable | Effet |
-|----------|-------|
-| `HARMONY_PKG_COOLING_DAYS` | Seuil de quarantaine en jours (défaut 14) |
-| `HARMONY_GUARDS=off` | Désactive tous les guards instantanément |
+| Variable | Effect |
+|----------|--------|
+| `HARMONY_PKG_COOLING_DAYS` | Quarantine threshold in days (default 14) |
+| `HARMONY_GUARDS=off` | Disables all guards instantly |
 
 ---
 
 ## 2. llm-output-sanitizer
 
-Filtre le contenu provenant de **sources externes non-natives Claude**. Les réponses natives de Claude (Edit, Write) ne sont PAS filtrées — seul le contenu qui *entre* dans le contexte depuis l'extérieur est analysé.
+Filters content coming from **non-native, external sources**. Claude's native
+responses (Edit, Write) are NOT filtered — only content that *enters* the context
+from the outside is analyzed.
 
-### Deux modes d'activation
+### Two activation modes
 
-| Mode | Sources analysées | Usage |
-|------|-------------------|-------|
-| **external-only** (défaut) | WebFetch, WebSearch, `curl`/`wget` vers URL, appels LLM (`ollama`, API) | Recommandé — couvre les vrais vecteurs d'injection avec un coût minimal |
-| **strict** | external-only **+** lectures de fichiers (`Read`) **+** static analysis Semgrep sur le code | Maximum de sécurité, légèrement plus coûteux |
+| Mode | Sources analyzed | Usage |
+|------|------------------|-------|
+| **external-only** (default) | WebFetch, WebSearch, `curl`/`wget` to a URL, LLM calls (`ollama`, API) | Recommended — covers the real injection vectors at minimal cost |
+| **strict** | external-only **+** file reads (`Read`) **+** Semgrep static analysis on code | Maximum security, slightly more costly |
 
-### Pourquoi distinguer "externe" et "natif" ?
+### Why distinguish "external" from "native"?
 
-Le risque d'injection de prompt vient du **contenu non fiable** qui entre dans le contexte :
-- Une page web récupérée par WebFetch (injection cachée dans le HTML/markdown)
-- Une réponse d'un LLM externe (ollama, OpenAI, etc.)
-- Un document téléchargé via curl/wget
-- Un fichier externe lu (mode strict)
+Prompt-injection risk comes from **untrusted content** entering the context:
+- A web page fetched by WebFetch (hidden injection in the HTML/markdown)
+- A response from an external LLM (ollama, OpenAI, etc.)
+- A document downloaded via curl/wget
+- An external file read (strict mode)
 
-Le contenu généré par Claude lui-même est de confiance → pas besoin de le filtrer, d'où le gain de performance.
+Content generated by Claude itself is trusted → no need to filter it, hence the performance gain.
 
-### 7 couches de détection
+### 7 detection layers
 
-| Couche | Détection |
-|--------|-----------|
-| 1 | Stéganographie Unicode (zero-width, ASCII smuggling U+E0000) |
-| 2 | Artifacts d'injection de prompt (DAN, jailbreak, override, ignore instructions) |
-| 3 | Injection shell (reverse shells, `/dev/tcp`, fork bomb, `rm -rf`) |
-| 4 | Exfiltration réseau (ngrok, webhook.site, DNS exfil, data URI) |
-| 5 | Secrets & credentials (clés privées, API keys, tokens) |
-| 6 | Supply chain dans le code suggéré (post-install, typosquats) |
-| 7 | Static analysis Semgrep (mode strict, si `semgrep` installé) |
+| Layer | Detection |
+|-------|-----------|
+| 1 | Unicode steganography (zero-width, ASCII smuggling U+E0000) |
+| 2 | Prompt-injection artifacts (DAN, jailbreak, override, ignore instructions) |
+| 3 | Shell injection (reverse shells, `/dev/tcp`, fork bomb, `rm -rf`) |
+| 4 | Network exfiltration (ngrok, webhook.site, DNS exfil, data URI) |
+| 5 | Secrets & credentials (private keys, API keys, tokens) |
+| 6 | Supply chain in suggested code (post-install, typosquats) |
+| 7 | Semgrep static analysis (strict mode, if `semgrep` is installed) |
 
-### Limitation connue
+### Known limitation
 
-Les injections **multimodales** (instructions cachées dans des images) ne sont pas couvertes — le sanitizer analyse uniquement le texte. Pour les LLM multimodaux, prévoir une couche dédiée.
+**Multimodal** injections (instructions hidden in images) are not covered — the
+sanitizer only analyzes text. For multimodal LLMs, plan a dedicated layer.
 
 ---
 
-## Switch : activer / désactiver
+## What you see
 
-### Via slash command (dans Claude Code)
+Each guard leaves a **visible trace** — you know it fired, without opening a
+dashboard:
+
+| Guard | Visible output (exit 0 = pass) |
+|-------|--------------------------------|
+| **rules-enforcer** | `🛡️ Rules: clean — no interdiction (Bash)` · or a block + the reason on block |
+| **supply-chain-guard** | `📦 Supply-chain: clean — install screened` |
+| **Sentinel** (circuit breaker) | `🧠 Sentinel: circuit CLOSED (0/3 failures)` on every action |
+
+The proof travels through the hook's `systemMessage` field (the only channel of a
+non-blocking hook visible to the user in Claude Code); a `statusMessage` spinner
+shows while it runs. To silence everything: `export HARMONY_HOOK_UI=off`.
+
+---
+
+## Switch: enable / disable
+
+### Via slash command (in Claude Code)
 
 ```
-/hf:security:guards status                      # État actuel
-/hf:security:guards on                          # Activer tout
-/hf:security:guards off                         # Désactiver tout
-/hf:security:guards on supply-chain             # Activer un guard
-/hf:security:guards off llm-sanitizer           # Désactiver un guard
-/hf:security:guards mode supply-chain warn      # Changer le mode
-/hf:security:guards mode llm-sanitizer strict   # Mode strict
+/hf:security:guards status                      # Current state
+/hf:security:guards on                          # Enable all
+/hf:security:guards off                         # Disable all
+/hf:security:guards on supply-chain             # Enable one guard
+/hf:security:guards off llm-sanitizer           # Disable one guard
+/hf:security:guards mode supply-chain warn      # Change the mode
+/hf:security:guards mode llm-sanitizer strict   # Strict mode
 ```
 
 ### Via script (terminal / CI)
@@ -116,17 +171,17 @@ bash ${HARMONY_DIR}/lib/security-guards.sh status
 bash ${HARMONY_DIR}/lib/security-guards.sh off supply-chain
 ```
 
-### Via variable d'environnement (override instantané)
+### Via environment variable (instant override)
 
 ```bash
-export HARMONY_GUARDS=off    # Désactive tout — utile en CI ou debug
+export HARMONY_GUARDS=off    # Disables everything — handy in CI or debug
 ```
 
 ---
 
 ## Configuration
 
-Source de vérité : `${HARMONY_DIR}/local/security-guards.json`
+Source of truth: `${HARMONY_DIR}/local/security-guards.json`
 
 ```json
 {
@@ -141,30 +196,30 @@ Source de vérité : `${HARMONY_DIR}/local/security-guards.json`
 }
 ```
 
-**Priorité de résolution** (du plus rapide au plus lent) :
-1. `HARMONY_GUARDS=off` (env) → désactivation instantanée, 0ms
-2. Config file → état persistant, ~5ms
-3. Défaut → activé
+**Resolution priority** (fastest to slowest):
+1. `HARMONY_GUARDS=off` (env) → instant disable, 0ms
+2. Config file → persistent state, ~5ms
+3. Default → enabled
 
-Quand un guard est désactivé, son hook sort en quelques millisecondes sans rien analyser → **zéro impact perf**.
+When a guard is disabled, its hook exits within a few milliseconds without analyzing anything → **zero perf impact**.
 
 ---
 
 ## Performance
 
-| Situation | Coût |
+| Situation | Cost |
 |-----------|------|
-| Guard désactivé (env ou config) | < 5ms (exit immédiat) |
-| supply-chain sur commande non-install | < 1ms (exit rapide) |
-| supply-chain sur install (audit local + registry online) | 2-8s |
-| llm-sanitizer sur tool natif Claude | < 1ms (non-externe) |
-| llm-sanitizer sur WebFetch/LLM (couches bash) | < 10ms |
-| llm-sanitizer mode strict + Semgrep | +1-3s par bloc de code |
+| Guard disabled (env or config) | < 5ms (immediate exit) |
+| supply-chain on a non-install command | < 1ms (fast exit) |
+| supply-chain on install (local audit + online registry) | 2-8s |
+| llm-sanitizer on a native Claude tool | < 1ms (non-external) |
+| llm-sanitizer on WebFetch/LLM (bash layers) | < 10ms |
+| llm-sanitizer strict mode + Semgrep | +1-3s per code block |
 
 ---
 
-## Références
+## References
 
 - OWASP LLM Top 10 — Prompt Injection (LLM01)
-- Microsoft Security (2026-05-28) — typosquats npm volant secrets CI/CD
-- PISanitizer (arxiv 2511.10720) — prompt sanitization long-context
+- Microsoft Security (2026-05-28) — npm typosquats stealing CI/CD secrets
+- PISanitizer (arxiv 2511.10720) — long-context prompt sanitization

@@ -1,32 +1,34 @@
-# Harmony Framework - Index de Reference Rapide
+# Harmony Framework - Quick Reference Index
+
+> **🌐 Language:** English · [Français](fr/INDEX-REFERENCE.md)
 
 > **Version**: 1.1.0
 > **Date**: 2026-01-03
-> **Status**: ✅ VALIDATED - Toutes les references verifiees
-> **Purpose**: Navigation rapide dans le framework sans relecture
+> **Status**: ✅ VALIDATED - All references verified
+> **Purpose**: Fast navigation in the framework without re-reading
 
 ---
 
-## Navigation Rapide par Besoin
+## Quick Navigation by Need
 
-| Je veux... | Fichier | Chemin |
+| I want to... | File | Path |
 |------------|---------|--------|
-| **Creer une story** | Scrum Master | `agents/scrum-master.md` |
-| **Implementer du code** | Developer | `agents/developer.md` |
-| **Creer des UCVs** | UCV Writer | `specialties/ucv/branchs/writer.md` |
-| **Tester UCVs manuellement** | UCV QA | `specialties/ucv/branchs/qa.md` |
-| **Valider 100% UCVs** | UCV Validator | `specialties/ucv/branchs/validator.md` |
-| **Designer l'architecture** | Architect | `agents/architect.md` |
-| **Analyser les besoins** | Analyst | `agents/analyst.md` |
-| **Tester automatiquement** | Tester | `agents/tester.md` |
-| **Tests exploratoires** | Exploratory QA | `agents/exploratory-qa.md` |
-| **Concevoir RAG/IA** | AI Architect | `agents/ai-architect.md` |
-| **Audit accessibilite** | Accessibility | `agents/accessibility.md` |
-| **Audit securite** | Security | `agents/security.md` |
+| **Create a story** | Scrum Master | `agents/scrum-master.md` |
+| **Implement code** | Developer | `agents/developer.md` |
+| **Create UCVs** | UCV Writer | `specialties/ucv/branchs/writer.md` |
+| **Test UCVs manually** | UCV QA | `specialties/ucv/branchs/qa.md` |
+| **Validate 100% of UCVs** | UCV Validator | `specialties/ucv/branchs/validator.md` |
+| **Design the architecture** | Architect | `agents/architect.md` |
+| **Analyze requirements** | Analyst | `agents/analyst.md` |
+| **Test automatically** | Tester | `agents/tester.md` |
+| **Exploratory testing** | Exploratory QA | `agents/exploratory-qa.md` |
+| **Design RAG/AI** | AI Architect | `agents/ai-architect.md` |
+| **Accessibility audit** | Accessibility | `agents/accessibility.md` |
+| **Security audit** | Security | `agents/security.md` |
 
 ---
 
-## Structure Agents - Reference Canonique
+## Agent Structure - Canonical Reference
 
 ```
 framework/agents/              # Structure plate - TOUS les agents au meme niveau
@@ -89,7 +91,7 @@ framework/specialties/ai/     # Specialty AI Systems
 
 ---
 
-## Specialties - Domaines Metier (Chargement JIT)
+## Specialties - Business Domains (JIT Loading)
 
 ```
 framework/specialties/
@@ -116,7 +118,7 @@ framework/specialties/
 
 ---
 
-## Profiles - Stack Technique (Chargement JIT)
+## Profiles - Tech Stack (JIT Loading)
 
 ```
 framework/profiles/
@@ -144,9 +146,9 @@ framework/profiles/
 
 ---
 
-## Workflows - Reference Rapide
+## Workflows - Quick Reference
 
-| Phase | Workflow | Fichier |
+| Phase | Workflow | File |
 |-------|----------|---------|
 | 1 | Discovery | `workflows/discovery.md` |
 | 2 | Planning | `workflows/planning.md` |
@@ -158,30 +160,30 @@ framework/profiles/
 
 ---
 
-## Patterns - Reference Rapide
+## Patterns - Quick Reference
 
-| ID | Nom | Usage |
+| ID | Name | Usage |
 |----|-----|-------|
-| P-001 | Search Resource | POST pour filtres, zero params URL |
-| P-005 | Closed-Loop Learning | Retour d'experience automatique |
-| P-012 | Framework Guardian | Protection immutabilite framework |
-| P-013 | Test Environment | Isolation bases test |
+| P-001 | Search Resource | POST for filters, zero URL params |
+| P-005 | Closed-Loop Learning | Automatic feedback loop |
+| P-012 | Framework Guardian | Framework immutability protection |
+| P-013 | Test Environment | Test database isolation |
 
 ---
 
-## Regles Architecture (R1-R5)
+## Architecture Rules (R1-R5)
 
-| Regle | Description |
+| Rule | Description |
 |-------|-------------|
-| **R1** | Pas de references croisees entre agents |
-| **R2** | Noms descriptifs (pas de personas dans filename) |
-| **R3** | Structure plate par categorie |
-| **R4** | Specialties pour contenu domain-specific |
-| **R5** | Knowledge packs au lieu de skills individuels |
+| **R1** | No cross-references between agents |
+| **R2** | Descriptive names (no personas in filename) |
+| **R3** | Flat structure by category |
+| **R4** | Specialties for domain-specific content |
+| **R5** | Knowledge packs instead of individual skills |
 
 ---
 
-## Commandes Harmony Rapides
+## Quick Harmony Commands
 
 ```bash
 # Agents
@@ -219,18 +221,18 @@ framework/profiles/
 
 ---
 
-## Fichiers Memoire
+## Memory Files
 
-| Fichier | Description |
+| File | Description |
 |---------|-------------|
-| `.harmony/local/memory/error-journal.json` | Journal erreurs |
-| `.harmony/local/memory/circuit-breaker.json` | Protection 3 retries |
-| `.harmony/local/memory/learned-patterns.json` | Patterns appris |
-| `.harmony/local/memory/workflow-state.json` | Etat workflow |
+| `.harmony/local/memory/error-journal.json` | Error journal |
+| `.harmony/local/memory/circuit-breaker.json` | 3-retry protection |
+| `.harmony/local/memory/learned-patterns.json` | Learned patterns |
+| `.harmony/local/memory/workflow-state.json` | Workflow state |
 
 ---
 
-## HQVF - Cycle Qualite
+## HQVF - Quality Cycle
 
 ```
 1. SM cree story
@@ -246,12 +248,12 @@ framework/profiles/
 
 ---
 
-## Documents Reference Complets
+## Complete Reference Documents
 
-| Document | Chemin | Description |
+| Document | Path | Description |
 |----------|--------|-------------|
-| Architecture | `docs/ARCHITECTURE-REFERENCE.md` | Reference complete architecture |
+| Architecture | `docs/ARCHITECTURE-REFERENCE.md` | Complete architecture reference |
 
 ---
 
-*Index genere pour navigation rapide - evite la relecture multiple*
+*Index generated for fast navigation - avoids multiple re-reads*

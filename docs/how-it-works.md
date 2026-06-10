@@ -1,5 +1,7 @@
 # How Harmony Works
 
+> **🌐 Language:** English · [Français](fr/how-it-works.md)
+
 > A guided tour of what Harmony actually does — from a single request to a
 > self-improving project that never repeats its mistakes.
 
@@ -27,24 +29,52 @@ The foundation. Three systems that fire on every request.
 
 ### Guardian — intelligent routing
 
-Detects intent and sends the work to the right agent, with the right context.
+Every request reaches the right agent **with the right context already loaded** —
+before the agent says a word. Guardian classifies intent, preloads only the
+knowledge that request needs, and hands off with a line you can actually see.
 
 ```
 User: "develop the scoring system"
-         ↓
-┌─────────────────────────────────┐
-│    GUARDIAN INTENT DETECTION    │
-├─────────────────────────────────┤
-│  Keywords: "develop", "scoring" │
-│  Intent: IMPLEMENT              │
-│  Context: Gaming                │
-│  Story Required: Yes            │
-└─────────────────────────────────┘
-         ↓
-  [Route to Developer Agent]
-         ↓
-  [Developer: Developer activated]
+         |
+         v
++--------------------------------------------------+
+|  1 . INTENT + CONTEXT  (RouteLLM, config model)  |
+|      path:  Claude Code  >  API key  >  keywords |
+|      result: intent=IMPLEMENT  flags=[is_game]   |
++--------------------------------------------------+
+|  2 . PREREQUISITE CHECK                          |
+|      story required for code changes (strict)    |
++--------------------------------------------------+
+|  3 . JIT CONTEXT PRELOAD  (<= 15K tokens)        |
+|      + gaming knowledge   + matching profiles    |
++--------------------------------------------------+
+|  4 . VISIBLE HANDOFF                             |
+|      shows the context summary, then activates   |
++--------------------------------------------------+
+         |
+         v
+  Developer activated -- with context, not blind
 ```
+
+You see the handoff every time:
+
+```
+📥 Context: agent=developer · intent=IMPLEMENT · flags=[is_game] → +tester · 2 knowledge · ~4k tokens
+```
+
+**The classifier model is configurable, and the execution path is resolved by
+priority — never hardcoded:**
+
+| Where you run | What classifies intent | API key needed? |
+|---------------|------------------------|:---------------:|
+| **Claude Code** | a sub-agent on your existing session (model from config) | **No** |
+| CLI / standalone | direct API call (Anthropic, OpenAI, …) | Yes |
+| Offline / fallback | deterministic keyword matching | No |
+
+The router's job is to map your free-form wording onto Harmony's known
+vocabulary — so the right specialty, knowledge and agents fire **without you
+maintaining a dictionary of synonyms**. Pick the model in
+`config/routing-rules.yaml` (`router_model`); override per project anytime.
 
 ### Sentinel — error memory
 
@@ -69,6 +99,13 @@ bugs into reusable patterns.
 ```
 
 > *(Example dashboard state.)*
+
+And you don't have to open a dashboard to know it's working — Sentinel prints its
+state on every guarded action:
+
+```
+🧠 Sentinel: circuit CLOSED (0/3 failures)
+```
 
 **Result**: recurring bugs drop sharply — the same error isn't repeated twice.
 
@@ -96,6 +133,22 @@ coverage: 100% → Story DONE ✓
 ```
 
 **Result**: a definition of "done" you can prove, not assume.
+
+### Observable by design
+
+You shouldn't have to *trust* that the framework ran — you should *see* it. Every
+guard and every routing decision announces itself in the terminal, the moment it
+fires:
+
+| When | What you see |
+|------|--------------|
+| An agent is dispatched | `📥 Context: agent=developer · intent=IMPLEMENT · flags=[has_auth] → +security,+rgpd` |
+| Before each guarded action | `🧠 Sentinel: circuit CLOSED (0/3 failures)` |
+| A risky command is screened | `🛡️ Rules: clean — no interdiction` (or a block, with the reason) |
+| A package install is checked | `📦 Supply-chain: clean — install screened` |
+
+No dashboards, no guesswork — visible proof beats blind trust. Too chatty for your
+taste? One switch silences it: `HARMONY_HOOK_UI=off`.
 
 ---
 
@@ -375,15 +428,17 @@ framework-specific, not IDE-locked. They travel with you across projects and edi
 │   ├── rules/                   Framework rules                  │
 │   └── docs/                    Documentation                    │
 │                                                                 │
-│   .claude/                     PROJECT DATA (Local)             │
-│   ├── memory/                  ← Project-specific data          │
-│   │   ├── working.json         Sprint/Story tracking            │
-│   │   ├── workflow-state.json  Workflow state                   │
-│   │   ├── error-journal.json   Project errors                   │
-│   │   └── learned-patterns.json Discovered patterns             │
+│   .harmony/local/              PROJECT DATA (mutable, local)    │
+│   └── memory/                  ← Project-specific data          │
+│       ├── working.json         Sprint/Story tracking            │
+│       ├── workflow-state.json  Workflow state                   │
+│       ├── error-journal.json   Project errors                   │
+│       └── learned-patterns.json Discovered patterns             │
+│                                                                 │
+│   .claude/                     IDE CONFIG (Claude Code)         │
 │   ├── commands/                                                 │
 │   │   └── harmony.md           /harmony skill                   │
-│   └── settings.json            Hooks configuration              │
+│   └── settings.json            Hooks configuration (7 hooks)    │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```

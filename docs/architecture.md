@@ -1,12 +1,14 @@
-# Architecture Harmony Framework
+# Harmony Framework Architecture
+
+> **🌐 Language:** English · [Français](fr/architecture.md)
 
 > **Improvement through Prompts and Memory, not model weight modification.**
 
 ---
 
-## Vue d'Ensemble
+## Overview
 
-Harmony est un framework de developpement AI-assiste qui fonctionne avec **tous les LLMs** sans modification. Il structure les connaissances et les workflows pour maximiser la precision des reponses.
+Harmony is an AI-assisted development framework that works with **every LLM** without modification. It structures knowledge and workflows to maximize the accuracy of responses.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -36,58 +38,58 @@ Harmony est un framework de developpement AI-assiste qui fonctionne avec **tous 
 
 ---
 
-## Les Trois Piliers
+## The Three Pillars
 
 ### 1. Guardian Protocol (Protect)
 
-Protege le workflow en routant vers le bon agent.
+Protects the workflow by routing to the right agent.
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| Intent Detection | Analyse mots-cles → intention |
-| Agent Routing | Route vers agent appropriate |
-| Phase Validation | Verifie phase du projet |
-| Prerequisites | Story existe? UCV approuve? |
+| Intent Detection | Analyzes keywords → intent |
+| Agent Routing | Routes to the appropriate agent |
+| Phase Validation | Checks the project phase |
+| Prerequisites | Does a story exist? Is the UCV approved? |
 
 ### 2. Sentinel System (Learn)
 
-Garde la memoire des erreurs pour ne pas les repeter.
+Keeps a memory of errors so they are never repeated.
 
-| Composant | Description |
+| Component | Description |
 |-----------|-------------|
-| Error Journal | Historique erreurs + solutions |
-| Circuit Breaker | 3 echecs = stop |
-| Learned Patterns | Patterns valides |
-| Anti-Patterns | Patterns a eviter |
+| Error Journal | History of errors + solutions |
+| Circuit Breaker | 3 failures = stop |
+| Learned Patterns | Validated patterns |
+| Anti-Patterns | Patterns to avoid |
 
 ### 3. HQVF (Deliver)
 
-Garantit la qualite via Use Cases Verifiables (UCV).
+Guarantees quality through Verifiable Use Cases (UCVs).
 
-| Regle | Description |
+| Rule | Description |
 |-------|-------------|
-| HQVF-1 | Jamais de dev sans UCV approuve |
-| HQVF-2 | Chaque story a un fichier UCV |
-| HQVF-3 | User approuve UCVs avant dev |
-| HQVF-7 | Story DONE = 100% UCVs valides |
+| HQVF-1 | Never develop without an approved UCV |
+| HQVF-2 | Every story has a UCV file |
+| HQVF-3 | The user approves UCVs before development |
+| HQVF-7 | Story DONE = 100% of UCVs validated |
 
 ---
 
 ## Specialties vs Tech Profiles
 
-**La distinction fondamentale:**
+**The fundamental distinction:**
 
 | Aspect | Specialties | Tech Profiles |
 |--------|-------------|---------------|
-| **Question** | QUOI construire? | COMMENT construire? |
-| **Type** | Domaine metier | Stack technique |
-| **Exemples** | gaming, medical | nestjs, angular |
-| **Agents** | Ajoute des agents | Pas de nouveaux agents |
-| **Activation** | Explicite | Auto-detect |
+| **Question** | WHAT to build? | HOW to build? |
+| **Type** | Business domain | Technical stack |
+| **Examples** | gaming, medical | nestjs, angular |
+| **Agents** | Adds agents | No new agents |
+| **Activation** | Explicit | Auto-detect |
 
-### Specialties (Packs Domaine)
+### Specialties (Domain Packs)
 
-Expertise metier avec agents specialises:
+Business expertise with specialized agents:
 
 ```
 specialties/
@@ -98,17 +100,17 @@ specialties/
     └── knowledge/           # Peuple via /harmony learn
 ```
 
-**Specialties disponibles:**
-- `gaming` - Jeux, gamification
-- `medical` - Sante, HIPAA, HL7
+**Available specialties:**
+- `gaming` - Games, gamification
+- `medical` - Healthcare, HIPAA, HL7
 - `fintech` - Finance, PCI-DSS
 - `education` - E-learning, LMS
 - `iot` - IoT, embedded
 - `ecommerce` - E-commerce, payments
 
-### Tech Profiles (Stacks Techniques)
+### Tech Profiles (Technical Stacks)
 
-Connaissances techniques avec dependances:
+Technical knowledge with dependencies:
 
 ```
 profiles/
@@ -124,11 +126,11 @@ profiles/
 
 ---
 
-## Systeme de Dependances
+## Dependency System
 
-### Niveaux
+### Levels
 
-| Level | Type | Exemples |
+| Level | Type | Examples |
 |-------|------|----------|
 | L0 | Languages | javascript, typescript, python |
 | L1 | Runtimes | nodejs, deno, bun |
@@ -137,7 +139,7 @@ profiles/
 
 ### Resolution
 
-Quand on active `nestjs`:
+When `nestjs` is activated:
 
 ```
 nestjs (L2)
@@ -147,11 +149,11 @@ nestjs (L2)
     └── javascript (L0) ← already loaded
 ```
 
-**Ordre de chargement:** javascript → typescript → nodejs → nestjs
+**Loading order:** javascript → typescript → nodejs → nestjs
 
-### Budget Token
+### Token Budget
 
-| Niveau | % Budget | Exemple nestjs |
+| Level | % Budget | Example nestjs |
 |--------|----------|----------------|
 | Target | 60% | nestjs knowledge |
 | Direct | 30% | typescript, nodejs |
@@ -161,7 +163,7 @@ nestjs (L2)
 
 ## JIT Loading (Just-In-Time)
 
-**Principe:** Ne charger que ce qui est pertinent pour la requete.
+**Principle:** Load only what is relevant to the request.
 
 ```
 User: "Cree un guard NestJS"
@@ -176,20 +178,20 @@ Charge:
 Total: ~2000 tokens (pas 50,000)
 ```
 
-### Avantages
+### Benefits
 
-| Sans JIT | Avec JIT |
+| Without JIT | With JIT |
 |----------|----------|
 | 50,000 tokens | 2,000 tokens |
-| Context sature | 95% libre |
-| Lent | Rapide |
+| Saturated context | 95% free |
+| Slow | Fast |
 | Hallucinations | Focus = precision |
 
 ---
 
 ## /harmony learn
 
-**Commande pour peupler les knowledge depuis sources web 2025.**
+**Command to populate knowledge from 2025 web sources.**
 
 ```bash
 # Depuis URL
@@ -204,24 +206,24 @@ Total: ~2000 tokens (pas 50,000)
 
 ### Workflow
 
-1. **FETCH** - WebFetch, Context7, ou Brave Search
-2. **DETECT** - Auto-detection profile/specialty
-3. **EXTRACT** - Best practices, patterns, exemples
-4. **VALIDATE** - Taille, duplicates, conflicts
+1. **FETCH** - WebFetch, Context7, or Brave Search
+2. **DETECT** - Auto-detection of profile/specialty
+3. **EXTRACT** - Best practices, patterns, examples
+4. **VALIDATE** - Size, duplicates, conflicts
 5. **SAVE** - Knowledge file + update manifest
-6. **REPORT** - Resume de ce qui a ete appris
+6. **REPORT** - Summary of what was learned
 
 ### Sources
 
 | Tool | Usage |
 |------|-------|
-| Context7 | Documentation officielle |
-| Brave Search | Recherche generale |
-| WebFetch | URL directe |
+| Context7 | Official documentation |
+| Brave Search | General search |
+| WebFetch | Direct URL |
 
 ---
 
-## Structure Fichiers
+## File Structure
 
 ```
 .harmony/
@@ -246,7 +248,7 @@ Total: ~2000 tokens (pas 50,000)
 
 ## Multi-Specialty / Multi-Profile
 
-Un projet peut activer plusieurs specialties ET plusieurs profiles:
+A project can activate several specialties AND several profiles:
 
 ```yaml
 # .harmony/project.yaml
@@ -263,18 +265,18 @@ project:
 
 ---
 
-## Compatibilite LLM
+## LLM Compatibility
 
-Harmony fonctionne avec **tous les LLMs** car:
+Harmony works with **every LLM** because:
 
-| Raison | Explication |
+| Reason | Explanation |
 |--------|-------------|
-| Markdown | Lingua franca des LLMs |
-| Prompt-based | Pas de fine-tuning |
-| Context optimise | JIT = pertinent uniquement |
+| Markdown | The lingua franca of LLMs |
+| Prompt-based | No fine-tuning |
+| Optimized context | JIT = relevant only |
 | Universal | Claude, GPT, Gemini, local |
 
-### LLMs Testes
+### Tested LLMs
 
 - Anthropic Claude (3.5, 4, Opus)
 - OpenAI GPT-4, GPT-4o
@@ -284,11 +286,11 @@ Harmony fonctionne avec **tous les LLMs** car:
 
 ---
 
-## Integrations (OU deployer)
+## Integrations (WHERE to deploy)
 
-**Troisieme dimension:** Specialties = QUOI, Profiles = COMMENT, **Integrations = OU**
+**Third dimension:** Specialties = WHAT, Profiles = HOW, **Integrations = WHERE**
 
-Harmony s'adapte a differents LLM/IDEs via le systeme d'integrations:
+Harmony adapts to different LLMs/IDEs through the integrations system:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -309,7 +311,7 @@ Harmony s'adapte a differents LLM/IDEs via le systeme d'integrations:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Comparaison des Integrations
+### Comparison of Integrations
 
 | Feature | Claude Code | Cursor | Windsurf | Continue | Cody |
 |---------|:-----------:|:------:|:--------:|:--------:|:----:|
@@ -320,7 +322,7 @@ Harmony s'adapte a differents LLM/IDEs via le systeme d'integrations:
 | **Agents** | Skills | Rules + personas | Rules | Assistants | Prompts |
 | **Auto-detect** | ✓ | Globs | ✗ | ✗ | ✗ |
 
-### Structure des Integrations
+### Structure of the Integrations
 
 ```
 .harmony/integrations/
@@ -351,9 +353,9 @@ Harmony s'adapte a differents LLM/IDEs via le systeme d'integrations:
         └── harmony-*.md          # Shareable prompts
 ```
 
-### Niveaux de Support
+### Support Levels
 
-| Niveau | Description | Integrations |
+| Level | Description | Integrations |
 |--------|-------------|--------------|
 | **Full** | Hooks + Memory + MCP + Rules | Claude Code |
 | **Good** | Rules + Agents/Personas | Cursor, Windsurf, Continue |
@@ -361,7 +363,7 @@ Harmony s'adapte a differents LLM/IDEs via le systeme d'integrations:
 
 ### Feature Mapping
 
-Comment chaque feature Harmony est implementee:
+How each Harmony feature is implemented:
 
 | Harmony Feature | Claude Code | Cursor | Windsurf | Continue |
 |-----------------|-------------|--------|----------|----------|
@@ -373,7 +375,7 @@ Comment chaque feature Harmony est implementee:
 
 ### /harmony install
 
-Deploie Harmony vers un LLM/IDE specifique:
+Deploys Harmony to a specific LLM/IDE:
 
 ```bash
 # Installer pour Cursor
@@ -389,16 +391,16 @@ Deploie Harmony vers un LLM/IDE specifique:
 /harmony install cody
 ```
 
-**Actions executees:**
-1. Detecte les profiles/specialties actifs
-2. Genere fichiers de config specifiques a l'IDE
-3. Copie templates dans les bons dossiers
-4. Configure rules avec tech stack detecte
-5. Affiche instructions post-installation
+**Actions performed:**
+1. Detects the active profiles/specialties
+2. Generates IDE-specific config files
+3. Copies templates into the correct folders
+4. Configures rules with the detected tech stack
+5. Displays post-installation instructions
 
-### Migration Claude Code → Autre IDE
+### Migration Claude Code → Another IDE
 
-Si vous passez de Claude Code a un autre IDE, certaines fonctionnalites sont perdues:
+If you switch from Claude Code to another IDE, some features are lost:
 
 | Lost Feature | Alternative |
 |--------------|-------------|
@@ -407,14 +409,14 @@ Si vous passez de Claude Code a un autre IDE, certaines fonctionnalites sont per
 | **MCP** | Built-in tools of target IDE |
 | **Slash commands** | Inline prompts or assistants |
 
-**Recommendation:** Garder Claude Code comme "source of truth" et utiliser les autres IDEs en complement.
+**Recommendation:** Keep Claude Code as the "source of truth" and use the other IDEs as a complement.
 
 ---
 
-## Voir Aussi
+## See Also
 
-- [Concepts](concepts.md) - Philosophie
-- [Getting Started](getting-started.md) - Demarrage
+- [Concepts](concepts.md) - Philosophy
+- [Getting Started](getting-started.md) - Getting started
 - [Profiles Registry](../profiles/profiles-registry.yaml)
 - [Gaming Specialty](../specialties/developer/branchs/gaming.md)
 - [/harmony learn](../workflows/harmony-learn.md)

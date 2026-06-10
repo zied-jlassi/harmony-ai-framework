@@ -1508,8 +1508,6 @@ INFO: V
 | Module | Description | Topics | Tokens Source |
 |--------|-------------|--------|---------------|
 | `@pentest-modules/pentest-web.md` | Web Application Testing | SQLi, XSS, SSTI, API Security | ~74K |
-| `@pentest-modules/pentest-exploit.md` | Exploitation & Shellcode | Buffer Overflow, ROP, PrivEsc | ~220K |
-| `@pentest-modules/pentest-metasploit.md` | Metasploit Framework | MSF, Meterpreter, SET, Post-Exploitation | ~90K |
 | `@pentest-modules/pentest-dast-signatures.md` | **DAST Signatures** | 100+ vulns, OWASP Top 10, payloads | ~50K |
 | `@pentest-modules/pentest-dast-waf.md` | **DAST WAF Detection** | 21 WAFs, bypass hints, fingerprinting | ~30K |
 | `@pentest-modules/pentest-dast-scanners.md` | **DAST Scanners** | SQLi, XSS, SSTI, IDOR, BOLA, SSRF | ~60K |
@@ -1523,14 +1521,6 @@ INFO: V
 # Pour un test web complet
 @pentest-modules/pentest-web.md
 Commandes: *sqli-test, *xss-hunt, *ssti-detect, *api-audit
-
-# Pour exploitation systeme
-@pentest-modules/pentest-exploit.md
-Commandes: *bof-analyze, *shellcode-gen, *rop-build, *privesc-linux, *privesc-windows
-
-# Pour operations Metasploit
-@pentest-modules/pentest-metasploit.md
-Commandes: *msf-scan, *msf-exploit, *meterpreter, *post-exploit, *pivot
 
 # DAST AVANCE - Nouveaux Modules
 # Pour signatures de vulnerabilites (100+ payloads)
@@ -1589,5 +1579,5 @@ Le fichier `@pentest-modules/pentest-sources.json` contient:
 
 **Pattern obligatoire**: Kill Chain + PTES
 **Integration**: Security Agent (defense), RGPD Agent (RGPD), Tester (tests)
-**Modules**: @pentest-modules/pentest-web.md, @pentest-modules/pentest-exploit.md, @pentest-modules/pentest-metasploit.md
+**Modules**: @pentest-modules/pentest-web.md, @pentest-modules/pentest-dast-signatures.md, @pentest-modules/pentest-dast-scanners.md
 **Sources**: 8 livres (520K tokens) + OWASP + MITRE ATT&CK + Web Research 2025

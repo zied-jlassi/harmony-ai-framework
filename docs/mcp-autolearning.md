@@ -1,8 +1,10 @@
-# Auto-Apprentissage avec MCP Memory
+# Auto-Learning with MCP Memory
 
-> **Cross-session learning pour Sentinel System**
+> **🌐 Language:** English · [Français](fr/mcp-autolearning.md)
 
-Ce document explique comment Harmony utilise `@modelcontextprotocol/server-memory` pour persister et recuperer les erreurs apprises par le Sentinel System.
+> **Cross-session learning for the Sentinel System**
+
+This document explains how Harmony uses `@modelcontextprotocol/server-memory` to persist and retrieve the errors learned by the Sentinel System.
 
 ---
 
@@ -79,9 +81,9 @@ Ce document explique comment Harmony utilise `@modelcontextprotocol/server-memor
 
 ---
 
-## Fichiers Impliques
+## Files Involved
 
-### Source de Verite: `error-journal.json`
+### Source of Truth: `error-journal.json`
 
 ```json
 {
@@ -106,7 +108,7 @@ Ce document explique comment Harmony utilise `@modelcontextprotocol/server-memor
 
 ### Knowledge Graph: `server-memory`
 
-Entites creees:
+Entities created:
 - `ERR-002` (type: BashError)
 - `P-011-bash-arithmetic` (type: Pattern)
 - `install.sh` (type: Module)
@@ -118,9 +120,9 @@ Relations:
 
 ---
 
-## Operations MCP Memory
+## MCP Memory Operations
 
-### 1. Enregistrer une erreur (apres detection Sentinel)
+### 1. Record an error (after Sentinel detection)
 
 ```javascript
 // Creer l'entite erreur
@@ -147,7 +149,7 @@ mcp__memory__create_relations({
 });
 ```
 
-### 2. Rechercher erreurs pertinentes (Context Preloader)
+### 2. Search relevant errors (Context Preloader)
 
 ```javascript
 // Recherche semantique basee sur le contexte actuel
@@ -162,7 +164,7 @@ const results = mcp__memory__search_nodes({
 // }
 ```
 
-### 3. Ajouter observations (enrichissement)
+### 3. Add observations (enrichment)
 
 ```javascript
 // Si l'erreur se reproduit, ajouter des observations
@@ -179,33 +181,33 @@ mcp__memory__add_observations({
 
 ---
 
-## Integration avec Sentinel
+## Integration with Sentinel
 
-### Workflow Complet
+### Complete Workflow
 
 1. **Detection** (Sentinel agent)
-   - Detecte erreur via pattern matching ou analyse
-   - Enregistre dans `error-journal.json`
+   - Detects an error via pattern matching or analysis
+   - Records it in `error-journal.json`
 
-2. **Sync MCP** (nouveau)
-   - Cree entite dans server-memory
-   - Cree relations avec patterns existants
-   - Indexation semantique automatique
+2. **MCP Sync** (new)
+   - Creates an entity in server-memory
+   - Creates relations with existing patterns
+   - Automatic semantic indexing
 
-3. **Recuperation** (Context Preloader)
-   - Au demarrage de session
-   - Recherche semantique basee sur fichiers ouverts/contexte
-   - Injection des erreurs pertinentes dans le contexte LLM
+3. **Retrieval** (Context Preloader)
+   - At session startup
+   - Semantic search based on open files / context
+   - Injection of relevant errors into the LLM context
 
 4. **Prevention** (Agent)
-   - Agent voit les erreurs passees AVANT de coder
-   - Evite de reproduire les memes erreurs
+   - The agent sees past errors BEFORE coding
+   - Avoids reproducing the same errors
 
 ---
 
 ## Configuration
 
-### MCP Client (obligatoire)
+### MCP Client (required)
 
 ```json
 {
@@ -218,7 +220,7 @@ mcp__memory__add_observations({
 }
 ```
 
-### Variables d'environnement
+### Environment variables
 
 ```bash
 # Chemin du knowledge graph (defaut: ~/.harmony/memory-graph)
@@ -230,19 +232,19 @@ HARMONY_MEMORY_SYNC=true
 
 ---
 
-## Avantages vs Approche Precedente
+## Advantages vs Previous Approach
 
-| Aspect | Avant (session-only) | Apres (MCP memory) |
+| Aspect | Before (session-only) | After (MCP memory) |
 |--------|---------------------|-------------------|
-| **Persistance** | Session unique | Cross-session |
-| **Recherche** | grep/pattern | Semantique |
-| **Relations** | Aucune | Graphe complet |
-| **Contexte** | Manuel | Automatique |
+| **Persistence** | Single session | Cross-session |
+| **Search** | grep/pattern | Semantic |
+| **Relations** | None | Full graph |
+| **Context** | Manual | Automatic |
 | **Prevention** | Reactive | Proactive |
 
 ---
 
-## Commandes Sentinel
+## Sentinel Commands
 
 ```bash
 # Voir erreurs en memoire
@@ -262,7 +264,7 @@ HARMONY_MEMORY_SYNC=true
 
 ## Troubleshooting
 
-### MCP memory non disponible
+### MCP memory unavailable
 
 ```bash
 # Verifier que le serveur repond
@@ -272,7 +274,7 @@ npx -y @modelcontextprotocol/server-memory --help
 cat ~/.config/claude-desktop/config.json | jq '.mcpServers.memory'
 ```
 
-### Erreurs non retrouvees
+### Errors not found
 
 ```bash
 # Verifier le contenu du graphe

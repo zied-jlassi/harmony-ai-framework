@@ -1,29 +1,31 @@
-# Audit Architecture - Harmony Framework v1.0.10
+# Architecture Audit - Harmony Framework v1.0.10
+
+> **🌐 Language:** English · [Français](../fr/audits/AUDIT-2026-01-04-architecture.md)
 
 **Date:** 2026-01-04
-**Auditeur:** Nova (AI Architect)
-**Scope:** Performance et fiabilite long terme
+**Auditor:** Nova (AI Architect)
+**Scope:** Performance and long-term reliability
 
 ---
 
-## Scores par Critere
+## Scores by Criterion
 
-| Critere | Score | Justification |
+| Criterion | Score | Justification |
 |---------|:-----:|---------------|
-| **Modularite** | 9/10 | Agents autonomes, specialites JIT, separation claire |
-| **Scalabilite** | 8/10 | Profiles extensibles, mais 566 fichiers a gerer |
-| **Maintenabilite** | 7/10 | Structure claire mais documentation dense |
-| **Performance Token** | 8.5/10 | JIT loading bien implemente (10-20K/session reel) |
-| **Resilience** | 9/10 | Circuit breaker, memory 3-tier, error-journal |
-| **Extensibilite** | 9/10 | Profiles, specialties, patterns modulaires |
+| **Modularity** | 9/10 | Autonomous agents, JIT specialties, clear separation |
+| **Scalability** | 8/10 | Extensible profiles, but 566 files to manage |
+| **Maintainability** | 7/10 | Clear structure but dense documentation |
+| **Token Performance** | 8.5/10 | JIT loading well implemented (10-20K/session in practice) |
+| **Resilience** | 9/10 | Circuit breaker, 3-tier memory, error-journal |
+| **Extensibility** | 9/10 | Modular profiles, specialties, patterns |
 
-**Score Global: 8.4/10**
+**Overall Score: 8.4/10**
 
 ---
 
-## Metriques Framework
+## Framework Metrics
 
-| Metrique | Valeur |
+| Metric | Value |
 |----------|--------|
 | **Total Files** | 566 |
 | **Total Size** | 7.0 MB |
@@ -34,12 +36,12 @@
 | **Profiles** | 60 files, 576 KB |
 | **Documentation** | 35 files, 252 KB |
 | **Configuration** | 60+ files, 300 KB |
-| **Est. Total Tokens** | 445-625K (potentiel) |
-| **Est. Session Tokens** | 10-20K (reel avec JIT) |
+| **Est. Total Tokens** | 445-625K (potential) |
+| **Est. Session Tokens** | 10-20K (actual with JIT) |
 
 ---
 
-## Architecture Three Pillars
+## Three Pillars Architecture
 
 ```
 HARMONY FRAMEWORK - THREE PILLARS
@@ -50,9 +52,9 @@ HARMONY FRAMEWORK - THREE PILLARS
 
 ---
 
-## Token Usage Reel (JIT Loading)
+## Actual Token Usage (JIT Loading)
 
-### Session Typique DEV
+### Typical DEV Session
 ```
 Guardian core        ~2K tokens
 Routing detection    ~1K tokens
@@ -64,7 +66,7 @@ Rules actives        ~1K tokens
 TOTAL               ~10-15K tokens/session
 ```
 
-### Session AI Architect
+### AI Architect Session
 ```
 Guardian + Routing   ~3K tokens
 ai-architect.md      ~4K tokens
@@ -76,67 +78,67 @@ TOTAL               ~15-20K tokens/session
 
 ---
 
-## Points d'Attention
+## Points of Attention
 
-### 1. Token Budget (Corrige)
+### 1. Token Budget (Fixed)
 
-**Status:** OK avec JIT
-- 625K = potentiel total, PAS charge reelle
-- JIT Loading fonctionne correctement
-- Session reelle: 10-20K tokens
+**Status:** OK with JIT
+- 625K = total potential, NOT the actual load
+- JIT Loading works correctly
+- Actual session: 10-20K tokens
 
-**Amelioration suggere:**
-- Ajouter token monitoring visuel (EN COURS)
+**Suggested improvement:**
+- Add visual token monitoring (IN PROGRESS)
 
-### 2. Complexite Croissante
+### 2. Growing Complexity
 
-**Risque:** 566 fichiers = fragmentation potentielle
+**Risk:** 566 files = potential fragmentation
 
 **Actions:**
-- [ ] Pattern-registry validation automatique
+- [ ] Automatic pattern-registry validation
 - [ ] Dependency graph visualization
-- [ ] INDEX auto-genere par categorie
+- [ ] Auto-generated INDEX by category
 
 ### 3. Workflow Dependency Chain
 
-**Risque:** Blocage cascade si phase incomplete
+**Risk:** Cascade blocking if a phase is incomplete
 
-**Mitigation existante:**
+**Existing mitigation:**
 - R-007-phase-gates.yaml
 - Guardian checkpoint
-- quick-flow pour projets simples
+- quick-flow for simple projects
 
 ---
 
-## Recommandations Prioritaires
+## Priority Recommendations
 
-### Court Terme (Immediat)
+### Short Term (Immediate)
 
 | # | Action | Impact | Status |
 |---|--------|--------|--------|
-| 1 | Token monitor visuel | Prevention overflow | EN COURS |
-| 2 | Workflow lazy-load | -40% tokens demarrage | A FAIRE |
-| 3 | INDEX auto-genere | Maintenance simplifiee | A FAIRE |
+| 1 | Visual token monitor | Overflow prevention | IN PROGRESS |
+| 2 | Workflow lazy-load | -40% startup tokens | TO DO |
+| 3 | Auto-generated INDEX | Simplified maintenance | TO DO |
 
-### Moyen Terme (1-2 mois)
-
-| # | Action | Impact |
-|---|--------|--------|
-| 4 | Dependency graph | Debug facilite |
-| 5 | Pattern dedup | Reduction complexite |
-| 6 | Profile optimization | -30% profils charges |
-
-### Long Terme (3-6 mois)
+### Medium Term (1-2 months)
 
 | # | Action | Impact |
 |---|--------|--------|
-| 7 | Micro-framework | Adoption plus rapide |
-| 8 | Plugin system | Extensibilite propre |
-| 9 | Version management | Upgrades securises |
+| 4 | Dependency graph | Easier debugging |
+| 5 | Pattern dedup | Reduced complexity |
+| 6 | Profile optimization | -30% profiles loaded |
+
+### Long Term (3-6 months)
+
+| # | Action | Impact |
+|---|--------|--------|
+| 7 | Micro-framework | Faster adoption |
+| 8 | Plugin system | Clean extensibility |
+| 9 | Version management | Safe upgrades |
 
 ---
 
-## Structure Detaillee
+## Detailed Structure
 
 ### Agents (34 files, 832 KB)
 
@@ -180,28 +182,28 @@ TOTAL               ~15-20K tokens/session
 | 2 | 2-planning/ | PRD & UX planning |
 | 3 | 3-solutioning/ | Design & story creation |
 | 4 | 4-implementation/ | Development cycle |
-| - | testarch/ | Test workflows (8) |
+| - | test-architect/ | Test workflows (8) |
 | - | quick-flow/ | Rapid development |
 
 ---
 
 ## Verdict
 
-**Le framework est solide pour une utilisation production.**
+**The framework is solid for production use.**
 
 | Aspect | Status |
 |--------|--------|
-| Architecture | Bien concue, modulaire |
+| Architecture | Well designed, modular |
 | Resilience | Circuit breaker + memory |
-| Extensibilite | Profiles + specialties |
-| Token efficiency | JIT implemente, monitoring a ajouter |
-| Maintenance | Discipline requise (566 fichiers) |
+| Extensibility | Profiles + specialties |
+| Token efficiency | JIT implemented, monitoring to add |
+| Maintenance | Discipline required (566 files) |
 
-**Fiabilite long terme: 8.4/10** - Viable avec monitoring tokens.
+**Long-term reliability: 8.4/10** - Viable with token monitoring.
 
 ---
 
-## Fichiers de Reference
+## Reference Files
 
 - Manifest: `harmony.manifest.json`
 - Guardian: `agents/guardian.md`
@@ -212,4 +214,4 @@ TOTAL               ~15-20K tokens/session
 
 ---
 
-*Audit genere par Nova (AI Architect) - Harmony Framework*
+*Audit generated by Nova (AI Architect) - Harmony Framework*

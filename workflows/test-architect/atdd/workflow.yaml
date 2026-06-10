@@ -1,0 +1,21 @@
+name: test-architect-atdd
+description: "Transforme les critères d'acceptation d'une story en tests exécutables avant l'implémentation (cycle RED → GREEN → REFACTOR)"
+author: "Harmony Framework"
+version: "1.0"
+
+config_source: "{project-root}/.harmony/config.yaml"
+communication_language: "{config_source}:communication_language"
+user_name: "{config_source}:user_name"
+document_output_language: "{config_source}:document_output_language"
+sprint_artifacts: "{config_source}:sprint_artifacts"
+
+installed_path: "{project-root}/.harmony/workflows/test-architect/atdd"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+
+story_file: ""  # Chemin explicite; auto-découverte si vide
+story_id: ""    # ID de la story (ex: STORY-042)
+
+working_memory: "{project-root}/.harmony/memory/working.json"
+
+standalone: true

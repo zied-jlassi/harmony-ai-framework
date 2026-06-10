@@ -1,0 +1,19 @@
+name: test-architect-test-review
+description: "Audite la qualité des tests existants, détecte les anti-patterns (ice cream cone, tests flaky, assertions manquantes) et formule des recommandations"
+author: "Harmony Framework"
+version: "1.0"
+
+config_source: "{project-root}/.harmony/config.yaml"
+communication_language: "{config_source}:communication_language"
+user_name: "{config_source}:user_name"
+document_output_language: "{config_source}:document_output_language"
+
+installed_path: "{project-root}/.harmony/workflows/test-architect/test-review"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+
+# scope: all | unit | integration | e2e | path/to/tests
+scope: "all"
+output_report: ""  # Auto-généré si vide
+
+standalone: true

@@ -666,7 +666,7 @@ traceability_and_gate:
 - If WAIVED 🔓: Deploy with business approval and aggressive monitoring
 
 **Generated:** {DATE}
-**Workflow:** testarch-trace v4.0 (Enhanced with Gate Decision)
+**Workflow:** test-architect-trace v4.0 (Enhanced with Gate Decision)
 
 ---
 

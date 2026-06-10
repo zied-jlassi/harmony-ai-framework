@@ -47,34 +47,14 @@ modules:
       description: "DAST reconnaissance"
 
   network:
-    - id: pentest-network
-      file: modules/pentest-network.md
-      description: "Network security testing"
     - id: pentest-recon
       file: modules/pentest-recon.md
       description: "Reconnaissance and OSINT"
-
-  exploitation:
-    - id: pentest-exploit
-      file: modules/pentest-exploit.md
-      description: "Exploitation techniques"
-    - id: pentest-metasploit
-      file: modules/pentest-metasploit.md
-      description: "Metasploit Framework"
-    - id: pentest-post
-      file: modules/pentest-post.md
-      description: "Post-exploitation"
 
   specialized:
     - id: pentest-crypto
       file: modules/pentest-crypto.md
       description: "Cryptographic security testing"
-    - id: pentest-social
-      file: modules/pentest-social.md
-      description: "Social engineering"
-    - id: pentest-malware
-      file: modules/pentest-malware.md
-      description: "Malware analysis"
     - id: pentest-forensics
       file: modules/pentest-forensics.md
       description: "Digital forensics"

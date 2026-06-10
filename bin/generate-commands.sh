@@ -178,17 +178,17 @@ EOF
     echo "  ✅ $filename"
 }
 
-# Function to generate testarch command (compact format)
-generate_testarch_command() {
+# Function to generate test-architect command (compact format)
+generate_test_command() {
     local name="$1"
     local path="$2"
     local description="$3"
 
-    local filename="hf-testarch-${name}.md"
+    local filename="hf-test-architect-${name}.md"
 
     cat > "$TARGET_DIR/$filename" << EOF
 ---
-name: "/hf:testarch:${name}"
+name: "/hf:test-architect:${name}"
 description: "${description}"
 ---
 Read \`\${HARMONY_DIR}/${path}\`
@@ -386,19 +386,19 @@ if [[ -f "$COMMANDS_DIR/workflows.yaml" ]]; then
 fi
 
 # ============================================================
-# Generate TestArch Commands (/hf:testarch:*)
+# Generate Test Architect Commands (/hf:test:*)
 # ============================================================
 echo ""
-echo "=== Generating TestArch Commands ==="
-if [[ -f "$COMMANDS_DIR/testarch.yaml" ]]; then
-    generate_testarch_command "framework" "workflows/testarch/framework/workflow.yaml" "Select and initialize test framework for the detected stack (Vitest, Jest, Playwright, Cypress, pytest, JUnit, go test)"
-    generate_testarch_command "atdd" "workflows/testarch/atdd/workflow.yaml" "Transform story acceptance criteria into failing tests — RED→GREEN→REFACTOR cycle (BDD, Gherkin)"
-    generate_testarch_command "test-design" "workflows/testarch/test-design/workflow.yaml" "Design test strategy and test cases — equivalence partitioning, boundary values, decision tables, state transition"
-    generate_testarch_command "automate" "workflows/testarch/automate/workflow.yaml" "Analyze code coverage (line/branch/function) and generate missing unit and integration tests"
-    generate_testarch_command "test-review" "workflows/testarch/test-review/workflow.yaml" "Audit test quality — detect ice cream cone, flaky tests, over-mocking, missing assertions, dead tests"
-    generate_testarch_command "nfr-assess" "workflows/testarch/nfr-assess/workflow.yaml" "Assess non-functional requirements: performance (k6/Gatling), security (OWASP/SAST/DAST), accessibility (WCAG 2.1/Axe)"
-    generate_testarch_command "trace" "workflows/testarch/trace/workflow.yaml" "Generate bidirectional traceability matrix requirements ↔ tests with configurable quality gate"
-    generate_testarch_command "ci" "workflows/testarch/ci/workflow.yaml" "Configure 4-layer CI/CD test pipeline for GitHub Actions and/or GitLab CI with Playwright sharding"
+echo "=== Generating Test Architect Commands ==="
+if [[ -f "$COMMANDS_DIR/test-architect.yaml" ]]; then
+    generate_test_command "framework" "workflows/test-architect/framework/workflow.yaml" "Select and initialize the test framework for the detected stack (Vitest, Jest, Playwright, pytest, JUnit, go test, cargo test)"
+    generate_test_command "atdd" "workflows/test-architect/atdd/workflow.yaml" "Turn acceptance criteria into failing executable specs — Example Mapping, Gherkin, RED→GREEN→REFACTOR"
+    generate_test_command "design" "workflows/test-architect/test-design/workflow.yaml" "Design test strategy and cases — risk scoring, equivalence/boundary, contract testing, ISO 25010 NFR coverage"
+    generate_test_command "automate" "workflows/test-architect/automate/workflow.yaml" "Analyze coverage and generate missing unit/integration tests — risk-prioritized, flaky-quarantine, AI-gen with review"
+    generate_test_command "review" "workflows/test-architect/test-review/workflow.yaml" "Audit test quality — test smells, mutation testing (adequacy), flaky detection, AI-generated test scrutiny"
+    generate_test_command "nfr" "workflows/test-architect/nfr-assess/workflow.yaml" "Assess non-functional requirements (ISO 25010:2023) — performance, security/SBOM, accessibility (WCAG 2.2/INP), reliability/SLO"
+    generate_test_command "trace" "workflows/test-architect/trace/workflow.yaml" "Generate bidirectional requirements ↔ tests traceability matrix with a configurable CI quality gate"
+    generate_test_command "ci" "workflows/test-architect/ci/workflow.yaml" "Configure a 4-layer CI/CD test pipeline (GitHub Actions / GitLab CI) — Playwright sharding, quality gates, DORA"
 fi
 
 # ============================================================
@@ -427,5 +427,5 @@ echo "  /harmony         - Interactive menu (30 commands)"
 echo "  /sentinel        - Error memory system"
 echo "  /hf:agent:*      - Agent commands (18 agents)"
 echo "  /hf:workflow:*   - Workflow commands (8 workflows)"
-echo "  /hf:testarch:*   - Test architecture commands (8 commands)"
+echo "  /hf:test-architect:* - Test Architect commands (8 commands)"
 echo "  /hf:diagram:*    - Diagram generation commands (4 commands)"

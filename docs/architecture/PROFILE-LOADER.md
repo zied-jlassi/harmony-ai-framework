@@ -1,5 +1,7 @@
 # Profile Loader - Architecture
 
+> **🌐 Language:** English · [Français](../fr/architecture/PROFILE-LOADER.md)
+
 **Version:** 1.0.0
 **Status:** Implemented
 **Date:** 2026-01-04
@@ -8,7 +10,7 @@
 
 ## Overview
 
-Le Profile Loader est un composant qui charge les sections de profiles techniques de maniere conditionnelle selon l'intent detecte par Guardian.
+The Profile Loader is a component that loads technical profile sections conditionally, based on the intent detected by Guardian.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -30,9 +32,9 @@ Le Profile Loader est un composant qui charge les sections de profiles technique
 
 ---
 
-## Integration avec Guardian
+## Integration with Guardian
 
-### Flux Complet
+### Full Flow
 
 ```
 User Message
@@ -81,14 +83,14 @@ User Message
 └─────────────┘
 ```
 
-### Pas de Conflit avec Routing
+### No Conflict with Routing
 
 | Aspect | Guardian | Profile Loader |
 |--------|----------|----------------|
-| **Quand** | Premier | Apres agent selection |
-| **Intent** | Detecte | Reutilise (lecture seule) |
-| **Output** | Agent route | Knowledge sections |
-| **State** | Ecrit | Lit + ajoute sections_loaded |
+| **When** | First | After agent selection |
+| **Intent** | Detected | Reused (read-only) |
+| **Output** | Routed agent | Knowledge sections |
+| **State** | Writes | Reads + adds sections_loaded |
 
 ---
 
@@ -235,34 +237,34 @@ bash framework/hooks/profile-loader.sh sections nestjs
 
 ### Integration Point
 
-Le hook peut etre appele:
-1. **Manuellement** par l'utilisateur
-2. **Par Guardian** apres routing (optionnel)
-3. **Par un hook pre-tool** (futur)
+The hook can be called:
+1. **Manually** by the user
+2. **By Guardian** after routing (optional)
+3. **By a pre-tool hook** (future)
 
 ---
 
 ## Token Budget
 
-### Par Section (Limites)
+### Per Section (Limits)
 
-| Section | Max Tokens | Justification |
+| Section | Max Tokens | Rationale |
 |---------|------------|---------------|
-| core | 2,000 | Essentiel, toujours charge |
-| advanced | 3,000 | Patterns complexes |
+| core | 2,000 | Essential, always loaded |
+| advanced | 3,000 | Complex patterns |
 | testing | 2,000 | Jest + E2E |
 | security | 1,500 | Auth patterns |
 
-### Par Session (Hard Limit)
+### Per Session (Hard Limit)
 
 ```yaml
 loading:
   max_total_tokens: 5000  # Hard limit par profile
 ```
 
-### Comparaison
+### Comparison
 
-| Scenario | Sans Loader | Avec Loader | Economie |
+| Scenario | Without Loader | With Loader | Savings |
 |----------|-------------|-------------|----------|
 | DEV standard | 13K | 2-3K | -77% |
 | DEV + testing | 13K | 4-5K | -62% |
@@ -272,7 +274,7 @@ loading:
 
 ## State Management
 
-### Lecture (Input)
+### Read (Input)
 
 ```json
 // .harmony/local/memory/workflow-state.json
@@ -284,7 +286,7 @@ loading:
 }
 ```
 
-### Ecriture (Output)
+### Write (Output)
 
 ```json
 // .harmony/local/memory/workflow-state.json (apres loading)
@@ -305,7 +307,7 @@ loading:
 
 ## Error Handling
 
-| Erreur | Comportement |
+| Error | Behavior |
 |--------|--------------|
 | Manifest not found | Fallback to no sections (warning) |
 | Section files missing | Skip section, continue |

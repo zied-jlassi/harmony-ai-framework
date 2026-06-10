@@ -1,0 +1,19 @@
+name: test-architect-test-design
+description: "Conçoit la stratégie de test complète et les cas de test détaillés à partir des exigences et de l'analyse de risque"
+author: "Harmony Framework"
+version: "1.0"
+
+config_source: "{project-root}/.harmony/config.yaml"
+communication_language: "{config_source}:communication_language"
+user_name: "{config_source}:user_name"
+document_output_language: "{config_source}:document_output_language"
+sprint_artifacts: "{config_source}:sprint_artifacts"
+
+installed_path: "{project-root}/.harmony/workflows/test-architect/test-design"
+instructions: "{installed_path}/instructions.md"
+validation: "{installed_path}/checklist.md"
+
+story_file: ""      # Story ou feature cible
+output_file: ""     # Fichier de sortie du plan de test (auto-généré si vide)
+
+standalone: true

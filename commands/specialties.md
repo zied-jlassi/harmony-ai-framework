@@ -83,7 +83,6 @@ specialties/
 │   │   └── rgpd.md
 │   ├── modules/
 │   │   ├── pentest-web.md
-│   │   ├── pentest-network.md
 │   │   └── pentest-crypto.md
 │   └── knowledge/
 │       ├── owasp-top10.md

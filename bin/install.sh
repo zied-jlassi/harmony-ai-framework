@@ -541,7 +541,7 @@ copy_framework_files() {
         # Copy essential files (exclude npm artifacts like package.json, bin/, .npmrc)
         # ADR-007: INSTRUCTIONS.md and AGENTS.md are now essential for instruction resilience
         local essential_missing=0
-        for file in README.md LICENSE harmony.manifest.json INSTRUCTIONS.md AGENTS.md; do
+        for file in README.md LICENSE SECURITY.md harmony.manifest.json INSTRUCTIONS.md AGENTS.md; do
             if [[ -f "$SCRIPT_DIR/$file" ]]; then
                 cp "$SCRIPT_DIR/$file" "$PROJECT_DIR/.harmony/"
             else
@@ -678,7 +678,8 @@ configure_hooks() {
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harmony/hooks/aria-detect.sh \"$TOOL_INPUT\""
+            "command": "bash .harmony/hooks/aria-detect.sh",
+            "statusMessage": "🔍 ARIA: detecting context…"
           }
         ]
       },
@@ -687,11 +688,18 @@ configure_hooks() {
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harmony/hooks/guardian-checkpoint.sh \"$TOOL_INPUT\""
+            "command": "bash .harmony/hooks/rules-enforcer.sh",
+            "statusMessage": "🛡️ Rules: checking interdictions…"
           },
           {
             "type": "command",
-            "command": "bash .harmony/hooks/sentinel-pre.sh \"$TOOL_NAME\" \"$TOOL_INPUT\""
+            "command": "bash .harmony/hooks/guardian-checkpoint.sh",
+            "statusMessage": "🛡️ Guardian: checking story context…"
+          },
+          {
+            "type": "command",
+            "command": "bash .harmony/hooks/sentinel-pre.sh",
+            "statusMessage": "🧠 Sentinel: checking error history…"
           }
         ]
       },
@@ -700,7 +708,8 @@ configure_hooks() {
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harmony/hooks/supply-chain-guard.sh"
+            "command": "bash .harmony/hooks/supply-chain-guard.sh",
+            "statusMessage": "📦 Supply-chain: screening packages…"
           }
         ]
       }
@@ -711,7 +720,8 @@ configure_hooks() {
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harmony/hooks/sentinel-post.sh \"$TOOL_NAME\" \"$TOOL_RESULT\""
+            "command": "bash .harmony/hooks/sentinel-post.sh",
+            "statusMessage": "🧠 Sentinel: recording result…"
           }
         ]
       },
@@ -720,7 +730,8 @@ configure_hooks() {
         "hooks": [
           {
             "type": "command",
-            "command": "bash .harmony/hooks/llm-output-sanitizer.sh"
+            "command": "bash .harmony/hooks/llm-output-sanitizer.sh",
+            "statusMessage": "🧹 Sanitizing external output…"
           }
         ]
       }
@@ -1082,7 +1093,7 @@ create_slash_commands() {
     #   - Core: /go, /harmony, /sentinel
     #   - Agents: /hf:agent:* (18 agents)
     #   - Workflows: /hf:workflow:* (8 workflows)
-    #   - TestArch: /hf:testarch:* (8 commands)
+    #   - TestArch: /hf:test-architect:* (8 commands)
     #   - Diagrams: /hf:diagram:* (4 commands)
     if [[ -x "$SCRIPT_DIR/bin/generate-commands.sh" ]]; then
         "$SCRIPT_DIR/bin/generate-commands.sh" "$commands_dir" > /dev/null 2>&1

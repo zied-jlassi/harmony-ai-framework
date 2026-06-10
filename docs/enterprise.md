@@ -1,152 +1,153 @@
 # Harmony Enterprise & AI Consulting
 
-> Pour les équipes qui veulent déployer Harmony en production — avec la **sécurité des données en priorité absolue**, sur n'importe quelle infrastructure, et tirer le maximum de performance de leurs LLM.
+> **🌐 Language:** English · [Français](fr/enterprise.md)
 
-Harmony est open source et gratuit. Ce qui suit est une **offre de conseil payante** pour les organisations qui veulent aller plus loin : intégration sur mesure, durcissement sécurité, agents spécialisés par domaine, et optimisation des performances LLM.
+> For teams that want to deploy Harmony in production — with **data security as the top priority**, on any infrastructure, and to get the most performance out of their LLMs.
 
----
-
-## 🎯 Ce que couvre le consulting
-
-### 1. Intégration sécurisée multi-environnement
-
-Déploiement de Harmony et de vos agents IA sur l'infrastructure de votre choix, avec isolation adaptée au niveau de sensibilité des données :
-
-| Environnement | Approche d'isolation |
-|---------------|---------------------|
-| **Linux / macOS (poste dev)** | Sandboxing natif + Security Guards Harmony (supply-chain, anti-injection) |
-| **Windows** | Exécution via **WSL2** (isolation du host, credential stripping) |
-| **Cloud (AWS/GCP/Azure)** | microVMs (Firecracker), gVisor, ou Kata Containers selon la charge |
-| **On-premise / régulé** | Déploiement **air-gapped**, default-deny egress, données jamais exposées au LLM |
-| **Multi-tenant** | Isolation syscall-level (gVisor) ou V8 Isolates pour les tâches légères |
-
-> L'isolation est devenue **le nouveau périmètre de sécurité** pour les charges agentiques. En 2026, 1 brèche IA sur 8 est liée à un système agentique — l'isolation n'est plus optionnelle.
-
-### 2. Sécurité des données — priorité n°1
-
-- **Default-deny egress** : vos agents ne peuvent pas exfiltrer de données ni scanner le réseau interne
-- **Credential stripping** : les secrets ne sont jamais exposés au code généré par le LLM
-- **Cross-session isolation** : étanchéité entre les sessions et les contextes
-- **Supply-chain hardening** : vérification des packages, MCP pinnés + hash, période de quarantaine
-- **Anti-injection** : filtrage du contenu externe (WebFetch, URLs, LLM tiers) avant qu'il n'entre dans le contexte
-- **Conformité** : RGPD, gouvernance execution-time qui applique les règles quel que soit le modèle
-
-### 3. Gestion optimale des LLM & performance
-
-- **Architecture model-agnostic** : pas de vendor lock-in, bascule entre modèles selon le coût/la tâche
-- **Routing intelligent** : le bon modèle pour la bonne tâche (tiers de modèles, RouteLLM)
-- **Optimisation des coûts** : réduction de la consommation de tokens via le JIT loading Harmony
-- **Benchmarking** : mesure des performances réelles sur vos cas d'usage
-- **Self-hosting** : déploiement de modèles open-source sur votre cloud ou bare-metal
-
-### 4. Workflows avancés & agents spécialisés sur mesure
-
-- Création de **workflows métier avancés** adaptés à votre domaine
-- Développement d'**agents spécialisés par domaine** (finance, santé, juridique, gaming, industrie...)
-- Branches d'expertise dédiées avec leur knowledge base
-- Intégration aux systèmes existants (ERP, CRM, CI/CD, data pipelines)
-- Orchestration multi-agents pour les processus complexes
+Harmony is open source and free. What follows is a **paid consulting offer** for organizations that want to go further: custom integration, security hardening, domain-specialized agents, and LLM performance optimization.
 
 ---
 
-## 🛡️ Notre principe directeur
+## 🎯 What the consulting covers
 
-> **La sécurité des données passe avant la fonctionnalité.** Chaque intégration est conçue pour que vos données sensibles restent sous votre contrôle — chiffrées, isolées, et jamais transmises à un tiers sans votre accord explicite.
+### 1. Secure multi-environment integration
+
+Deploying Harmony and your AI agents on the infrastructure of your choice, with isolation matched to the sensitivity level of the data:
+
+| Environment | Isolation approach |
+|-------------|--------------------|
+| **Linux / macOS (dev workstation)** | Native sandboxing + Harmony Security Guards (supply-chain, anti-injection) |
+| **Windows** | Execution via **WSL2** (host isolation, credential stripping) |
+| **Cloud (AWS/GCP/Azure)** | microVMs (Firecracker), gVisor, or Kata Containers depending on the workload |
+| **On-premise / regulated** | **Air-gapped** deployment, default-deny egress, data never exposed to the LLM |
+| **Multi-tenant** | Syscall-level isolation (gVisor) or V8 Isolates for lightweight tasks |
+
+> Isolation has become **the new security perimeter** for agentic workloads. In 2026, 1 in 8 AI breaches is tied to an agentic system — isolation is no longer optional.
+
+### 2. Data security — priority #1
+
+- **Default-deny egress**: your agents cannot exfiltrate data or scan the internal network
+- **Credential stripping**: secrets are never exposed to LLM-generated code
+- **Cross-session isolation**: airtight separation between sessions and contexts
+- **Supply-chain hardening**: package verification, pinned + hashed MCP, cooling period
+- **Anti-injection**: filtering external content (WebFetch, URLs, third-party LLMs) before it enters the context
+- **Compliance**: GDPR, execution-time governance that enforces rules regardless of the model
+
+### 3. Optimal LLM management & performance
+
+- **Model-agnostic architecture**: no vendor lock-in, switch between models by cost/task
+- **Intelligent routing**: the right model for the right task (model tiers, RouteLLM)
+- **Cost optimization**: reduced token consumption via Harmony's JIT loading
+- **Benchmarking**: measuring real performance on your use cases
+- **Self-hosting**: deploying open-source models on your cloud or bare-metal
+
+### 4. Advanced workflows & custom specialized agents
+
+- Creating **advanced business workflows** tailored to your domain
+- Developing **domain-specialized agents** (finance, healthcare, legal, gaming, industry...)
+- Dedicated expertise branches with their own knowledge base
+- Integration with existing systems (ERP, CRM, CI/CD, data pipelines)
+- Multi-agent orchestration for complex processes
 
 ---
 
-## 📈 Pour qui ?
+## 🛡️ Our guiding principle
 
-- Équipes qui veulent **industrialiser** l'usage des LLM sans compromettre la sécurité
-- Organisations en environnement **régulé** (données personnelles, financières, médicales)
-- Startups qui veulent un **socle agentique robuste** dès le départ
-- Entreprises qui veulent des **agents IA spécialisés** dans leur métier
+> **Data security comes before functionality.** Every integration is designed so that your sensitive data stays under your control — encrypted, isolated, and never transmitted to a third party without your explicit consent.
 
 ---
 
-## 📈 Impact estimé (basé sur notre expérience)
+## 📈 For whom?
 
-> ⚠️ **Ce sont des estimations issues de notre propre expérience** en développant et en
-> « dogfoodant » Harmony — pas des chiffres audités. Les résultats varient selon les
-> équipes, les projets et les pratiques. À lire comme des ordres de grandeur, pas comme
-> des garanties.
+- Teams that want to **industrialize** LLM usage without compromising security
+- Organizations in **regulated** environments (personal, financial, medical data)
+- Startups that want a **robust agentic foundation** from the start
+- Companies that want **AI agents specialized** in their domain
 
-### Ce que nous avons observé
+---
+
+## 📈 Estimated impact (based on our experience)
+
+> ⚠️ **These are estimates from our own experience** building and "dogfooding"
+> Harmony — not audited figures. Results vary by team, project and practices. Read
+> them as orders of magnitude, not guarantees.
+
+### What we observed
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                    💰 IMPACT ESTIMÉ (ordres de grandeur)                      ║
+║                    💰 ESTIMATED IMPACT (orders of magnitude)                  ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   ⏱️ TEMPS GAGNÉ                    💵 RÉDUCTION DES COÛTS                    ║
-║   ─────────────                    ─────────────────────                      ║
-║   ~10 min/bug → moins d'1 min      Moins de temps passé à re-déboguer         ║
-║   sur les bugs déjà rencontrés     les mêmes erreurs                          ║
+║   ⏱️ TIME SAVED                     💵 COST REDUCTION                         ║
+║   ─────────────                     ────────────────                          ║
+║   ~10 min/bug → under 1 min         Less time spent re-debugging              ║
+║   on bugs already seen              the same errors                           ║
 ║                                                                               ║
-║   🎯 QUALITÉ                        🧠 EFFICACITÉ TOKENS                      ║
+║   🎯 QUALITY                        🧠 TOKEN EFFICIENCY                       ║
 ║   ─────────                         ──────────────────                        ║
-║   Forte baisse des bugs récurrents  Moins de tokens grâce au JIT loading      ║
-║   Fini le « works on my machine »   (on ne charge que le nécessaire)          ║
+║   Sharp drop in recurring bugs      Fewer tokens thanks to JIT loading        ║
+║   No more "works on my machine"     (only what's needed is loaded)            ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### Économies de tokens (estimées)
+### Token savings (estimated)
 
-Le JIT loading ne charge que le contexte nécessaire au lieu de tout recharger à chaque
-session. Ordres de grandeur observés sur nos propres projets :
+JIT loading only loads the context a request needs instead of reloading everything every
+session. Orders of magnitude observed on our own projects:
 
-| Levier | Sans Harmony | Avec Harmony | Économie estimée |
-|--------|:------------:|:------------:|:----------------:|
-| 🔄 Rechargement de contexte | Chaque session | Mis en cache | **~-60%** |
-| 📚 Docs complètes dans le prompt | Toujours chargées | JIT loading | **~-45%** |
-| 🤖 Prompts d'agents | Tous les agents | Seulement le nécessaire | **~-35%** |
-| 🧠 Contexte d'erreurs | Ré-expliqué à chaque fois | Appris | **~-50%** |
+| Lever | Without Harmony | With Harmony | Estimated saving |
+|-------|:---------------:|:------------:|:----------------:|
+| 🔄 Context reload | Every session | Cached | **~-60%** |
+| 📚 Full docs in the prompt | Always loaded | JIT loading | **~-45%** |
+| 🤖 Agent prompts | All agents | Only what's needed | **~-35%** |
+| 🧠 Error context | Re-explained every time | Learned | **~-50%** |
 
-### Allocation du temps développeur (illustratif)
+### Developer time allocation (illustrative)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│              RÉPARTITION DU TEMPS (illustratif)                 │
+│              TIME ALLOCATION (illustrative)                     │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│   SANS HARMONY             AVEC HARMONY                         │
+│   WITHOUT HARMONY          WITH HARMONY                         │
 │   ┌────────────────┐       ┌────────────────┐                   │
-│   │ 🔧 Débogage    │ 40%   │ 🔧 Débogage    │ 10%               │
-│   │ 🔄 Reprises    │ 25%   │ 🔄 Reprises    │  5%               │
+│   │ 🔧 Debugging   │ 40%   │ 🔧 Debugging   │ 10%               │
+│   │ 🔄 Rework      │ 25%   │ 🔄 Rework      │  5%               │
 │   │ 💻 Code        │ 35%   │ 💻 Code        │ 85%               │
 │   └────────────────┘       └────────────────┘                   │
 │                                                                 │
-│   Idée : moins de temps perdu à re-déboguer = plus de temps     │
-│   sur le code qui crée de la valeur.                            │
+│   Idea: less time lost re-debugging = more time on              │
+│   code that creates value.                                      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-> Ces graphiques illustrent la **dynamique** que nous visons (moins de re-débogage, plus
-> de code utile), pas une mesure garantie sur votre contexte.
+> These charts illustrate the **dynamic** we aim for (less re-debugging, more useful
+> code), not a guaranteed measurement in your context.
 
 ---
 
-## 💬 Notre expérience en dogfooding
+## 💬 Our dogfooding experience
 
-> *Observations issues du développement de Harmony avec Harmony — votre expérience peut différer.*
+> *Observations from building Harmony with Harmony — your experience may differ.*
 
-- **Forte baisse des bugs récurrents** une fois que Sentinel a commencé à mémoriser les erreurs passées.
-- **Temps de débogage sur les problèmes connus** passé de ~10 min à moins d'une minute.
-- **Le « works on my machine »** a disparu grâce à la triple validation (DEV+TEST+QA).
-- **La confusion entre agents** a disparu avec le routing automatique de Guardian.
+- **Sharp drop in recurring bugs** once Sentinel started remembering past errors.
+- **Debug time on known issues** went from ~10 min to under a minute.
+- **"Works on my machine"** disappeared thanks to triple validation (DEV+TEST+QA).
+- **Agent confusion** disappeared with Guardian's automatic routing.
 
 ---
 
 ## 📬 Contact
 
-Pour une intégration sur mesure, un audit de sécurité, ou la création d'agents/workflows spécialisés :
+For a custom integration, a security audit, or the creation of specialized agents/workflows:
 
 **zied.jlassi.dev@gmail.com**
 
-*Premier échange gratuit pour cadrer votre besoin et évaluer la faisabilité.*
+*First exchange free to scope your need and assess feasibility.*
 
 ---
 
-*Harmony Framework reste 100% open source (MIT). Le consulting est un service optionnel pour les organisations qui veulent un accompagnement expert.*
+*Harmony Framework remains 100% open source (MIT). Consulting is an optional service for organizations that want expert support.*

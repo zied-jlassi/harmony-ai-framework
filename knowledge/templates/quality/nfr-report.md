@@ -436,7 +436,7 @@ nfr_assessment:
 - If FAIL ❌: Resolve FAIL status NFRs, re-run `*nfr-assess`
 
 **Generated:** {DATE}
-**Workflow:** testarch-nfr v4.0
+**Workflow:** test-architect-nfr v4.0
 
 ---
 

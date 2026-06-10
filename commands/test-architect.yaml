@@ -1,0 +1,99 @@
+# Harmony Framework — Test Architect command registry
+# Complete test architecture integrated into the Harmony development cycle
+# Usage: /hf:test-architect:<command> [arguments]
+
+version: "1.0"
+author: "Harmony Framework"
+prefix: "/hf:test-architect"
+category: testing
+phase: 4
+
+commands:
+
+  framework:
+    path: workflows/test-architect/framework/workflow.yaml
+    description: "Select and initialize the test framework for the detected stack (Vitest, Jest, Playwright, pytest, JUnit, go test, cargo test)"
+    arguments: "[framework: vitest|jest|playwright|cypress|pytest|junit|go-test|cargo-test]"
+    phase: 4
+    requires: []
+    tags: [setup, framework, vitest, jest, playwright, pytest, junit]
+
+  atdd:
+    path: workflows/test-architect/atdd/workflow.yaml
+    description: "Turn acceptance criteria into failing executable specs — Example Mapping, Gherkin, RED→GREEN→REFACTOR"
+    arguments: "[story-id]"
+    phase: 4
+    requires: [story-exists]
+    tags: [atdd, bdd, specification-by-example, example-mapping, gherkin, red-green-refactor]
+
+  design:
+    path: workflows/test-architect/test-design/workflow.yaml
+    description: "Design test strategy and cases — risk scoring, equivalence/boundary, contract testing, ISO 25010 NFR coverage"
+    arguments: "[story-or-feature]"
+    phase: 4
+    requires: [requirements-exist]
+    tags: [design, strategy, risk-based, boundary-values, pact, contract-testing, testing-trophy]
+
+  automate:
+    path: workflows/test-architect/automate/workflow.yaml
+    description: "Analyze coverage and generate missing unit/integration tests — risk-prioritized, flaky-quarantine, AI-gen with review"
+    arguments: "[scope: all|changed|path/to/module]"
+    phase: 4
+    requires: [source-code-exists]
+    tags: [coverage, automation, vitest, jest, pytest, mocking, flaky, self-healing]
+
+  review:
+    path: workflows/test-architect/test-review/workflow.yaml
+    description: "Audit test quality — test smells, mutation testing (adequacy), flaky detection, AI-generated test scrutiny"
+    arguments: "[scope: all|unit|integration|e2e]"
+    phase: 4
+    requires: [tests-exist]
+    tags: [review, quality, test-smells, mutation-testing, flaky, ai-generated]
+
+  nfr:
+    path: workflows/test-architect/nfr-assess/workflow.yaml
+    description: "Assess non-functional requirements (ISO 25010:2023) — performance, security/SBOM, accessibility (WCAG 2.2/INP), reliability/SLO"
+    arguments: "[type: performance|security|accessibility|reliability|all]"
+    phase: 4
+    requires: []
+    tags: [nfr, iso-25010, k6, owasp, sbom, wcag, inp, core-web-vitals, slo, error-budget, chaos]
+
+  trace:
+    path: workflows/test-architect/trace/workflow.yaml
+    description: "Generate bidirectional requirements ↔ tests traceability matrix with a configurable CI quality gate"
+    arguments: "[scope: full|story-id]"
+    phase: 4
+    requires: [tests-exist]
+    tags: [traceability, rtm, coverage-gap, quality-gate, living-traceability]
+
+  ci:
+    path: workflows/test-architect/ci/workflow.yaml
+    description: "Configure a 4-layer CI/CD test pipeline (GitHub Actions / GitLab CI) — Playwright sharding, quality gates, DORA"
+    arguments: "[platform: github|gitlab|both]"
+    phase: 4
+    requires: [tests-exist]
+    tags: [ci, cd, github-actions, gitlab-ci, sharding, quality-gate, dora]
+
+# ─────────────────────────────────────────────
+# Usage examples
+# ─────────────────────────────────────────────
+# /hf:test-architect:framework vitest
+# /hf:test-architect:atdd STORY-042
+# /hf:test-architect:design epic-3-checkout
+# /hf:test-architect:automate changed
+# /hf:test-architect:review all
+# /hf:test-architect:nfr performance
+# /hf:test-architect:trace full
+# /hf:test-architect:ci github
+
+# ─────────────────────────────────────────────
+# Recommended order in a project
+# ─────────────────────────────────────────────
+# 1. framework  → initialize the test stack
+# 2. design     → design the strategy
+# 3. atdd       → ATDD story by story (during dev)
+# 4. automate   → complete coverage
+# 5. review     → audit test quality
+# 6. nfr        → validate non-functional requirements
+# 7. trace      → verify full traceability
+# 8. ci         → automate in the pipeline

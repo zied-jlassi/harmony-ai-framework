@@ -1,5 +1,7 @@
 # Harmony Agent Ecosystem
 
+> **🌐 Language:** English · [Français](fr/agents.md)
+
 > Complete reference for all Harmony agents and their roles.
 
 ---
@@ -138,7 +140,7 @@ Phase 4: Implementation
 
 ### Via Natural Language (Guardian Auto-Routing)
 
-Guardian detecte automatiquement l'intent et route vers l'agent approprié:
+Guardian automatically detects intent and routes to the appropriate agent:
 
 ```
 "develop STORY-042"           → Developer

@@ -1,5 +1,7 @@
 # Getting Started with Harmony
 
+> **🌐 Language:** English · [Français](fr/getting-started.md)
+
 Welcome to Harmony Framework! This guide will help you get up and running in minutes.
 
 ## Prerequisites
@@ -22,7 +24,7 @@ Harmony Framework requires these official MCP servers for cross-session learning
 | **server-memory** | `@modelcontextprotocol/server-memory` | Cross-session memory, Sentinel error patterns |
 | **server-sequentialthinking** | `@modelcontextprotocol/server-sequentialthinking` | Structured problem decomposition |
 
-**Configuration MCP Client** (Claude Desktop / Cursor / VS Code):
+**MCP Client configuration** (Claude Desktop / Cursor / VS Code):
 
 ```json
 {
@@ -49,43 +51,34 @@ Harmony Framework requires these official MCP servers for cross-session learning
 ### Step 1: Install Harmony
 
 ```bash
-# Create a new project or navigate to existing one
+# Create a new project or navigate to an existing one
 mkdir my-project && cd my-project
 
-# Install Harmony
-npm install harmony-ai
-
-# Initialize Harmony in your project
-npx harmony init
+# Install Harmony into the project (one command, no separate init)
+npx harmony-ai --full
 ```
 
-### Step 2: Choose Your Configuration
+### Step 2: What `--full` sets up
 
-During initialization, you'll be asked:
+The installer is non-interactive (it uses sensible defaults). It:
 
-```
-? Project name: my-project
-? Language: English / Français
-? Enable Guardian Protocol? Yes
-? Enable Sentinel System? Yes
-? Enable HQVF Quality? Yes
-? Starting phase: Discovery (Phase 1)
-```
+- creates `.harmony/` (the read-only framework core) in your project;
+- wires the 7 Claude Code hooks into `.claude/settings.json`;
+- seeds project memory in `.harmony/local/memory/`;
+- prints a system check and a success summary.
+
+Guardian, Sentinel and HQVF are enabled by default; the project starts in
+**Discovery (Phase 1)**.
 
 ### Step 3: Verify Installation
 
 ```bash
-npx harmony doctor
-```
+# Framework tree + hooks present
+ls .harmony/agents .harmony/hooks .harmony/local/memory
+cat .claude/settings.json
 
-Expected output:
-```
-✅ Harmony Framework v1.0.0
-✅ Configuration valid
-✅ Memory system initialized
-✅ Hooks installed
-✅ Agents available: 6 core, 4 specialists
-✅ Ready to go!
+# Then, inside your AI assistant:
+/go            # Session kickoff — loads context and reports state
 ```
 
 ## Your First Workflow
@@ -257,7 +250,7 @@ harmony monitor open   # → http://localhost:8080
 
 ```
 🛡️ GUARDIAN CHECKPOINT - VIOLATION
-TENTATIVE: Code modification without active story
+ATTEMPT: Code modification without active story
 ```
 
 **Solution**: Create or activate a story first:
@@ -273,15 +266,15 @@ TENTATIVE: Code modification without active story
 ```
 
 **Solution**:
-1. Check the error journal: `npx harmony memory show errors`
+1. Check the error journal: `.harmony/local/memory/error-journal.json`
 2. Fix the root cause
-3. Reset the circuit: `npx harmony sentinel reset`
+3. Reset the circuit: `/harmony sentinel --reset`
 
 ### "Agent not available for current phase"
 
-**Solution**: Check your current phase:
+**Solution**: Check your current phase (inside your assistant):
 ```
-npx harmony status
+/harmony            # interactive menu / status
 ```
 
 Move to the appropriate phase or use an agent allowed in your current phase.

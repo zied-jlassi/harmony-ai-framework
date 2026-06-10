@@ -1,14 +1,16 @@
 # Harmony Framework - Architecture Reference
 
+> **🌐 Language:** English · [Français](fr/ARCHITECTURE-REFERENCE.md)
+
 > **Version**: 2.0.0
 > **Date**: 2026-01-06
 > **Status**: AUTHORITATIVE
-> **Purpose**: Document de référence définitif pour l'architecture Harmony
-> **Audience**: Claude dans futures sessions - schémas visuels des relations
+> **Purpose**: Definitive reference document for the Harmony architecture
+> **Audience**: Claude in future sessions - visual diagrams of relationships
 
 ---
 
-## 🎯 Vue d'Ensemble - Flux Principal
+## 🎯 Overview - Main Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -44,9 +46,9 @@
 
 ---
 
-## 🏛️ Les Trois Piliers - Schémas Détaillés
+## 🏛️ The Three Pillars - Detailed Diagrams
 
-### Pilier 1: GUARDIAN Protocol
+### Pillar 1: GUARDIAN Protocol
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -77,7 +79,7 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Pilier 2: SENTINEL System
+### Pillar 2: SENTINEL System
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -114,7 +116,7 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Pilier 3: HQVF Quality
+### Pillar 3: HQVF Quality
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -149,7 +151,7 @@
 
 ---
 
-## 🤖 Écosystème des Agents
+## 🤖 Agent Ecosystem
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -194,7 +196,7 @@
 
 ---
 
-## 📚 Profiles & Specialties - Relation
+## 📚 Profiles & Specialties - Relationship
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -561,7 +563,7 @@
 
 ---
 
-## 🎯 Résumé Final
+## 🎯 Final Summary
 
 ```
 HARMONY = GUARDIAN + SENTINEL + HQVF
@@ -580,13 +582,13 @@ Patterns: Applied for solutions
 
 ---
 
-## Table des Matières Détaillée
+## Detailed Table of Contents
 
-### Schémas Visuels (Nouvelle Section v2.0)
-- [Vue d'Ensemble - Flux Principal](#-vue-densemble---flux-principal)
-- [Les Trois Piliers](#️-les-trois-piliers---schémas-détaillés)
-- [Écosystème des Agents](#-écosystème-des-agents)
-- [Profiles & Specialties](#-profiles--specialties---relation)
+### Visual Diagrams (New Section v2.0)
+- [Overview - Main Flow](#-overview---main-flow)
+- [The Three Pillars](#️-the-three-pillars---detailed-diagrams)
+- [Agent Ecosystem](#-agent-ecosystem)
+- [Profiles & Specialties](#-profiles--specialties---relationship)
 - [Knowledge & Patterns](#-knowledge--patterns)
 - [Rules System](#️-rules-system)
 - [Routing System](#-routing-system)
@@ -596,48 +598,48 @@ Patterns: Applied for solutions
 - [Component Relationships](#-component-relationships-summary)
 - [Quick Reference Tables](#-quick-reference-tables)
 
-### Documentation Détaillée
-1. [Philosophie Harmony](#1-philosophie-harmony)
-2. [Règles d'Architecture](#2-règles-darchitecture)
-3. [Hiérarchie des Agents](#3-hiérarchie-des-agents)
+### Detailed Documentation
+1. [Harmony Philosophy](#1-harmony-philosophy)
+2. [Architecture Rules](#2-architecture-rules)
+3. [Agent Hierarchy](#3-agent-hierarchy)
 4. [Specialties vs Profiles](#4-specialties-vs-profiles)
 5. [Framework vs User Space](#5-framework-vs-user-space)
-6. [Systèmes Uniques Harmony](#6-systèmes-uniques-harmony)
-7. [Duplications et Résolutions](#7-duplications-et-résolutions)
+6. [Unique Harmony Systems](#6-unique-harmony-systems)
+7. [Current Structure](#7-current-structure-post-restructure-2026-01)
 
 ---
 
-## 1. Philosophie Harmony
+## 1. Harmony Philosophy
 
 ### Motto
 ```
 "Learn. Protect. Deliver."
 ```
 
-### Ce que Harmony apporte
+### What Harmony brings
 
-Harmony se concentre sur la **qualité**, la **mémoire** et la **protection** — des couches complémentaires à toute orchestration de workflow :
+Harmony focuses on **quality**, **memory**, and **protection** — complementary layers to any workflow orchestration:
 
-| Capacité | Apport Harmony |
+| Capability | Harmony's contribution |
 |----------|----------------|
 | **Focus** | Quality + Memory + Protection |
-| **Mémoire** | Sentinel (error-journal, patterns appris, cross-session) |
+| **Memory** | Sentinel (error-journal, learned patterns, cross-session) |
 | **Protection** | Guardian (intent routing, circuit breaker) |
-| **Qualité** | HQVF (UCVs obligatoires, triple validation) |
-| **Agents** | Descriptifs fonctionnels (routage natif par capacité) |
+| **Quality** | HQVF (mandatory UCVs, triple validation) |
+| **Agents** | Functional descriptors (native routing by capability) |
 
-### Complémentarité avec un orchestrateur de workflow
+### Complementarity with a workflow orchestrator
 
-Harmony s'intègre à un framework d'orchestration externe (Discovery → Release) :
-les deux sont **complémentaires** — l'orchestration pilote le flux, Harmony ajoute
-qualité, mémoire et garde-fous. L'objectif est le partage d'information, pas la
+Harmony integrates with an external orchestration framework (Discovery → Release):
+the two are **complementary** — orchestration drives the flow, Harmony adds
+quality, memory, and guardrails. The goal is information sharing, not
 substitution.
 
 ---
 
-## 2. Règles d'Architecture
+## 2. Architecture Rules
 
-### R1: Pas de références croisées entre agents
+### R1: No cross-references between agents
 
 ```
 ❌ INTERDIT:
@@ -647,9 +649,9 @@ agents/developer.md → "voir aussi agents/tester.md"
 agents/developer.md → "voir workflows/implementation.md"
 ```
 
-**Raison**: Chaque agent est autonome. Les workflows orchestrent, pas les agents.
+**Reason**: Each agent is autonomous. Workflows orchestrate, not agents.
 
-### R2: Noms descriptifs (pas de personas)
+### R2: Descriptive names (no personas)
 
 ```
 ❌ INTERDIT:
@@ -661,9 +663,9 @@ agents/scrum-master.md
 agents/developer.md
 ```
 
-**Raison**: Les personas sont DANS le fichier, pas dans le nom. Facilite la maintenance.
+**Reason**: Personas live INSIDE the file, not in the name. This simplifies maintenance.
 
-### R3: Structure plate par catégorie
+### R3: Flat structure by category
 
 ```
 agents/                     # Structure PLATE - tous les agents au même niveau
@@ -679,9 +681,9 @@ specialties/ai/             # Knowledge AI (pas des agents)
 └── knowledge/              # Patterns RAG, Memory, Orchestration...
 ```
 
-**Raison**: Navigation prévisible. Pas de nesting infini. AI knowledge dans specialties/.
+**Reason**: Predictable navigation. No infinite nesting. AI knowledge in specialties/.
 
-### R4: Specialties pour contenu domain-specific
+### R4: Specialties for domain-specific content
 
 ```
 specialties/
@@ -696,9 +698,9 @@ specialties/
     └── knowledge/
 ```
 
-**Raison**: Isolation totale. Un projet gaming charge SEULEMENT gaming/, pas security/.
+**Reason**: Total isolation. A gaming project loads ONLY gaming/, not security/.
 
-### R5: Knowledge packs au lieu de skills individuels
+### R5: Knowledge packs instead of individual skills
 
 ```
 ❌ INTERDIT:
@@ -714,13 +716,13 @@ profiles/
     └── nestjs-knowledge.md  # Un fichier consolidé, chargeable à la demande
 ```
 
-**Raison**: JIT loading. Charge le pack quand nécessaire, pas 500 fichiers.
+**Reason**: JIT loading. Load the pack when needed, not 500 files.
 
 ---
 
-## 3. Hiérarchie des Agents
+## 3. Agent Hierarchy
 
-### Vue d'ensemble
+### Overview
 
 ```
 framework/agents/
@@ -767,29 +769,29 @@ patterns/
     └── graph-of-thoughts.md # Graph-based Reasoning
 ```
 
-### Quand utiliser quel agent
+### When to use which agent
 
-| Besoin | Agent | Fichier |
+| Need | Agent | File |
 |--------|-------|---------|
-| Analyser requirements | Analyst | `agents/analyst.md` |
-| Designer architecture | Architect | `agents/architect.md` |
-| Implémenter code | Developer | `agents/developer.md` |
-| Écrire tests automatisés | Tester | `agents/tester.md` |
-| Planifier sprints/stories | Scrum Master | `agents/scrum-master.md` |
-| Tests exploratoires UI | Luna | `agents/exploratory-qa.md` |
-| Créer UCVs | Clara | `specialties/ucv/branchs/writer.md` |
-| Valider UCVs | Victor | `specialties/ucv/branchs/validator.md` |
-| Concevoir RAG | Riley | `specialties/ai/knowledge/rag-patterns.md` |
-| Concevoir mémoire | Milo | `specialties/ai/knowledge/memory-patterns.md` |
+| Analyze requirements | Analyst | `agents/analyst.md` |
+| Design architecture | Architect | `agents/architect.md` |
+| Implement code | Developer | `agents/developer.md` |
+| Write automated tests | Tester | `agents/tester.md` |
+| Plan sprints/stories | Scrum Master | `agents/scrum-master.md` |
+| Exploratory UI testing | Luna | `agents/exploratory-qa.md` |
+| Create UCVs | Clara | `specialties/ucv/branchs/writer.md` |
+| Validate UCVs | Victor | `specialties/ucv/branchs/validator.md` |
+| Design RAG | Riley | `specialties/ai/knowledge/rag-patterns.md` |
+| Design memory | Milo | `specialties/ai/knowledge/memory-patterns.md` |
 | Multi-agents | Oscar | `specialties/ai/knowledge/orchestration-patterns.md` |
 
 ---
 
 ## 4. Specialties vs Profiles
 
-### Specialties = Domaine métier
+### Specialties = Business domain
 
-**Chargement**: Au démarrage projet, basé sur `project_type`
+**Loading**: At project startup, based on `project_type`
 
 ```yaml
 # .harmony/local/config/overrides.yaml
@@ -802,16 +804,16 @@ project:
 # - knowledge/game-mechanics.md disponible
 ```
 
-**Exemples de Specialties**:
-- `gaming/` - Jeux, scores, leaderboards
+**Examples of Specialties**:
+- `gaming/` - Games, scores, leaderboards
 - `security/` - Pentest, hardening, compliance
 - `creative/` - Design, UX, branding
-- `medical/` - HIPAA, données patients
+- `medical/` - HIPAA, patient data
 - `finance/` - PCI-DSS, transactions
 
-### Profiles = Stack technique
+### Profiles = Technical stack
 
-**Chargement**: JIT (Just-In-Time), à la demande
+**Loading**: JIT (Just-In-Time), on demand
 
 ```yaml
 # .harmony/local/config/overrides.yaml
@@ -824,27 +826,27 @@ profiles:
 # Chargé SEULEMENT quand Claude travaille sur ce stack
 ```
 
-**Exemples de Profiles**:
+**Examples of Profiles**:
 - `nestjs/` - Guards, interceptors, modules
 - `prisma/` - Migrations, schema, queries
 - `react/` - Hooks, components, state
 - `angular/` - Services, modules, RxJS
 - `docker/` - Compose, Dockerfile, networks
 
-### Différence clé
+### Key difference
 
 | Aspect | Specialty | Profile |
 |--------|-----------|---------|
-| **Quand** | Au démarrage | À la demande |
-| **Scope** | Domaine métier | Stack technique |
-| **Contenu** | Agents + Knowledge | Knowledge only |
-| **Exemple** | "Ce projet est un jeu" | "Ce fichier utilise NestJS" |
+| **When** | At startup | On demand |
+| **Scope** | Business domain | Technical stack |
+| **Content** | Agents + Knowledge | Knowledge only |
+| **Example** | "This project is a game" | "This file uses NestJS" |
 
 ---
 
 ## 5. Framework vs User Space
 
-### Protection P-012 (Framework Guardian)
+### P-012 Protection (Framework Guardian)
 
 ```
 .harmony/
@@ -869,14 +871,14 @@ profiles:
     └── config.yaml          # Project config
 ```
 
-### Hook Guardian
+### Guardian Hook
 
-Le hook `.claude/hooks/guardian-checkpoint.sh` bloque automatiquement:
-- Toute écriture dans `.harmony/agents/`
-- Toute écriture dans `.harmony/workflows/`
-- Modifications framework sans override explicite
+The `.claude/hooks/guardian-checkpoint.sh` hook automatically blocks:
+- Any write into `.harmony/agents/`
+- Any write into `.harmony/workflows/`
+- Framework modifications without an explicit override
 
-### Comment customiser
+### How to customize
 
 ```bash
 # ❌ INTERDIT - Modifier directement
@@ -889,9 +891,9 @@ Write .harmony/local/overrides/agents/developer.md
 
 ---
 
-## 6. Systèmes Uniques Harmony
+## 6. Unique Harmony Systems
 
-### Sentinel (Mémoire persistante)
+### Sentinel (Persistent memory)
 
 ```
 .harmony/local/memory/
@@ -901,14 +903,14 @@ Write .harmony/local/overrides/agents/developer.md
 └── anti-patterns.json       # Anti-patterns à éviter
 ```
 
-**Commandes**:
+**Commands**:
 ```bash
 /harmony --mode sentinel            # Dashboard
 /harmony --mode sentinel --learn    # Documenter erreur
 /harmony --mode sentinel --reset    # Reset circuit breaker
 ```
 
-### Guardian (Routage intelligent)
+### Guardian (Intelligent routing)
 
 ```
 ┌─────────────────────────────────────────┐
@@ -952,7 +954,7 @@ UCV Validator vérifie 100%
 Story DONE
 ```
 
-**Format UCV**:
+**UCV format**:
 ```yaml
 use_cases:
   - id: UC-001
@@ -967,23 +969,23 @@ use_cases:
 
 ---
 
-## 7. Structure Actuelle (Post-Restructure 2026-01)
+## 7. Current Structure (Post-Restructure 2026-01)
 
-### Restructuration effectuée ✅
+### Restructuring completed ✅
 
-La structure agents a été aplatie. Tous les agents sont maintenant au même niveau dans `agents/`:
+The agents structure has been flattened. All agents are now at the same level in `agents/`:
 
-| Ancien Chemin | Nouveau Chemin | Status |
+| Old Path | New Path | Status |
 |---------------|----------------|--------|
-| `agents/specialists/*.md` | `agents/*.md` | ✅ Déplacé |
-| `agents/compliance/*.md` | `agents/*.md` | ✅ Déplacé |
-| `agents/specialists/sub-agents/*.md` | `specialties/ai/knowledge/*-patterns.md` | ✅ Déplacé |
+| `agents/specialists/*.md` | `agents/*.md` | ✅ Moved |
+| `agents/compliance/*.md` | `agents/*.md` | ✅ Moved |
+| `agents/specialists/sub-agents/*.md` | `specialties/ai/knowledge/*-patterns.md` | ✅ Moved |
 
-### AI Knowledge (pas des agents)
+### AI Knowledge (not agents)
 
-Les sous-agents AI ont été renommés en **knowledge files** dans `specialties/ai/knowledge/`:
+The AI sub-agents have been renamed to **knowledge files** in `specialties/ai/knowledge/`:
 
-| Ancien | Nouveau | Commande |
+| Old | New | Command |
 |--------|---------|----------|
 | `rag-architect.md` | `rag-patterns.md` | `/ai:riley` |
 | `memory-architect.md` | `memory-patterns.md` | `/ai:milo` |
@@ -992,7 +994,7 @@ Les sous-agents AI ont été renommés en **knowledge files** dans `specialties/
 | `graphrag-architect.md` | `graphrag-patterns.md` | `/ai:grace` |
 | `safety-architect.md` | `safety-patterns.md` | `/ai:sage` |
 
-### Règle pour le futur
+### Rule for the future
 
 ```
 AVANT de créer un nouvel agent:
@@ -1005,14 +1007,14 @@ AVANT de créer un nouvel agent:
 
 ---
 
-## Annexe: Fichiers Clés
+## Appendix: Key Files
 
-| Fichier | Description |
+| File | Description |
 |---------|-------------|
-| `framework/docs/ARCHITECTURE-REFERENCE.md` | Ce document |
-| `patterns/P-012-framework-guardian.md` | Pattern protection framework |
-| `patterns/P-013-test-environment.md` | Pattern isolation tests |
+| `framework/docs/ARCHITECTURE-REFERENCE.md` | This document |
+| `patterns/P-012-framework-guardian.md` | Framework protection pattern |
+| `patterns/P-013-test-environment.md` | Test isolation pattern |
 
 ---
 
-*Document v2.0 - Schémas visuels ajoutés. Dernière mise à jour: 2026-01-06*
+*Document v2.0 - Visual diagrams added. Last update: 2026-01-06*

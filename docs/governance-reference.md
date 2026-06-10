@@ -1,13 +1,15 @@
 # Governance Modules Reference
 
-> 15 concepts de gouvernance avancée pour agents IA enterprise-grade.
+> **🌐 Language:** English · [Français](fr/governance-reference.md)
+
+> 15 advanced governance concepts for enterprise-grade AI agents.
 > Version 1.1.0 | Harmony Framework
 
 ---
 
-## Vue d'Ensemble
+## Overview
 
-L'architecture de gouvernance est organisée en 4 couches:
+The governance architecture is organized into 4 layers:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -43,18 +45,18 @@ L'architecture de gouvernance est organisée en 4 couches:
 
 ### Audit Trail (`lib/audit-trail.sh`)
 
-Piste d'audit complète avec support rollback.
+Complete audit trail with rollback support.
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `audit_start_session` | Démarre une session d'audit |
-| `audit_record_decision` | Enregistre une décision avec métadonnées |
-| `audit_record_file_change` | Capture les changements de fichiers |
-| `audit_create_checkpoint` | Crée un point de sauvegarde |
-| `audit_rollback_to` | Restaure à un checkpoint |
-| `audit_export` | Exporte l'historique (JSON/CSV) |
+| `audit_start_session` | Starts an audit session |
+| `audit_record_decision` | Records a decision with metadata |
+| `audit_record_file_change` | Captures file changes |
+| `audit_create_checkpoint` | Creates a checkpoint |
+| `audit_rollback_to` | Restores to a checkpoint |
+| `audit_export` | Exports the history (JSON/CSV) |
 
 **Usage:**
 
@@ -80,22 +82,22 @@ audit_rollback_to "$checkpoint" --force
 
 ### Compliance Reporter (`lib/compliance-reporter.sh`)
 
-Génération de preuves de conformité pour audits.
+Generation of compliance evidence for audits.
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `compliance_add_check` | Ajoute un résultat de vérification |
-| `compliance_generate_report` | Génère un rapport complet |
-| `compliance_get_status` | Obtient le score de conformité |
-| `compliance_export_markdown` | Exporte en Markdown |
-| `compliance_run_standard_checks` | Exécute les vérifications standard |
+| `compliance_add_check` | Adds a check result |
+| `compliance_generate_report` | Generates a complete report |
+| `compliance_get_status` | Gets the compliance score |
+| `compliance_export_markdown` | Exports to Markdown |
+| `compliance_run_standard_checks` | Runs the standard checks |
 
-**Standards supportés:**
+**Supported standards:**
 
 - OWASP Top 10
-- Code Coverage (seuils configurables)
+- Code Coverage (configurable thresholds)
 - Security Gates
 - Documentation
 
@@ -116,26 +118,26 @@ compliance_generate_report "release-1.0"
 
 ### Confidence Scorer (`lib/confidence-scorer.sh`)
 
-Quantification de l'incertitude avec escalation automatique.
+Uncertainty quantification with automatic escalation.
 
-**Niveaux de confiance:**
+**Confidence levels:**
 
-| Score | Niveau | Action |
+| Score | Level | Action |
 |-------|--------|--------|
-| 85-100 | CONFIDENT | Exécution autonome |
-| 60-84 | UNCERTAIN | Demande de validation optionnelle |
-| 40-59 | LOW | Escalation recommandée |
-| 0-39 | VERY_LOW | Human-in-the-loop requis |
+| 85-100 | CONFIDENT | Autonomous execution |
+| 60-84 | UNCERTAIN | Optional validation request |
+| 40-59 | LOW | Escalation recommended |
+| 0-39 | VERY_LOW | Human-in-the-loop required |
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `confidence_calculate` | Calcule le score (0-100) |
-| `confidence_get_level` | Retourne le niveau textuel |
-| `confidence_needs_review` | Détermine si review nécessaire |
-| `confidence_escalate` | Escalade à un humain |
-| `confidence_calibrate` | Calibre sur feedback |
+| `confidence_calculate` | Calculates the score (0-100) |
+| `confidence_get_level` | Returns the textual level |
+| `confidence_needs_review` | Determines whether review is needed |
+| `confidence_escalate` | Escalates to a human |
+| `confidence_calibrate` | Calibrates on feedback |
 
 **Usage:**
 
@@ -156,26 +158,26 @@ fi
 
 ### Agent Maturity (`lib/agent-maturity.sh`)
 
-Modèle de maturité à 4 niveaux pour les agents.
+A 4-level maturity model for agents.
 
-**Niveaux:**
+**Levels:**
 
-| Niveau | Nom | Capacités |
+| Level | Name | Capabilities |
 |--------|-----|-----------|
-| L1 | BASIC | Exécution de tâches, instructions |
-| L2 | COORDINATED | Collaboration multi-agent, handoff |
-| L3 | AUTONOMOUS | Auto-correction, récupération d'erreurs |
-| L4 | SELF_OPTIMIZING | Meta-learning, amélioration continue |
+| L1 | BASIC | Task execution, instructions |
+| L2 | COORDINATED | Multi-agent collaboration, handoff |
+| L3 | AUTONOMOUS | Self-correction, error recovery |
+| L4 | SELF_OPTIMIZING | Meta-learning, continuous improvement |
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `maturity_get_level` | Obtient le niveau actuel |
-| `maturity_record_capability` | Enregistre une capacité démontrée |
-| `maturity_can_perform` | Vérifie si l'agent peut faire X |
-| `maturity_assess` | Évalue le niveau global |
-| `maturity_promote` | Promeut au niveau supérieur |
+| `maturity_get_level` | Gets the current level |
+| `maturity_record_capability` | Records a demonstrated capability |
+| `maturity_can_perform` | Checks whether the agent can do X |
+| `maturity_assess` | Assesses the overall level |
+| `maturity_promote` | Promotes to the next level |
 
 **Usage:**
 
@@ -194,17 +196,17 @@ maturity_assess "developer"
 
 ### A/B Testing (`lib/ab-testing.sh`)
 
-Expérimentation structurée pour configurations d'agents.
+Structured experimentation for agent configurations.
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `ab_create_experiment` | Crée une expérience |
-| `ab_add_variant` | Ajoute une variante |
-| `ab_select_variant` | Sélectionne une variante (weighted random) |
-| `ab_record_result` | Enregistre un résultat |
-| `ab_get_winner` | Détermine le gagnant statistique |
+| `ab_create_experiment` | Creates an experiment |
+| `ab_add_variant` | Adds a variant |
+| `ab_select_variant` | Selects a variant (weighted random) |
+| `ab_record_result` | Records a result |
+| `ab_get_winner` | Determines the statistical winner |
 
 **Usage:**
 
@@ -228,23 +230,23 @@ ab_record_result "$variant" 85 "prompt-style"
 
 ### Context Filter - FILCO (`lib/context-filter.sh`)
 
-Filtrage intelligent du contexte pour réduire le bruit.
+Intelligent context filtering to reduce noise.
 
-**Algorithme:**
+**Algorithm:**
 
-1. **CHUNK**: Découpe en unités sémantiques (~500 chars)
-2. **SCORE**: Score combiné (keyword 60% + structural 40%)
-3. **RANK**: Tri par score décroissant
-4. **SELECT**: Sélection dans le budget tokens
+1. **CHUNK**: Splits into semantic units (~500 chars)
+2. **SCORE**: Combined score (keyword 60% + structural 40%)
+3. **RANK**: Sort by descending score
+4. **SELECT**: Selection within the token budget
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `filco_filter` | Filtre le contexte selon une requête |
-| `filco_score_chunk` | Score un chunk (0-100) |
-| `filco_compact` | Compacte dans un budget tokens |
-| `filco_rank_chunks` | Retourne les chunks triés |
+| `filco_filter` | Filters the context according to a query |
+| `filco_score_chunk` | Scores a chunk (0-100) |
+| `filco_compact` | Compacts within a token budget |
+| `filco_rank_chunks` | Returns the sorted chunks |
 
 **Usage:**
 
@@ -260,38 +262,38 @@ compacted=$(filco_compact "$context" 5000)  # max 5000 tokens
 
 **Impact:**
 
-| Métrique | Avant FILCO | Après FILCO |
+| Metric | Before FILCO | After FILCO |
 |----------|-------------|-------------|
-| Taille contexte | 15,000 tokens | 5,000 tokens |
-| Précision réponse | 75% | 85% |
-| Coût tokens | $0.15/req | $0.05/req |
+| Context size | 15,000 tokens | 5,000 tokens |
+| Response accuracy | 75% | 85% |
+| Token cost | $0.15/req | $0.05/req |
 
-**Pattern associé:** [P-024-context-filtering](../patterns/P-024-context-filtering.md)
+**Related pattern:** [P-024-context-filtering](../patterns/P-024-context-filtering.md)
 
 ---
 
 ### Mesh Network (`lib/mesh-network.sh`)
 
-Réseaux maillés pour collaboration peer-to-peer entre agents.
+Mesh networks for peer-to-peer collaboration between agents.
 
-**Types de mesh:**
+**Mesh types:**
 
 | Type | Coordinator | Agents | Usage |
 |------|-------------|--------|-------|
-| Feature | architect | developer, tester, reviewer | Développement feature |
-| Quality | qa-lead | tester, security, perf | Validation qualité |
-| Incident | commander | developer, devops, analyst | Résolution incident |
+| Feature | architect | developer, tester, reviewer | Feature development |
+| Quality | qa-lead | tester, security, perf | Quality validation |
+| Incident | commander | developer, devops, analyst | Incident resolution |
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `mesh_create` | Crée un réseau |
-| `mesh_join` | Rejoint un réseau |
-| `mesh_send` | Envoie un message P2P |
-| `mesh_handoff` | Transfert de responsabilité |
-| `mesh_escalate` | Escalade au coordinateur |
-| `mesh_status` | Affiche le statut |
+| `mesh_create` | Creates a network |
+| `mesh_join` | Joins a network |
+| `mesh_send` | Sends a P2P message |
+| `mesh_handoff` | Transfers responsibility |
+| `mesh_escalate` | Escalates to the coordinator |
+| `mesh_status` | Displays the status |
 
 **Usage:**
 
@@ -310,7 +312,7 @@ mesh_handoff "developer" "tester" "All unit tests pass"
 mesh_escalate "Blocked: Need architecture decision"
 ```
 
-**Pattern associé:** [P-023-mesh-networks](../patterns/P-023-mesh-networks.md)
+**Related pattern:** [P-023-mesh-networks](../patterns/P-023-mesh-networks.md)
 
 ---
 
@@ -318,27 +320,27 @@ mesh_escalate "Blocked: Need architecture decision"
 
 ### Data Sandbox (`lib/data-sandbox.sh`)
 
-Isolation des données non fiables.
+Isolation of untrusted data.
 
-**Types de menaces détectées:**
+**Detected threat types:**
 
-| Type | Patterns | Exemples |
+| Type | Patterns | Examples |
 |------|----------|----------|
-| Prompt Injection | `ignore previous`, `disregard`, `new instructions` | Attaques LLM |
+| Prompt Injection | `ignore previous`, `disregard`, `new instructions` | LLM attacks |
 | Code Injection | `$()`, backticks, `eval` | Shell injection |
-| Path Traversal | `../`, `..\\` | Accès fichiers |
+| Path Traversal | `../`, `..\\` | File access |
 | SQL Injection | `'; DROP`, `UNION SELECT` | DB attacks |
 | XSS | `<script>`, `onerror=` | Web attacks |
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `sandbox_validate` | Valide une entrée |
-| `sandbox_is_suspicious` | Détecte si suspect |
-| `sandbox_detect_injection` | Identifie le type d'injection |
-| `sandbox_quarantine` | Met en quarantaine |
-| `sandbox_sanitize` | Nettoie l'entrée |
+| `sandbox_validate` | Validates an input |
+| `sandbox_is_suspicious` | Detects whether suspicious |
+| `sandbox_detect_injection` | Identifies the injection type |
+| `sandbox_quarantine` | Quarantines |
+| `sandbox_sanitize` | Sanitizes the input |
 
 **Usage:**
 
@@ -359,30 +361,30 @@ fi
 
 ### Security Gates (`lib/security-gates.sh`)
 
-Portes de sécurité pour contrôle d'accès.
+Security gates for access control.
 
-**Niveaux de sécurité:**
+**Security levels:**
 
-| Niveau | Opérations | Autorisation |
+| Level | Operations | Authorization |
 |--------|------------|--------------|
 | 1 | file_read | Auto |
 | 2 | file_write, api_call | Review |
 | 3 | deploy, config_change | Approval |
 | 4 | production, database | Explicit |
 
-**Chemins bloqués:**
+**Blocked paths:**
 
-- `/etc/*`, `/usr/*`, `/bin/*` (système)
+- `/etc/*`, `/usr/*`, `/bin/*` (system)
 - `~/.ssh/*`, `~/.gnupg/*` (secrets)
-- `node_modules/` (dépendances)
+- `node_modules/` (dependencies)
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `security_check_gate` | Vérifie l'autorisation |
-| `security_record_event` | Enregistre un événement |
-| `security_request_approval` | Demande approbation |
+| `security_check_gate` | Checks the authorization |
+| `security_record_event` | Records an event |
+| `security_request_approval` | Requests approval |
 
 **Usage:**
 
@@ -400,23 +402,23 @@ fi
 
 ### Anomaly Detector (`lib/anomaly-detector.sh`)
 
-Détection d'anomalies comportementales.
+Behavioral anomaly detection.
 
-**Anomalies détectées:**
+**Detected anomalies:**
 
-| Type | Indicateurs | Sévérité |
+| Type | Indicators | Severity |
 |------|-------------|----------|
-| Loop | Lignes répétées (>3x) | 2-3 |
-| Hallucination | Fichiers/classes inexistants | 2-3 |
-| Performance | Temps > 2x baseline | 1-2 |
+| Loop | Repeated lines (>3x) | 2-3 |
+| Hallucination | Nonexistent files/classes | 2-3 |
+| Performance | Time > 2x baseline | 1-2 |
 | Unusual | Output > 2x normal | 1-2 |
 
-**Fonctions principales:**
+**Main functions:**
 
-| Fonction | Description |
+| Function | Description |
 |----------|-------------|
-| `anomaly_check` | Vérifie la sortie d'un agent |
-| `anomaly_record_baseline` | Établit une baseline |
+| `anomaly_check` | Checks an agent's output |
+| `anomaly_record_baseline` | Establishes a baseline |
 
 **Usage:**
 
@@ -433,29 +435,29 @@ fi
 
 ---
 
-## Patterns Cognitifs
+## Cognitive Patterns
 
 ### Emotional Prompting (`patterns/cognitive/emotional-prompting.md`)
 
-Techniques psychologiques pour améliorer l'engagement:
+Psychological techniques to improve engagement:
 
-- **Positive Framing**: "L'équipe compte sur toi"
-- **Stakes Communication**: "C'est critique pour la release"
-- **Empathy Injection**: Reconnaissance de la difficulté
+- **Positive Framing**: "The team is counting on you"
+- **Stakes Communication**: "This is critical for the release"
+- **Empathy Injection**: Acknowledging the difficulty
 
 ### Meta-Prompting (`patterns/cognitive/meta-prompting.md`)
 
-Génération dynamique de prompts selon le contexte:
+Dynamic prompt generation based on context:
 
-- Sélection de template adaptée
-- Injection de connaissances JIT
-- Adaptation au niveau de complexité
+- Adapted template selection
+- JIT knowledge injection
+- Adaptation to the complexity level
 
-**Pattern associé:** [P-021-meta-prompting](../patterns/P-021-meta-prompting.md)
+**Related pattern:** [P-021-meta-prompting](../patterns/P-021-meta-prompting.md)
 
 ### Self-Evolving (`patterns/cognitive/self-evolving.md`)
 
-Boucle d'amélioration continue:
+Continuous improvement loop:
 
 ```
 Execute → Evaluate → LLM-as-Judge → Feedback → Meta-prompt → Execute
@@ -465,41 +467,41 @@ Execute → Evaluate → LLM-as-Judge → Feedback → Meta-prompt → Execute
 
 ## Configuration
 
-### Fichiers de configuration
+### Configuration files
 
-| Fichier | Description |
+| File | Description |
 |---------|-------------|
-| `.harmony/local/audit-config.json` | Rétention, champs sensibles |
-| `.harmony/local/confidence-config.json` | Seuils, poids scoring |
-| `.harmony/local/sandbox-config.json` | Patterns bloqués, schémas |
+| `.harmony/local/audit-config.json` | Retention, sensitive fields |
+| `.harmony/local/confidence-config.json` | Thresholds, scoring weights |
+| `.harmony/local/sandbox-config.json` | Blocked patterns, schemas |
 
-### Variables d'environnement
+### Environment variables
 
-| Variable | Défaut | Description |
+| Variable | Default | Description |
 |----------|--------|-------------|
-| `HARMONY_DIR` | `.harmony` | Répertoire framework |
-| `FILCO_CHUNK_SIZE` | 500 | Taille des chunks |
-| `PRELOADER_MAX_TOKENS` | 15000 | Budget tokens max |
+| `HARMONY_DIR` | `.harmony` | Framework directory |
+| `FILCO_CHUNK_SIZE` | 500 | Chunk size |
+| `PRELOADER_MAX_TOKENS` | 15000 | Max token budget |
 
 ---
 
 ## Tests
 
-### Validation rapide
+### Quick validation
 
 ```bash
 ./tests/e2e/scripts/test.sh /path/to/project governance
 ```
 
-### Scénario complet
+### Full scenario
 
 ```bash
 ./tests/e2e/scripts/test.sh /path/to/project scenario governance
 ```
 
-### Self-tests des modules
+### Module self-tests
 
-Chaque module inclut une fonction `_self_test()`:
+Each module includes a `_self_test()` function:
 
 ```bash
 source .harmony/lib/audit-trail.sh
@@ -508,21 +510,21 @@ audit_trail_self_test  # ou appel direct avec --test
 
 ---
 
-## Références
+## References
 
 | Pattern | Description |
 |---------|-------------|
-| [P-021-meta-prompting](../patterns/P-021-meta-prompting.md) | Génération dynamique prompts |
-| [P-022-agent-maturity](../patterns/P-022-agent-maturity.md) | Modèle maturité L1-L4 |
-| [P-023-mesh-networks](../patterns/P-023-mesh-networks.md) | Collaboration P2P |
-| [P-024-context-filtering](../patterns/P-024-context-filtering.md) | Algorithme FILCO |
+| [P-021-meta-prompting](../patterns/P-021-meta-prompting.md) | Dynamic prompt generation |
+| [P-022-agent-maturity](../patterns/P-022-agent-maturity.md) | Maturity model L1-L4 |
+| [P-023-mesh-networks](../patterns/P-023-mesh-networks.md) | P2P collaboration |
+| [P-024-context-filtering](../patterns/P-024-context-filtering.md) | FILCO algorithm |
 
 ---
 
 ## Changelog
 
-- **v1.1.0**: Implémentation initiale des 15 concepts
-  - 10 modules bash (lib/)
-  - 3 patterns cognitifs
-  - 4 patterns système (P-021 à P-024)
-  - Tests E2E complets
+- **v1.1.0**: Initial implementation of the 15 concepts
+  - 10 bash modules (lib/)
+  - 3 cognitive patterns
+  - 4 system patterns (P-021 to P-024)
+  - Complete E2E tests

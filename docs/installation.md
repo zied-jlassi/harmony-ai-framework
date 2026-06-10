@@ -1,5 +1,7 @@
 # Installation Guide
 
+> **🌐 Language:** English · [Français](fr/installation.md)
+
 Complete guide for installing Harmony Framework in your project.
 
 ## Prerequisites (Mandatory)
@@ -61,43 +63,59 @@ yq --version     # any version works
 
 ## Installation Methods
 
-### Method 1: NPM (Recommended)
+Harmony installs itself **into your project** with a single `npx` command — there is no
+global install and no separate `init` step. Run it from your project root.
+
+### Method 1: npx (Recommended)
 
 ```bash
-# Install globally
-npm install -g harmony-ai
-
-# Or install locally in your project
-npm install harmony-ai
-
-# Initialize
-npx harmony init
+# Full installation WITH hooks (recommended)
+npx harmony-ai --full
 ```
 
-### Method 2: Yarn
+That's it. The installer creates `.harmony/` in your project, configures Claude Code
+hooks automatically (into `.claude/settings.json`), and prints a summary.
+
+#### Options
+
+| Flag | Effect |
+|------|--------|
+| `--full` | Full framework **with** hooks (recommended) |
+| `--minimal` | Core files only, **no** hooks |
+| `--hooks` | Enable hooks (already included in `--full`) |
+| `--no-hooks` | Use with `--full` to install everything except hooks |
+| `--ide TYPE` | Target IDE: `auto` (default), `claude-code`, `cursor`, `windsurf`, `continue`, `cody` |
+| `--project-dir PATH` | Target project directory (must already exist; default: current directory) |
+| `--force` | Overwrite an existing installation |
+| `--help` | Show all options |
 
 ```bash
-yarn add harmony-ai
-npx harmony init
+# Full installation for Cursor
+npx harmony-ai --full --ide cursor
+
+# Full installation without hooks
+npx harmony-ai --full --no-hooks
+
+# Minimal installation (no hooks)
+npx harmony-ai --minimal
+
+# Force reinstall / restore
+npx harmony-ai --full --force
 ```
 
-### Method 3: PNPM
-
-```bash
-pnpm add harmony-ai
-npx harmony init
-```
-
-### Method 4: Manual Installation
+### Method 2: Manual Installation (from a clone)
 
 ```bash
 # Clone the repository
 git clone https://github.com/zied-jlassi/harmony-ai-framework.git
 
-# Run the installer
-cd harmony-framework
-./bin/install.sh /path/to/your/project
+# Run the installer against your project (the target dir must already exist)
+./harmony-ai-framework/bin/install.sh --full --project-dir /path/to/your/project
 ```
+
+> **Note**: The published npm package is **`harmony-ai`**. There is no `harmony init`,
+> `harmony doctor`, or other `harmony <subcommand>` CLI — once installed, you drive
+> Harmony through slash commands (`/go`, `/harmony`) inside your AI assistant.
 
 ---
 
@@ -107,47 +125,61 @@ cd harmony-framework
 
 #### For Claude Code
 
-Add the hooks to your `.claude/settings.local.json`:
+**Hooks are configured automatically** when you install with `--full`. The installer
+writes them to `.claude/settings.json` (backing up any existing file). You normally
+don't need to touch anything.
+
+The installation wires seven hooks:
+
+| Phase | Matcher | Hook | Role |
+|-------|---------|------|------|
+| `PreToolUse` | `Edit\|Write` | `aria-detect.sh` | Accessibility detection on edits |
+| `PreToolUse` | `Edit\|Write\|Bash` | `rules-enforcer.sh` | **Block destructive commands** (`rm -rf /`, fork bombs, `curl\|bash`, secrets…) — runs first |
+| `PreToolUse` | `Edit\|Write\|Bash` | `guardian-checkpoint.sh` | Story-context guard |
+| `PreToolUse` | `Edit\|Write\|Bash` | `sentinel-pre.sh` | Check error history |
+| `PreToolUse` | `Bash` | `supply-chain-guard.sh` | Screen package installs |
+| `PostToolUse` | `Edit\|Write\|Bash` | `sentinel-post.sh` | Record result / learn patterns |
+| `PostToolUse` | `Bash\|WebFetch\|WebSearch` | `llm-output-sanitizer.sh` | Sanitize external output |
+
+If you installed with `--no-hooks` and want to enable them later, re-run
+`npx harmony-ai --full --force`, or add the block manually to `.claude/settings.json`:
 
 ```json
 {
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Edit|Write",
         "hooks": [
-          {
-            "type": "command",
-            "command": ".harmony/hooks/rules-enforcer.sh \"$TOOL_NAME\" \"$TOOL_INPUT\"",
-            "statusMessage": "🛡️ Rules: Checking interdictions..."
-          },
-          {
-            "type": "command",
-            "command": ".harmony/hooks/sentinel-pre.sh \"$TOOL_NAME\" \"$TOOL_INPUT\"",
-            "statusMessage": "🛡️ Sentinel: Checking error history..."
-          }
+          { "type": "command", "command": "bash .harmony/hooks/aria-detect.sh" }
         ]
       },
       {
-        "matcher": "Write|Edit",
+        "matcher": "Edit|Write|Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": ".harmony/hooks/guardian-checkpoint.sh \"$TOOL_NAME\" \"$TOOL_INPUT\"",
-            "statusMessage": "🛡️ Guardian: Checking story context..."
-          }
+          { "type": "command", "command": "bash .harmony/hooks/rules-enforcer.sh" },
+          { "type": "command", "command": "bash .harmony/hooks/guardian-checkpoint.sh" },
+          { "type": "command", "command": "bash .harmony/hooks/sentinel-pre.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "bash .harmony/hooks/supply-chain-guard.sh" }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Edit|Write|Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": ".harmony/hooks/sentinel-post.sh \"$TOOL_NAME\" \"$TOOL_INPUT\" \"$TOOL_OUTPUT\" \"$EXIT_CODE\"",
-            "statusMessage": "🛡️ Sentinel: Recording result..."
-          }
+          { "type": "command", "command": "bash .harmony/hooks/sentinel-post.sh" }
+        ]
+      },
+      {
+        "matcher": "Bash|WebFetch|WebSearch",
+        "hooks": [
+          { "type": "command", "command": "bash .harmony/hooks/llm-output-sanitizer.sh" }
         ]
       }
     ]
@@ -273,13 +305,16 @@ your-project/
 │   └── workflows/
 │       └── ...
 │
-├── .claude/                     # PROJECT DATA (Claude Code)
-│   └── memory/                  # IDE-specific memory location
-│       ├── error-journal.json
-│       ├── circuit-breaker.json
-│       ├── workflow-state.json
-│       ├── working.json
-│       └── learned-patterns.json
+│   └── local/                   # PROJECT DATA (mutable, not read-only)
+│       └── memory/              # IDE-specific memory location (Claude Code)
+│           ├── error-journal.json
+│           ├── circuit-breaker.json
+│           ├── workflow-state.json
+│           ├── working.json
+│           └── learned-patterns.json
+│
+├── .claude/                     # IDE config (Claude Code)
+│   └── settings.json            # Hooks configuration (written by --full)
 │
 ├── docs/
 │   └── backlog/
@@ -368,104 +403,90 @@ module.exports = {
 
 ## Verification
 
-### Check Installation
+The installer prints a system check and a success summary at the end of the run. To
+verify after the fact, confirm the framework tree and hooks exist:
 
 ```bash
-npx harmony doctor
+# Core framework installed (read-only)
+ls .harmony/agents .harmony/hooks .harmony/local/memory
+
+# Hooks wired into Claude Code (only with --full)
+cat .claude/settings.json
 ```
 
-Expected output:
-
-```
-🏥 Harmony Health Check
-━━━━━━━━━━━━━━━━━━━━━━━
-
-✅ Harmony Framework v1.0.0
-✅ Node.js v20.10.0 (>=18.0.0 required)
-✅ Configuration: .harmony/config/harmony.config.js
-✅ Memory directory: .harmony/local/memory/  (IDE-specific)
-✅ Hooks installed: 3/3
-✅ Agents available: 10 core, 4 specialists, 4 compliance
-✅ Patterns loaded: 8
-✅ Rules loaded: 7
-
-📊 Current State:
-   Phase: 1 (Discovery)
-   Circuit Breaker: CLOSED
-   Error Count: 0
-   Patterns Learned: 0
-
-🎉 Harmony is ready!
-```
-
-### Test Guardian Protocol
+Then, inside your AI assistant, run the live health checks:
 
 ```bash
-npx harmony test guardian
+/go                 # Session kickoff — loads context and reports state
+/harmony            # Interactive menu (30 commands)
+/harmony quick      # Fast validation (~30s)
 ```
 
-### Test Sentinel System
-
-```bash
-npx harmony test sentinel
-```
+> There is no `npx harmony doctor` / `npx harmony test` CLI. Verification and day-to-day
+> operation happen through slash commands inside the assistant.
 
 ---
 
 ## Uninstallation
 
 ```bash
-# Remove Harmony from project
-npx harmony uninstall
-
-# Or manually
+# Remove the framework and its project data
 rm -rf .harmony
-npm uninstall harmony-ai
+
+# Remove the hooks Harmony added to Claude Code
+#   (restore a backup if the installer made one, otherwise delete the file)
+rm -f .claude/settings.json
+mv .claude/settings.json.backup .claude/settings.json 2>/dev/null || true
 ```
+
+> Harmony is installed *into* the project by `npx`; nothing is added to your
+> `package.json` dependencies, so there is no `npm uninstall` step.
 
 ---
 
 ## Upgrading
 
 ```bash
-# Upgrade to latest version
-npm update harmony-ai
-
-# Run migrations
-npx harmony migrate
+# Reinstall the latest version over the existing one
+npx harmony-ai@latest --full --force
 ```
+
+`--force` overwrites the read-only framework files while preserving your project data
+in `.harmony/local/memory/` (existing JSON memory is detected and kept).
 
 ---
 
 ## Troubleshooting
 
-### Installation fails with permission error
+### `jq`/`yq` not found — installation aborts
+
+Install the prerequisites (see top of this guide) and confirm they are on your PATH:
 
 ```bash
-# Try with sudo (not recommended)
-sudo npm install -g harmony-ai
-
-# Better: Fix npm permissions
-mkdir ~/.npm-global
-npm config set prefix '~/.npm-global'
-export PATH=~/.npm-global/bin:$PATH
+jq --version && yq --version
 ```
+
+### Checksum verification failed
+
+The framework verifies file integrity at install time. If it reports a checksum
+mismatch, the download/clone is incomplete or corrupted — re-run the install, or for a
+clone do `git pull` to refresh, then retry with `--force`.
 
 ### Hooks not triggering
 
-1. Verify hooks are executable:
-```bash
-chmod +x .harmony/hooks/*.sh
-```
-
-2. Check settings.local.json syntax
-3. Restart your AI assistant
+1. Make sure you installed with `--full` (not `--minimal` / `--no-hooks`).
+2. Verify hooks are executable:
+   ```bash
+   chmod +x .harmony/hooks/*.sh
+   ```
+3. Check that `.claude/settings.json` is valid JSON and contains the hook entries.
+4. Restart your AI assistant so it reloads settings.
 
 ### Memory files corrupted
 
 ```bash
-# Reset memory to clean state
-npx harmony memory reset
+# Remove the runtime memory; it is re-initialized from templates on next /go
+rm -rf .harmony/local/memory
 ```
 
 ---

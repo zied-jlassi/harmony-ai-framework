@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-06-15
+
 ### Added
 - **Visible hook status (`lib/hook-ui.sh`)**: every guard now proves it fired via a
   `systemMessage` (the only channel shown for non-blocking hooks) plus per-hook

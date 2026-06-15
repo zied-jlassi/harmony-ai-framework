@@ -197,7 +197,7 @@ ef1bb8c39974b40bc05ee41b2e7824f3486a65fd728a29b070cc9394eda2dcbf  ./error-librar
 8e80c5bde4fd557281117337e681cc10626c9b7bd827bf5a7841db9fea246651  ./error-library/schema/error.schema.json
 11a5b1cdd16468edf2543140c79b38962e84aeec8186dc0849748fd835bd63fe  ./error-library/SYNC-PROCEDURE.md
 fd34f9a5c0250df963baf4af26f6f578fb5a28ad80130c3e9b6bafbe9ff83851  ./error-library/tools/sync-mcp.sh
-f694a7af8867199775cbeb83f5a803008ec7bb9a8be3e7aa7a1b4550e5d395cf  ./harmony.manifest.json
+e1e9ac7af86f2dc374abaee6a40b8882f1883e011a21b70c5f1edb4740ea7956  ./harmony.manifest.json
 b0fb413d097d9faba948f115dd2ad4c1e3d6086537ffd4dc9584bcf15162f294  ./hooks/aria-detect.sh
 3a3a22d8250737de56ff3f509ba4d4059ded69f422a5f37d72e78857a3a0e687  ./hooks/compacting-warning.sh
 fda912542decfdeab4f022f297e3a181323a2c32b63428a4e211c2138d13276b  ./hooks/guardian-checkpoint.sh

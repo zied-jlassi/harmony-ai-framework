@@ -1,5 +1,7 @@
 # TODO: Context Loading System Implementation
 
+> **🌐 Language:** English · [Français](../fr/architecture/TODO-context-loading.md)
+
 ## Status Overview
 
 | Component | Status | File | Priority |

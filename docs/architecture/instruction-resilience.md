@@ -1,5 +1,7 @@
 # Instruction Resilience Architecture
 
+> **🌐 Language:** English · [Français](../fr/architecture/instruction-resilience.md)
+
 Harmony separates its critical instructions from the user-owned `CLAUDE.md` so that
 framework protocols keep working even if `CLAUDE.md` is edited, truncated, or hit by a
 merge conflict. This document explains the architecture and why it is designed this way.

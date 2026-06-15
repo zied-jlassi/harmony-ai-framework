@@ -1,10 +1,12 @@
-# Flow Complet: "Intégrer un module d'authentification"
+# Complete Flow: "Integrate an authentication module"
 
-> Exemple de déroulement avec le modèle knowledge centralisé.
+> **🌐 Language:** English · [Français](../fr/examples/FLOW-AUTHENTICATION-MODULE.md)
+
+> Example walkthrough with the centralized knowledge model.
 
 ---
 
-## Requête Utilisateur
+## User Request
 
 ```
 USER: "j'ai besoin d'intégrer un module d'authentification"
@@ -12,7 +14,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 1: Guardian - Détection Intent
+## Step 1: Guardian - Intent Detection
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -25,7 +27,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 2: Profile Loader - Chargement Knowledge Centralisé
+## Step 2: Profile Loader - Loading Centralized Knowledge
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -46,7 +48,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 3: Sentinel - Vérification Mémoire
+## Step 3: Sentinel - Memory Check
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -64,7 +66,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 4: Context7 - Fetch Docs Officielles (On-Demand)
+## Step 4: Context7 - Fetch Official Docs (On-Demand)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -82,7 +84,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 5: Contexte Fusionné
+## Step 5: Merged Context
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -103,7 +105,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Étape 6: Développement Guidé
+## Step 6: Guided Development
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -120,7 +122,7 @@ USER: "j'ai besoin d'intégrer un module d'authentification"
 
 ---
 
-## Code Généré
+## Generated Code
 
 ```typescript
 // auth.module.ts
@@ -166,26 +168,26 @@ export class AuthController {
 
 ---
 
-## Résumé
+## Summary
 
-| Étape | Source | Apport |
+| Step | Source | Contribution |
 |-------|--------|--------|
-| 1. Détection | Guardian | Intent SECURITY détecté |
-| 2. Conventions | Profile (Niveau 1+2) | Standards + spécificités projet |
-| 3. Erreurs | Sentinel (Niveau 3) | "Ne pas hardcoder JWT_SECRET" |
-| 4. Docs | Context7 | Pattern officiel NestJS frais |
-| 5. Code | Claude | Fusion intelligente des 3 sources |
+| 1. Detection | Guardian | SECURITY intent detected |
+| 2. Conventions | Profile (Level 1+2) | Standards + project specifics |
+| 3. Errors | Sentinel (Level 3) | "Do not hardcode JWT_SECRET" |
+| 4. Docs | Context7 | Fresh official NestJS pattern |
+| 5. Code | Claude | Intelligent fusion of the 3 sources |
 
 ---
 
-## Bénéfices
+## Benefits
 
-- **Code correct dès le premier essai**
-- **Conforme aux standards industrie**
-- **Respecte les conventions projet**
-- **Évite les erreurs passées**
-- **Docs toujours à jour (Context7)**
+- **Correct code on the first try**
+- **Compliant with industry standards**
+- **Respects project conventions**
+- **Avoids past mistakes**
+- **Always up-to-date docs (Context7)**
 
 ---
 
-*Exemple documenté pour Harmony Framework - Modèle Knowledge Centralisé*
+*Example documented for the Harmony Framework - Centralized Knowledge Model*

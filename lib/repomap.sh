@@ -2,7 +2,7 @@
 # ============================================================================
 # repomap.sh - Repository Map Generator for Harmony Framework
 # ============================================================================
-# Inspired by Aider's repomap feature for codebase context
+# Builds a structured map of the repository to give agents codebase context.
 # Generates structured maps of repository for AI context
 #
 # Usage: source repomap.sh

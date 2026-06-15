@@ -41,7 +41,7 @@ Phase 4: IMPLEMENTATION
 └── retrospective/          → Sprint Retrospective
 
 Phase 5: VALIDATION (UCV-Driven)
-├── testarch/               → Test Architecture
+├── test-architect/               → Test Architecture
 │   └── ⭐ TEA TESTS UCVs   → Tester writes tests per UCV
 └── ucv-lifecycle.md        → UCV Validation
     └── ⭐ UCV VALIDATOR    → UCV Validator validates 100% coverage
@@ -124,7 +124,7 @@ workflows/
 │   └── retrospective/
 │
 ├── # Test Workflows (UCV-Driven)
-├── testarch/
+├── test-architect/
 │   ├── atdd/                    # ← TEST marks UCVs
 │   ├── test-design/
 │   └── ...
@@ -151,7 +151,7 @@ workflows/
 | `ucv-lifecycle.md` | UCV creation to validation | UCV Writer, UCV Validator |
 | `story-lifecycle.md` | Story creation to completion | SM, DEV, TEA |
 | `dev-story/` | Story development with UCV marking | Developer |
-| `testarch/atdd/` | Test per UCV | Tester |
+| `test-architect/atdd/` | Test per UCV | Tester |
 
 ---
 
@@ -163,7 +163,7 @@ workflows/
 | 3 | readiness | Check UCVs approved |
 | 4 | create-story | Verify UCV exists |
 | 4 | dev-story | DEV marks UCVs |
-| 4 | testarch/atdd | TEST writes tests per UCV |
+| 4 | test-architect/atdd | TEST writes tests per UCV |
 | 4 | (Exploratory QA QA) | QA marks UCVs |
 | 4 | (validation) | UCV Validator validates 100% |
 

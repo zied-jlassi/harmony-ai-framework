@@ -1,5 +1,7 @@
 # Assistant Toolkit
 
+> **🌐 Language:** English · [Français](fr/assistant-toolkit.md)
+
 The Assistant Toolkit provides a collection of modules for enhanced AI-assisted development. These modules enhance Harmony Framework with model management, automatic linting, repository mapping, file watching, and session history management.
 
 ## Overview

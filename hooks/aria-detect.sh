@@ -8,7 +8,7 @@
 #   - Before start_story
 #   - On /harmony context command
 #
-# Usage: bash aria-detect.sh "$TOOL_INPUT"
+# Input: Claude Code hook JSON on stdin (.tool_input)
 #   or: bash aria-detect.sh --detect "user request text"
 #
 
@@ -20,7 +20,10 @@ if [[ -z "${HARMONY_DIR:-}" ]]; then
 fi
 FRAMEWORK_LIB="${HARMONY_DIR}/lib"
 WORKFLOW_STATE="${HARMONY_DIR}/local/memory/workflow-state.json"
-TOOL_INPUT="${1:-{}}"
+
+# Claude Code hook contract: event data arrives as JSON on stdin (.tool_input).
+INPUT=$(cat 2>/dev/null || true)
+TOOL_INPUT=$(echo "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null || echo '{}')
 
 # Colors
 RED='\033[0;31m'

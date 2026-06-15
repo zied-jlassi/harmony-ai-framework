@@ -1,13 +1,15 @@
 # Model Tiers System
 
+> **🌐 Language:** English · [Français](../fr/design/MODEL-TIERS-SYSTEM.md)
+
 > **Version**: 2.0
 > **Status**: Production
 > **Config**: `config/model-tiers.yaml`
 > **Related**: `docs/design/CONTEXT-DETECTION-SYSTEM.md`
 
-## Vue d'Ensemble
+## Overview
 
-Le Model Tiers System est le systeme d'abstraction LLM de Harmony Framework. Il permet d'utiliser n'importe quel provider LLM (Claude, OpenAI, Mistral, etc.) sans modification du code.
+The Model Tiers System is the LLM abstraction layer of the Harmony Framework. It lets you use any LLM provider (Claude, OpenAI, Mistral, etc.) without changing the code.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -48,13 +50,13 @@ Le Model Tiers System est le systeme d'abstraction LLM de Harmony Framework. Il 
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Concepts Cles
+## Key Concepts
 
 ### 1. Provider Detection
 
-Harmony detecte automatiquement le provider LLM:
+Harmony automatically detects the LLM provider:
 
-| Ordre | Check | Provider |
+| Order | Check | Provider |
 |-------|-------|----------|
 | 1 | `ANTHROPIC_API_KEY` | claude |
 | 2 | `OPENAI_API_KEY` | openai |
@@ -68,43 +70,43 @@ Harmony detecte automatiquement le provider LLM:
 
 ### 2. Model Tiers
 
-Trois niveaux de modeles pour differentes complexites:
+Three model levels for different complexities:
 
 | Tier | Usage | Claude | OpenAI | Groq |
 |------|-------|--------|--------|------|
 | **T1** | Architecture, Audit | opus | gpt-4o | llama70b |
-| **T2** | Dev quotidien | sonnet | gpt-4o-mini | llama8b |
-| **T3** | Taches rapides | haiku | gpt-4o-mini | llama8b |
+| **T2** | Daily dev | sonnet | gpt-4o-mini | llama8b |
+| **T3** | Quick tasks | haiku | gpt-4o-mini | llama8b |
 | **Router** | Classification | haiku | gpt-4o-mini | llama8b |
 
 ### 3. Router Model (RouteLLM)
 
-Le router est un modele leger qui classifie les intentions quand les mots-cles ne matchent pas.
+The router is a lightweight model that classifies intents when keywords do not match.
 
-**Pourquoi un modele dedie?**
+**Why a dedicated model?**
 
-- Specialise pour classification
-- Ultra-rapide (< 500ms)
-- Cout minimal
-- Ne mobilise pas les gros modeles pour une simple question
+- Specialized for classification
+- Ultra-fast (< 500ms)
+- Minimal cost
+- Does not engage the large models for a simple question
 
-**Choix par provider:**
+**Choice per provider:**
 
-| Provider | Router Model | Latence | Cout/1M tokens |
+| Provider | Router Model | Latency | Cost/1M tokens |
 |----------|--------------|---------|----------------|
 | Claude | haiku | ~400ms | $0.25 |
 | OpenAI | gpt-4o-mini | ~300ms | $0.15 |
-| Groq | llama-3.1-8b | ~100ms | Gratuit* |
+| Groq | llama-3.1-8b | ~100ms | Free* |
 | Mistral | mistral-small | ~350ms | ~$0.20 |
 | Ollama | codellama:7b | Variable | $0 (local) |
 
-*Groq gratuit jusqu'a 6000 req/min
+*Groq free up to 6000 req/min
 
 ## Configuration
 
-### Configuration de Base
+### Base Configuration
 
-Fichier: `config/model-tiers.yaml`
+File: `config/model-tiers.yaml`
 
 ```yaml
 # Detection automatique
@@ -125,9 +127,9 @@ providers:
       router: { id: "claude-3-5-haiku-20241022" }
 ```
 
-### Override par Projet
+### Per-Project Override
 
-Fichier: `.harmony/config.yaml`
+File: `.harmony/config.yaml`
 
 ```yaml
 llm:
@@ -146,26 +148,26 @@ llm:
   disable_router: false
 ```
 
-### Exemples de Configuration
+### Configuration Examples
 
-#### 1. Utiliser Claude (defaut)
+#### 1. Use Claude (default)
 
-Aucune config necessaire si `ANTHROPIC_API_KEY` est defini.
+No config needed if `ANTHROPIC_API_KEY` is set.
 
-#### 2. Utiliser OpenAI
+#### 2. Use OpenAI
 
 ```bash
 export OPENAI_API_KEY="sk-..."
 ```
 
-Harmony detectera automatiquement et utilisera:
+Harmony will automatically detect it and use:
 - Router: gpt-4o-mini
 - T1: gpt-4o
 - T2/T3: gpt-4o-mini
 
-#### 3. Router Groq + Dev Claude
+#### 3. Groq Router + Claude Dev
 
-Pour un router ultra-rapide avec dev sur Claude:
+For an ultra-fast router with dev on Claude:
 
 ```yaml
 # .harmony/config.yaml
@@ -176,7 +178,7 @@ llm:
     model: "llama-3.1-8b-instant"
 ```
 
-#### 4. 100% Local (RGPD)
+#### 4. 100% Local (GDPR)
 
 ```bash
 export OLLAMA_HOST="http://localhost:11434"
@@ -191,9 +193,9 @@ llm:
     model: "codellama:7b"
 ```
 
-#### 5. Desactiver RouteLLM
+#### 5. Disable RouteLLM
 
-Pour n'utiliser que les mots-cles:
+To use only keywords:
 
 ```yaml
 # .harmony/config.yaml
@@ -201,46 +203,46 @@ llm:
   disable_router: true
 ```
 
-## Routing des Taches
+## Task Routing
 
-### Par Complexite
+### By Complexity
 
-| Tier | Types de Taches |
+| Tier | Task Types |
 |------|-----------------|
 | T1 | architecture_design, security_audit, complex_refactoring, adr_creation |
 | T2 | feature_implementation, code_review, test_writing, bug_fixing |
 | T3 | simple_fixes, formatting, quick_lookups, status_checks |
 
-### Taches Background
+### Background Tasks
 
-Les taches en arriere-plan utilisent toujours T3:
+Background tasks always use T3:
 - exploration
 - linting
 - validation
 - health_check
 
-## Metriques
+## Metrics
 
-Le systeme track:
+The system tracks:
 
-| Metrique | Cible |
+| Metric | Target |
 |----------|-------|
 | Router accuracy | > 90% |
-| Usage T3 | > 40% |
-| Reduction cout | > 50% |
-| Latence router | < 500ms |
+| T3 usage | > 40% |
+| Cost reduction | > 50% |
+| Router latency | < 500ms |
 
 Log: `.harmony/local/memory/model-metrics.log`
 
 ## FAQ
 
-### Q: Que se passe-t-il si aucun provider n'est detecte?
+### Q: What happens if no provider is detected?
 
-RouteLLM est desactive, seul le routage par mots-cles fonctionne.
+RouteLLM is disabled; only keyword-based routing works.
 
-### Q: Puis-je utiliser un provider different pour le router?
+### Q: Can I use a different provider for the router?
 
-Oui, via `.harmony/config.yaml`:
+Yes, via `.harmony/config.yaml`:
 ```yaml
 llm:
   provider: "claude"
@@ -249,30 +251,30 @@ llm:
     model: "llama-3.1-8b-instant"
 ```
 
-### Q: Comment forcer un tier specifique?
+### Q: How do I force a specific tier?
 
-Via le commentaire dans la requete:
+Via a comment in the request:
 ```
 @tier1: Analyse cette architecture complexe
 ```
 
-### Q: Groq est-il vraiment gratuit?
+### Q: Is Groq really free?
 
-Oui, avec limites:
-- 6000 requetes/minute
-- 28,800 requetes/jour
-- Parfait pour router (< 150 tokens/req)
+Yes, with limits:
+- 6000 requests/minute
+- 28,800 requests/day
+- Perfect for the router (< 150 tokens/req)
 
-### Q: Quelle est la latence ajoutee par RouteLLM?
+### Q: How much latency does RouteLLM add?
 
 - Claude (haiku): ~400ms
 - OpenAI (4o-mini): ~300ms
 - Groq (llama8b): ~100ms
 
-A comparer avec le temps economise en evitant un mauvais routage.
+Compare this with the time saved by avoiding a bad route.
 
-## Voir Aussi
+## See Also
 
-- [Context Detection System](./CONTEXT-DETECTION-SYSTEM.md) - RouteLLM en detail
-- [Routing Rules](../../config/routing-rules.yaml) - Mots-cles et patterns
-- [Pipeline Orchestration](../../config/pipeline-orchestration.yaml) - Phases et agents
+- [Context Detection System](./CONTEXT-DETECTION-SYSTEM.md) - RouteLLM in detail
+- [Routing Rules](../../config/routing-rules.yaml) - Keywords and patterns
+- [Pipeline Orchestration](../../config/pipeline-orchestration.yaml) - Phases and agents

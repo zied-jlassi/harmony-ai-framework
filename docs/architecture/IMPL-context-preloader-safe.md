@@ -1,19 +1,21 @@
 # Implementation: Loop-Safe Context Preloader
 
+> **🌐 Language:** English · [Français](../fr/architecture/IMPL-context-preloader-safe.md)
+
 ## Executive Summary
 
-Ce document décrit l'implémentation du système de chargement de contexte **sans boucles infinies**.
+This document describes the implementation of the context loading system **without infinite loops**.
 
-**Principes clés:**
-1. **ONE-SHOT**: Chaque phase s'exécute une seule fois
-2. **FORWARD-ONLY**: Machine à états interdit les retours
-3. **BOUNDED**: Budget token enforced (15K max)
-4. **FLAT**: Pas de chaînes de dépendances
-5. **IMMUTABLE**: Contexte verrouillé après injection
+**Key principles:**
+1. **ONE-SHOT**: Each phase runs exactly once
+2. **FORWARD-ONLY**: The state machine forbids backward transitions
+3. **BOUNDED**: Token budget enforced (15K max)
+4. **FLAT**: No dependency chains
+5. **IMMUTABLE**: Context locked after injection
 
 ---
 
-## Architecture Anti-Boucles
+## Loop-Free Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
@@ -37,33 +39,33 @@ Ce document décrit l'implémentation du système de chargement de contexte **sa
 
 ---
 
-## Scénarios de Boucles et Protections
+## Loop Scenarios and Protections
 
-### Scénario 1: Re-classification
+### Scenario 1: Re-classification
 ```
 RISQUE: Haiku appelé plusieurs fois → résultats différents → incohérence
 PROTECTION: State machine - CLASSIFYING ne peut être atteint qu'une fois
 ```
 
-### Scénario 2: Chaîne de profils
+### Scenario 2: Profile chain
 ```
 RISQUE: Profile A requires B requires C requires A → boucle infinie
 PROTECTION: Résolution FLAT - tous les requires résolus en UNE passe
 ```
 
-### Scénario 3: Knowledge récursif
+### Scenario 3: Recursive knowledge
 ```
 RISQUE: knowledge/a.md référence b.md qui référence a.md
 PROTECTION: MAX_DEPTH=1 - pas de chargement imbriqué
 ```
 
-### Scénario 4: Triggered agents chain
+### Scenario 4: Triggered agents chain
 ```
 RISQUE: Agent A trigger B qui trigger A
 PROTECTION: Triggered agents chargés comme SUMMARIES (50 lignes), pas exécutés
 ```
 
-### Scénario 5: Handoff re-classification
+### Scenario 5: Handoff re-classification
 ```
 RISQUE: Handoff Dev→Tester déclenche nouvelle classification
 PROTECTION: Handoff hérite du contexte, pas de re-classification
@@ -71,7 +73,7 @@ PROTECTION: Handoff hérite du contexte, pas de re-classification
 
 ---
 
-## Implémentation: context-preloader.sh
+## Implementation: context-preloader.sh
 
 ```bash
 #!/bin/bash
@@ -570,7 +572,7 @@ _reset_preloader() {
 
 ---
 
-## Tests de Validation Anti-Boucles
+## Anti-Loop Validation Tests
 
 ```bash
 #!/bin/bash
@@ -605,9 +607,9 @@ echo "State after invalid transition: $PRELOADER_CURRENT_STATE"
 
 ---
 
-## Intégration avec Guardian
+## Integration with Guardian
 
-Dans `agents/guardian.md`, ajouter après Step 3 (Route to Agent):
+In `agents/guardian.md`, add after Step 3 (Route to Agent):
 
 ```markdown
 ## Step 4: Context Pre-Loading
@@ -636,11 +638,11 @@ AVANT d'exécuter l'agent sélectionné:
 
 ---
 
-## Checklist Implémentation
+## Implementation Checklist
 
-- [ ] Créer `lib/context-preloader.sh` avec le code ci-dessus
-- [ ] Ajouter tests dans `tests/e2e/scripts/test.sh`
-- [ ] Modifier `agents/guardian.md` Step 4
-- [ ] Créer knowledge files manquants (authentication-patterns.md, etc.)
-- [ ] Tester scénarios de boucles
-- [ ] Documenter dans CLAUDE.md
+- [ ] Create `lib/context-preloader.sh` with the code above
+- [ ] Add tests in `tests/e2e/scripts/test.sh`
+- [ ] Modify `agents/guardian.md` Step 4
+- [ ] Create missing knowledge files (authentication-patterns.md, etc.)
+- [ ] Test loop scenarios
+- [ ] Document in CLAUDE.md

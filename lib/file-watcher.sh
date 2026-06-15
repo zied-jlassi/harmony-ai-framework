@@ -2,7 +2,7 @@
 # ============================================================================
 # file-watcher.sh - File Change Detection for Harmony Framework
 # ============================================================================
-# Inspired by Aider's watch mode for automatic linting and context updates
+# Watch mode for automatic linting and context updates on file changes.
 # Provides file monitoring, change detection, and event hooks
 #
 # Usage: source file-watcher.sh

@@ -356,7 +356,7 @@ See `tea-index.csv` for complete knowledge fragment mapping.
 - Ask in team standup
 - Tag @{tea_agent_username} in Slack/Discord
 - Refer to `./.harmony/docs/tea-README.md` for workflow documentation
-- Consult `./.harmony/testarch/knowledge` for testing best practices
+- Consult `./.harmony/test-architect/knowledge` for testing best practices
 
 ---
 

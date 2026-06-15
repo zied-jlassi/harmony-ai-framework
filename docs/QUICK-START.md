@@ -1,12 +1,14 @@
 # Quick Start
 
+> **🌐 Language:** English · [Français](fr/QUICK-START.md)
+
 > Get Harmony running in 2 minutes.
 
 ## 1. Install (30 sec)
 
 ```bash
-npm install harmony-ai
-npx harmony init
+# Requires jq + yq — run from your project root
+npx harmony-ai --full
 ```
 
 ## 2. Configure MCP Servers (1 min)
@@ -44,7 +46,12 @@ Harmony routes automatically to the right agent.
 ## Verify Installation
 
 ```bash
-npx harmony doctor
+# Framework tree + hooks present
+ls .harmony/agents .harmony/hooks .harmony/local/memory
+cat .claude/settings.json
+
+# Then, inside your AI assistant:
+/go            # Session kickoff — loads context and reports state
 ```
 
 ---
@@ -69,4 +76,4 @@ Harmony installed 3 systems:
 
 ---
 
-**Need help?** Run `npx harmony help` or [open an issue](https://github.com/anthropics/harmony-framework/issues)
+**Need help?** Run `/harmony` inside your assistant or [open an issue](https://github.com/zied-jlassi/harmony-ai-framework/issues)

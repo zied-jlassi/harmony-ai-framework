@@ -44,6 +44,10 @@ CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""' 2>/dev/null || echo "")
 
 [[ -z "$CMD" ]] && exit 0
 
+# Visible-status helper (proof the guard triggered)
+[[ -f "${HARMONY_DIR}/lib/hook-ui.sh" ]] && source "${HARMONY_DIR}/lib/hook-ui.sh"
+type hook_status &>/dev/null || hook_status() { :; }
+
 # ── Exit rapide si commande non pertinente ────────────────────────────────────
 is_install_cmd() {
     echo "$CMD" | grep -qiE \
@@ -354,4 +358,6 @@ for mcp_cfg in ".mcp.json" ".claude/mcp.json" ".cursor/mcp.json"; do
 done
 
 info "Supply chain check terminé — commande autorisée à s'exécuter."
+# User-visible proof the package screening ran and passed
+hook_status "📦 Supply-chain: clean — install screened"
 exit 0

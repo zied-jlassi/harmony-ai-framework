@@ -1,5 +1,7 @@
 # Working Memory - Sprint & Backlog Tracking
 
+> **🌐 Language:** English · [Français](fr/working-memory.md)
+
 > **AI-Agnostic**: Works with Claude, Cursor, Windsurf, Cody, Continue, or any AI assistant.
 
 The Working Memory system provides persistent sprint and backlog tracking that survives session crashes and enables seamless context handoff between sessions.

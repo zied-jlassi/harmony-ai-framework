@@ -53,7 +53,7 @@ harmony install --status
 │   ├── hf-agent-ucv-writer.md  # /hf:agent:ucv-writer
 │   ├── hf-agent-ucv-validator.md # /hf:agent:ucv-validator
 │   ├── hf-workflow-*.md        # /hf:workflow:* commands
-│   ├── hf-testarch-*.md        # /hf:testarch:* commands
+│   ├── hf-test-architect-*.md        # /hf:test-architect:* commands
 │   └── hf-diagram-*.md         # /hf:diagram:* commands
 ├── hooks/
 │   ├── harmony-sentinel.sh     # Error memory
@@ -76,7 +76,7 @@ Commands are generated from YAML registries using `bin/generate-commands.sh`:
 # Registry files (source of truth):
 # - commands/agents.yaml     → /hf:agent:* (13 commands)
 # - commands/workflows.yaml  → /hf:workflow:* (8 commands)
-# - commands/testarch.yaml   → /hf:testarch:* (4 commands)
+# - commands/test-architect.yaml   → /hf:test-architect:* (4 commands)
 # - commands/diagrams.yaml   → /hf:diagram:* (4 commands)
 # Total: 29 commands
 ```

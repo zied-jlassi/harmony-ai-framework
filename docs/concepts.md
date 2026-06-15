@@ -1,5 +1,7 @@
 # Core Concepts
 
+> **🌐 Language:** English · [Français](fr/concepts.md)
+
 Understanding the philosophy and architecture behind Harmony Framework.
 
 ---

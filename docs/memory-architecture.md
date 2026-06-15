@@ -1,5 +1,7 @@
 # Memory Architecture — Two Zones
 
+> **🌐 Language:** English · [Français](fr/memory-architecture.md)
+
 > **One rule to remember:** mutable state lives in **`.harmony/local/`**. Everything else under `.harmony/` is **read-only framework base** and is overwritten on every update.
 >
 > Decision record: **ADR-010**. Sprint/backlog specifics: [working-memory.md](working-memory.md).

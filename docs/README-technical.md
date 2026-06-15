@@ -1,23 +1,25 @@
 # Harmony Framework - Technical Reference
 
-> **Version technique détaillée du README original.**
+> **🌐 Language:** English · [Français](fr/README-technical.md)
+
+> **Detailed technical version of the original README.**
 >
-> Ce document préserve toute la documentation technique originale
-> développée durant la création du framework.
+> This document preserves all the original technical documentation
+> developed during the creation of the framework.
 
 ---
 
-## Vue d'Ensemble Technique
+## Technical Overview
 
-Harmony est un **self-improving AI development framework** qui apporte structure, mémoire, et assurance qualité au développement assisté par IA. Contrairement aux frameworks traditionnels qui se concentrent uniquement sur l'orchestration LLM, Harmony crée un écosystème de développement complet qui:
+Harmony is a **self-improving AI development framework** that brings structure, memory, and quality assurance to AI-assisted development. Unlike traditional frameworks that focus solely on LLM orchestration, Harmony builds a complete development ecosystem that:
 
-- **Learn** - Apprend de ses erreurs et ne les répète jamais
-- **Protect** - Protège le workflow avec des guardrails intelligents
-- **Deliver** - Livre la qualité via des Use Cases vérifiables
+- **Learn** - Learns from its mistakes and never repeats them
+- **Protect** - Protects the workflow with intelligent guardrails
+- **Deliver** - Delivers quality through verifiable Use Cases
 
 ---
 
-## Architecture Détaillée
+## Detailed Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -48,11 +50,11 @@ Harmony est un **self-improving AI development framework** qui apporte structure
 
 ---
 
-## Les Trois Piliers - Détail Complet
+## The Three Pillars - Full Detail
 
 ### 1. Guardian Protocol
 
-Protège le workflow en détectant l'intention et routant vers l'agent correct.
+Protects the workflow by detecting intent and routing to the correct agent.
 
 ```
 User: "développe le scoring"
@@ -66,23 +68,23 @@ User: "développe le scoring"
     [Route to Developer Agent]
 ```
 
-**Table de routage:**
+**Routing table:**
 
-| Intent | Mots-clés | Agent | Prérequis |
+| Intent | Keywords | Agent | Prerequisites |
 |--------|-----------|-------|-----------|
-| IMPLEMENT | développer, coder, implémenter, ajouter | Developer | Story DOIT exister |
-| FIX | corriger, bug, erreur, problème | Developer | Story ou BUGFIX |
-| PLAN | story, sprint, planifier, backlog | SM (Scrum Master) | Architecture existe |
-| TEST | tester, test, coverage, TDD | TEA (Tester) | - |
-| EXPLORE_QA | Exploratory QA, QA exploratoire | Exploratory QA | - |
-| ANALYZE | analyser, besoin, comprendre | Analyst (Analyst) | - |
-| DESIGN | architecture, ADR, structurer | Architect | PRD existe |
-| UCV | UCV, use case, vérifications | UCV Writer | Story existe |
-| AI | IA, RAG, LLM, mémoire | AI Architect + sub-agents | - |
+| IMPLEMENT | develop, code, implement, add | Developer | A story MUST exist |
+| FIX | fix, bug, error, problem | Developer | Story or BUGFIX |
+| PLAN | story, sprint, plan, backlog | SM (Scrum Master) | Architecture exists |
+| TEST | test, testing, coverage, TDD | TEA (Tester) | - |
+| EXPLORE_QA | Exploratory QA | Exploratory QA | - |
+| ANALYZE | analyze, requirement, understand | Analyst (Analyst) | - |
+| DESIGN | architecture, ADR, structure | Architect | PRD exists |
+| UCV | UCV, use case, verifications | UCV Writer | Story exists |
+| AI | AI, RAG, LLM, memory | AI Architect + sub-agents | - |
 
 ### 2. Sentinel System
 
-Garde la mémoire des erreurs pour ne pas les répéter.
+Keeps a memory of errors so they are not repeated.
 
 ```
 ┌─────────────────────────────────────────┐
@@ -96,16 +98,16 @@ Garde la mémoire des erreurs pour ne pas les répéter.
 └─────────────────────────────────────────┘
 ```
 
-**Fichiers mémoire:**
+**Memory files:**
 
-| Fichier | Description |
+| File | Description |
 |---------|-------------|
-| `error-journal.json` | Journal des erreurs avec patterns |
-| `circuit-breaker.json` | État du circuit (CLOSED/OPEN) |
-| `learned-patterns.json` | Patterns appris et validés |
-| `anti-patterns.json` | Anti-patterns à éviter |
+| `error-journal.json` | Error journal with patterns |
+| `circuit-breaker.json` | Circuit state (CLOSED/OPEN) |
+| `learned-patterns.json` | Learned and validated patterns |
+| `anti-patterns.json` | Anti-patterns to avoid |
 
-**Format Error Journal:**
+**Error Journal format:**
 
 ```json
 {
@@ -128,21 +130,21 @@ Garde la mémoire des erreurs pour ne pas les répéter.
 
 ### 3. HQVF (Harmony Quality Verification Framework)
 
-Garantit la qualité via Use Cases Verifiables (UCV).
+Guarantees quality through Verifiable Use Cases (UCVs).
 
-**Règles HQVF:**
+**HQVF rules:**
 
-| Règle | Description |
+| Rule | Description |
 |-------|-------------|
-| HQVF-1 | Jamais de dev sans UCV approuvé |
-| HQVF-2 | Chaque story a un fichier UCV |
-| HQVF-3 | User approuve UCVs avant dev |
-| HQVF-4 | DEV coche chaque vérification |
-| HQVF-5 | TEA écrit 1+ test par vérification |
-| HQVF-6 | Exploratory QA valide chaque UCV |
-| HQVF-7 | Story DONE = 100% UCVs validés |
+| HQVF-1 | Never develop without an approved UCV |
+| HQVF-2 | Every story has a UCV file |
+| HQVF-3 | The user approves UCVs before development |
+| HQVF-4 | DEV checks off each verification |
+| HQVF-5 | TEA writes 1+ test per verification |
+| HQVF-6 | Exploratory QA validates each UCV |
+| HQVF-7 | Story DONE = 100% of UCVs validated |
 
-**Format UCV:**
+**UCV format:**
 
 ```yaml
 story_id: STORY-042
@@ -168,52 +170,52 @@ use_cases:
 
 ---
 
-## Écosystème des Agents
+## Agent Ecosystem
 
 ### Core Agents
 
-| Agent | Persona | Rôle | Phase |
+| Agent | Persona | Role | Phase |
 |-------|---------|------|-------|
-| **Guardian** | - | Protection workflow | All |
-| **Sentinel** | - | Mémoire erreurs | All |
-| **Analyst** | Analyst | Analyse besoins | 1-2 |
-| **Architect** | Architect | Design technique | 3 |
-| **Developer** | Developer | Implémentation | 4 |
-| **Tester** | Tester | Assurance qualité | 4 |
-| **Scrum Master** | Scrum Master | Gestion sprint | 3-4 |
+| **Guardian** | - | Workflow protection | All |
+| **Sentinel** | - | Error memory | All |
+| **Analyst** | Analyst | Requirements analysis | 1-2 |
+| **Architect** | Architect | Technical design | 3 |
+| **Developer** | Developer | Implementation | 4 |
+| **Tester** | Tester | Quality assurance | 4 |
+| **Scrum Master** | Scrum Master | Sprint management | 3-4 |
 
 ### Specialist Agents
 
-| Agent | Persona | Spécialité |
+| Agent | Persona | Specialty |
 |-------|---------|-----------|
-| **AI Architect** | AI Architect | Architecture AI/LLM (+ 6 sub-agents) |
-| **Exploratory QA** | Exploratory QA | QA Exploratoire |
+| **AI Architect** | AI Architect | AI/LLM architecture (+ 6 sub-agents) |
+| **Exploratory QA** | Exploratory QA | Exploratory QA |
 | **UCV Writer** | UCV Writer | UCV Writer |
 | **UCV Validator** | UCV Validator | UCV Validator |
 
 ### AI Architect's Sub-Agents (AI Specialists)
 
-| Agent | Persona | Domaine |
+| Agent | Persona | Domain |
 |-------|---------|---------|
-| **Riley** | Riley | Pipelines RAG, Vector DBs |
-| **Milo** | Milo | Systèmes mémoire, 3-Tier |
-| **Oscar** | Oscar | Orchestration multi-agent |
-| **Olivia** | Olivia | Observabilité, tracing |
+| **Riley** | Riley | RAG pipelines, Vector DBs |
+| **Milo** | Milo | Memory systems, 3-Tier |
+| **Oscar** | Oscar | Multi-agent orchestration |
+| **Olivia** | Olivia | Observability, tracing |
 | **Grace** | Grace | GraphRAG, Knowledge Graphs |
 | **Sage** | Sage | Safety & Guardrails |
 
 ### Compliance Agents
 
-| Agent | Domaine |
+| Agent | Domain |
 |-------|---------|
-| **Security** | Sécurité applicative |
-| **Pentest** | Tests de pénétration |
-| **RGPD** | Conformité données |
+| **Security** | Application security |
+| **Pentest** | Penetration testing |
+| **RGPD** | Data compliance |
 | **Accessibility** | WCAG, RGAA |
 
 ---
 
-## Phases du Workflow
+## Workflow Phases
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -235,16 +237,16 @@ use_cases:
 
 **Phase Gates:**
 
-| De | Vers | Prérequis |
+| From | To | Prerequisites |
 |----|------|-----------|
-| 1 → 2 | Discovery → Planning | Brief approuvé |
-| 2 → 3 | Planning → Solutioning | PRD approuvé |
+| 1 → 2 | Discovery → Planning | Brief approved |
+| 2 → 3 | Planning → Solutioning | PRD approved |
 | 3 → 4 | Solutioning → Implementation | Architecture + Stories + UCVs |
 | 4 → 5 | Implementation → Release | 100% UCV + Exploratory QA approved |
 
 ---
 
-## Architecture Mémoire 3-Tier
+## 3-Tier Memory Architecture
 
 ```yaml
 memory:
@@ -291,18 +293,18 @@ memory:
 |---------|-------------|
 | **P-001** | Hybrid Orchestration (Supervisor + Sequential + Parallel) |
 | **P-002** | Three-Tier Memory Hierarchy |
-| **P-003** | JIT Context Loading (charge à la demande) |
+| **P-003** | JIT Context Loading (load on demand) |
 | **P-004** | Circuit Breaker Protection (3 retries max) |
 | **P-005** | Closed-Loop Learning (Execute → Evaluate → Reflect → Store) |
 | **P-006** | Intent Detection & Routing |
-| **P-007** | Story-Based Development (jamais de dev sans story) |
-| **P-008** | UCV Quality Gate (100% coverage obligatoire) |
+| **P-007** | Story-Based Development (never develop without a story) |
+| **P-008** | UCV Quality Gate (100% coverage required) |
 
 ---
 
 ## Rules Engine
 
-| Règle | Description |
+| Rule | Description |
 |-------|-------------|
 | **R-001** | Never develop without a story |
 | **R-002** | Strict role separation between agents |
@@ -368,7 +370,7 @@ module.exports = {
 
 ## Profiles & Specialties
 
-### Tech Profiles (COMMENT construire)
+### Tech Profiles (HOW to build)
 
 ```
 profiles/
@@ -384,16 +386,16 @@ profiles/
     └── angular/    (L2)
 ```
 
-**Niveaux de dépendance:**
+**Dependency levels:**
 
-| Level | Type | Exemples |
+| Level | Type | Examples |
 |-------|------|----------|
 | L0 | Languages | javascript, typescript, python |
 | L1 | Runtimes | nodejs, deno, bun |
 | L2 | Frameworks | nestjs, angular, django |
 | L3 | Meta/Tools | prisma, graphql, docker |
 
-### Specialties (QUOI construire)
+### Specialties (WHAT to build)
 
 ```
 specialties/
@@ -404,9 +406,9 @@ specialties/
     └── knowledge/           # Via /harmony learn
 ```
 
-**Specialties disponibles:**
-- `gaming` - Jeux, gamification
-- `medical` - Santé, HIPAA, HL7
+**Available specialties:**
+- `gaming` - Games, gamification
+- `medical` - Healthcare, HIPAA, HL7
 - `fintech` - Finance, PCI-DSS
 - `education` - E-learning, LMS
 - `iot` - IoT, embedded
@@ -414,9 +416,9 @@ specialties/
 
 ---
 
-## Intégrations IDE
+## IDE Integrations
 
-### Niveaux de support
+### Support levels
 
 | IDE | Support | Features |
 |-----|---------|----------|
@@ -439,7 +441,7 @@ specialties/
 
 ## Acknowledgments
 
-Harmony Framework s'appuie sur les meilleures pratiques de:
+The Harmony Framework draws on the best practices of:
 - Anthropic's Context Engineering research
 - Microsoft's Multi-Agent patterns
 - Google's ADK architecture

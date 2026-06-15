@@ -2,7 +2,7 @@
 # ============================================================================
 # history-summarizer.sh - History and Context Summarization for Harmony Framework
 # ============================================================================
-# Inspired by Aider's chat history compression and context management
+# Session history compression and context management for long agent runs.
 # Provides history tracking, summarization, and context compression
 #
 # Usage: source history-summarizer.sh

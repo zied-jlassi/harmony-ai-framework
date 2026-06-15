@@ -1,9 +1,11 @@
 # Harmony Framework - Evolution & Design Decisions
 
-> **Document de mémoire : Comment et pourquoi Harmony a été conçu.**
+> **🌐 Language:** English · [Français](fr/evolution.md)
+
+> **Memory document: How and why Harmony was designed.**
 >
-> Ce document garde la trace du processus de pensée, des analyses,
-> et des décisions architecturales prises durant le développement.
+> This document keeps track of the thought process, the analyses,
+> and the architectural decisions made during development.
 
 ---
 
@@ -16,37 +18,37 @@
 
 ---
 
-## Phase 1: Origine (Décembre 2024)
+## Phase 1: Origins (December 2024)
 
-### Le Problème Initial
+### The Initial Problem
 
-Dans un projet e-commerce complexe, nous avons constaté des problèmes récurrents:
+In a complex e-commerce project, we observed recurring issues:
 
-1. **Erreurs répétées** - Le même bug revenait session après session
-2. **Confusion d'agents** - Mauvais agent activé pour la tâche
-3. **Qualité incertaine** - "Ça marche" n'était pas vérifiable
-4. **Contexte perdu** - Chaque session repartait de zéro
+1. **Repeated errors** - The same bug kept coming back session after session
+2. **Agent confusion** - The wrong agent was activated for the task
+3. **Uncertain quality** - "It works" was not verifiable
+4. **Lost context** - Each session started from scratch
 
-### Analyse de l'Architecte AI (AI Architect)
+### AI Architect Analysis
 
-**Recherche menée:**
-- 150+ sources 2025 analysées
-- Frameworks évalués: LangChain, CrewAI, AutoGen, Semantic Kernel
-- Patterns extraits: Microsoft Azure AI, AWS Agentic, Google ADK
+**Research conducted:**
+- 150+ sources from 2025 analyzed
+- Frameworks evaluated: LangChain, CrewAI, AutoGen, Semantic Kernel
+- Patterns extracted: Microsoft Azure AI, AWS Agentic, Google ADK
 
 **Conclusion:**
-> "Aucun framework existant n'offre de mémoire d'erreurs persistante
-> ni de système de qualité vérifiable. C'est notre USP."
+> "No existing framework offers persistent error memory
+> or a verifiable quality system. That is our USP."
 
 ---
 
-## Phase 2: Les Trois Piliers (Janvier 2025)
+## Phase 2: The Three Pillars (January 2025)
 
-### Conception du Guardian Protocol
+### Designing the Guardian Protocol
 
-**Problème:** Comment router automatiquement vers le bon agent?
+**Problem:** How do we automatically route to the right agent?
 
-**Solution conçue:**
+**Solution designed:**
 ```
 User: "développe le scoring"
          ↓
@@ -58,7 +60,7 @@ User: "développe le scoring"
 [Route to DEV Agent]
 ```
 
-**Table de routage créée:**
+**Routing table created:**
 
 | Intent | Keywords | Agent | Prerequisites |
 |--------|----------|-------|---------------|
@@ -69,16 +71,16 @@ User: "développe le scoring"
 | ANALYZE | analyser, besoin | Analyst | - |
 | DESIGN | architecture, ADR | Architect | PRD exists |
 
-### Conception du Sentinel System
+### Designing the Sentinel System
 
-**Problème:** Comment ne pas répéter les mêmes erreurs?
+**Problem:** How do we avoid repeating the same errors?
 
 **Inspiration:**
 - Circuit breaker pattern (Microservices)
 - Error budgets (SRE)
 - Learning from failures (Chaos Engineering)
 
-**Architecture choisie:**
+**Architecture chosen:**
 
 ```yaml
 memory:
@@ -99,15 +101,15 @@ memory:
     description: "Patterns à éviter"
 ```
 
-**Décision clé:**
-> "Le circuit breaker s'ouvre après 3 échecs consécutifs.
-> Pas de reset automatique - analyse obligatoire."
+**Key decision:**
+> "The circuit breaker opens after 3 consecutive failures.
+> No automatic reset - analysis is mandatory."
 
-### Conception de HQVF
+### Designing HQVF
 
-**Problème:** Comment vérifier objectivement la qualité?
+**Problem:** How do we objectively verify quality?
 
-**Analyse du gap Dev/Test/QA:**
+**Analysis of the Dev/Test/QA gap:**
 ```
 DEV écrit 100 lignes de code
 TEST vérifie 5% avec tests
@@ -135,29 +137,29 @@ use_case:
       qa: false    # ☐ Exploratory QA marque
 ```
 
-**Règle HQVF-7:**
-> "Story DONE = 100% UCVs validés (DEV + TEST + QA)"
-> C'est objectif, pas subjectif.
+**Rule HQVF-7:**
+> "Story DONE = 100% of UCVs validated (DEV + TEST + QA)"
+> It is objective, not subjective.
 
 ---
 
-## Phase 3: Système de Mémoire 3-Tier
+## Phase 3: 3-Tier Memory System
 
-### Analyse des Context Windows
+### Context Window Analysis
 
-**Évolution observée:**
-| Année | Taille | Modèle |
+**Observed evolution:**
+| Year | Size | Model |
 |-------|--------|--------|
 | 2022 | 4K | GPT-3.5 |
 | 2023 | 32K | GPT-4 |
 | 2024 | 128K | Claude 3 |
 | 2025 | 200K+ | Claude 4 |
 
-**Problème identifié:**
-> "Plus grand ≠ Meilleur. Lost-in-middle est réel.
-> Les infos au milieu du contexte sont 15-20% moins rappelées."
+**Identified problem:**
+> "Bigger ≠ Better. Lost-in-middle is real.
+> Information in the middle of the context is 15-20% less recalled."
 
-### Architecture 3-Tier choisie
+### 3-Tier Architecture chosen
 
 ```
 ┌─────────────────────────────────────────┐
@@ -178,34 +180,34 @@ use_case:
 └─────────────────────────────────────────┘
 ```
 
-**Décision clé:**
-> "JIT Loading (Just-In-Time): Ne charger que ce qui est pertinent.
-> Semantic similarity > 0.7 pour inclusion."
+**Key decision:**
+> "JIT Loading (Just-In-Time): Load only what is relevant.
+> Semantic similarity > 0.7 for inclusion."
 
 ---
 
 ## Phase 4: Profiles & Specialties
 
-### La distinction fondamentale
+### The fundamental distinction
 
-**Question clé:** Comment séparer le QUOI du COMMENT?
+**Key question:** How do we separate the WHAT from the HOW?
 
 **Solution:**
-- **Specialties** = QUOI construire (domaine métier)
-- **Profiles** = COMMENT construire (stack technique)
+- **Specialties** = WHAT to build (business domain)
+- **Profiles** = HOW to build (technical stack)
 
 | Aspect | Specialties | Profiles |
 |--------|-------------|----------|
-| Question | Quoi? | Comment? |
-| Exemples | gaming, medical | nestjs, angular |
-| Agents | Ajoute des agents | Pas de nouveaux agents |
-| Activation | Explicite | Auto-detect |
+| Question | What? | How? |
+| Examples | gaming, medical | nestjs, angular |
+| Agents | Adds agents | No new agents |
+| Activation | Explicit | Auto-detect |
 
-### Système de dépendances
+### Dependency System
 
-**Problème:** NestJS nécessite TypeScript qui nécessite JavaScript.
+**Problem:** NestJS requires TypeScript which requires JavaScript.
 
-**Solution: Niveaux (L0-L3)**
+**Solution: Levels (L0-L3)**
 
 ```
 L0: Languages (javascript, typescript, python)
@@ -214,7 +216,7 @@ L2: Frameworks (nestjs, angular)
 L3: Meta/Tools (prisma, graphql)
 ```
 
-**Résolution automatique:**
+**Automatic resolution:**
 ```
 Activer "nestjs"
 → Charge: nestjs (60%)
@@ -223,9 +225,9 @@ Activer "nestjs"
 
 ---
 
-## Phase 5: Intégrations Multi-IDE
+## Phase 5: Multi-IDE Integrations
 
-### Analyse des capacités IDE
+### IDE Capability Analysis
 
 | Feature | Claude Code | Cursor | Windsurf | Continue | Cody |
 |---------|:-----------:|:------:|:--------:|:--------:|:----:|
@@ -234,9 +236,9 @@ Activer "nestjs"
 | MCP | ✓ | ✗ | ✗ | ✗ | ✗ |
 | Rules | CLAUDE.md | .mdc | .windsurfrules | YAML | Prompts |
 
-### Décision: Feature Mapping
+### Decision: Feature Mapping
 
-**Comment adapter Harmony à chaque IDE?**
+**How do we adapt Harmony to each IDE?**
 
 | Harmony Feature | Claude Code | Cursor | Windsurf |
 |-----------------|-------------|--------|----------|
@@ -246,21 +248,21 @@ Activer "nestjs"
 | Agents | Skills | Personas | Instructions |
 
 **Conclusion:**
-> "Claude Code est le 'gold standard' (full support).
-> Autres IDEs = dégradation gracieuse."
+> "Claude Code is the 'gold standard' (full support).
+> Other IDEs = graceful degradation."
 
 ---
 
-## Phase 6: Unification Command → Framework (Décembre 2025)
+## Phase 6: Command → Framework Unification (December 2025)
 
-### Analyse ULTRATHINK
+### ULTRATHINK Analysis
 
-**Problème identifié:**
-- `/harmony` command très riche (27 modes)
-- `.harmony/` framework structure publique
-- Duplication, incohérence potentielle
+**Identified problem:**
+- `/harmony` command very rich (27 modes)
+- `.harmony/` public framework structure
+- Duplication, potential inconsistency
 
-**Solution conçue:**
+**Solution designed:**
 
 ```
 AVANT (2 systèmes):
@@ -272,21 +274,21 @@ APRÈS (1 système):
     └── .claude/commands/harmony.md (thin wrapper)
 ```
 
-### Recherche concurrentielle
+### Competitive Research
 
-**Frameworks analysés:**
+**Frameworks analyzed:**
 - LangChain (90k+ stars) - RAG focus
 - CrewAI (30k+ stars) - Multi-agent roles
 - AutoGen (Microsoft) - Agent dialogue
 - Semantic Kernel (Microsoft) - Enterprise
 
-**USP Harmony identifiés:**
+**Harmony USPs identified:**
 1. Error Memory (Sentinel) - UNIQUE
 2. Quality Gates (HQVF) - UNIQUE
 3. Intent Routing (Guardian) - UNIQUE
 4. Multi-IDE - RARE
 
-### Architecture finale
+### Final Architecture
 
 ```
 .harmony/
@@ -301,141 +303,141 @@ APRÈS (1 système):
 
 ---
 
-## Décisions Architecturales (ADRs)
+## Architectural Decisions (ADRs)
 
 ### ADR-001: Prompt-Based, Not Fine-Tuned
 
-**Contexte:** Faut-il fine-tuner un modèle pour Harmony?
+**Context:** Should we fine-tune a model for Harmony?
 
-**Décision:** NON - Prompts + Memory uniquement
+**Decision:** NO - Prompts + Memory only
 
-**Raison:**
-> "Amélioration via prompts et mémoire,
-> PAS de modification des poids du modèle.
-> Le LLM reste intact.
-> Performance garantie (pas de dégradation)."
+**Rationale:**
+> "Improvement through prompts and memory,
+> NOT modification of the model's weights.
+> The LLM stays intact.
+> Performance guaranteed (no degradation)."
 
 ### ADR-002: Circuit Breaker Manual Reset
 
-**Contexte:** Le circuit breaker doit-il se reset automatiquement?
+**Context:** Should the circuit breaker reset automatically?
 
-**Décision:** NON - Reset manuel obligatoire
+**Decision:** NO - Manual reset mandatory
 
-**Raison:**
-> "Auto-reset permet de répéter l'erreur.
-> Manual reset force l'analyse root cause.
-> Le pattern d'erreur doit être documenté."
+**Rationale:**
+> "Auto-reset allows the error to repeat.
+> Manual reset forces root cause analysis.
+> The error pattern must be documented."
 
 ### ADR-003: UCV Triple Validation
 
-**Contexte:** Qui valide qu'une feature est terminée?
+**Context:** Who validates that a feature is complete?
 
-**Décision:** DEV + TEST + QA (les trois)
+**Decision:** DEV + TEST + QA (all three)
 
-**Raison:**
-> "DEV vérifie implémentation
-> TEST vérifie comportement
-> QA vérifie utilisabilité
-> Les trois perspectives = qualité complète"
+**Rationale:**
+> "DEV verifies implementation
+> TEST verifies behavior
+> QA verifies usability
+> The three perspectives = complete quality"
 
 ### ADR-004: Profiles Auto-Detection
 
-**Contexte:** L'utilisateur doit-il déclarer ses profiles?
+**Context:** Should the user declare their profiles?
 
-**Décision:** Auto-détection avec override possible
+**Decision:** Auto-detection with possible override
 
-**Raison:**
+**Rationale:**
 > "package.json → nodejs, typescript
 > tsconfig.json → typescript
 > nest-cli.json → nestjs
-> Moins de configuration manuelle"
+> Less manual configuration"
 
 ---
 
-## Leçons Apprises
+## Lessons Learned
 
-### Ce qui a fonctionné
+### What worked
 
-1. **Sentinel** - Réduction 82% des bugs récurrents
-2. **HQVF** - Zéro "ça marche sur ma machine"
-3. **Guardian** - Routing automatique sans confusion
-4. **Multi-IDE** - Pas de lock-in
+1. **Sentinel** - 82% reduction in recurring bugs
+2. **HQVF** - Zero "it works on my machine"
+3. **Guardian** - Automatic routing without confusion
+4. **Multi-IDE** - No lock-in
 
-### Ce qui a été difficile
+### What was difficult
 
 1. **Lost-in-middle** - Solution: JIT Loading
 2. **IDE differences** - Solution: Feature mapping
-3. **Documentation size** - Solution: Chunking 200-500 lignes
+3. **Documentation size** - Solution: Chunking 200-500 lines
 
-### Ce qu'on referait différemment
+### What we would do differently
 
-1. Commencer par le framework, pas la commande
-2. Versioning sémantique dès le début
-3. Tests automatisés plus tôt
+1. Start with the framework, not the command
+2. Semantic versioning from the start
+3. Automated tests earlier
 
 ---
 
-## Références Clés
+## Key References
 
-### Sources Architecturales
+### Architectural Sources
 - Microsoft Azure AI Agent Patterns
 - AWS Agentic AI Patterns
 - Google ADK Documentation
 - Anthropic Context Engineering (2025)
 
-### Sources Mémoire
+### Memory Sources
 - Mem0 Documentation (+26% accuracy)
 - MemGPT/Letta Architecture
 - FlowHunt Context Engineering Guide
 
-### Sources Qualité
+### Quality Sources
 - Confident AI LLM Guardrails
 - DeepEval Evaluation Framework
 - Agile Testing Quadrants
 
 ---
 
-## Contributeurs
+## Contributors
 
 | Persona | Role | Contribution |
 |---------|------|--------------|
-| AI Architect | AI Architect | Architecture globale, recherche |
-| UCV Writer | UCV Writer | Système HQVF |
-| UCV Validator | UCV Validator | Validation qualité |
-| Exploratory QA | QA Explorer | Tests exploratoires |
-| Developer | Developer | Implémentation |
-| Tester | Tester | Tests automatisés |
-| Scrum Master | Scrum Master | Workflow stories |
+| AI Architect | AI Architect | Overall architecture, research |
+| UCV Writer | UCV Writer | HQVF system |
+| UCV Validator | UCV Validator | Quality validation |
+| Exploratory QA | QA Explorer | Exploratory testing |
+| Developer | Developer | Implementation |
+| Tester | Tester | Automated tests |
+| Scrum Master | Scrum Master | Story workflow |
 | Analyst | Analyst | Requirements |
-| Architect | Architect | Design technique |
+| Architect | Architect | Technical design |
 
 ---
 
-## Prochaines Étapes
+## Next Steps
 
-### v2.1 (Prévu)
-- [ ] CLI npm global `harmony`
-- [ ] Tests automatisés
+### v2.1 (Planned)
+- [ ] Global npm CLI `harmony`
+- [ ] Automated tests
 - [ ] Landing page harmony-ai.dev
 
-### v2.2 (Prévu)
-- [ ] Specialties additionnelles (fintech, medical)
-- [ ] 30+ profiles supplémentaires
-- [ ] Intégration VS Code extension
+### v2.2 (Planned)
+- [ ] Additional specialties (fintech, medical)
+- [ ] 30+ additional profiles
+- [ ] VS Code extension integration
 
 ### v3.0 (Vision)
-- [ ] Cloud sync pour mémoire
+- [ ] Cloud sync for memory
 - [ ] Team collaboration
 - [ ] Analytics dashboard
 
 ---
 
-## Note Finale
+## Final Note
 
-> **Ce document est la mémoire vivante du développement de Harmony.**
+> **This document is the living memory of Harmony's development.**
 >
-> Il capture non seulement le QUOI mais aussi le POURQUOI et le COMMENT.
-> Chaque décision a une raison. Chaque pattern a une histoire.
+> It captures not only the WHAT but also the WHY and the HOW.
+> Every decision has a reason. Every pattern has a story.
 >
-> "Learn. Protect. Deliver." - C'est plus qu'un slogan,
-> c'est notre philosophie de développement.
+> "Learn. Protect. Deliver." - It's more than a slogan,
+> it's our development philosophy.

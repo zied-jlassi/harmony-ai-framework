@@ -39,9 +39,15 @@ readonly HARMONY_DIR="${HARMONY_DIR:-.harmony}"
 readonly LOG_FILE="${HARMONY_DIR}/local/logs/security/security.log"
 readonly DEBUG="${HARMONY_HOOK_DEBUG:-0}"
 
-# Paramètres d'entrée Claude Code
-readonly TOOL_NAME="${1:-unknown}"
-readonly TOOL_INPUT="${2:-{}}"
+# Entrée Claude Code : JSON sur stdin (.tool_name / .tool_input),
+# pas via args positionnels ni $TOOL_INPUT (contrat de hooks Claude Code).
+INPUT=$(cat 2>/dev/null || true)
+readonly TOOL_NAME="$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")"
+readonly TOOL_INPUT="$(echo "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null || echo '{}')"
+
+# Visible-status helper (proof the guard triggered)
+[[ -f "${HARMONY_DIR}/lib/hook-ui.sh" ]] && source "${HARMONY_DIR}/lib/hook-ui.sh"
+type hook_status &>/dev/null || hook_status() { :; }
 
 # Couleurs
 readonly RED='\033[0;31m'
@@ -634,7 +640,7 @@ main() {
                 "$matched_pattern" \
                 "$command" \
                 "$explanation" \
-                "$alternatives"
+                "$alternatives" >&2
 
             log_security "BLOCKED" "Pattern: $matched_pattern | Command: ${command:0:200}"
             exit 2
@@ -647,7 +653,7 @@ main() {
     if [[ "$DOCKER_ENV" == "required" ]] && [[ -n "$command" ]]; then
         local pkg_pattern
         if pkg_pattern=$(check_local_pkg_manager "$command"); then
-            print_docker_required "$command" "$CONTAINER_PREFIX"
+            print_docker_required "$command" "$CONTAINER_PREFIX" >&2
             log_security "BLOCKED" "Local pkg manager: $pkg_pattern | Command: ${command:0:200}"
             exit 2
         fi
@@ -668,7 +674,7 @@ main() {
 Ne JAMAIS commiter des credentials, API keys, mots de passe." \
                 "- Utiliser des variables d'environnement
 - Ajouter au .gitignore
-- Utiliser un gestionnaire de secrets (Vault, etc.)"
+- Utiliser un gestionnaire de secrets (Vault, etc.)" >&2
 
             log_security "BLOCKED" "Secrets: $secret_pattern | File: $file_path"
             exit 2
@@ -678,12 +684,16 @@ Ne JAMAIS commiter des credentials, API keys, mots de passe." \
     # ═══════════════════════════════════════════════════════════
     # CHECK 4: Patterns warning (non bloquant)
     # ═══════════════════════════════════════════════════════════
+    local warned=""
     if [[ -n "$command" ]] && check_warning_patterns "$command"; then
-        print_warning "Commande sensible détectée - vérification recommandée"
+        print_warning "Commande sensible détectée - vérification recommandée" >&2
         log_security "WARNING" "Command: ${command:0:200}"
+        warned=" ⚠️ sensible"
     fi
 
     log_debug "=== Rules Enforcer passed ==="
+    # User-visible proof the interdiction check ran and passed
+    hook_status "🛡️ Rules: clean — no interdiction (${TOOL_NAME})${warned}"
     exit 0
 }
 
